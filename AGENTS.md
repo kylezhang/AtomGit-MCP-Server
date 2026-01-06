@@ -252,3 +252,22 @@ After completing all four priority levels:
 - **ALWAYS** complete one priority level before starting the next
 - **MANDATORY** testing and README updates before committing
 - **REQUIRED** real API testing with environment variables before release
+
+## Environment Configuration Rules
+
+**CRITICAL**: Never modify or recreate the `.env` file. The user has already prepared all necessary environment variables including:
+- `ATOMGIT_TOKEN` - Valid personal access token
+- `TEST_REPO_OWNER` - Test repository owner
+- `TEST_REPOSITORY` - Test repository name
+- Other configuration variables
+
+**NEVER**:
+- Copy `.env.example` to `.env`
+- Modify existing `.env` file content
+- Reset or change environment variables
+- Create new `.env` files
+
+**ALWAYS**:
+- Use existing `.env` configuration for testing
+- Respect user's pre-configured environment
+- Run tests with the provided environment variables

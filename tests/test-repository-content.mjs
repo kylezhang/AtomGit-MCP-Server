@@ -44,10 +44,10 @@ async function testRepositoryContentTools() {
     const rootContent = await atomGitService.getRepositoryContent(TEST_OWNER, TEST_REPO, '');
     console.log(`✅ Found ${Array.isArray(rootContent) ? rootContent.length : 1} items in root directory\n`);
 
-    // Test 2: Get repository file list
-    console.log('2. Testing getRepositoryFileList...');
-    const fileList = await atomGitService.getRepositoryFileList(TEST_OWNER, TEST_REPO, '', undefined, 1, 10);
-    console.log(`✅ Found ${fileList.length} files in repository\n`);
+    // Test 2: Get repository tree (alternative to file list)
+    console.log('2. Testing getRepositoryTree...');
+    const tree = await atomGitService.getRepositoryTree(TEST_OWNER, TEST_REPO, 'master');
+    console.log(`✅ Found ${tree.length} items in repository tree\n`);
 
     // Test 3: Get specific file content (if README.md exists)
     if (Array.isArray(rootContent)) {

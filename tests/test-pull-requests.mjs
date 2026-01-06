@@ -20,18 +20,18 @@ const atomGitService = new AtomGitService({
 });
 
 // Test data - replace with actual values from your environment
-const TEST_OWNER = process.env.TEST_REPO_OWNER || process.env.TEST_USERNAME;
+const TEST_OWNER = process.env.TEST_REPO_OWNER;
 const TEST_REPO = process.env.TEST_REPOSITORY;
 
 if (!TEST_OWNER || !TEST_REPO) {
   console.error('❌ Test configuration missing!');
-  console.error('Please set the following environment variables in your .env file:');
+  console.error('Please ensure the following environment variables are set in your .env file:');
   console.error('TEST_REPO_OWNER=your_actual_username');
   console.error('TEST_REPOSITORY=your_actual_repository_name');
   console.error('');
-  console.error('Example:');
-  console.error('TEST_REPO_OWNER=myusername');
-  console.error('TEST_REPOSITORY=my-repo');
+  console.error('Current values:');
+  console.error(`TEST_REPO_OWNER: ${TEST_OWNER || 'undefined'}`);
+  console.error(`TEST_REPOSITORY: ${TEST_REPO || 'undefined'}`);
   process.exit(1);
 }
 

@@ -51,7 +51,7 @@ async function testBranchTools() {
       // Test 2: Get specific branch
       console.log('2. Testing getRepositoryBranch...');
       const branch = await atomGitService.getRepositoryBranch(TEST_OWNER, TEST_REPO, branchName);
-      console.log(`✅ Got branch: "${branch.name}" (SHA: ${branch.commit.sha.substring(0, 7)})\n`);
+      console.log(`✅ Got branch: "${branch.name}" (SHA: ${branch.commit?.sha?.substring(0, 7) || 'unknown'})\n`);
 
       // Test 3: Get branch protection rules
       console.log('3. Testing getBranchProtectionRules...');
