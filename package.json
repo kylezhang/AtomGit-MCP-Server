@@ -12,6 +12,7 @@
     "test": "node test.mjs",
     "test:auth": "node test-auth.mjs",
     "test:mcp": "node test-mcp.mjs",
+    "test:comprehensive": "node test-comprehensive.mjs",
     "clean": "rimraf dist",
     "setup": "chmod +x setup.sh && ./setup.sh"
   },
