@@ -1,0 +1,2 @@
+# AtomGit-MCP-Server
+
