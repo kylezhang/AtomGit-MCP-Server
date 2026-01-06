@@ -26,5 +26,11 @@ export declare class AtomGitService {
     getRepositoryReleases(owner: string, repo: string, page?: number, perPage?: number): Promise<Release[]>;
     getRepositoryRelease(owner: string, repo: string, tag: string): Promise<Release>;
     getLatestRelease(owner: string, repo: string): Promise<Release>;
+    getRepositoryForks(owner: string, repo: string, page?: number, perPage?: number): Promise<AtomGitRepository[]>;
+    createRepositoryBranch(owner: string, repo: string, branch: string, sha?: string): Promise<Branch>;
+    deleteRepositoryBranch(owner: string, repo: string, branch: string): Promise<void>;
+    createRepositoryPull(owner: string, repo: string, pullData: any): Promise<PullRequest>;
+    getUserSubscriptions(): Promise<AtomGitRepository[]>;
+    getUserNamespaces(): Promise<string[]>;
 }
 //# sourceMappingURL=AtomGitService.d.ts.map

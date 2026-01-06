@@ -177,5 +177,39 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`);
         return response.data;
     }
+    // Priority 1: Repository Management - Forks
+    async getRepositoryForks(owner, repo, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/forks`, {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    }
+    // Priority 1: Repository Management - Create (already exists at line 120)
+    // async createRepository(repoData: CreateRepositoryRequest): Promise<AtomGitRepository> {
+    // Priority 1: Branch Management - Create
+    async createRepositoryBranch(owner, repo, branch, sha) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, { branch, sha });
+        return response.data;
+    }
+    // Priority 1: Branch Management - Delete
+    async deleteRepositoryBranch(owner, repo, branch) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Create
+    async createRepositoryPull(owner, repo, pullData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls`, pullData);
+        return response.data;
+    }
+    // Priority 1: User Management - Subscriptions
+    async getUserSubscriptions() {
+        const response = await this.client.get('/api/v5/user/subscriptions');
+        return response.data;
+    }
+    // Priority 1: User Management - Namespaces
+    async getUserNamespaces() {
+        const response = await this.client.get('/api/v5/user/namespaces');
+        return response.data;
+    }
 }
 //# sourceMappingURL=AtomGitService.js.map
