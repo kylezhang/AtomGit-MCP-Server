@@ -1,0 +1,1 @@
+{"version":3,"file":"BranchTools.d.ts","sourceRoot":"","sources":["../../src/tools/BranchTools.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,oCAAoC,CAAC;AAC1D,OAAO,EAAE,cAAc,EAAE,MAAM,+BAA+B,CAAC;AAE/D,qBAAa,WAAW;IACV,OAAO,CAAC,cAAc;gBAAd,cAAc,EAAE,cAAc;IAElD,QAAQ,IAAI,IAAI,EAAE;IAuBZ,QAAQ,CAAC,IAAI,EAAE,MAAM,EAAE,IAAI,EAAE,GAAG,GAAG,OAAO,CAAC,GAAG,CAAC;CAStD"}

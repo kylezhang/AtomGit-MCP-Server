@@ -172,3 +172,100 @@ export interface AtomGitConfig {
   apiBaseUrl: string;
   token?: string;
 }
+
+export interface Commit {
+  sha: string;
+  url: string;
+  html_url: string;
+  comments_url: string;
+  commit: {
+    url: string;
+    author: {
+      name: string;
+      email: string;
+      date: string;
+    };
+    committer: {
+      name: string;
+      email: string;
+      date: string;
+    };
+    message: string;
+    tree: {
+      sha: string;
+      url: string;
+    };
+  };
+  author: AtomGitUser;
+  committer: AtomGitUser;
+  parents: Array<{
+    sha: string;
+    url: string;
+  }>;
+  stats?: {
+    additions: number;
+    deletions: number;
+    total: number;
+  };
+  files?: Array<{
+    filename: string;
+    additions: number;
+    deletions: number;
+    changes: number;
+    patch: string;
+    blob_url: string;
+    raw_url: string;
+    contents_url: string;
+  }>;
+}
+
+export interface Tag {
+  name: string;
+  zipball_url: string;
+  tarball_url: string;
+  commit: {
+    sha: string;
+    url: string;
+  };
+  node_id: string;
+}
+
+export interface CreateReleaseRequest {
+  tag_name: string;
+  target_commitish?: string;
+  name: string;
+  body?: string;
+  draft?: boolean;
+  prerelease?: boolean;
+}
+
+export interface Release {
+  id: number;
+  tag_name: string;
+  target_commitish: string;
+  name: string;
+  body: string;
+  draft: boolean;
+  prerelease: boolean;
+  created_at: string;
+  published_at: string;
+  author: AtomGitUser;
+  assets: Array<{
+    url: string;
+    browser_download_url: string;
+    id: number;
+    name: string;
+    label?: string;
+    state: string;
+    content_type: string;
+    size: number;
+    download_count: number;
+    created_at: string;
+    updated_at: string;
+  }>;
+  tarball_url: string;
+  zipball_url: string;
+  html_url: string;
+  url: string;
+  upload_url: string;
+}

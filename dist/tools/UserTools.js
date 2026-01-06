@@ -10,7 +10,7 @@ export class UserTools {
                 description: 'Get the current authenticated user information',
                 inputSchema: {
                     type: 'object',
-                    properties: {}
+                    properties: {},
                 }
             },
             {
@@ -21,7 +21,7 @@ export class UserTools {
                     properties: {
                         username: {
                             type: 'string',
-                            description: 'The username to fetch information for'
+                            description: 'The username of the user'
                         }
                     },
                     required: ['username']
@@ -35,7 +35,7 @@ export class UserTools {
                     properties: {
                         username: {
                             type: 'string',
-                            description: 'The username to fetch repositories for'
+                            description: 'The username of the user'
                         }
                     },
                     required: ['username']
@@ -46,18 +46,18 @@ export class UserTools {
                 description: 'Get all repositories for the current authenticated user',
                 inputSchema: {
                     type: 'object',
-                    properties: {}
+                    properties: {},
                 }
             },
             {
                 name: 'get_user_starred_repos',
-                description: 'Get all repositories starred by a specific user',
+                description: 'Get all starred repositories for a specific user',
                 inputSchema: {
                     type: 'object',
                     properties: {
                         username: {
                             type: 'string',
-                            description: 'The username to fetch starred repositories for'
+                            description: 'The username of the user'
                         }
                     },
                     required: ['username']
@@ -65,10 +65,34 @@ export class UserTools {
             },
             {
                 name: 'get_current_user_starred_repos',
-                description: 'Get all repositories starred by the current authenticated user',
+                description: 'Get all starred repositories for the current authenticated user',
                 inputSchema: {
                     type: 'object',
-                    properties: {}
+                    properties: {},
+                }
+            },
+            {
+                name: 'search_users',
+                description: 'Search for users by query',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        query: {
+                            type: 'string',
+                            description: 'Search query'
+                        },
+                        page: {
+                            type: 'number',
+                            description: 'Page number for pagination',
+                            default: 1
+                        },
+                        perPage: {
+                            type: 'number',
+                            description: 'Number of results per page',
+                            default: 30
+                        }
+                    },
+                    required: ['query']
                 }
             }
         ];
@@ -87,6 +111,8 @@ export class UserTools {
                 return await this.atomGitService.getUserStarredRepos(args.username);
             case 'get_current_user_starred_repos':
                 return await this.atomGitService.getCurrentUserStarredRepos();
+            case 'search_users':
+                return await this.atomGitService.searchUsers(args.query, args.page, args.perPage);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

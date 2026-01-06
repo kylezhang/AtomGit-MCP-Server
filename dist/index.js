@@ -1,88 +1,115 @@
 #!/usr/bin/env node
-import { config } from 'dotenv';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema, } from '@modelcontextprotocol/sdk/types.js';
+import { config } from 'dotenv';
 import { AtomGitService } from './services/AtomGitService.js';
+import { BranchTools } from './tools/BranchTools.js';
+import { IssuesTools } from './tools/IssuesTools.js';
+import { PullRequestTools } from './tools/PullRequestTools.js';
 import { UserTools } from './tools/UserTools.js';
 import { RepositoryTools } from './tools/RepositoryTools.js';
 import { RepositoryManagementTools } from './tools/RepositoryManagementTools.js';
+import { CommitTools } from './tools/CommitTools.js';
+import { TagTools } from './tools/TagTools.js';
 // Load environment variables
 config();
+const ATOMGIT_API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
+const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
 class AtomGitMCPServer {
     server;
     atomGitService;
+    branchTools;
+    issuesTools;
+    pullRequestTools;
     userTools;
     repositoryTools;
     repositoryManagementTools;
+    commitTools;
+    tagTools;
     constructor() {
-        // Initialize AtomGit service with configuration
-        const apiBaseUrl = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
-        const token = process.env.ATOMGIT_TOKEN;
-        this.atomGitService = new AtomGitService({
-            apiBaseUrl,
-            token
-        });
-        this.userTools = new UserTools(this.atomGitService);
-        this.repositoryTools = new RepositoryTools(this.atomGitService);
-        this.repositoryManagementTools = new RepositoryManagementTools(this.atomGitService);
         this.server = new Server({
-            name: 'atomgit-mcp',
+            name: 'atomgit-mcp-server',
             version: '1.0.0',
         }, {
             capabilities: {
                 tools: {},
             },
         });
-        this.setupToolHandlers();
+        const config = {
+            apiBaseUrl: ATOMGIT_API_BASE_URL,
+        };
+        if (ATOMGIT_TOKEN) {
+            config.token = ATOMGIT_TOKEN;
+        }
+        this.atomGitService = new AtomGitService(config);
+        this.branchTools = new BranchTools(this.atomGitService);
+        this.issuesTools = new IssuesTools(this.atomGitService);
+        this.pullRequestTools = new PullRequestTools(this.atomGitService);
+        this.userTools = new UserTools(this.atomGitService);
+        this.repositoryTools = new RepositoryTools(this.atomGitService);
+        this.repositoryManagementTools = new RepositoryManagementTools(this.atomGitService);
+        this.commitTools = new CommitTools(this.atomGitService);
+        this.tagTools = new TagTools(this.atomGitService);
+        this.setupHandlers();
     }
-    setupToolHandlers() {
-        // List available tools
+    setupHandlers() {
         this.server.setRequestHandler(ListToolsRequestSchema, async () => {
-            const userTools = this.userTools.getTools();
-            const repositoryTools = this.repositoryTools.getTools();
-            const repositoryManagementTools = this.repositoryManagementTools.getTools();
-            return {
-                tools: [...userTools, ...repositoryTools, ...repositoryManagementTools],
-            };
+            const allTools = [
+                ...this.branchTools.getTools(),
+                ...this.issuesTools.getTools(),
+                ...this.pullRequestTools.getTools(),
+                ...this.userTools.getTools(),
+                ...this.repositoryTools.getTools(),
+                ...this.repositoryManagementTools.getTools(),
+                ...this.commitTools.getTools(),
+                ...this.tagTools.getTools(),
+            ];
+            return { tools: allTools };
         });
-        // Handle tool calls
         this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
             const { name, arguments: args } = request.params;
             try {
-                let result;
-                const userToolNames = this.userTools.getTools().map(tool => tool.name);
-                const repositoryToolNames = this.repositoryTools.getTools().map(tool => tool.name);
-                const repositoryManagementToolNames = this.repositoryManagementTools.getTools().map(tool => tool.name);
-                // Route to appropriate tool handler
-                if (userToolNames.includes(name)) {
-                    result = await this.userTools.callTool(name, args);
+                // Try to handle with each tool class
+                const toolClasses = [
+                    this.branchTools,
+                    this.issuesTools,
+                    this.pullRequestTools,
+                    this.userTools,
+                    this.repositoryTools,
+                    this.repositoryManagementTools,
+                    this.commitTools,
+                    this.tagTools,
+                ];
+                for (const toolClass of toolClasses) {
+                    try {
+                        const result = await toolClass.callTool(name, args);
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify(result, null, 2),
+                                },
+                            ],
+                        };
+                    }
+                    catch (error) {
+                        if (error.message === `Unknown tool: ${name}`) {
+                            continue; // Try next tool class
+                        }
+                        throw error; // Re-throw other errors
+                    }
                 }
-                else if (repositoryToolNames.includes(name)) {
-                    result = await this.repositoryTools.callTool(name, args);
-                }
-                else if (repositoryManagementToolNames.includes(name)) {
-                    result = await this.repositoryManagementTools.callTool(name, args);
-                }
-                else {
-                    throw new Error(`Unknown tool: ${name}`);
-                }
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: JSON.stringify(result, null, 2),
-                        },
-                    ],
-                };
+                throw new Error(`Unknown tool: ${name}`);
             }
             catch (error) {
-                const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
                 return {
                     content: [
                         {
                             type: 'text',
-                            text: `Error: ${errorMessage}`,
+                            text: JSON.stringify({
+                                error: error.message,
+                            }),
                         },
                     ],
                     isError: true,
@@ -96,10 +123,9 @@ class AtomGitMCPServer {
         console.error('AtomGit MCP server running on stdio');
     }
 }
-// Start the server
 const server = new AtomGitMCPServer();
 server.run().catch((error) => {
-    console.error('Failed to start server:', error);
+    console.error('Server error:', error);
     process.exit(1);
 });
 //# sourceMappingURL=index.js.map

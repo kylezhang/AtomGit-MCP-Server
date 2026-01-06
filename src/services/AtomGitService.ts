@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { 
   AtomGitUser, 
   AtomGitRepository, 
@@ -8,15 +8,17 @@ import {
   Branch,
   Issue,
   PullRequest,
-  CreateIssueRequest
+  CreateIssueRequest,
+  Commit,
+  Tag,
+  CreateReleaseRequest,
+  Release
 } from '../types/index.js';
 
 export class AtomGitService {
   private client: AxiosInstance;
-  private config: AtomGitConfig;
 
   constructor(config: AtomGitConfig) {
-    this.config = config;
     this.client = axios.create({
       baseURL: config.apiBaseUrl,
       headers: {
@@ -137,6 +139,61 @@ export class AtomGitService {
 
   async getRepositoryPull(owner: string, repo: string, pullNumber: number): Promise<PullRequest> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`);
+    return response.data;
+  }
+
+  // Commit APIs
+  async getRepositoryCommits(owner: string, repo: string, sha?: string, page = 1, perPage = 30): Promise<Commit[]> {
+    const url = sha ? `/api/v5/repos/${owner}/${repo}/commits` : `/api/v5/repos/${owner}/${repo}/commits`;
+    const response = await this.client.get(url, {
+      params: {
+        sha,
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  async getRepositoryCommit(owner: string, repo: string, sha: string): Promise<Commit> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}`);
+    return response.data;
+  }
+
+  // Tag APIs
+  async getRepositoryTags(owner: string, repo: string, page = 1, perPage = 30): Promise<Tag[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/tags`, {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  // Release APIs
+  async createRelease(owner: string, repo: string, releaseData: CreateReleaseRequest): Promise<Release> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/releases`, releaseData);
+    return response.data;
+  }
+
+  async getRepositoryReleases(owner: string, repo: string, page = 1, perPage = 30): Promise<Release[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases`, {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  async getRepositoryRelease(owner: string, repo: string, tag: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
+    return response.data;
+  }
+
+  async getLatestRelease(owner: string, repo: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`);
     return response.data;
   }
 }
