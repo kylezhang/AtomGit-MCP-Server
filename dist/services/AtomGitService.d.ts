@@ -32,6 +32,11 @@ export declare class AtomGitService {
     getRepositoryIssueCommentReactions(owner: string, repo: string, commentId: number): Promise<any[]>;
     getRepositoryIssueModifyHistory(owner: string, repo: string, issueNumber: number): Promise<any[]>;
     getRepositoryIssueCommentModifyHistory(owner: string, repo: string, commentId: number): Promise<any[]>;
+    getRepositoryBranch(owner: string, repo: string, branch: string): Promise<Branch>;
+    createBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any>;
+    deleteBranchProtectionRule(owner: string, repo: string, wildcard: string): Promise<void>;
+    getBranchProtectionRules(owner: string, repo: string): Promise<any[]>;
+    updateBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any>;
     getRepositoryPulls(owner: string, repo: string, state?: 'open' | 'closed' | 'all', page?: number, perPage?: number): Promise<PullRequest[]>;
     getRepositoryPull(owner: string, repo: string, pullNumber: number): Promise<PullRequest>;
     getRepositoryCommits(owner: string, repo: string, sha?: string, page?: number, perPage?: number): Promise<Commit[]>;

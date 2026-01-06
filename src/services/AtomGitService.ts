@@ -232,6 +232,32 @@ export class AtomGitService {
     return response.data;
   }
 
+  // Priority 1: Branch Advanced Management
+  async getRepositoryBranch(owner: string, repo: string, branch: string): Promise<Branch> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+    return response.data;
+  }
+
+  async createBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/setting/new`, ruleData);
+    return response.data;
+  }
+
+  async deleteBranchProtectionRule(owner: string, repo: string, wildcard: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`);
+    return response.data;
+  }
+
+  async getBranchProtectionRules(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protect_branches`);
+    return response.data;
+  }
+
+  async updateBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/${ruleData.wildcard}/setting`, ruleData);
+    return response.data;
+  }
+
   async getRepositoryPulls(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open', page = 1, perPage = 30): Promise<PullRequest[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls`, {
       params: {

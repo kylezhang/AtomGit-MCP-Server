@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 71 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 78 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
 
 ### ✨ 主要特性
 
@@ -74,11 +74,18 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `get_current_user_starred_repos` | 获取当前用户收藏 | ✅ 已测试 | 🔑 需要认证 |
 | `search_users` | 搜索用户 | ✅ 已测试 | 🔑 需要认证 |
 
-### 🌿 分支管理 (1 个工具)
+### 🌿 分支管理 (8 个工具)
 
 | 工具名称 | 功能描述 | 测试状态 | 需要认证 |
 |----------|----------|----------|----------|
 | `get_repository_branches` | 获取仓库所有分支 | ✅ 已测试 | 🔑 需要认证 |
+| `create_repository_branch` | 创建新分支 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_branch` | 删除分支 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_branch` | 获取特定分支详情 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_branch_protection_rule` | 创建分支保护规则 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_branch_protection_rule` | 删除分支保护规则 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_branch_protection_rules` | 获取分支保护规则列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_branch_protection_rule` | 更新分支保护规则 | ⏳ 待测试 | 🔑 需要认证 |
 
 ### 📝 提交管理 (2 个工具)
 

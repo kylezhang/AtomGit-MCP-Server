@@ -180,6 +180,27 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/modify_history`);
         return response.data;
     }
+    // Priority 1: Branch Advanced Management
+    async getRepositoryBranch(owner, repo, branch) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+        return response.data;
+    }
+    async createBranchProtectionRule(owner, repo, ruleData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/setting/new`, ruleData);
+        return response.data;
+    }
+    async deleteBranchProtectionRule(owner, repo, wildcard) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`);
+        return response.data;
+    }
+    async getBranchProtectionRules(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protect_branches`);
+        return response.data;
+    }
+    async updateBranchProtectionRule(owner, repo, ruleData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/${ruleData.wildcard}/setting`, ruleData);
+        return response.data;
+    }
     async getRepositoryPulls(owner, repo, state = 'open', page = 1, perPage = 30) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls`, {
             params: {
