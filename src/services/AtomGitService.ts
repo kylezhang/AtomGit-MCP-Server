@@ -152,6 +152,86 @@ export class AtomGitService {
     return response.data;
   }
 
+  // Priority 1: Issues Full Management
+  async updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: any): Promise<Issue> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}`, updateData);
+    return response.data;
+  }
+
+  async getRepositoryIssueComments(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/comments`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async createRepositoryIssueComment(owner: string, repo: string, issueNumber: number, commentData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/comments`, commentData);
+    return response.data;
+  }
+
+  async getRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`);
+    return response.data;
+  }
+
+  async updateRepositoryIssueComment(owner: string, repo: string, commentId: number, updateData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`, updateData);
+    return response.data;
+  }
+
+  async deleteRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`);
+    return response.data;
+  }
+
+  async createRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
+    return response.data;
+  }
+
+  async replaceRepositoryIssueLabels(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
+    return response.data;
+  }
+
+  async deleteRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, name: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}`);
+    return response.data;
+  }
+
+  async getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getRepositoryIssueRelatedBranches(owner: string, repo: string, issueNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/related_branches`);
+    return response.data;
+  }
+
+  async getRepositoryIssueReactions(owner: string, repo: string, issueNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/user_reactions`);
+    return response.data;
+  }
+
+  async getRepositoryIssueCommentReactions(owner: string, repo: string, commentId: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/user_reactions`);
+    return response.data;
+  }
+
+  async getRepositoryIssueModifyHistory(owner: string, repo: string, issueNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/modify_history`);
+    return response.data;
+  }
+
+  async getRepositoryIssueCommentModifyHistory(owner: string, repo: string, commentId: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/modify_history`);
+    return response.data;
+  }
+
   async getRepositoryPulls(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open', page = 1, perPage = 30): Promise<PullRequest[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls`, {
       params: {

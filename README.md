@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 53 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 71 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
 
 ### ✨ 主要特性
 
@@ -93,13 +93,28 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 |----------|----------|----------|----------|
 | `get_repository_tags` | 获取仓库标签列表 | ✅ 已测试 | 🔑 需要认证 |
 
-### 🐛 问题管理 (3 个工具)
+### 🐛 问题管理 (19 个工具)
 
 | 工具名称 | 功能描述 | 测试状态 | 需要认证 |
 |----------|----------|----------|----------|
 | `get_repository_issues` | 获取仓库问题列表 | ✅ 已测试 | 🔑 需要认证 |
-| `get_issue` | 获取特定问题详情 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_issue` | 获取特定问题详情 | ✅ 已测试 | 🔑 需要认证 |
 | `create_repository_issue` | 创建新问题 | ✅ 已测试 | 🔑 需要认证 |
+| `update_repository_issue` | 更新问题信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_comments` | 获取问题评论列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_repository_issue_comment` | 创建问题评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_comment` | 获取特定问题评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_issue_comment` | 更新问题评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_issue_comment` | 删除问题评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_repository_issue_label` | 为问题添加标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `replace_repository_issue_labels` | 替换问题所有标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_issue_label` | 删除问题的标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_operate_logs` | 获取问题操作日志 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_related_branches` | 获取问题关联分支 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_reactions` | 获取问题的表态列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_comment_reactions` | 获取问题评论的表态列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_modify_history` | 获取问题的修改历史 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_issue_comment_modify_history` | 获取问题评论的修改历史 | ⏳ 待测试 | 🔑 需要认证 |
 
 ### 🔀 Pull Requests 管理 (25 个工具)
 
