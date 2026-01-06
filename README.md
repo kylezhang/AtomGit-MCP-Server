@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 45 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 53 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
 
 ### ✨ 主要特性
 
@@ -45,7 +45,7 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 
 根据 [AtomGit 官方 API](https://docs.atomgit.com/docs/apis/)，已实现以下工具：
 
-### 📂 仓库管理 (4 个工具)
+### 📂 仓库管理 (12 个工具)
 
 | 工具名称 | 功能描述 | 测试状态 | 需要认证 |
 |----------|----------|----------|----------|
@@ -53,6 +53,14 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `get_repository_tree` | 获取仓库目录树 | ✅ 已测试 | 🔑 需要认证 |
 | `search_repositories` | 搜索仓库 | ✅ 已测试 | 🔑 需要认证 |
 | `list_repository_forks` | 列出仓库分叉 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_content` | 获取仓库路径内容 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_repository_file` | 创建仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_file` | 更新仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_file` | 删除仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_file_list` | 获取仓库文件列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_file_blob` | 获取文件Blob内容 | ⏳ 待测试 | 🔑 需要认证 |
+| `upload_repository_image` | 上传仓库图片 | ⏳ 待测试 | 🔑 需要认证 |
+| `upload_repository_file` | 上传仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
 
 ### 👤 用户管理 (7 个工具)
 

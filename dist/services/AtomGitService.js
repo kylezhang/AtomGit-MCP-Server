@@ -345,6 +345,56 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_approval_reviewers`);
         return response.data;
     }
+    // Priority 1: Repository File Content Management
+    async getRepositoryContent(owner, repo, path = '', ref) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contents/${path}`, {
+            params: ref ? { ref } : {}
+        });
+        return response.data;
+    }
+    async createRepositoryFile(owner, repo, fileData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+        return response.data;
+    }
+    async updateRepositoryFile(owner, repo, fileData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+        return response.data;
+    }
+    async deleteRepositoryFile(owner, repo, fileData) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, {
+            data: fileData
+        });
+        return response.data;
+    }
+    async getRepositoryFileList(owner, repo, path = '', ref, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/file/list`, {
+            params: {
+                path,
+                ref,
+                page,
+                per_page: perPage
+            }
+        });
+        return response.data;
+    }
+    async getRepositoryFileBlob(owner, repo, sha) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/git/blobs/${sha}`);
+        return response.data;
+    }
+    async uploadRepositoryImage(owner, repo, fileData, filename) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/img/upload`, {
+            file: fileData,
+            filename
+        });
+        return response.data;
+    }
+    async uploadRepositoryFile(owner, repo, fileData, filename) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/file/upload`, {
+            file: fileData,
+            filename
+        });
+        return response.data;
+    }
     // Priority 1: User Management - Subscriptions
     async getUserSubscriptions() {
         const response = await this.client.get('/api/v5/user/subscriptions');

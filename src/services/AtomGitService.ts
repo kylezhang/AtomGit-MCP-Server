@@ -425,6 +425,64 @@ export class AtomGitService {
     return response.data;
   }
 
+  // Priority 1: Repository File Content Management
+  async getRepositoryContent(owner: string, repo: string, path: string = '', ref?: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contents/${path}`, {
+      params: ref ? { ref } : {}
+    });
+    return response.data;
+  }
+
+  async createRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+    return response.data;
+  }
+
+  async updateRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+    return response.data;
+  }
+
+  async deleteRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, {
+      data: fileData
+    });
+    return response.data;
+  }
+
+  async getRepositoryFileList(owner: string, repo: string, path: string = '', ref?: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/file/list`, {
+      params: {
+        path,
+        ref,
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  async getRepositoryFileBlob(owner: string, repo: string, sha: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/git/blobs/${sha}`);
+    return response.data;
+  }
+
+  async uploadRepositoryImage(owner: string, repo: string, fileData: string, filename: string): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/img/upload`, {
+      file: fileData,
+      filename
+    });
+    return response.data;
+  }
+
+  async uploadRepositoryFile(owner: string, repo: string, fileData: string, filename: string): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/file/upload`, {
+      file: fileData,
+      filename
+    });
+    return response.data;
+  }
+
   // Priority 1: User Management - Subscriptions
   async getUserSubscriptions(): Promise<AtomGitRepository[]> {
     const response = await this.client.get('/api/v5/user/subscriptions');

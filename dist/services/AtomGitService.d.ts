@@ -59,6 +59,14 @@ export declare class AtomGitService {
     assignRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any>;
     removeRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any>;
     getRepositoryPullApprovalReviewerOptions(owner: string, repo: string, pullNumber: number): Promise<any[]>;
+    getRepositoryContent(owner: string, repo: string, path?: string, ref?: string): Promise<any>;
+    createRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
+    updateRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
+    deleteRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
+    getRepositoryFileList(owner: string, repo: string, path?: string, ref?: string, page?: number, perPage?: number): Promise<any[]>;
+    getRepositoryFileBlob(owner: string, repo: string, sha: string): Promise<any>;
+    uploadRepositoryImage(owner: string, repo: string, fileData: string, filename: string): Promise<any>;
+    uploadRepositoryFile(owner: string, repo: string, fileData: string, filename: string): Promise<any>;
     getUserSubscriptions(): Promise<AtomGitRepository[]>;
     getUserNamespaces(): Promise<string[]>;
 }

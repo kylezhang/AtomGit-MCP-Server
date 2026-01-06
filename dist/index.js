@@ -9,6 +9,7 @@ import { IssuesTools } from './tools/IssuesTools.js';
 import { PullRequestTools } from './tools/PullRequestTools.js';
 import { UserTools } from './tools/UserTools.js';
 import { RepositoryTools } from './tools/RepositoryTools.js';
+import { RepositoryContentTools } from './tools/RepositoryContentTools.js';
 import { RepositoryManagementTools } from './tools/RepositoryManagementTools.js';
 import { CommitTools } from './tools/CommitTools.js';
 import { TagTools } from './tools/TagTools.js';
@@ -24,6 +25,7 @@ class AtomGitMCPServer {
     pullRequestTools;
     userTools;
     repositoryTools;
+    repositoryContentTools;
     repositoryManagementTools;
     commitTools;
     tagTools;
@@ -48,6 +50,7 @@ class AtomGitMCPServer {
         this.pullRequestTools = new PullRequestTools(this.atomGitService);
         this.userTools = new UserTools(this.atomGitService);
         this.repositoryTools = new RepositoryTools(this.atomGitService);
+        this.repositoryContentTools = new RepositoryContentTools(this.atomGitService);
         this.repositoryManagementTools = new RepositoryManagementTools(this.atomGitService);
         this.commitTools = new CommitTools(this.atomGitService);
         this.tagTools = new TagTools(this.atomGitService);
@@ -61,6 +64,7 @@ class AtomGitMCPServer {
                 ...this.pullRequestTools.getTools(),
                 ...this.userTools.getTools(),
                 ...this.repositoryTools.getTools(),
+                ...this.repositoryContentTools.getTools(),
                 ...this.repositoryManagementTools.getTools(),
                 ...this.commitTools.getTools(),
                 ...this.tagTools.getTools(),
@@ -77,6 +81,7 @@ class AtomGitMCPServer {
                     this.pullRequestTools,
                     this.userTools,
                     this.repositoryTools,
+                    this.repositoryContentTools,
                     this.repositoryManagementTools,
                     this.commitTools,
                     this.tagTools,
