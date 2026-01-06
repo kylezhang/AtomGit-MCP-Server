@@ -168,6 +168,36 @@ export interface CreateIssueRequest {
   labels?: string[];
 }
 
+export interface CreatePullRequestRequest {
+  title: string;
+  head: string;
+  base: string;
+  body?: string;
+  draft?: boolean;
+  maintainer_can_modify?: boolean;
+}
+
+export interface MergePullRequestRequest {
+  commit_title?: string;
+  commit_message?: string;
+  merge_method?: 'merge' | 'squash' | 'rebase';
+}
+
+export interface UpdatePullRequestRequest {
+  title?: string;
+  body?: string;
+  state?: 'open' | 'closed';
+  base?: string;
+  maintainer_can_modify?: boolean;
+}
+
+export interface CreatePullRequestCommentRequest {
+  body: string;
+  commit_id?: string;
+  path?: string;
+  position?: number;
+}
+
 export interface AtomGitConfig {
   apiBaseUrl: string;
   token?: string;

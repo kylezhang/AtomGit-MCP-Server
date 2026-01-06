@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 20 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 45 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
 
 ### ✨ 主要特性
 
@@ -93,12 +93,42 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `get_issue` | 获取特定问题详情 | ✅ 已测试 | 🔑 需要认证 |
 | `create_repository_issue` | 创建新问题 | ✅ 已测试 | 🔑 需要认证 |
 
-### 🔀 Pull Requests 管理 (2 个工具)
+### 🔀 Pull Requests 管理 (25 个工具)
 
 | 工具名称 | 功能描述 | 测试状态 | 需要认证 |
 |----------|----------|----------|----------|
-| `get_repository_pull_requests` | 获取仓库 PR 列表 | ✅ 已测试 | 🔑 需要认证 |
-| `get_pull_request` | 获取特定 PR 详情 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_pulls` | 获取仓库 PR 列表 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_pull` | 获取特定 PR 详情 | ✅ 已测试 | 🔑 需要认证 |
+| `create_repository_pull` | 创建新的 PR | ⏳ 待测试 | 🔑 需要认证 |
+| `merge_repository_pull` | 合并 PR | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_merge_status` | 检查 PR 是否可合并 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_issues` | 获取 PR 关联的 Issues | ⏳ 待测试 | 🔑 需要认证 |
+| `create_repository_pull_comment` | 创建 PR 评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_comments` | 获取 PR 所有评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_files` | 获取 PR 变更的文件 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_pull` | 更新 PR 信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_commits` | 获取 PR 的提交 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_repository_pull_label` | 为 PR 添加标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_labels` | 获取 PR 的标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `replace_repository_pull_labels` | 替换 PR 所有标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_pull_label` | 删除 PR 的标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `process_repository_pull_test` | 处理 PR 测试 | ⏳ 待测试 | 🔑 需要认证 |
+| `process_repository_pull_review` | 处理 PR 审查 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_operate_logs` | 获取 PR 操作日志 | ⏳ 待测试 | 🔑 需要认证 |
+| `reset_repository_pull_testers` | 重置 PR 测试者状态 | ⏳ 待测试 | 🔑 需要认证 |
+| `assign_repository_pull_testers` | 指派用户测试 PR | ⏳ 待测试 | 🔑 需要认证 |
+| `remove_repository_pull_testers` | 移除 PR 测试者 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_tester_options` | 获取可选的 PR 测试者 | ⏳ 待测试 | 🔑 需要认证 |
+| `reset_repository_pull_assignees` | 重置 PR 审查者状态 | ⏳ 待测试 | 🔑 需要认证 |
+| `assign_repository_pull_assignees` | 指派用户审查 PR | ⏳ 待测试 | 🔑 需要认证 |
+| `remove_repository_pull_assignees` | 移除 PR 审查者 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_files_json` | 获取 PR 文件变更信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_file_content` | 获取 PR 中文件内容 | ⏳ 待测试 | 🔑 需要认证 |
+| `link_repository_pull_issues` | 将 Issues 关联到 PR | ⏳ 待测试 | 🔑 需要认证 |
+| `unlink_repository_pull_issues` | 取消 Issues 与 PR 的关联 | ⏳ 待测试 | 🔑 需要认证 |
+| `assign_repository_pull_approval_reviewers` | 指派用户审批 PR | ⏳ 待测试 | 🔑 需要认证 |
+| `remove_repository_pull_approval_reviewers` | 移除 PR 审批者 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_approval_reviewer_options` | 获取可选的 PR 审批者 | ⏳ 待测试 | 🔑 需要认证 |
 
 
 ## 🚀 快速开发开始

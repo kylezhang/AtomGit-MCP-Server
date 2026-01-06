@@ -1,4 +1,4 @@
-import { AtomGitUser, AtomGitRepository, AtomGitTree, AtomGitConfig, CreateRepositoryRequest, Branch, Issue, PullRequest, CreateIssueRequest, Commit, Tag, CreateReleaseRequest, Release } from '../types/index.js';
+import { AtomGitUser, AtomGitRepository, AtomGitTree, AtomGitConfig, CreateRepositoryRequest, Branch, Issue, PullRequest, CreateIssueRequest, CreatePullRequestRequest, MergePullRequestRequest, UpdatePullRequestRequest, CreatePullRequestCommentRequest, Commit, Tag, CreateReleaseRequest, Release } from '../types/index.js';
 export declare class AtomGitService {
     private client;
     constructor(config: AtomGitConfig);
@@ -29,7 +29,36 @@ export declare class AtomGitService {
     getRepositoryForks(owner: string, repo: string, page?: number, perPage?: number): Promise<AtomGitRepository[]>;
     createRepositoryBranch(owner: string, repo: string, branch: string, sha?: string): Promise<Branch>;
     deleteRepositoryBranch(owner: string, repo: string, branch: string): Promise<void>;
-    createRepositoryPull(owner: string, repo: string, pullData: any): Promise<PullRequest>;
+    createRepositoryPull(owner: string, repo: string, pullData: CreatePullRequestRequest): Promise<PullRequest>;
+    mergeRepositoryPull(owner: string, repo: string, pullNumber: number, mergeData: MergePullRequestRequest): Promise<any>;
+    getRepositoryPullMergeStatus(owner: string, repo: string, pullNumber: number): Promise<any>;
+    getRepositoryPullIssues(owner: string, repo: string, pullNumber: number): Promise<any[]>;
+    createRepositoryPullComment(owner: string, repo: string, pullNumber: number, commentData: CreatePullRequestCommentRequest): Promise<any>;
+    getRepositoryPullComments(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
+    getRepositoryPullFiles(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
+    updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: UpdatePullRequestRequest): Promise<PullRequest>;
+    getRepositoryPullCommits(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
+    createRepositoryPullLabel(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any[]>;
+    getRepositoryPullLabels(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
+    replaceRepositoryPullLabels(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any[]>;
+    deleteRepositoryPullLabel(owner: string, repo: string, pullNumber: number, name: string): Promise<void>;
+    processRepositoryPullTest(owner: string, repo: string, pullNumber: number, testData: any): Promise<any>;
+    processRepositoryPullReview(owner: string, repo: string, pullNumber: number, reviewData: any): Promise<any>;
+    getRepositoryPullOperateLogs(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
+    resetRepositoryPullTesters(owner: string, repo: string, pullNumber: number): Promise<any>;
+    assignRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any>;
+    removeRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any>;
+    getRepositoryPullTesterOptions(owner: string, repo: string, pullNumber: number): Promise<any[]>;
+    resetRepositoryPullAssignees(owner: string, repo: string, pullNumber: number): Promise<any>;
+    assignRepositoryPullAssignees(owner: string, repo: string, pullNumber: number, assignees: string[]): Promise<any>;
+    removeRepositoryPullAssignees(owner: string, repo: string, pullNumber: number, assignees: string[]): Promise<any>;
+    getRepositoryPullFilesJson(owner: string, repo: string, pullNumber: number): Promise<any>;
+    getRepositoryPullFileContent(owner: string, repo: string, head: string, sha: string, name: string): Promise<any>;
+    linkRepositoryPullIssues(owner: string, repo: string, pullNumber: number, issues: number[]): Promise<any>;
+    unlinkRepositoryPullIssues(owner: string, repo: string, pullNumber: number, issues: number[]): Promise<any>;
+    assignRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any>;
+    removeRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any>;
+    getRepositoryPullApprovalReviewerOptions(owner: string, repo: string, pullNumber: number): Promise<any[]>;
     getUserSubscriptions(): Promise<AtomGitRepository[]>;
     getUserNamespaces(): Promise<string[]>;
 }

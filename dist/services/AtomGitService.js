@@ -201,6 +201,150 @@ export class AtomGitService {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls`, pullData);
         return response.data;
     }
+    // Priority 1: Pull Request Management - Merge
+    async mergeRepositoryPull(owner, repo, pullNumber, mergeData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`, mergeData);
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Merge Status
+    async getRepositoryPullMergeStatus(owner, repo, pullNumber) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`);
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Issues
+    async getRepositoryPullIssues(owner, repo, pullNumber) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`);
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Comments
+    async createRepositoryPullComment(owner, repo, pullNumber, commentData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`, commentData);
+        return response.data;
+    }
+    async getRepositoryPullComments(owner, repo, pullNumber, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`, {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Files
+    async getRepositoryPullFiles(owner, repo, pullNumber, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files`, {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Update
+    async updateRepositoryPull(owner, repo, pullNumber, updateData) {
+        const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`, updateData);
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Commits
+    async getRepositoryPullCommits(owner, repo, pullNumber, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/commits`, {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Labels
+    async createRepositoryPullLabel(owner, repo, pullNumber, labels) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
+        return response.data;
+    }
+    async getRepositoryPullLabels(owner, repo, pullNumber, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    }
+    async replaceRepositoryPullLabels(owner, repo, pullNumber, labels) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
+        return response.data;
+    }
+    async deleteRepositoryPullLabel(owner, repo, pullNumber, name) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels/${name}`);
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Testing & Review
+    async processRepositoryPullTest(owner, repo, pullNumber, testData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test`, testData);
+        return response.data;
+    }
+    async processRepositoryPullReview(owner, repo, pullNumber, reviewData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/review`, reviewData);
+        return response.data;
+    }
+    async getRepositoryPullOperateLogs(owner, repo, pullNumber, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/operate_logs`, {
+            params: { page, per_page: perPage }
+        });
+        return response.data;
+    }
+    async resetRepositoryPullTesters(owner, repo, pullNumber) {
+        const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, {});
+        return response.data;
+    }
+    async assignRepositoryPullTesters(owner, repo, pullNumber, testers) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, { testers });
+        return response.data;
+    }
+    async removeRepositoryPullTesters(owner, repo, pullNumber, testers) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, {
+            data: { testers }
+        });
+        return response.data;
+    }
+    async getRepositoryPullTesterOptions(owner, repo, pullNumber) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_approval_testers`);
+        return response.data;
+    }
+    async resetRepositoryPullAssignees(owner, repo, pullNumber) {
+        const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, {});
+        return response.data;
+    }
+    async assignRepositoryPullAssignees(owner, repo, pullNumber, assignees) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, { assignees });
+        return response.data;
+    }
+    async removeRepositoryPullAssignees(owner, repo, pullNumber, assignees) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, {
+            data: { assignees }
+        });
+        return response.data;
+    }
+    // Priority 1: Pull Request Management - Additional Features
+    async getRepositoryPullFilesJson(owner, repo, pullNumber) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files_json`);
+        return response.data;
+    }
+    async getRepositoryPullFileContent(owner, repo, head, sha, name) {
+        const response = await this.client.get(`/${owner}/${repo}/raw/${head}/${sha}/${name}`);
+        return response.data;
+    }
+    async linkRepositoryPullIssues(owner, repo, pullNumber, issues) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/linked_issues`, { issues });
+        return response.data;
+    }
+    async unlinkRepositoryPullIssues(owner, repo, pullNumber, issues) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`, {
+            data: { issues }
+        });
+        return response.data;
+    }
+    async assignRepositoryPullApprovalReviewers(owner, repo, pullNumber, reviewers) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/approval_reviewers`, { reviewers });
+        return response.data;
+    }
+    async removeRepositoryPullApprovalReviewers(owner, repo, pullNumber, reviewers) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/approval_reviewers`, {
+            data: { reviewers }
+        });
+        return response.data;
+    }
+    async getRepositoryPullApprovalReviewerOptions(owner, repo, pullNumber) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_approval_reviewers`);
+        return response.data;
+    }
     // Priority 1: User Management - Subscriptions
     async getUserSubscriptions() {
         const response = await this.client.get('/api/v5/user/subscriptions');

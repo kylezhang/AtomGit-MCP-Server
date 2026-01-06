@@ -1,14 +1,18 @@
 import axios, { AxiosInstance } from 'axios';
-import { 
-  AtomGitUser, 
-  AtomGitRepository, 
-  AtomGitTree, 
-  AtomGitConfig, 
+import {
+  AtomGitUser,
+  AtomGitRepository,
+  AtomGitTree,
+  AtomGitConfig,
   CreateRepositoryRequest,
   Branch,
   Issue,
   PullRequest,
   CreateIssueRequest,
+  CreatePullRequestRequest,
+  MergePullRequestRequest,
+  UpdatePullRequestRequest,
+  CreatePullRequestCommentRequest,
   Commit,
   Tag,
   CreateReleaseRequest,
@@ -243,8 +247,181 @@ export class AtomGitService {
   }
 
   // Priority 1: Pull Request Management - Create
-  async createRepositoryPull(owner: string, repo: string, pullData: any): Promise<PullRequest> {
+  async createRepositoryPull(owner: string, repo: string, pullData: CreatePullRequestRequest): Promise<PullRequest> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls`, pullData);
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Merge
+  async mergeRepositoryPull(owner: string, repo: string, pullNumber: number, mergeData: MergePullRequestRequest): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`, mergeData);
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Merge Status
+  async getRepositoryPullMergeStatus(owner: string, repo: string, pullNumber: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`);
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Issues
+  async getRepositoryPullIssues(owner: string, repo: string, pullNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`);
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Comments
+  async createRepositoryPullComment(owner: string, repo: string, pullNumber: number, commentData: CreatePullRequestCommentRequest): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`, commentData);
+    return response.data;
+  }
+
+  async getRepositoryPullComments(owner: string, repo: string, pullNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Files
+  async getRepositoryPullFiles(owner: string, repo: string, pullNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Update
+  async updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: UpdatePullRequestRequest): Promise<PullRequest> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`, updateData);
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Commits
+  async getRepositoryPullCommits(owner: string, repo: string, pullNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/commits`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Labels
+  async createRepositoryPullLabel(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any[]> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
+    return response.data;
+  }
+
+  async getRepositoryPullLabels(owner: string, repo: string, pullNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async replaceRepositoryPullLabels(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any[]> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
+    return response.data;
+  }
+
+  async deleteRepositoryPullLabel(owner: string, repo: string, pullNumber: number, name: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels/${name}`);
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Testing & Review
+  async processRepositoryPullTest(owner: string, repo: string, pullNumber: number, testData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test`, testData);
+    return response.data;
+  }
+
+  async processRepositoryPullReview(owner: string, repo: string, pullNumber: number, reviewData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/review`, reviewData);
+    return response.data;
+  }
+
+  async getRepositoryPullOperateLogs(owner: string, repo: string, pullNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/operate_logs`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async resetRepositoryPullTesters(owner: string, repo: string, pullNumber: number): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, {});
+    return response.data;
+  }
+
+  async assignRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, { testers });
+    return response.data;
+  }
+
+  async removeRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, {
+      data: { testers }
+    });
+    return response.data;
+  }
+
+  async getRepositoryPullTesterOptions(owner: string, repo: string, pullNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_approval_testers`);
+    return response.data;
+  }
+
+  async resetRepositoryPullAssignees(owner: string, repo: string, pullNumber: number): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, {});
+    return response.data;
+  }
+
+  async assignRepositoryPullAssignees(owner: string, repo: string, pullNumber: number, assignees: string[]): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, { assignees });
+    return response.data;
+  }
+
+  async removeRepositoryPullAssignees(owner: string, repo: string, pullNumber: number, assignees: string[]): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, {
+      data: { assignees }
+    });
+    return response.data;
+  }
+
+  // Priority 1: Pull Request Management - Additional Features
+  async getRepositoryPullFilesJson(owner: string, repo: string, pullNumber: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files_json`);
+    return response.data;
+  }
+
+  async getRepositoryPullFileContent(owner: string, repo: string, head: string, sha: string, name: string): Promise<any> {
+    const response = await this.client.get(`/${owner}/${repo}/raw/${head}/${sha}/${name}`);
+    return response.data;
+  }
+
+  async linkRepositoryPullIssues(owner: string, repo: string, pullNumber: number, issues: number[]): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/linked_issues`, { issues });
+    return response.data;
+  }
+
+  async unlinkRepositoryPullIssues(owner: string, repo: string, pullNumber: number, issues: number[]): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`, {
+      data: { issues }
+    });
+    return response.data;
+  }
+
+  async assignRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/approval_reviewers`, { reviewers });
+    return response.data;
+  }
+
+  async removeRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/approval_reviewers`, {
+      data: { reviewers }
+    });
+    return response.data;
+  }
+
+  async getRepositoryPullApprovalReviewerOptions(owner: string, repo: string, pullNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_approval_reviewers`);
     return response.data;
   }
 
