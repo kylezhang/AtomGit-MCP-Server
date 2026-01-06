@@ -19,8 +19,30 @@ export class AtomGitService {
         return response.data;
     }
     async getUser(username) {
-        const response = await this.client.get(`/api/v5/users/${username}`);
-        return response.data;
+        console.log(`🔍 getUser API call: /api/v5/users/${username}`);
+        try {
+            const response = await this.client.get(`/api/v5/users/${username}`);
+            console.log(`📊 Response status: ${response.status}`);
+            console.log(`📊 Response headers:`, response.headers);
+            if (response.data) {
+                console.log(`✅ User data received: ${response.data.login || response.data.name}`);
+                console.log(`👤 User ID: ${response.data.id}`);
+                console.log(`🏢 User page: ${response.data.html_url}`);
+            }
+            else {
+                console.log(`⚠️  No user data received`);
+            }
+            return response.data;
+        }
+        catch (error) {
+            console.log(`❌ Error: ${error.message}`);
+            if (error.response) {
+                console.log(`📊 Status: ${error.response.status}`);
+                console.log(`📄 Status Text: ${error.response.statusText}`);
+                console.log(`📋 Error Data:`, error.response.data);
+            }
+            throw error;
+        }
     }
     async getUserRepos(username) {
         const response = await this.client.get(`/api/v5/users/${username}/repos`);
