@@ -5,9 +5,9 @@
  * This script tests both public and authenticated endpoints
  */
 
-import { AtomGitService } from './dist/services/AtomGitService.js';
+import { AtomGitService } from '../dist/services/AtomGitService.js';
 
-const API_BASE_URL = 'https://api.atomgit.com';
+const API_BASE_URL = 'https://api.gitcode.com';
 const TOKEN = process.env.ATOMGIT_TOKEN;
 
 if (!TOKEN) {

@@ -5,9 +5,9 @@
  * This script tests various tools without requiring a full MCP client setup
  */
 
-import { AtomGitService } from './dist/services/AtomGitService.js';
+import { AtomGitService } from '../dist/services/AtomGitService.js';
 
-const API_BASE_URL = 'https://api.atomgit.com';
+const API_BASE_URL = 'https://api.gitcode.com';
 // You can provide a token for authenticated requests, or leave it null for public data only
 const TOKEN = process.env.ATOMGIT_TOKEN;
 

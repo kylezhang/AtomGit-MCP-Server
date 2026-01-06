@@ -10,6 +10,47 @@
 - `npm run test:auth` - Run authenticated tests
 - `npm run test:mcp` - Test MCP server functionality
 
+## File Organization Guidelines
+
+**IMPORTANT**: Keep the project root directory clean and organized. Follow these strict rules:
+
+### Files That MUST Stay in Root Directory
+- `src/` - Source code directory
+- `dist/` - Compiled JavaScript output
+- `package.json` - Project configuration
+- `package-lock.json` - Dependency lock file
+- `tsconfig.json` - TypeScript configuration
+- `.env.example` - Environment variable template
+- `.gitignore` - Git ignore rules
+- `README.md` - Main project documentation
+- `LICENSE` - Project license
+- `setup.sh` - Setup script
+- `AGENTS.md` - This file (agent guidelines)
+
+### Files That MUST Go to Subdirectories
+
+1. **Test Scripts** → `tests/` directory
+   - All `test-*.mjs` files
+   - Example: `tests/test-auth.mjs`, `tests/test-comprehensive.mjs`
+
+2. **Debug Scripts** → `scripts/debug/` directory
+   - All `debug-*.mjs` files
+   - Example: `scripts/debug/debug-api.mjs`, `scripts/debug/debug-user-api.mjs`
+
+3. **Documentation Files** → `docs/` directory
+   - All `*_REPORT.md` files
+   - All `*_SUMMARY.md` files
+   - All `*_ACHIEVEMENT.md` files
+   - Example: `docs/PROJECT_STATUS.md`, `docs/TEST_REPORT.md`
+
+### Rule Enforcement
+- **NEVER** create test scripts, debug scripts, or documentation reports in the root directory
+- **ALWAYS** organize files according to their purpose using the subdirectories above
+- If you need to create a new test, place it in `tests/`
+- If you need to create a debug script, place it in `scripts/debug/`
+- If you need to create documentation, place it in `docs/`
+- This keeps the root directory clean and focused on core project files
+
 ## Code Style Guidelines
 
 ### Imports

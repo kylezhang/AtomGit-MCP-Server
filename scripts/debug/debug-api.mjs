@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.atomgit.com';
+const API_BASE_URL = 'https://api.gitcode.com';
 const TOKEN = process.env.ATOMGIT_TOKEN;
 
 console.log('🔑 Testing AtomGit API with token:', TOKEN ? 'YES' : 'NO');

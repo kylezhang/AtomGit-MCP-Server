@@ -4,7 +4,7 @@
  * Quick test to verify API base URL fix
  */
 
-import { AtomGitService } from './dist/services/AtomGitService.js';
+import { AtomGitService } from '../dist/services/AtomGitService.js';
 import 'dotenv/config';
 
 const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.gitcode.com';
