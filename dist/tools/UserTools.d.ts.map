@@ -1,0 +1,1 @@
+{"version":3,"file":"UserTools.d.ts","sourceRoot":"","sources":["../../src/tools/UserTools.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,oCAAoC,CAAC;AAC1D,OAAO,EAAE,cAAc,EAAE,MAAM,+BAA+B,CAAC;AAE/D,qBAAa,SAAS;IACR,OAAO,CAAC,cAAc;gBAAd,cAAc,EAAE,cAAc;IAElD,QAAQ,IAAI,IAAI,EAAE;IAuEZ,QAAQ,CAAC,IAAI,EAAE,MAAM,EAAE,IAAI,EAAE,GAAG,GAAG,OAAO,CAAC,GAAG,CAAC;CAwBtD"}
