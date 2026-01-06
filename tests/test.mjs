@@ -7,12 +7,24 @@
 
 import { AtomGitService } from '../dist/services/AtomGitService.js';
 
-const API_BASE_URL = 'https://api.gitcode.com';
-// You can provide a token for authenticated requests, or leave it null for public data only
+const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
 const TOKEN = process.env.ATOMGIT_TOKEN;
+const TEST_USERNAME = process.env.TEST_USERNAME || 'zkxw2008';
+const TEST_REPOSITORY = process.env.TEST_REPOSITORY;
+const TEST_REPO_OWNER = process.env.TEST_REPO_OWNER;
 
 async function testAtomGitService() {
   console.log('Testing AtomGit MCP Server...\n');
+
+  console.log(`🔧 测试配置:`);
+  console.log(`   API URL: ${API_BASE_URL}`);
+  console.log(`   用户名: ${TEST_USERNAME}`);
+  if (TEST_REPOSITORY && TEST_REPO_OWNER) {
+    console.log(`   测试仓库: ${TEST_REPO_OWNER}/${TEST_REPOSITORY}`);
+  } else {
+    console.log(`   测试仓库: 使用默认（可能导致部分测试失败）`);
+  }
+  console.log('');
 
   const service = new AtomGitService({
     apiBaseUrl: API_BASE_URL,
@@ -22,7 +34,7 @@ async function testAtomGitService() {
   const tests = [
     {
       name: 'Get repository',
-      test: () => service.getRepository('GitCode', 'GitCode-Docs'),
+      test: () => service.getRepository(TEST_USERNAME, TEST_REPOSITORY),
       success: (result) => {
         console.log(`Repo: ${result.name}, Description: ${result.description}`);
         console.log(`Stars: ${result.stargazers_count}, Forks: ${result.forks_count}`);
@@ -30,7 +42,7 @@ async function testAtomGitService() {
     },
     {
       name: 'Get user',
-      test: () => service.getUser('GitCode'),
+      test: () => service.getUser(TEST_USERNAME),
       success: (result) => {
         console.log(`User: ${result.name} (@${result.username})`);
         console.log(`Public repos: ${result.public_repos}`);
@@ -38,7 +50,7 @@ async function testAtomGitService() {
     },
     {
       name: 'Get repository branches',
-      test: () => service.getRepositoryBranches('GitCode', 'GitCode-Docs'),
+      test: () => service.getRepositoryBranches(TEST_USERNAME, TEST_REPOSITORY),
       success: (result) => {
         console.log(`Found ${result.length} branches`);
         if (result.length > 0) {
@@ -48,7 +60,7 @@ async function testAtomGitService() {
     },
     {
       name: 'Get repository commits',
-      test: () => service.getRepositoryCommits('GitCode', 'GitCode-Docs', undefined, 1, 5),
+      test: () => service.getRepositoryCommits(TEST_USERNAME, TEST_REPOSITORY, undefined, 1, 5),
       success: (result) => {
         console.log(`Found ${result.length} commits`);
         if (result.length > 0) {
@@ -58,7 +70,7 @@ async function testAtomGitService() {
     },
     {
       name: 'Get repository tree',
-      test: () => service.getRepositoryTree('GitCode', 'GitCode-Docs', undefined),
+      test: () => service.getRepositoryTree(TEST_USERNAME, TEST_REPOSITORY, undefined),
       success: (result) => {
         console.log(`Found ${result.tree.length} items in tree`);
         if (result.tree.length > 0) {
@@ -68,7 +80,7 @@ async function testAtomGitService() {
     },
     {
       name: 'Get repository tags',
-      test: () => service.getRepositoryTags('GitCode', 'GitCode-Docs', 1, 5),
+      test: () => service.getRepositoryTags(TEST_USERNAME, TEST_REPOSITORY, 1, 5),
       success: (result) => {
         console.log(`Found ${result.length} tags`);
         if (result.length > 0) {

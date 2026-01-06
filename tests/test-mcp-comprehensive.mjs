@@ -62,8 +62,8 @@ async function runMCPTest() {
       params: {
         name: 'get_repository',
         arguments: {
-          owner: 'gitcode',
-          repo: 'gitcode'
+          owner: TEST_USERNAME,
+          repo: TEST_USERNAME
         }
       }
     }, {});
@@ -125,7 +125,7 @@ async function runMCPTest() {
       params: {
         name: 'get_user',
         arguments: {
-          username: 'gitcode'
+          username: TEST_USERNAME
         }
       }
     }, {});
@@ -163,7 +163,7 @@ async function runMCPTest() {
       params: {
         name: 'get_user_repos',
         arguments: {
-          username: 'gitcode'
+          username: TEST_USERNAME
         }
       }
     }, {});

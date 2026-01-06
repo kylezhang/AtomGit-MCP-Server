@@ -6,6 +6,8 @@ import { AtomGitService } from '../dist/services/AtomGitService.js';
 dotenv.config();
 
 const token = process.env.ATOMGIT_TOKEN;
+const apiBaseUrl = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
+const username = process.env.TEST_USERNAME || 'zkxw2008';
 
 if (!token) {
   console.log('❌ 错误: 未提供 ATOMGIT_TOKEN');
@@ -17,7 +19,8 @@ if (!token) {
   console.log('2. 生成个人访问令牌');
   console.log('3. 创建 .env 文件并添加:');
   console.log('   ATOMGIT_TOKEN=your_token_here');
-  console.log('   ATOMGIT_API_BASE_URL=https://api.gitcode.com');
+  console.log('   ATOMGIT_API_BASE_URL=https://api.atomgit.com');
+  console.log('   TEST_USERNAME=your_test_username');
   console.log('');
   process.exit(1);
 }
@@ -26,11 +29,11 @@ async function testUserAPIs() {
   console.log('🧪 测试用户相关 API（需要认证令牌）');
   console.log('='.repeat(50));
   console.log(`🔑 使用令牌: ${token.substring(0, 10)}...`);
+  console.log(`👤 测试用户名: ${username}`);
+  console.log(`🌐 API URL: ${apiBaseUrl}`);
   console.log('');
 
-  const apiBaseUrl = process.env.ATOMGIT_API_BASE_URL || 'https://api.gitcode.com';
   const service = new AtomGitService({ apiBaseUrl, token });
-  const username = 'zkxw2008'; // 使用您提供的用户名
 
   const results = {
     success: 0,
@@ -117,7 +120,7 @@ async function testUserAPIs() {
     console.log('⚠️  部分测试通过');
     console.log('');
     console.log('💡 可能的原因:');
-    console.log('- 用户名 "zkxw2008" 可能不存在');
+    console.log(`- 用户名 "${username}" 可能不存在`);
     console.log('- 该用户可能没有公开仓库或收藏');
     console.log('- API 返回的错误信息显示了具体原因');
   } else {

@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import axios from 'axios';
 dotenv.config();
 
-const API_BASE_URL = 'https://api.gitcode.com/api/v5';
+const API_BASE_URL = 'https://api.atomgit.com/api/v5';
 const token = process.env.ATOMGIT_TOKEN;
 
 const headers = token ? {

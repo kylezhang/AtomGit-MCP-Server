@@ -10,8 +10,11 @@ import { AtomGitService } from '../dist/services/AtomGitService.js';
 // Load environment variables
 import 'dotenv/config';
 
-const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.gitcode.com';
+const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
 const TOKEN = process.env.ATOMGIT_TOKEN;
+const TEST_USERNAME = process.env.TEST_USERNAME || 'zkxw2008';
+const TEST_REPOSITORY = process.env.TEST_REPOSITORY;
+const TEST_REPO_OWNER = process.env.TEST_REPO_OWNER || TEST_USERNAME;
 
 if (!TOKEN) {
   console.log('❌ No ATOMGIT_TOKEN found in environment variables');
@@ -45,12 +48,12 @@ const testCategories = [
     tools: [
       {
         name: 'get_repository',
-        test: () => service.getRepository('GitCode', 'GitCode-Docs'),
+        test: () => service.getRepository(TEST_USERNAME, TEST_REPOSITORY),
         requiresAuth: false
       },
       {
         name: 'get_repository_tree', 
-        test: () => service.getRepositoryTree('GitCode', 'GitCode-Docs'),
+        test: () => service.getRepositoryTree(TEST_USERNAME, TEST_REPOSITORY),
         requiresAuth: false
       },
       {
@@ -80,12 +83,12 @@ const testCategories = [
       },
       {
         name: 'get_user',
-        test: () => service.getUser('GitCode'),
+        test: () => service.getUser(TEST_USERNAME),
         requiresAuth: false
       },
       {
         name: 'get_user_repos',
-        test: () => service.getUserRepos('GitCode'),
+        test: () => service.getUserRepos(TEST_USERNAME),
         requiresAuth: false
       },
       {
@@ -95,7 +98,7 @@ const testCategories = [
       },
       {
         name: 'get_user_starred_repos',
-        test: () => service.getUserStarredRepos('GitCode'),
+        test: () => service.getUserStarredRepos(TEST_USERNAME),
         requiresAuth: false
       },
       {
@@ -115,7 +118,7 @@ const testCategories = [
     tools: [
       {
         name: 'get_repository_branches',
-        test: () => service.getRepositoryBranches('GitCode', 'GitCode-Docs'),
+        test: () => service.getRepositoryBranches(TEST_USERNAME, TEST_REPOSITORY),
         requiresAuth: false
       }
     ]
@@ -125,12 +128,12 @@ const testCategories = [
     tools: [
       {
         name: 'get_repository_issues',
-        test: () => service.getRepositoryIssues('GitCode', 'GitCode-Docs', 'open', 1, 3),
+        test: () => service.getRepositoryIssues(TEST_USERNAME, TEST_REPOSITORY, 'open', 1, 3),
         requiresAuth: false
       },
       {
         name: 'create_repository_issue',
-        test: () => service.createRepositoryIssue('GitCode', 'GitCode-Docs', {
+        test: () => service.createRepositoryIssue(TEST_USERNAME, TEST_REPOSITORY, {
           title: `Test Issue from MCP ${Date.now()}`,
           body: 'This is a test issue created by AtomGit MCP Server'
         }),
@@ -138,7 +141,7 @@ const testCategories = [
       },
       {
         name: 'get_repository_issue',
-        test: () => service.getRepositoryIssue('GitCode', 'GitCode-Docs', 1),
+        test: () => service.getRepositoryIssue(TEST_USERNAME, TEST_REPOSITORY, 1),
         requiresAuth: false
       }
     ]
@@ -148,12 +151,12 @@ const testCategories = [
     tools: [
       {
         name: 'get_repository_pulls',
-        test: () => service.getRepositoryPulls('GitCode', 'GitCode-Docs', 'open', 1, 3),
+        test: () => service.getRepositoryPulls(TEST_USERNAME, TEST_REPOSITORY, 'open', 1, 3),
         requiresAuth: false
       },
       {
         name: 'get_repository_pull',
-        test: () => service.getRepositoryPull('GitCode', 'GitCode-Docs', 1),
+        test: () => service.getRepositoryPull(TEST_USERNAME, TEST_REPOSITORY, 1),
         requiresAuth: false
       }
     ]
@@ -163,12 +166,12 @@ const testCategories = [
     tools: [
       {
         name: 'get_repository_commits',
-        test: () => service.getRepositoryCommits('GitCode', 'GitCode-Docs', undefined, 1, 3),
+        test: () => service.getRepositoryCommits(TEST_USERNAME, TEST_REPOSITORY, undefined, 1, 3),
         requiresAuth: false
       },
       {
         name: 'get_repository_commit',
-        test: () => service.getRepositoryCommit('GitCode', 'GitCode-Docs', 'main'),
+        test: () => service.getRepositoryCommit(TEST_USERNAME, TEST_REPOSITORY, 'main'),
         requiresAuth: false
       }
     ]
@@ -178,7 +181,7 @@ const testCategories = [
     tools: [
       {
         name: 'get_repository_tags',
-        test: () => service.getRepositoryTags('GitCode', 'GitCode-Docs', 1, 5),
+        test: () => service.getRepositoryTags(TEST_USERNAME, TEST_REPOSITORY, 1, 5),
         requiresAuth: false
       }
     ]
