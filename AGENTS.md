@@ -93,3 +93,37 @@
 - `src/tools/` - MCP tool implementations
 - `src/types/` - TypeScript type definitions
 - All TypeScript files must have `.ts` extension
+
+## README.md Editing Guidelines
+
+**IMPORTANT**: The README.md structure has been manually optimized for human readers. Follow these strict rules:
+
+### Sections That CAN Be Updated
+
+- `## 🛠️ 已实现工具` - This section can be updated to add/remove tools
+- `### 📂 仓库管理` - Repository tools table
+- `### 👤 用户管理` - User tools table
+- `### 🌿 分支管理` - Branch tools table
+- `### 📝 提交管理` - Commit tools table
+- `### 🏷️ 标签管理` - Tag tools table
+- `### 🐛 问题管理` - Issues tools table
+- `### 🔀 Pull Requests 管理` - PR tools table
+
+### Sections That MUST NOT Be Changed
+
+- Project introduction and description
+- `## ✨ 主要特性`
+- `## 在相关工具中配置使用`
+- `## 🚀 快速开发开始` (except for fixing obvious errors)
+- `## 📂 项目结构`
+- `## 📄 许可证`
+- `## 🤝 贡献`
+- Overall structure and section ordering
+
+### Rule Enforcement
+
+- **ONLY** update `## 🛠️ 已实现工具` section and its subsections
+- **NEVER** change the overall structure of README.md
+- **NEVER** add or remove sections outside the tools section
+- **NEVER** reorder existing sections
+- The structure has been carefully optimized for user experience
