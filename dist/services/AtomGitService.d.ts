@@ -83,7 +83,7 @@ export declare class AtomGitService {
     createRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
     updateRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
     deleteRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
-    getRepositoryFileList(owner: string, repo: string, path?: string, ref?: string, page?: number, perPage?: number): Promise<any[]>;
+    get_repository_file_list($owner: string, repo: string, path?: string, ref?: string, page?: number, perPage?: number): Promise<any[]>;
     getRepositoryFileBlob(owner: string, repo: string, sha: string): Promise<any>;
     uploadRepositoryImage(owner: string, repo: string, fileData: string, filename: string): Promise<any>;
     uploadRepositoryFile(owner: string, repo: string, fileData: string, filename: string): Promise<any>;

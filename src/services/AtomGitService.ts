@@ -556,8 +556,8 @@ export class AtomGitService {
     return response.data;
   }
 
-  async getRepositoryFileList(owner: string, repo: string, path: string = '', ref?: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/file/list`, {
+  async get_repository_file_list($owner: string, repo: string, path: string = '', ref?: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${$owner}/${repo}/file_list`, {
       params: {
         path,
         ref,

@@ -292,7 +292,7 @@ export class RepositoryContentTools {
                     branch: args.branch
                 });
             case 'get_repository_file_list':
-                return await this.atomGitService.getRepositoryFileList(args.owner, args.repo, args.path, args.ref, args.page, args.perPage);
+                return await this.atomGitService.get_repository_file_list(args.owner, args.repo, args.path, args.ref, args.page, args.perPage);
             case 'get_repository_file_blob':
                 return await this.atomGitService.getRepositoryFileBlob(args.owner, args.repo, args.sha);
             case 'upload_repository_image':

@@ -298,7 +298,7 @@ export class RepositoryContentTools {
         });
 
       case 'get_repository_file_list':
-        return await this.atomGitService.getRepositoryFileList(
+        return await this.atomGitService.get_repository_file_list(
           args.owner,
           args.repo,
           args.path,

@@ -452,8 +452,8 @@ export class AtomGitService {
         });
         return response.data;
     }
-    async getRepositoryFileList(owner, repo, path = '', ref, page = 1, perPage = 30) {
-        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/file/list`, {
+    async get_repository_file_list($owner, repo, path = '', ref, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${$owner}/${repo}/file_list`, {
             params: {
                 path,
                 ref,
