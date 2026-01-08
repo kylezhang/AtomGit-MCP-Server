@@ -27,6 +27,9 @@ import { MemberManagementTools } from './tools/MemberManagementTools.js';
 import { SearchAdvancedTools } from './tools/SearchAdvancedTools.js';
 import { UserAdvancedTools } from './tools/UserAdvancedTools.js';
 import { ReleaseAdvancedTools } from './tools/ReleaseAdvancedTools.js';
+import { OrganizationTools } from './tools/OrganizationTools.js';
+import { WebhooksTools } from './tools/WebhooksTools.js';
+import { EnterpriseTools } from './tools/EnterpriseTools.js';
 
 // Load environment variables
 config();
@@ -55,6 +58,9 @@ class AtomGitMCPServer {
   private searchAdvancedTools: SearchAdvancedTools;
   private userAdvancedTools: UserAdvancedTools;
   private releaseAdvancedTools: ReleaseAdvancedTools;
+  private organizationTools: OrganizationTools;
+  private webhooksTools: WebhooksTools;
+  private enterpriseTools: EnterpriseTools;
 
   constructor() {
     this.server = new Server(
@@ -97,6 +103,9 @@ class AtomGitMCPServer {
     this.searchAdvancedTools = new SearchAdvancedTools(this.atomGitService);
     this.userAdvancedTools = new UserAdvancedTools(this.atomGitService);
     this.releaseAdvancedTools = new ReleaseAdvancedTools(this.atomGitService);
+    this.organizationTools = new OrganizationTools(this.atomGitService);
+    this.webhooksTools = new WebhooksTools(this.atomGitService);
+    this.enterpriseTools = new EnterpriseTools(this.atomGitService);
 
     this.setupHandlers();
   }
@@ -122,6 +131,9 @@ class AtomGitMCPServer {
         ...this.searchAdvancedTools.getTools(),
         ...this.userAdvancedTools.getTools(),
         ...this.releaseAdvancedTools.getTools(),
+        ...this.organizationTools.getTools(),
+        ...this.webhooksTools.getTools(),
+        ...this.enterpriseTools.getTools(),
       ];
       
       return { tools: allTools };
@@ -151,6 +163,9 @@ class AtomGitMCPServer {
           this.searchAdvancedTools,
           this.userAdvancedTools,
           this.releaseAdvancedTools,
+          this.organizationTools,
+          this.webhooksTools,
+          this.enterpriseTools,
         ];
 
         for (const toolClass of toolClasses) {

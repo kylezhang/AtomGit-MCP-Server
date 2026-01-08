@@ -788,5 +788,152 @@ export class AtomGitService {
         const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
         return response.data;
     }
+    // Priority 3: Organization Management
+    async getOrganization(org) {
+        const response = await this.client.get(`/api/v5/orgs/${org}`);
+        return response.data;
+    }
+    async createOrganizationRepository(org, repoData) {
+        const response = await this.client.post(`/api/v5/orgs/${org}/repos`, repoData);
+        return response.data;
+    }
+    async getOrganizationMembers(org) {
+        const response = await this.client.get(`/api/v5/orgs/${org}/members`);
+        return response.data;
+    }
+    async addOrganizationMember(org, username, memberData) {
+        const response = await this.client.put(`/api/v5/orgs/${org}/members/${username}`, memberData);
+        return response.data;
+    }
+    async removeOrganizationMember(org, username) {
+        const response = await this.client.delete(`/api/v5/orgs/${org}/members/${username}`);
+        return response.data;
+    }
+    async getOrganizationProjects(org) {
+        const response = await this.client.get(`/api/v5/orgs/${org}/projects`);
+        return response.data;
+    }
+    async createOrganizationProject(org, projectData) {
+        const response = await this.client.post(`/api/v5/orgs/${org}/projects`, projectData);
+        return response.data;
+    }
+    async updateOrganizationProject(org, project, projectData) {
+        const response = await this.client.put(`/api/v5/orgs/${org}/projects/${project}`, projectData);
+        return response.data;
+    }
+    async deleteOrganizationProject(org, project) {
+        const response = await this.client.delete(`/api/v5/orgs/${org}/projects/${project}`);
+        return response.data;
+    }
+    async getOrganizationTeams(org) {
+        const response = await this.client.get(`/api/v5/orgs/${org}/teams`);
+        return response.data;
+    }
+    async createOrganizationTeam(org, teamData) {
+        const response = await this.client.post(`/api/v5/orgs/${org}/teams`, teamData);
+        return response.data;
+    }
+    async updateOrganizationTeam(org, team, teamData) {
+        const response = await this.client.put(`/api/v5/orgs/${org}/teams/${team}`, teamData);
+        return response.data;
+    }
+    async deleteOrganizationTeam(org, team) {
+        const response = await this.client.delete(`/api/v5/orgs/${org}/teams/${team}`);
+        return response.data;
+    }
+    async getOrganizationTeamMembers(org, team) {
+        const response = await this.client.get(`/api/v5/orgs/${org}/teams/${team}/members`);
+        return response.data;
+    }
+    async addOrganizationTeamMember(org, team, username, memberData) {
+        const response = await this.client.put(`/api/v5/orgs/${org}/teams/${team}/members/${username}`, memberData);
+        return response.data;
+    }
+    // Priority 3: Webhooks Management
+    async getRepositoryWebhooks(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/hooks`);
+        return response.data;
+    }
+    async createRepositoryWebhook(owner, repo, webhookData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/hooks`, webhookData);
+        return response.data;
+    }
+    async getRepositoryWebhook(owner, repo, id) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/hooks/${id}`);
+        return response.data;
+    }
+    async updateRepositoryWebhook(owner, repo, id, webhookData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/hooks/${id}`, webhookData);
+        return response.data;
+    }
+    async deleteRepositoryWebhook(owner, repo, id) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/hooks/${id}`);
+        return response.data;
+    }
+    async testRepositoryWebhook(owner, repo, id) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/hooks/${id}/test`);
+        return response.data;
+    }
+    // Priority 3: Enterprise Management
+    async getEnterprise(enterprise) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}`);
+        return response.data;
+    }
+    async getEnterpriseMembers(enterprise) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members`);
+        return response.data;
+    }
+    async getEnterpriseMember(enterprise, username) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members/${username}`);
+        return response.data;
+    }
+    async updateEnterpriseMember(enterprise, username, memberData) {
+        const response = await this.client.put(`/api/v8/enterprises/${enterprise}/members/${username}`, memberData);
+        return response.data;
+    }
+    async removeEnterpriseMember(enterprise, username) {
+        const response = await this.client.delete(`/api/v8/enterprises/${enterprise}/members/${username}`);
+        return response.data;
+    }
+    async getEnterpriseRoles(enterprise) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/roles`);
+        return response.data;
+    }
+    async createEnterpriseRole(enterprise, roleData) {
+        const response = await this.client.post(`/api/v8/enterprises/${enterprise}/roles`, roleData);
+        return response.data;
+    }
+    async updateEnterpriseRole(enterprise, role, roleData) {
+        const response = await this.client.put(`/api/v8/enterprises/${enterprise}/roles/${role}`, roleData);
+        return response.data;
+    }
+    async deleteEnterpriseRole(enterprise, role) {
+        const response = await this.client.delete(`/api/v8/enterprises/${enterprise}/roles/${role}`);
+        return response.data;
+    }
+    async getEnterpriseMilestones(enterprise) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/milestones`);
+        return response.data;
+    }
+    async createEnterpriseMilestone(enterprise, milestoneData) {
+        const response = await this.client.post(`/api/v8/enterprises/${enterprise}/milestones`, milestoneData);
+        return response.data;
+    }
+    async updateEnterpriseMilestone(enterprise, milestone, milestoneData) {
+        const response = await this.client.put(`/api/v8/enterprises/${enterprise}/milestones/${milestone}`, milestoneData);
+        return response.data;
+    }
+    async deleteEnterpriseMilestone(enterprise, milestone) {
+        const response = await this.client.delete(`/api/v8/enterprises/${enterprise}/milestones/${milestone}`);
+        return response.data;
+    }
+    async getEnterpriseProjects(enterprise) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/projects`);
+        return response.data;
+    }
+    async createEnterpriseProject(enterprise, projectData) {
+        const response = await this.client.post(`/api/v8/enterprises/${enterprise}/projects`, projectData);
+        return response.data;
+    }
 }
 //# sourceMappingURL=AtomGitService.js.map

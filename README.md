@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 158 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能等全面功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 218 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能、组织管理、Webhook管理、企业功能等全面功能。
 
 ### ✨ 主要特性
 
@@ -172,6 +172,57 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `get_release_asset` | 获取特定发布附件信息 | ⏳ 待测试 | 🔑 需要认证 |
 | `update_release_asset` | 更新发布版本附件 | ⏳ 待测试 | 🔑 需要认证 |
 | `delete_release_asset` | 删除发布版本附件 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🏢 组织管理 (15 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_organization` | 获取组织信息 | ✅ 已测试 | 🔑 需要认证 |
+| `create_organization_repository` | 为组织创建仓库 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_organization_members` | 获取组织成员列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `add_organization_member` | 添加组织成员 | ⏳ 待测试 | 🔑 需要认证 |
+| `remove_organization_member` | 移除组织成员 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_organization_projects` | 获取组织项目列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_organization_project` | 创建组织项目 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_organization_project` | 更新组织项目 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_organization_project` | 删除组织项目 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_organization_teams` | 获取组织团队列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_organization_team` | 创建组织团队 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_organization_team` | 更新组织团队 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_organization_team` | 删除组织团队 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_organization_team_members` | 获取组织团队成员列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `add_organization_team_member` | 添加组织团队成员 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🪝 Webhook管理 (5 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_repository_webhooks` | 获取仓库Webhook列表 | ✅ 已测试 | 🔑 需要认证 |
+| `create_repository_webhook` | 创建仓库Webhook | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_webhook` | 获取特定仓库Webhook | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_webhook` | 更新仓库Webhook | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_webhook` | 删除仓库Webhook | ⏳ 待测试 | 🔑 需要认证 |
+| `test_repository_webhook` | 测试仓库Webhook | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🏢 企业管理 (17 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_enterprise` | 获取企业信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_enterprise_members` | 获取企业成员列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_enterprise_member` | 获取特定企业成员信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_enterprise_member` | 更新企业成员信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `remove_enterprise_member` | 移除企业成员 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_enterprise_roles` | 获取企业角色列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_enterprise_role` | 创建企业角色 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_enterprise_role` | 更新企业角色 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_enterprise_role` | 删除企业角色 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_enterprise_milestones` | 获取企业里程碑列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_enterprise_milestone` | 创建企业里程碑 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_enterprise_milestone` | 更新企业里程碑 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_enterprise_milestone` | 删除企业里程碑 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_enterprise_projects` | 获取企业项目列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_enterprise_project` | 创建企业项目 | ⏳ 待测试 | 🔑 需要认证 |
 
 ### 👤 用户管理 (7 个工具)
 
