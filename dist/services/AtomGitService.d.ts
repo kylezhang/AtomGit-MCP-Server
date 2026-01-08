@@ -191,5 +191,19 @@ export declare class AtomGitService {
     deleteEnterpriseMilestone(enterprise: string, milestone: string): Promise<void>;
     getEnterpriseProjects(enterprise: string): Promise<any[]>;
     createEnterpriseProject(enterprise: string, projectData: any): Promise<any>;
+    getOrganizationKanbans(owner: string): Promise<any[]>;
+    createOrganizationKanban(owner: string, kanbanData: any): Promise<any>;
+    getOrganizationKanban(owner: string, id: string): Promise<any>;
+    updateOrganizationKanban(owner: string, id: string, kanbanData: any): Promise<any>;
+    deleteOrganizationKanban(owner: string, id: string): Promise<void>;
+    getOrganizationKanbanContent(owner: string, id: string): Promise<any>;
+    updateOrganizationKanbanContent(owner: string, id: string, contentData: any): Promise<any>;
+    chatCompletion(data: any): Promise<any>;
+    speechRecognition(data: any): Promise<any>;
+    objectDetection(data: any): Promise<any>;
+    textEmbedding(data: any): Promise<any>;
+    imageGeneration(data: any): Promise<any>;
+    audioSynthesis(data: any): Promise<any>;
+    translation(data: any): Promise<any>;
 }
 //# sourceMappingURL=AtomGitService.d.ts.map

@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 218 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能、组织管理、Webhook管理、企业功能等全面功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 230 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能、组织管理、Webhook管理、企业功能、看板管理、AI Hub功能等全面功能。
 
 ### ✨ 主要特性
 
@@ -223,6 +223,30 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `delete_enterprise_milestone` | 删除企业里程碑 | ⏳ 待测试 | 🔑 需要认证 |
 | `get_enterprise_projects` | 获取企业项目列表 | ⏳ 待测试 | 🔑 需要认证 |
 | `create_enterprise_project` | 创建企业项目 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 📋 看板管理 (7 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_organization_kanbans` | 获取组织看板列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_organization_kanban` | 创建组织看板 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_organization_kanban` | 获取特定看板详情 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_organization_kanban` | 更新组织看板 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_organization_kanban` | 删除组织看板 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_organization_kanban_content` | 获取看板内容 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_organization_kanban_content` | 更新看板内容 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🤖 AI Hub功能 (7 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `chat_completion` | AI文本生成完成 | ✅ 已测试 | 🔑 需要认证 |
+| `speech_recognition` | AI语音识别 | ⏳ 待测试 | 🔑 需要认证 |
+| `object_detection` | AI物体检测 | ⏳ 待测试 | 🔑 需要认证 |
+| `text_embedding` | AI文本嵌入 | ⏳ 待测试 | 🔑 需要认证 |
+| `image_generation` | AI图像生成 | ⏳ 待测试 | 🔑 需要认证 |
+| `audio_synthesis` | AI音频合成 | ⏳ 待测试 | 🔑 需要认证 |
+| `translation` | AI文本翻译 | ⏳ 待测试 | 🔑 需要认证 |
 
 ### 👤 用户管理 (7 个工具)
 

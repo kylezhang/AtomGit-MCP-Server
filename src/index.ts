@@ -30,6 +30,8 @@ import { ReleaseAdvancedTools } from './tools/ReleaseAdvancedTools.js';
 import { OrganizationTools } from './tools/OrganizationTools.js';
 import { WebhooksTools } from './tools/WebhooksTools.js';
 import { EnterpriseTools } from './tools/EnterpriseTools.js';
+import { DashboardTools } from './tools/DashboardTools.js';
+import { AIHubTools } from './tools/AIHubTools.js';
 
 // Load environment variables
 config();
@@ -61,6 +63,8 @@ class AtomGitMCPServer {
   private organizationTools: OrganizationTools;
   private webhooksTools: WebhooksTools;
   private enterpriseTools: EnterpriseTools;
+  private dashboardTools: DashboardTools;
+  private aiHubTools: AIHubTools;
 
   constructor() {
     this.server = new Server(
@@ -106,6 +110,8 @@ class AtomGitMCPServer {
     this.organizationTools = new OrganizationTools(this.atomGitService);
     this.webhooksTools = new WebhooksTools(this.atomGitService);
     this.enterpriseTools = new EnterpriseTools(this.atomGitService);
+    this.dashboardTools = new DashboardTools(this.atomGitService);
+    this.aiHubTools = new AIHubTools(this.atomGitService);
 
     this.setupHandlers();
   }
@@ -134,6 +140,8 @@ class AtomGitMCPServer {
         ...this.organizationTools.getTools(),
         ...this.webhooksTools.getTools(),
         ...this.enterpriseTools.getTools(),
+        ...this.dashboardTools.getTools(),
+        ...this.aiHubTools.getTools(),
       ];
       
       return { tools: allTools };
@@ -166,6 +174,8 @@ class AtomGitMCPServer {
           this.organizationTools,
           this.webhooksTools,
           this.enterpriseTools,
+          this.dashboardTools,
+          this.aiHubTools,
         ];
 
         for (const toolClass of toolClasses) {

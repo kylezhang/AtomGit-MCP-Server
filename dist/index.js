@@ -25,6 +25,8 @@ import { ReleaseAdvancedTools } from './tools/ReleaseAdvancedTools.js';
 import { OrganizationTools } from './tools/OrganizationTools.js';
 import { WebhooksTools } from './tools/WebhooksTools.js';
 import { EnterpriseTools } from './tools/EnterpriseTools.js';
+import { DashboardTools } from './tools/DashboardTools.js';
+import { AIHubTools } from './tools/AIHubTools.js';
 // Load environment variables
 config();
 const ATOMGIT_API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
@@ -53,6 +55,8 @@ class AtomGitMCPServer {
     organizationTools;
     webhooksTools;
     enterpriseTools;
+    dashboardTools;
+    aiHubTools;
     constructor() {
         this.server = new Server({
             name: 'atomgit-mcp-server',
@@ -90,6 +94,8 @@ class AtomGitMCPServer {
         this.organizationTools = new OrganizationTools(this.atomGitService);
         this.webhooksTools = new WebhooksTools(this.atomGitService);
         this.enterpriseTools = new EnterpriseTools(this.atomGitService);
+        this.dashboardTools = new DashboardTools(this.atomGitService);
+        this.aiHubTools = new AIHubTools(this.atomGitService);
         this.setupHandlers();
     }
     setupHandlers() {
@@ -116,6 +122,8 @@ class AtomGitMCPServer {
                 ...this.organizationTools.getTools(),
                 ...this.webhooksTools.getTools(),
                 ...this.enterpriseTools.getTools(),
+                ...this.dashboardTools.getTools(),
+                ...this.aiHubTools.getTools(),
             ];
             return { tools: allTools };
         });
@@ -145,6 +153,8 @@ class AtomGitMCPServer {
                     this.organizationTools,
                     this.webhooksTools,
                     this.enterpriseTools,
+                    this.dashboardTools,
+                    this.aiHubTools,
                 ];
                 for (const toolClass of toolClasses) {
                     try {

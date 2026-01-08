@@ -1146,4 +1146,76 @@ export class AtomGitService {
     const response = await this.client.post(`/api/v8/enterprises/${enterprise}/projects`, projectData);
     return response.data;
   }
+
+  // Priority 4: Dashboard (Kanban) Management
+  async getOrganizationKanbans(owner: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/org/${owner}/kanban/list`);
+    return response.data;
+  }
+
+  async createOrganizationKanban(owner: string, kanbanData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/org/${owner}/kanban`, kanbanData);
+    return response.data;
+  }
+
+  async getOrganizationKanban(owner: string, id: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}`);
+    return response.data;
+  }
+
+  async updateOrganizationKanban(owner: string, id: string, kanbanData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}`, kanbanData);
+    return response.data;
+  }
+
+  async deleteOrganizationKanban(owner: string, id: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${id}`);
+    return response.data;
+  }
+
+  async getOrganizationKanbanContent(owner: string, id: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/content`);
+    return response.data;
+  }
+
+  async updateOrganizationKanbanContent(owner: string, id: string, contentData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/content`, contentData);
+    return response.data;
+  }
+
+  // Priority 4: AI Hub Features
+  async chatCompletion(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/chat/completions', data);
+    return response.data;
+  }
+
+  async speechRecognition(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/speech/recognition', data);
+    return response.data;
+  }
+
+  async objectDetection(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/object/detection', data);
+    return response.data;
+  }
+
+  async textEmbedding(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/text/embedding', data);
+    return response.data;
+  }
+
+  async imageGeneration(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/image/generation', data);
+    return response.data;
+  }
+
+  async audioSynthesis(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/audio/synthesis', data);
+    return response.data;
+  }
+
+  async translation(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/translation', data);
+    return response.data;
+  }
 }

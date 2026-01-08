@@ -935,5 +935,63 @@ export class AtomGitService {
         const response = await this.client.post(`/api/v8/enterprises/${enterprise}/projects`, projectData);
         return response.data;
     }
+    // Priority 4: Dashboard (Kanban) Management
+    async getOrganizationKanbans(owner) {
+        const response = await this.client.get(`/api/v5/org/${owner}/kanban/list`);
+        return response.data;
+    }
+    async createOrganizationKanban(owner, kanbanData) {
+        const response = await this.client.post(`/api/v5/org/${owner}/kanban`, kanbanData);
+        return response.data;
+    }
+    async getOrganizationKanban(owner, id) {
+        const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}`);
+        return response.data;
+    }
+    async updateOrganizationKanban(owner, id, kanbanData) {
+        const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}`, kanbanData);
+        return response.data;
+    }
+    async deleteOrganizationKanban(owner, id) {
+        const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${id}`);
+        return response.data;
+    }
+    async getOrganizationKanbanContent(owner, id) {
+        const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/content`);
+        return response.data;
+    }
+    async updateOrganizationKanbanContent(owner, id, contentData) {
+        const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/content`, contentData);
+        return response.data;
+    }
+    // Priority 4: AI Hub Features
+    async chatCompletion(data) {
+        const response = await this.client.post('/api/v5/chat/completions', data);
+        return response.data;
+    }
+    async speechRecognition(data) {
+        const response = await this.client.post('/api/v5/speech/recognition', data);
+        return response.data;
+    }
+    async objectDetection(data) {
+        const response = await this.client.post('/api/v5/object/detection', data);
+        return response.data;
+    }
+    async textEmbedding(data) {
+        const response = await this.client.post('/api/v5/text/embedding', data);
+        return response.data;
+    }
+    async imageGeneration(data) {
+        const response = await this.client.post('/api/v5/image/generation', data);
+        return response.data;
+    }
+    async audioSynthesis(data) {
+        const response = await this.client.post('/api/v5/audio/synthesis', data);
+        return response.data;
+    }
+    async translation(data) {
+        const response = await this.client.post('/api/v5/translation', data);
+        return response.data;
+    }
 }
 //# sourceMappingURL=AtomGitService.js.map
