@@ -493,11 +493,11 @@ export class AtomGitService {
     }
     // Priority 1: Repository Settings & Configuration
     async getRepositorySettings(owner, repo) {
-        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/repo-settings`);
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/repo_settings`);
         return response.data;
     }
     async updateRepositorySettings(owner, repo, settings) {
-        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/repo-settings`, settings);
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/repo_settings`, settings);
         return response.data;
     }
     async getRepositoryPullRequestSettings(owner, repo) {
@@ -652,7 +652,7 @@ export class AtomGitService {
         return response.data;
     }
     async getRepositoryCommitDiff(owner, repo, sha) {
-        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/diff`);
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commit/${sha}/diff`);
         return response.data;
     }
     async compareRepositoryCommits(owner, repo, base, head) {
@@ -660,7 +660,7 @@ export class AtomGitService {
         return response.data;
     }
     async getRepositoryCommitPatch(owner, repo, sha) {
-        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/patch`);
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commit/${sha}/patch`);
         return response.data;
     }
     async getRepositoryCommitStats(owner, repo, sha) {

@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 230 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能、组织管理、Webhook管理、企业功能、看板管理、AI Hub功能等全面功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 **246 个工具**，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能、组织管理、Webhook管理、企业功能、看板管理、AI Hub功能等全面功能。
 
 ### ✨ 主要特性
 
@@ -52,13 +52,13 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `get_repository` | 获取特定仓库信息 | ✅ 已测试 | 🔑 需要认证 |
 | `get_repository_tree` | 获取仓库目录树 | ✅ 已测试 | 🔑 需要认证 |
 | `search_repositories` | 搜索仓库 | ✅ 已测试 | 🔑 需要认证 |
-| `list_repository_forks` | 列出仓库分叉 | ✅ 已测试 | 🔑 需要认证 |
+| `list_repository_forks` | 列出仓库分叉 | ⏳ 待测试 | 🔑 需要认证 |
 | `get_repository_content` | 获取仓库路径内容 | ⏳ 待测试 | 🔑 需要认证 |
 | `create_repository_file` | 创建仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
 | `update_repository_file` | 更新仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
 | `delete_repository_file` | 删除仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
-| `get_repository_file_list` | 获取仓库文件列表 | ⏳ 待测试 | 🔑 需要认证 |
-| `get_repository_file_blob` | 获取文件Blob内容 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_file_list` | 获取仓库文件列表 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_file_blob` | 获取文件Blob内容 | ⚠️ 部分工作 | 🔑 需要认证 |
 | `upload_repository_image` | 上传仓库图片 | ⏳ 待测试 | 🔑 需要认证 |
 | `upload_repository_file` | 上传仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
 
@@ -66,7 +66,7 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 
 | 工具名称 | 功能描述 | 测试状态 | 需要认证 |
 |----------|----------|----------|----------|
-| `get_repository_settings` | 获取仓库设置信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_settings` | 获取仓库设置信息 | ✅ 已测试 | 🔑 需要认证 |
 | `update_repository_settings` | 更新仓库设置 | ⏳ 待测试 | 🔑 需要认证 |
 | `get_repository_pull_request_settings` | 获取PR设置信息 | ⏳ 待测试 | 🔑 需要认证 |
 | `update_repository_pull_request_settings` | 更新PR设置 | ⏳ 待测试 | 🔑 需要认证 |
@@ -122,9 +122,9 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 |----------|----------|----------|----------|
 | `get_repository_commit_comments` | 获取提交的评论列表 | ✅ 已测试 | 🔑 需要认证 |
 | `create_repository_commit_comment` | 为提交创建评论 | ⏳ 待测试 | 🔑 需要认证 |
-| `get_repository_commit_diff` | 获取提交的差异信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_commit_diff` | 获取提交的差异信息 | ✅ 已测试 | 🔑 需要认证 |
 | `compare_repository_commits` | 比较两个提交之间的差异 | ⏳ 待测试 | 🔑 需要认证 |
-| `get_repository_commit_patch` | 获取提交的补丁文件 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_commit_patch` | 获取提交的补丁文件 | ✅ 已测试 | 🔑 需要认证 |
 | `get_repository_commit_stats` | 获取提交的代码统计信息 | ⏳ 待测试 | 🔑 需要认证 |
 | `get_repository_commit_statuses` | 获取提交的状态信息 | ⏳ 待测试 | 🔑 需要认证 |
 | `create_repository_commit_status` | 为提交创建状态 | ⏳ 待测试 | 🔑 需要认证 |
@@ -267,8 +267,8 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `get_repository_branches` | 获取仓库所有分支 | ✅ 已测试 | 🔑 需要认证 |
 | `create_repository_branch` | 创建新分支 | ⏳ 待测试 | 🔑 需要认证 |
 | `delete_repository_branch` | 删除分支 | ⏳ 待测试 | 🔑 需要认证 |
-| `get_repository_branch` | 获取特定分支详情 | ⏳ 待测试 | 🔑 需要认证 |
-| `create_branch_protection_rule` | 创建分支保护规则 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_branch` | 获取特定分支详情 | ✅ 已测试 | 🔑 需要认证 |
+| `create_branch_protection_rule` | 创建分支保护规则 | ⚠️ 部分工作 | 🔑 需要认证 |
 | `delete_branch_protection_rule` | 删除分支保护规则 | ⏳ 待测试 | 🔑 需要认证 |
 | `get_branch_protection_rules` | 获取分支保护规则列表 | ⏳ 待测试 | 🔑 需要认证 |
 | `update_branch_protection_rule` | 更新分支保护规则 | ⏳ 待测试 | 🔑 需要认证 |
@@ -278,7 +278,7 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | 工具名称 | 功能描述 | 测试状态 | 需要认证 |
 |----------|----------|----------|----------|
 | `get_repository_commits` | 获取仓库提交历史 | ✅ 已测试 | 🔑 需要认证 |
-| `get_commit` | 获取特定提交详情 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_commit` | 获取特定提交详情 | ✅ 已测试 | 🔑 需要认证 |
 
 ### 🏷️ 标签管理 (1 个工具)
 
