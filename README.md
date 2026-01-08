@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 107 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能等全面功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 158 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能等全面功能。
 
 ### ✨ 主要特性
 
@@ -101,6 +101,77 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `update_repository_transition` | 更新仓库权限模式 | ⏳ 待测试 | 🔑 需要认证 |
 | `get_repository_customized_roles` | 获取仓库自定义角色 | ⏳ 待测试 | 🔑 需要认证 |
 | `update_repository_member_role` | 更新仓库成员角色 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🏷️ 标签和里程碑管理 (8 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_repository_labels` | 获取仓库标签列表 | ✅ 已测试 | 🔑 需要认证 |
+| `create_repository_label` | 创建仓库标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_label` | 更新仓库标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_label` | 删除仓库标签 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_milestones` | 获取仓库里程碑列表 | ✅ 已测试 | 🔑 需要认证 |
+| `create_repository_milestone` | 创建仓库里程碑 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_milestone` | 更新仓库里程碑 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_milestone` | 删除仓库里程碑 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_milestone` | 获取特定里程碑详情 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🔍 高级提交管理 (10 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_repository_commit_comments` | 获取提交的评论列表 | ✅ 已测试 | 🔑 需要认证 |
+| `create_repository_commit_comment` | 为提交创建评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_commit_diff` | 获取提交的差异信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `compare_repository_commits` | 比较两个提交之间的差异 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_commit_patch` | 获取提交的补丁文件 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_commit_stats` | 获取提交的代码统计信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_commit_statuses` | 获取提交的状态信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `create_repository_commit_status` | 为提交创建状态 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_commit_comment` | 获取特定提交评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_commit_comment` | 更新提交评论 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository_commit_comment` | 删除提交评论 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 👥 成员管理 (4 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_repository_collaborators` | 获取仓库协作者列表 | ✅ 已测试 | 🔑 需要认证 |
+| `add_repository_collaborator` | 添加仓库协作者 | ⏳ 待测试 | 🔑 需要认证 |
+| `remove_repository_collaborator` | 移除仓库协作者 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_collaborator` | 获取特定协作者信息 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🔎 高级搜索功能 (2 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `search_issues` | 搜索仓库中的Issues | ✅ 已测试 | 🔑 需要认证 |
+| `search_code` | 搜索仓库中的代码 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 👤 高级用户管理 (8 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_user_followers` | 获取用户关注者列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_user_following` | 获取用户正在关注的人列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `follow_user` | 关注用户 | ⏳ 待测试 | 🔑 需要认证 |
+| `unfollow_user` | 取消关注用户 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_current_user_followers` | 获取当前用户的关注者列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_current_user_following` | 获取当前用户正在关注的人列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_user_organizations` | 获取用户的组织列表 | ✅ 已测试 | 🔑 需要认证 |
+| `get_current_user_organizations` | 获取当前用户的组织列表 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 📦 高级发布管理 (7 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `update_release` | 更新发布版本 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_release` | 删除发布版本 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_release_assets` | 获取发布版本的附件列表 | ⏳ 待测试 | 🔑 需要认证 |
+| `upload_release_asset` | 上传发布版本附件 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_release_asset` | 获取特定发布附件信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_release_asset` | 更新发布版本附件 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_release_asset` | 删除发布版本附件 | ⏳ 待测试 | 🔑 需要认证 |
 
 ### 👤 用户管理 (7 个工具)
 

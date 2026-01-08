@@ -728,4 +728,239 @@ export class AtomGitService {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/members/${username}`, roleData);
     return response.data;
   }
+
+  // Priority 2: Labels & Milestones Management
+  async getRepositoryLabels(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/labels`);
+    return response.data;
+  }
+
+  async createRepositoryLabel(owner: string, repo: string, labelData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/labels`, labelData);
+    return response.data;
+  }
+
+  async deleteRepositoryLabel(owner: string, repo: string, name: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/labels/${name}`);
+    return response.data;
+  }
+
+  async updateRepositoryLabel(owner: string, repo: string, name: string, labelData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/labels/${name}`, labelData);
+    return response.data;
+  }
+
+  async getRepositoryMilestones(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open', page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones`, {
+      params: {
+        state,
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  async createRepositoryMilestone(owner: string, repo: string, milestoneData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/milestones`, milestoneData);
+    return response.data;
+  }
+
+  async updateRepositoryMilestone(owner: string, repo: string, number: number, milestoneData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/milestones/${number}`, milestoneData);
+    return response.data;
+  }
+
+  async deleteRepositoryMilestone(owner: string, repo: string, number: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/milestones/${number}`);
+    return response.data;
+  }
+
+  async getRepositoryMilestone(owner: string, repo: string, number: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones/${number}`);
+    return response.data;
+  }
+
+  // Priority 2: Commit Advanced Management
+  async getRepositoryCommitComments(owner: string, repo: string, sha: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  async createRepositoryCommitComment(owner: string, repo: string, sha: string, commentData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, commentData);
+    return response.data;
+  }
+
+  async getRepositoryCommitDiff(owner: string, repo: string, sha: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/diff`);
+    return response.data;
+  }
+
+  async compareRepositoryCommits(owner: string, repo: string, base: string, head: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/compare/${base}...${head}`);
+    return response.data;
+  }
+
+  async getRepositoryCommitPatch(owner: string, repo: string, sha: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/patch`);
+    return response.data;
+  }
+
+  async getRepositoryCommitStats(owner: string, repo: string, sha?: string): Promise<any> {
+    const url = sha ? `/api/v5/repos/${owner}/${repo}/commits/${sha}/stats` : `/api/v5/repos/${owner}/${repo}/stats`;
+    const response = await this.client.get(url);
+    return response.data;
+  }
+
+  async getRepositoryCommitStatuses(owner: string, repo: string, sha: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/statuses`);
+    return response.data;
+  }
+
+  async createRepositoryCommitStatus(owner: string, repo: string, sha: string, statusData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/statuses`, statusData);
+    return response.data;
+  }
+
+  async getRepositoryCommitComment(owner: string, repo: string, commentId: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
+    return response.data;
+  }
+
+  async updateRepositoryCommitComment(owner: string, repo: string, commentId: number, commentData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`, commentData);
+    return response.data;
+  }
+
+  async deleteRepositoryCommitComment(owner: string, repo: string, commentId: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
+    return response.data;
+  }
+
+  // Priority 2: Member Management
+  async getRepositoryCollaborators(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators`);
+    return response.data;
+  }
+
+  async addRepositoryCollaborator(owner: string, repo: string, username: string, collaboratorData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`, collaboratorData);
+    return response.data;
+  }
+
+  async removeRepositoryCollaborator(owner: string, repo: string, username: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
+    return response.data;
+  }
+
+  async getRepositoryCollaborator(owner: string, repo: string, username: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
+    return response.data;
+  }
+
+  // Priority 2: Search Functionality
+  async searchIssues(owner: string, repo: string, query: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/search/issues`, {
+      params: {
+        q: `repo:${owner}/${repo} ${query}`,
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  async searchCode(owner: string, repo: string, query: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/search/code`, {
+      params: {
+        q: `repo:${owner}/${repo} ${query}`,
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  // Priority 2: User Advanced Features
+  async getUserFollowers(username: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/followers`);
+    return response.data;
+  }
+
+  async getUserFollowing(username: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/following`);
+    return response.data;
+  }
+
+  async followUser(username: string): Promise<void> {
+    const response = await this.client.put(`/api/v5/user/following/${username}`);
+    return response.data;
+  }
+
+  async unfollowUser(username: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/user/following/${username}`);
+    return response.data;
+  }
+
+  async getCurrentUserFollowers(): Promise<any[]> {
+    const response = await this.client.get('/api/v5/user/followers');
+    return response.data;
+  }
+
+  async getCurrentUserFollowing(): Promise<any[]> {
+    const response = await this.client.get('/api/v5/user/following');
+    return response.data;
+  }
+
+  async getUserOrganizations(username: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/orgs`);
+    return response.data;
+  }
+
+  async getCurrentUserOrganizations(): Promise<any[]> {
+    const response = await this.client.get('/api/v5/user/orgs');
+    return response.data;
+  }
+
+  // Priority 2: Release Advanced Management
+  async updateRelease(owner: string, repo: string, tag: string, releaseData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, releaseData);
+    return response.data;
+  }
+
+  async deleteRelease(owner: string, repo: string, tag: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
+    return response.data;
+  }
+
+  async getReleaseAssets(owner: string, repo: string, tag: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/assets`);
+    return response.data;
+  }
+
+  async uploadReleaseAsset(owner: string, repo: string, tag: string, assetData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/releases/${tag}/assets`, assetData);
+    return response.data;
+  }
+
+  async getReleaseAsset(owner: string, repo: string, assetId: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
+    return response.data;
+  }
+
+  async updateReleaseAsset(owner: string, repo: string, assetId: number, assetData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`, assetData);
+    return response.data;
+  }
+
+  async deleteReleaseAsset(owner: string, repo: string, assetId: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
+    return response.data;
+  }
 }

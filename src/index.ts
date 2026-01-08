@@ -21,6 +21,12 @@ import { TagTools } from './tools/TagTools.js';
 import { RepositorySettingsTools } from './tools/RepositorySettingsTools.js';
 import { RepositoryAdvancedTools } from './tools/RepositoryAdvancedTools.js';
 import { RepositoryManagementAdvancedTools } from './tools/RepositoryManagementAdvancedTools.js';
+import { LabelsMilestonesTools } from './tools/LabelsMilestonesTools.js';
+import { CommitAdvancedTools } from './tools/CommitAdvancedTools.js';
+import { MemberManagementTools } from './tools/MemberManagementTools.js';
+import { SearchAdvancedTools } from './tools/SearchAdvancedTools.js';
+import { UserAdvancedTools } from './tools/UserAdvancedTools.js';
+import { ReleaseAdvancedTools } from './tools/ReleaseAdvancedTools.js';
 
 // Load environment variables
 config();
@@ -43,6 +49,12 @@ class AtomGitMCPServer {
   private repositorySettingsTools: RepositorySettingsTools;
   private repositoryAdvancedTools: RepositoryAdvancedTools;
   private repositoryManagementAdvancedTools: RepositoryManagementAdvancedTools;
+  private labelsMilestonesTools: LabelsMilestonesTools;
+  private commitAdvancedTools: CommitAdvancedTools;
+  private memberManagementTools: MemberManagementTools;
+  private searchAdvancedTools: SearchAdvancedTools;
+  private userAdvancedTools: UserAdvancedTools;
+  private releaseAdvancedTools: ReleaseAdvancedTools;
 
   constructor() {
     this.server = new Server(
@@ -79,6 +91,12 @@ class AtomGitMCPServer {
     this.repositorySettingsTools = new RepositorySettingsTools(this.atomGitService);
     this.repositoryAdvancedTools = new RepositoryAdvancedTools(this.atomGitService);
     this.repositoryManagementAdvancedTools = new RepositoryManagementAdvancedTools(this.atomGitService);
+    this.labelsMilestonesTools = new LabelsMilestonesTools(this.atomGitService);
+    this.commitAdvancedTools = new CommitAdvancedTools(this.atomGitService);
+    this.memberManagementTools = new MemberManagementTools(this.atomGitService);
+    this.searchAdvancedTools = new SearchAdvancedTools(this.atomGitService);
+    this.userAdvancedTools = new UserAdvancedTools(this.atomGitService);
+    this.releaseAdvancedTools = new ReleaseAdvancedTools(this.atomGitService);
 
     this.setupHandlers();
   }
@@ -98,6 +116,12 @@ class AtomGitMCPServer {
         ...this.repositorySettingsTools.getTools(),
         ...this.repositoryAdvancedTools.getTools(),
         ...this.repositoryManagementAdvancedTools.getTools(),
+        ...this.labelsMilestonesTools.getTools(),
+        ...this.commitAdvancedTools.getTools(),
+        ...this.memberManagementTools.getTools(),
+        ...this.searchAdvancedTools.getTools(),
+        ...this.userAdvancedTools.getTools(),
+        ...this.releaseAdvancedTools.getTools(),
       ];
       
       return { tools: allTools };
@@ -121,6 +145,12 @@ class AtomGitMCPServer {
           this.repositorySettingsTools,
           this.repositoryAdvancedTools,
           this.repositoryManagementAdvancedTools,
+          this.labelsMilestonesTools,
+          this.commitAdvancedTools,
+          this.memberManagementTools,
+          this.searchAdvancedTools,
+          this.userAdvancedTools,
+          this.releaseAdvancedTools,
         ];
 
         for (const toolClass of toolClasses) {

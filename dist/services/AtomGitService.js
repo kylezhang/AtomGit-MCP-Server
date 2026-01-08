@@ -594,5 +594,199 @@ export class AtomGitService {
         const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/members/${username}`, roleData);
         return response.data;
     }
+    // Priority 2: Labels & Milestones Management
+    async getRepositoryLabels(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/labels`);
+        return response.data;
+    }
+    async createRepositoryLabel(owner, repo, labelData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/labels`, labelData);
+        return response.data;
+    }
+    async deleteRepositoryLabel(owner, repo, name) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/labels/${name}`);
+        return response.data;
+    }
+    async updateRepositoryLabel(owner, repo, name, labelData) {
+        const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/labels/${name}`, labelData);
+        return response.data;
+    }
+    async getRepositoryMilestones(owner, repo, state = 'open', page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones`, {
+            params: {
+                state,
+                page,
+                per_page: perPage
+            }
+        });
+        return response.data;
+    }
+    async createRepositoryMilestone(owner, repo, milestoneData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/milestones`, milestoneData);
+        return response.data;
+    }
+    async updateRepositoryMilestone(owner, repo, number, milestoneData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/milestones/${number}`, milestoneData);
+        return response.data;
+    }
+    async deleteRepositoryMilestone(owner, repo, number) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/milestones/${number}`);
+        return response.data;
+    }
+    async getRepositoryMilestone(owner, repo, number) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones/${number}`);
+        return response.data;
+    }
+    // Priority 2: Commit Advanced Management
+    async getRepositoryCommitComments(owner, repo, sha, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, {
+            params: {
+                page,
+                per_page: perPage
+            }
+        });
+        return response.data;
+    }
+    async createRepositoryCommitComment(owner, repo, sha, commentData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, commentData);
+        return response.data;
+    }
+    async getRepositoryCommitDiff(owner, repo, sha) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/diff`);
+        return response.data;
+    }
+    async compareRepositoryCommits(owner, repo, base, head) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/compare/${base}...${head}`);
+        return response.data;
+    }
+    async getRepositoryCommitPatch(owner, repo, sha) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/patch`);
+        return response.data;
+    }
+    async getRepositoryCommitStats(owner, repo, sha) {
+        const url = sha ? `/api/v5/repos/${owner}/${repo}/commits/${sha}/stats` : `/api/v5/repos/${owner}/${repo}/stats`;
+        const response = await this.client.get(url);
+        return response.data;
+    }
+    async getRepositoryCommitStatuses(owner, repo, sha) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/statuses`);
+        return response.data;
+    }
+    async createRepositoryCommitStatus(owner, repo, sha, statusData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/statuses`, statusData);
+        return response.data;
+    }
+    async getRepositoryCommitComment(owner, repo, commentId) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
+        return response.data;
+    }
+    async updateRepositoryCommitComment(owner, repo, commentId, commentData) {
+        const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`, commentData);
+        return response.data;
+    }
+    async deleteRepositoryCommitComment(owner, repo, commentId) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
+        return response.data;
+    }
+    // Priority 2: Member Management
+    async getRepositoryCollaborators(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators`);
+        return response.data;
+    }
+    async addRepositoryCollaborator(owner, repo, username, collaboratorData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`, collaboratorData);
+        return response.data;
+    }
+    async removeRepositoryCollaborator(owner, repo, username) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
+        return response.data;
+    }
+    async getRepositoryCollaborator(owner, repo, username) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
+        return response.data;
+    }
+    // Priority 2: Search Functionality
+    async searchIssues(owner, repo, query, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/search/issues`, {
+            params: {
+                q: `repo:${owner}/${repo} ${query}`,
+                page,
+                per_page: perPage
+            }
+        });
+        return response.data;
+    }
+    async searchCode(owner, repo, query, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/search/code`, {
+            params: {
+                q: `repo:${owner}/${repo} ${query}`,
+                page,
+                per_page: perPage
+            }
+        });
+        return response.data;
+    }
+    // Priority 2: User Advanced Features
+    async getUserFollowers(username) {
+        const response = await this.client.get(`/api/v5/users/${username}/followers`);
+        return response.data;
+    }
+    async getUserFollowing(username) {
+        const response = await this.client.get(`/api/v5/users/${username}/following`);
+        return response.data;
+    }
+    async followUser(username) {
+        const response = await this.client.put(`/api/v5/user/following/${username}`);
+        return response.data;
+    }
+    async unfollowUser(username) {
+        const response = await this.client.delete(`/api/v5/user/following/${username}`);
+        return response.data;
+    }
+    async getCurrentUserFollowers() {
+        const response = await this.client.get('/api/v5/user/followers');
+        return response.data;
+    }
+    async getCurrentUserFollowing() {
+        const response = await this.client.get('/api/v5/user/following');
+        return response.data;
+    }
+    async getUserOrganizations(username) {
+        const response = await this.client.get(`/api/v5/users/${username}/orgs`);
+        return response.data;
+    }
+    async getCurrentUserOrganizations() {
+        const response = await this.client.get('/api/v5/user/orgs');
+        return response.data;
+    }
+    // Priority 2: Release Advanced Management
+    async updateRelease(owner, repo, tag, releaseData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, releaseData);
+        return response.data;
+    }
+    async deleteRelease(owner, repo, tag) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
+        return response.data;
+    }
+    async getReleaseAssets(owner, repo, tag) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/assets`);
+        return response.data;
+    }
+    async uploadReleaseAsset(owner, repo, tag, assetData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/releases/${tag}/assets`, assetData);
+        return response.data;
+    }
+    async getReleaseAsset(owner, repo, assetId) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
+        return response.data;
+    }
+    async updateReleaseAsset(owner, repo, assetId, assetData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`, assetData);
+        return response.data;
+    }
+    async deleteReleaseAsset(owner, repo, assetId) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
+        return response.data;
+    }
 }
 //# sourceMappingURL=AtomGitService.js.map
