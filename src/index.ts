@@ -18,6 +18,9 @@ import { RepositoryContentTools } from './tools/RepositoryContentTools.js';
 import { RepositoryManagementTools } from './tools/RepositoryManagementTools.js';
 import { CommitTools } from './tools/CommitTools.js';
 import { TagTools } from './tools/TagTools.js';
+import { RepositorySettingsTools } from './tools/RepositorySettingsTools.js';
+import { RepositoryAdvancedTools } from './tools/RepositoryAdvancedTools.js';
+import { RepositoryManagementAdvancedTools } from './tools/RepositoryManagementAdvancedTools.js';
 
 // Load environment variables
 config();
@@ -37,6 +40,9 @@ class AtomGitMCPServer {
   private repositoryManagementTools: RepositoryManagementTools;
   private commitTools: CommitTools;
   private tagTools: TagTools;
+  private repositorySettingsTools: RepositorySettingsTools;
+  private repositoryAdvancedTools: RepositoryAdvancedTools;
+  private repositoryManagementAdvancedTools: RepositoryManagementAdvancedTools;
 
   constructor() {
     this.server = new Server(
@@ -70,6 +76,9 @@ class AtomGitMCPServer {
     this.repositoryManagementTools = new RepositoryManagementTools(this.atomGitService);
     this.commitTools = new CommitTools(this.atomGitService);
     this.tagTools = new TagTools(this.atomGitService);
+    this.repositorySettingsTools = new RepositorySettingsTools(this.atomGitService);
+    this.repositoryAdvancedTools = new RepositoryAdvancedTools(this.atomGitService);
+    this.repositoryManagementAdvancedTools = new RepositoryManagementAdvancedTools(this.atomGitService);
 
     this.setupHandlers();
   }
@@ -86,6 +95,9 @@ class AtomGitMCPServer {
         ...this.repositoryManagementTools.getTools(),
         ...this.commitTools.getTools(),
         ...this.tagTools.getTools(),
+        ...this.repositorySettingsTools.getTools(),
+        ...this.repositoryAdvancedTools.getTools(),
+        ...this.repositoryManagementAdvancedTools.getTools(),
       ];
       
       return { tools: allTools };
@@ -106,6 +118,9 @@ class AtomGitMCPServer {
           this.repositoryManagementTools,
           this.commitTools,
           this.tagTools,
+          this.repositorySettingsTools,
+          this.repositoryAdvancedTools,
+          this.repositoryManagementAdvancedTools,
         ];
 
         for (const toolClass of toolClasses) {

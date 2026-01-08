@@ -5,7 +5,11 @@
  * This script tests both public and authenticated endpoints
  */
 
+import { config } from 'dotenv';
 import { AtomGitService } from '../dist/services/AtomGitService.js';
+
+// Load environment variables
+config();
 
 const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
 const TOKEN = process.env.ATOMGIT_TOKEN;

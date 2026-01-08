@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 78 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理和 Pull Request 管理等核心功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 107 个工具，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能等全面功能。
 
 ### ✨ 主要特性
 
@@ -61,6 +61,46 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 | `get_repository_file_blob` | 获取文件Blob内容 | ⏳ 待测试 | 🔑 需要认证 |
 | `upload_repository_image` | 上传仓库图片 | ⏳ 待测试 | 🔑 需要认证 |
 | `upload_repository_file` | 上传仓库文件 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🏗️ 仓库设置管理 (6 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_repository_settings` | 获取仓库设置信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_settings` | 更新仓库设置 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_pull_request_settings` | 获取PR设置信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_pull_request_settings` | 更新PR设置 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_push_config` | 获取推送规则配置 | ⏳ 待测试 | 🔑 需要认证 |
+| `set_repository_push_config` | 设置仓库推送规则 | ⏳ 待测试 | 🔑 需要认证 |
+
+### 🚀 仓库高级功能 (8 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `get_repository_languages` | 获取仓库编程语言统计 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_contributors` | 获取仓库贡献者列表 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_contributors_statistic` | 获取贡献者统计信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_download_statistics` | 获取下载次数统计 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_events` | 获取仓库动态事件 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_raw_file` | 获取仓库原始文件内容 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_subscribers` | 获取订阅仓库的用户 | ✅ 已测试 | 🔑 需要认证 |
+| `get_repository_stargazers` | 获取Star仓库的用户 | ✅ 已测试 | 🔑 需要认证 |
+
+### 📋 仓库高级管理 (11 个工具)
+
+| 工具名称 | 功能描述 | 测试状态 | 需要认证 |
+|----------|----------|----------|----------|
+| `update_repository_info` | 更新仓库信息 | ⏳ 待测试 | 🔑 需要认证 |
+| `delete_repository` | 删除仓库 | ⏳ 待测试 | 🔑 需要认证 |
+| `fork_repository` | Fork仓库 | ⏳ 待测试 | 🔑 需要认证 |
+| `archive_repository` | 归档仓库 | ⏳ 待测试 | 🔑 需要认证 |
+| `transfer_repository` | 转移仓库 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_module_setting` | 更新仓库模块设置 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_reviewer` | 更新代码审查设置 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_transition` | 获取仓库权限模式 | ✅ 已测试 | 🔑 需要认证 |
+| `update_repository_transition` | 更新仓库权限模式 | ⏳ 待测试 | 🔑 需要认证 |
+| `get_repository_customized_roles` | 获取仓库自定义角色 | ⏳ 待测试 | 🔑 需要认证 |
+| `update_repository_member_role` | 更新仓库成员角色 | ⏳ 待测试 | 🔑 需要认证 |
 
 ### 👤 用户管理 (7 个工具)
 

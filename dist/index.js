@@ -13,6 +13,9 @@ import { RepositoryContentTools } from './tools/RepositoryContentTools.js';
 import { RepositoryManagementTools } from './tools/RepositoryManagementTools.js';
 import { CommitTools } from './tools/CommitTools.js';
 import { TagTools } from './tools/TagTools.js';
+import { RepositorySettingsTools } from './tools/RepositorySettingsTools.js';
+import { RepositoryAdvancedTools } from './tools/RepositoryAdvancedTools.js';
+import { RepositoryManagementAdvancedTools } from './tools/RepositoryManagementAdvancedTools.js';
 // Load environment variables
 config();
 const ATOMGIT_API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
@@ -29,6 +32,9 @@ class AtomGitMCPServer {
     repositoryManagementTools;
     commitTools;
     tagTools;
+    repositorySettingsTools;
+    repositoryAdvancedTools;
+    repositoryManagementAdvancedTools;
     constructor() {
         this.server = new Server({
             name: 'atomgit-mcp-server',
@@ -54,6 +60,9 @@ class AtomGitMCPServer {
         this.repositoryManagementTools = new RepositoryManagementTools(this.atomGitService);
         this.commitTools = new CommitTools(this.atomGitService);
         this.tagTools = new TagTools(this.atomGitService);
+        this.repositorySettingsTools = new RepositorySettingsTools(this.atomGitService);
+        this.repositoryAdvancedTools = new RepositoryAdvancedTools(this.atomGitService);
+        this.repositoryManagementAdvancedTools = new RepositoryManagementAdvancedTools(this.atomGitService);
         this.setupHandlers();
     }
     setupHandlers() {
@@ -68,6 +77,9 @@ class AtomGitMCPServer {
                 ...this.repositoryManagementTools.getTools(),
                 ...this.commitTools.getTools(),
                 ...this.tagTools.getTools(),
+                ...this.repositorySettingsTools.getTools(),
+                ...this.repositoryAdvancedTools.getTools(),
+                ...this.repositoryManagementAdvancedTools.getTools(),
             ];
             return { tools: allTools };
         });
@@ -85,6 +97,9 @@ class AtomGitMCPServer {
                     this.repositoryManagementTools,
                     this.commitTools,
                     this.tagTools,
+                    this.repositorySettingsTools,
+                    this.repositoryAdvancedTools,
+                    this.repositoryManagementAdvancedTools,
                 ];
                 for (const toolClass of toolClasses) {
                     try {

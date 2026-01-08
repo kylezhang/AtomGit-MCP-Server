@@ -89,5 +89,30 @@ export declare class AtomGitService {
     uploadRepositoryFile(owner: string, repo: string, fileData: string, filename: string): Promise<any>;
     getUserSubscriptions(): Promise<AtomGitRepository[]>;
     getUserNamespaces(): Promise<string[]>;
+    getRepositorySettings(owner: string, repo: string): Promise<any>;
+    updateRepositorySettings(owner: string, repo: string, settings: any): Promise<any>;
+    getRepositoryPullRequestSettings(owner: string, repo: string): Promise<any>;
+    updateRepositoryPullRequestSettings(owner: string, repo: string, settings: any): Promise<any>;
+    getRepositoryPushConfig(owner: string, repo: string): Promise<any>;
+    setRepositoryPushConfig(owner: string, repo: string, config: any): Promise<any>;
+    getRepositoryLanguages(owner: string, repo: string): Promise<any>;
+    getRepositoryContributors(owner: string, repo: string): Promise<any[]>;
+    getRepositoryContributorsStatistic(owner: string, repo: string): Promise<any>;
+    getRepositoryDownloadStatistics(owner: string, repo: string): Promise<any>;
+    getRepositoryEvents(owner: string, repo: string): Promise<any[]>;
+    updateRepository(owner: string, repo: string, updateData: any): Promise<AtomGitRepository>;
+    deleteRepository(owner: string, repo: string): Promise<void>;
+    forkRepository(owner: string, repo: string, forkData?: any): Promise<AtomGitRepository>;
+    archiveRepository(org: string, repository: string, archiveData: any): Promise<any>;
+    transferRepository(org: string, repository: string, transferData: any): Promise<any>;
+    getRepositoryRawFile(owner: string, repo: string, path: string): Promise<any>;
+    getRepositorySubscribers(owner: string, repo: string): Promise<any[]>;
+    getRepositoryStargazers(owner: string, repo: string): Promise<any[]>;
+    updateRepositoryModuleSetting(owner: string, repo: string, moduleData: any): Promise<any>;
+    updateRepositoryReviewer(owner: string, repo: string, reviewerData: any): Promise<any>;
+    getRepositoryTransition(owner: string, repo: string): Promise<any>;
+    updateRepositoryTransition(owner: string, repo: string, transitionData: any): Promise<any>;
+    getRepositoryCustomizedRoles(owner: string, repo: string): Promise<any[]>;
+    updateRepositoryMemberRole(owner: string, repo: string, username: string, roleData: any): Promise<any>;
 }
 //# sourceMappingURL=AtomGitService.d.ts.map

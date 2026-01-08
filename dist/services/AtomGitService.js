@@ -491,5 +491,108 @@ export class AtomGitService {
         const response = await this.client.get('/api/v5/user/namespaces');
         return response.data;
     }
+    // Priority 1: Repository Settings & Configuration
+    async getRepositorySettings(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/repo-settings`);
+        return response.data;
+    }
+    async updateRepositorySettings(owner, repo, settings) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/repo-settings`, settings);
+        return response.data;
+    }
+    async getRepositoryPullRequestSettings(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pull-request-settings`);
+        return response.data;
+    }
+    async updateRepositoryPullRequestSettings(owner, repo, settings) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pull-request-settings`, settings);
+        return response.data;
+    }
+    async getRepositoryPushConfig(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/push-config`);
+        return response.data;
+    }
+    async setRepositoryPushConfig(owner, repo, config) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/push-config`, config);
+        return response.data;
+    }
+    // Priority 1: Repository Advanced Features
+    async getRepositoryLanguages(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/languages`);
+        return response.data;
+    }
+    async getRepositoryContributors(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors`);
+        return response.data;
+    }
+    async getRepositoryContributorsStatistic(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors-statistic`);
+        return response.data;
+    }
+    async getRepositoryDownloadStatistics(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/download-statistics`);
+        return response.data;
+    }
+    async getRepositoryEvents(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/events`);
+        return response.data;
+    }
+    // Priority 1: Repository Management
+    async updateRepository(owner, repo, updateData) {
+        const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}`, updateData);
+        return response.data;
+    }
+    async deleteRepository(owner, repo) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}`);
+        return response.data;
+    }
+    async forkRepository(owner, repo, forkData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/forks`, forkData || {});
+        return response.data;
+    }
+    async archiveRepository(org, repository, archiveData) {
+        const response = await this.client.put(`/api/v5/org/${org}/repo/${repository}/status`, archiveData);
+        return response.data;
+    }
+    async transferRepository(org, repository, transferData) {
+        const response = await this.client.post(`/api/v5/org/${org}/projects/${repository}/transfer`, transferData);
+        return response.data;
+    }
+    async getRepositoryRawFile(owner, repo, path) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${path}`);
+        return response.data;
+    }
+    async getRepositorySubscribers(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/subscribers`);
+        return response.data;
+    }
+    async getRepositoryStargazers(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/stargazers`);
+        return response.data;
+    }
+    async updateRepositoryModuleSetting(owner, repo, moduleData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/module-setting`, moduleData);
+        return response.data;
+    }
+    async updateRepositoryReviewer(owner, repo, reviewerData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/reviewer`, reviewerData);
+        return response.data;
+    }
+    async getRepositoryTransition(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/transition`);
+        return response.data;
+    }
+    async updateRepositoryTransition(owner, repo, transitionData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/transition`, transitionData);
+        return response.data;
+    }
+    async getRepositoryCustomizedRoles(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/customized-roles`);
+        return response.data;
+    }
+    async updateRepositoryMemberRole(owner, repo, username, roleData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/members/${username}`, roleData);
+        return response.data;
+    }
 }
 //# sourceMappingURL=AtomGitService.js.map
