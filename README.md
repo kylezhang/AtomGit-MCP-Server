@@ -125,8 +125,7 @@ Apache License 2.0 - 详见 [LICENSE](./LICENSE) 文件
 
 ## 📞 支持与联系
 
-- 📧 **技术支持**: [GitHub Issues](https://github.com/your-repo/AtomGit-MCP-Server/issues)
-- 📧 **功能请求**: [GitHub Discussions](https://github.com/your-repo/AtomGit-MCP-Server/discussions)
+- 📧 **技术支持**: [Issues](https://atomgit.com/zkxw2008/AtomGit-MCP-Server/issues)
 
 ---
 
