@@ -1,273 +1,99 @@
-# AtomGit MCP Server - Agent Guidelines
+# AtomGit MCP Server - Developer Guidelines
 
-## Development Commands
+**ROLE:** You are an expert TypeScript developer building the AtomGit MCP Server. You must strictly follow the file structure, coding standards, and implementation priorities defined below.
 
-- `npm run build` - Build TypeScript to `dist/`
-- `npm run typecheck` - Type check without emitting files
-- `npm run dev` - Start in development mode
-- `npm start` - Start production server
-- `npm test` - Run basic API tests
-- `npm run test:auth` - Run authenticated tests
-- `npm run test:mcp` - Test MCP server functionality
+## 🚨 CRITICAL CONSTRAINTS (Read First)
 
-## File Organization Guidelines
+1. **Environment Integrity (`.env`)**:
+* **NEVER** modify, recreate, or delete the `.env` file.
+* **NEVER** copy `.env.example` to `.env`.
+* **ALWAYS** use the existing `.env` configuration provided by the user (Token, Repo Owner, etc.).
 
-**IMPORTANT**: Keep the project root directory clean and organized. Follow these strict rules:
+2. **Root Directory Hygiene**:
+* **NEVER** create test scripts, debug scripts, or docs in the root directory.
+* **ONLY** core config files (`package.json`, `tsconfig.json`, `README.md`, etc.) and `src/` are allowed in root.
 
-### Files That MUST Stay in Root Directory
-- `src/` - Source code directory
-- `dist/` - Compiled JavaScript output
-- `package.json` - Project configuration
-- `package-lock.json` - Dependency lock file
-- `tsconfig.json` - TypeScript configuration
-- `.env.example` - Environment variable template
-- `.gitignore` - Git ignore rules
-- `README.md` - Main project documentation
-- `LICENSE` - Project license
-- `setup.sh` - Setup script
-- `AGENTS.md` - This file (agent guidelines)
+---
 
-### Files That MUST Go to Subdirectories
+## 📂 File Organization & Structure
 
-1. **Test Scripts** → `tests/` directory
-   - All `test-*.mjs` files
-   - Example: `tests/test-auth.mjs`, `tests/test-comprehensive.mjs`
+### Directory Mandates
 
-2. **Debug Scripts** → `scripts/debug/` directory
-   - All `debug-*.mjs` files
-   - Example: `scripts/debug/debug-api.mjs`, `scripts/debug/debug-user-api.mjs`
+Follow this strict mapping for new files:
 
-3. **Documentation Files** → `docs/` directory
-   - All `*_REPORT.md` files
-   - All `*_SUMMARY.md` files
-   - All `*_ACHIEVEMENT.md` files
-   - Example: `docs/PROJECT_STATUS.md`, `docs/TEST_REPORT.md`
+| File Type | Target Directory | Naming Pattern |
+| --- | --- | --- |
+| **Source Code** | `src/` | `*.ts` |
+| **Tests** | `tests/` | `test-*.mjs` |
+| **Debug Scripts** | `scripts/debug/` | `debug-*.mjs` |
+| **Documentation** | `docs/` | `*_REPORT.md`, `*_SUMMARY.md` |
 
-### Rule Enforcement
-- **NEVER** create test scripts, debug scripts, or documentation reports in the root directory
-- **ALWAYS** organize files according to their purpose using the subdirectories above
-- If you need to create a new test, place it in `tests/`
-- If you need to create a debug script, place it in `scripts/debug/`
-- If you need to create documentation, place it in `docs/`
-- This keeps the root directory clean and focused on core project files
+### Project Architecture (`src/`)
 
-## Code Style Guidelines
+* `src/services/` - API service logic (e.g., `AtomGitService.ts`).
+* `src/tools/` - MCP tool definitions & implementations.
+* `src/types/` - TypeScript interfaces and types.
 
-### Imports
-- Use `.js` extension for all imports (TypeScript ES modules)
-- Import from `@modelcontextprotocol/sdk/types.js` for MCP types
-- Group imports: external libs, then internal modules
+---
 
-### TypeScript
-- Use strict TypeScript config with no implicit any
-- Prefer exact optional properties (`exactOptionalPropertyTypes: true`)
-- All API calls must have proper type annotations
-- Return specific types, not `any` or `unknown`
+## 💻 Code Style & Standards
+
+### TypeScript & Imports
+
+* **Extension:** Use `.js` extension for all local imports (ESM requirement).
+* **Strictness:** No implicit `any`. Use `exactOptionalPropertyTypes: true`.
+* **Return Types:** Explicitly define return types. Avoid `any` or `unknown`.
+* **MCP SDK:** Import types from `@modelcontextprotocol/sdk/types.js`.
 
 ### Naming Conventions
-- Classes: PascalCase (`AtomGitService`, `BranchTools`)
-- Methods: camelCase (`getRepository`, `createRepositoryIssue`)
-- Constants: UPPER_SNAKE_CASE (`API_BASE_URL`)
-- Files: PascalCase for classes (`AtomGitService.ts`)
 
-### Error Handling
-- All async methods must wrap API calls in try/catch
-- Return meaningful error messages with context
-- Use descriptive names for caught errors
-- Log errors to stderr for debugging
+* **Classes:** PascalCase (`BranchTools`)
+* **Methods:** camelCase (`createRepositoryIssue`)
+* **Files:** PascalCase for classes (`AtomGitService.ts`)
+* **Constants:** UPPER_SNAKE_CASE (`API_BASE_URL`)
 
-### API Design
-- All MCP tools must include description and inputSchema
-- Required parameters must be specified in schema
-- Include default values for optional parameters
-- Use descriptive parameter descriptions
+### API & Error Handling
 
-### Tool Implementation
-- Each tool class handles a specific domain (branches, issues, etc.)
-- Use `getTools(): Tool[]` and `callTool(name, args): Promise<any>` pattern
-- Throw `Error(\`Unknown tool: \${name}\`)` for unknown tool names
-- Pass args directly to service methods without unnecessary transformation
+* **Wrappers:** All async API calls must be wrapped in `try/catch`.
+* **Errors:** Throw meaningful errors with context. Log to `stderr` for debugging.
+* **Tool Schema:** Every tool MUST have a `description` and `inputSchema` (with defaults for optional params).
+* **Pattern:** Use `getTools()` and `callTool(name, args)` pattern. Throw error if tool name is unknown.
 
-### Project Structure
-- `src/services/` - API service layer
-- `src/tools/` - MCP tool implementations
-- `src/types/` - TypeScript type definitions
-- All TypeScript files must have `.ts` extension
+---
 
-## README.md Editing Guidelines
+## 📖 Documentation (README.md) Editing
 
-**IMPORTANT**: The README.md structure has been manually optimized for human readers. Follow these strict rules:
+**Goal:** Maintain the manually optimized human-readable structure.
 
-### Sections That CAN Be Updated
+* **ALLOWED to Edit:** Only the `## 🛠️ 已实现工具` (Implemented Tools) section and its subsections (tables).
+* **FORBIDDEN to Edit:** Project intro, `Features`, `Quick Start`, `Structure`, `License`, or the order of sections.
 
-- `## 🛠️ 已实现工具` - This section can be updated to add/remove tools
-- `### 📂 仓库管理` - Repository tools table
-- `### 👤 用户管理` - User tools table
-- `### 🌿 分支管理` - Branch tools table
-- `### 📝 提交管理` - Commit tools table
-- `### 🏷️ 标签管理` - Tag tools table
-- `### 🐛 问题管理` - Issues tools table
-- `### 🔀 Pull Requests 管理` - PR tools table
+---
 
-### Sections That MUST NOT Be Changed
+## 🚀 Implementation Plan & Workflow
 
-- Project introduction and description
-- `## ✨ 主要特性`
-- `## 在相关工具中配置使用`
-- `## 🚀 快速开发开始` (except for fixing obvious errors)
-- `## 📂 项目结构`
-- `## 📄 许可证`
-- `## 🤝 贡献`
-- Overall structure and section ordering
+**Strategy:** Prioritize "Core Repository Operations" (PRs, Files, Issues) before moving to "Collaboration" or "Enterprise" features.
 
-### Rule Enforcement
+### Development Loop (Repeat for each feature)
 
-- **ONLY** update `## 🛠️ 已实现工具` section and its subsections
-- **NEVER** change the overall structure of README.md
-- **NEVER** add or remove sections outside the tools section
-- **NEVER** reorder existing sections
-- The structure has been carefully optimized for user experience
+1. **Develop:** Implement Service method + MCP Tool.
+2. **Test:** Create/Run unit & integration tests in `tests/` using **real** `.env` vars.
+3. **Doc:** Update `README.md` tool list.
+4. **Verify:** Ensure `npm run typecheck` and `npm test` pass.
 
-## AtomGit MCP Server Implementation Plan
+### Priority Roadmap
 
-**IMPORTANT**: This implementation plan outlines the systematic approach to completing the remaining AtomGit API integrations. Follow this plan strictly to avoid duplication and ensure comprehensive coverage.
+1. **Priority 1: Core Ops** (PRs, File Content, Issues, Branches).
+2. **Priority 2: Collaboration** (Labels, Milestones, Commits, Members, Search).
+3. **Priority 3: Org & Enterprise** (Orgs, Releases, Webhooks, Ent. Features).
+4. **Priority 4: Advanced** (Kanban, AI Hub, User Settings).
 
-### Current Status Overview
-- **Implemented Tools**: 20 out of 215 total API endpoints (9.3%)
-- **Remaining Endpoints**: 195 (90.7%)
-- **Implementation Strategy**: Prioritized by user impact and development workflow
+---
 
-### Priority Implementation Strategy
+## 🛠️ Development Commands
 
-#### Priority 1: Core Repository Operations (95 endpoints)
-**Goal**: Complete daily development workflow essentials
-
-1. **Pull Requests Full Management** (41 endpoints)
-   - Create, merge, comment, review, label management
-   - PR file viewing, issue linking, reviewer assignment
-   - **Impact**: Dramatically improves code collaboration experience
-
-2. **Repository File Content Management** (8 endpoints)
-   - File create, update, delete, upload operations
-   - File listing, blob retrieval, raw file access
-   - **Impact**: Supports complete file operation workflows
-
-3. **Issues Full Management** (24 endpoints)
-   - Issue comments, labels, reactions, operation logs
-   - Issue updates, branch linking, modification history
-   - **Impact**: Completes issue tracking management
-
-4. **Branch Advanced Management** (7 endpoints)
-   - Branch create, delete, protection rules
-   - Individual branch retrieval, protection rule management
-   - **Impact**: Enhances branch management security
-
-#### Priority 2: Collaboration Enhancement (37 endpoints)
-**Goal**: Improve team collaboration efficiency
-
-1. **Labels & Milestones Full Management** (13 endpoints)
-   - Label create, delete, protection
-   - Milestone CRUD operations
-   - **Impact**: Completes version release management
-
-2. **Commit Advanced Management** (9 endpoints)
-   - Commit comments, diff viewing, patch retrieval
-   - Commit comparison, code statistics
-   - **Impact**: Enhances code review capabilities
-
-3. **Repository Member Permission Management** (6 endpoints)
-   - Member add, remove, permission viewing
-   - Permission level management
-   - **Impact**: Completes team permission control
-
-4. **Search Functionality Completion** (1 endpoint)
-   - Issues search
-   - **Impact**: Improves content discovery
-
-#### Priority 3: Organization & Enterprise Features (41 endpoints)
-**Goal**: Support large teams and enterprise needs
-
-1. **Organization Management** (17 endpoints)
-   - Organization info, member management, repository creation
-   - **Impact**: Supports organization-level management
-
-2. **Release Management** (8 endpoints)
-   - Release create, update, asset management
-   - **Impact**: Completes version release workflow
-
-3. **Webhooks Management** (6 endpoints)
-   - Webhook CRUD operations, testing
-   - **Impact**: Supports automation integration
-
-4. **Enterprise Management** (10 endpoints)
-   - Enterprise members, roles, milestone management
-   - **Impact**: Supports enterprise-level features
-
-#### Priority 4: Advanced Features (22 endpoints)
-**Goal**: Provide value-added functionality
-
-1. **Dashboard (Kanban) Management** (7 endpoints)
-   - Kanban creation, content management, status updates
-   - **Impact**: Project visualization management
-
-2. **AI Hub Features** (7 endpoints)
-   - Text generation, speech recognition, object detection
-   - **Impact**: AI-enhanced development experience
-
-3. **User Advanced Features** (8 endpoints)
-   - User settings, SSH key management, notification management
-   - **Impact**: Personalized user experience
-
-### Implementation Workflow
-
-#### Standard Process for Each Priority Level:
-1. **Development Phase**: Implement API service methods and MCP tools
-2. **Testing Phase**:
-   - Unit tests for new functionality
-   - Integration tests with real API calls
-   - Use `.env` environment variables for real data testing
-3. **Documentation Update**: Update README.md tool listings
-4. **Code Commit**: Commit and push to remote repository
-5. **Verification**: Ensure all tests pass
-6. **Next Phase**: Repeat process for next priority
-
-#### Testing Requirements:
-- ✅ All new features must have corresponding tests
-- ✅ Use real environment variables for API testing
-- ✅ Ensure backward compatibility
-- ✅ Comprehensive error handling
-- ✅ TypeScript type checking passes
-
-### Expected Outcomes
-
-After completing all four priority levels:
-- **Implementation Rate**: From 9.3% to 100%
-- **Tool Count**: From 20 to 100+ tools
-- **Coverage**: Complete AtomGit platform functionality
-- **User Experience**: One-stop AtomGit operations for developers
-
-### Rule Enforcement
-- **STRICTLY FOLLOW** this priority order - do not implement features out of sequence
-- **NEVER** duplicate existing functionality
-- **ALWAYS** complete one priority level before starting the next
-- **MANDATORY** testing and README updates before committing
-- **REQUIRED** real API testing with environment variables before release
-
-## Environment Configuration Rules
-
-**CRITICAL**: Never modify or recreate the `.env` file. The user has already prepared all necessary environment variables including:
-- `ATOMGIT_TOKEN` - Valid personal access token
-- `TEST_REPO_OWNER` - Test repository owner
-- `TEST_REPOSITORY` - Test repository name
-- Other configuration variables
-
-**NEVER**:
-- Copy `.env.example` to `.env`
-- Modify existing `.env` file content
-- Reset or change environment variables
-- Create new `.env` files
-
-**ALWAYS**:
-- Use existing `.env` configuration for testing
-- Respect user's pre-configured environment
-- Run tests with the provided environment variables
+* `npm run dev` - Start development mode
+* `npm run build` - Build to `dist/`
+* `npm run typecheck` - Verify types
+* `npm run test:mcp` - Test MCP server functionality
+* `npm run test:auth` - Run authenticated tests
