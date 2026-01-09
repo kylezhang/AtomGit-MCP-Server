@@ -29,12 +29,40 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 
 ### 配置 JSON
 
-**注意事项（Windows 路径）：**
-在 Windows 操作系统中，`args` 参数内的文件路径需使用反斜杠 `\`，并进行转义处理。
-例如，将
-`"path/to/AtomGit-MCP-Server/dist/index.js"`
-替换为：
-`"path\\AtomGit-MCP-Server\\dist\\index.js"`
+**注意事项（Windows 路径）**
+
+* 在 Windows 操作系统中，`args` 参数内的文件路径需使用反斜杠 `\`，并在 JSON 中进行转义。
+
+* 例如，将
+  `"path/to/AtomGit-MCP-Server/dist/index.js"`
+  替换为：
+  `"path\\AtomGit-MCP-Server\\dist\\index.js"`
+
+* **在 Windows（尤其是 Trae / VS Code 系编辑器）中，MCP 启动时不会解析 `PATH`，
+  `command` 中直接使用 `"node"`可能会有问题。
+  请显式指定 `node.exe` 的绝对路径，并避免路径中包含空格。**
+
+---
+
+### 配置示例（Windows）
+
+```json
+{
+  "mcpServers": {
+    "atomgit": {
+      "command": "C:\\Progra~1\\nodejs\\node.exe",
+      "args": ["path\\AtomGit-MCP-Server\\dist\\index.js"],
+      "env": {
+        "ATOMGIT_TOKEN": "your_personal_access_token_here"
+      }
+    }
+  }
+}
+```
+
+---
+
+### 配置示例（macOS / Linux）
 
 ```json
 {
@@ -49,6 +77,7 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
   }
 }
 ```
+
 
 ---
 
