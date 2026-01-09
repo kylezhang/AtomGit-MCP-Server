@@ -41,7 +41,7 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
   "mcpServers": {
     "atomgit": {
       "command": "node",
-      "args": ["path\\AtomGit-MCP-Server\\dist\\index.js"],
+      "args": ["path/to/AtomGit-MCP-Server/dist/index.js"],
       "env": {
         "ATOMGIT_TOKEN": "your_personal_access_token_here"
       }
