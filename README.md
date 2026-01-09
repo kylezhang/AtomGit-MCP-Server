@@ -23,28 +23,25 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
   2. 点击"生成令牌"按钮
   3. 选择必要的权限范围（建议选择完全权限以获得最佳体验）
 
-### Claude Desktop 
+可以这样优化，表达更规范、也更便于技术人员快速理解与操作：
+
+---
+
+### 配置 JSON
+
+**注意事项（Windows 路径）：**
+在 Windows 操作系统中，`args` 参数内的文件路径需使用反斜杠 `\`，并进行转义处理。
+例如，将
+`"path/to/AtomGit-MCP-Server/dist/index.js"`
+替换为：
+`"path\\AtomGit-MCP-Server\\dist\\index.js"`
+
 ```json
 {
   "mcpServers": {
     "atomgit": {
       "command": "node",
-      "args": ["path/to/AtomGit-MCP-Server/dist/index.js"],
-      "env": {
-        "ATOMGIT_TOKEN": "your_personal_access_token_here"
-      }
-    }
-  }
-}
-```
-
-### Cursor
-```json
-{
-  "mcpServers": {
-    "atomgit": {
-      "command": "node", 
-      "args": ["path/to/AtomGit-MCP-Server/dist/index.js"],
+      "args": ["path\\AtomGit-MCP-Server\\dist\\index.js"],
       "env": {
         "ATOMGIT_TOKEN": "your_personal_access_token_here"
       }

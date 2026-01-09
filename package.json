@@ -13,8 +13,7 @@
     "test:auth": "node tests/test-auth.mjs",
     "test:mcp": "node tests/test-mcp.mjs",
     "test:comprehensive": "node tests/test-comprehensive.mjs",
-    "clean": "rimraf dist",
-    "setup": "chmod +x setup.sh && ./setup.sh"
+    "clean": "rimraf dist"
   },
   "keywords": [
     "mcp",
