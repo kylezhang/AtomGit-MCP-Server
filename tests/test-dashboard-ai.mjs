@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Test script for Priority 4: Dashboard and AI Hub Features
+ * Test script for Dashboard and AI Hub Features
  */
 
 import { config } from 'dotenv';

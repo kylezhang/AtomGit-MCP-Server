@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Test script for Priority 2: Collaboration Enhancement APIs
+ * Test script for Collaboration Enhancement APIs
  */
 
 import { config } from 'dotenv';

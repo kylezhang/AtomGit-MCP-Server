@@ -19,30 +19,8 @@ export class AtomGitService {
         return response.data;
     }
     async getUser(username) {
-        console.log(`🔍 getUser API call: /api/v5/users/${username}`);
-        try {
-            const response = await this.client.get(`/api/v5/users/${username}`);
-            console.log(`📊 Response status: ${response.status}`);
-            console.log(`📊 Response headers:`, response.headers);
-            if (response.data) {
-                console.log(`✅ User data received: ${response.data.login || response.data.name}`);
-                console.log(`👤 User ID: ${response.data.id}`);
-                console.log(`🏢 User page: ${response.data.html_url}`);
-            }
-            else {
-                console.log(`⚠️  No user data received`);
-            }
-            return response.data;
-        }
-        catch (error) {
-            console.log(`❌ Error: ${error.message}`);
-            if (error.response) {
-                console.log(`📊 Status: ${error.response.status}`);
-                console.log(`📄 Status Text: ${error.response.statusText}`);
-                console.log(`📋 Error Data:`, error.response.data);
-            }
-            throw error;
-        }
+        const response = await this.client.get(`/api/v5/users/${username}`);
+        return response.data;
     }
     async getUserRepos(username) {
         const response = await this.client.get(`/api/v5/users/${username}/repos`);
@@ -115,7 +93,6 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}`);
         return response.data;
     }
-    // Priority 1: Issues Full Management
     async updateRepositoryIssue(owner, repo, issueNumber, updateData) {
         const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}`, updateData);
         return response.data;
@@ -180,7 +157,6 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/modify_history`);
         return response.data;
     }
-    // Priority 1: Branch Advanced Management
     async getRepositoryBranch(owner, repo, branch) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
         return response.data;
@@ -263,46 +239,37 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`);
         return response.data;
     }
-    // Priority 1: Repository Management - Forks
     async getRepositoryForks(owner, repo, page = 1, perPage = 30) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/forks`, {
             params: { page, per_page: perPage }
         });
         return response.data;
     }
-    // Priority 1: Repository Management - Create (already exists at line 120)
     // async createRepository(repoData: CreateRepositoryRequest): Promise<AtomGitRepository> {
-    // Priority 1: Branch Management - Create
     async createRepositoryBranch(owner, repo, branch, sha) {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, { branch, sha });
         return response.data;
     }
-    // Priority 1: Branch Management - Delete
     async deleteRepositoryBranch(owner, repo, branch) {
         const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
         return response.data;
     }
-    // Priority 1: Pull Request Management - Create
     async createRepositoryPull(owner, repo, pullData) {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls`, pullData);
         return response.data;
     }
-    // Priority 1: Pull Request Management - Merge
     async mergeRepositoryPull(owner, repo, pullNumber, mergeData) {
         const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`, mergeData);
         return response.data;
     }
-    // Priority 1: Pull Request Management - Merge Status
     async getRepositoryPullMergeStatus(owner, repo, pullNumber) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`);
         return response.data;
     }
-    // Priority 1: Pull Request Management - Issues
     async getRepositoryPullIssues(owner, repo, pullNumber) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`);
         return response.data;
     }
-    // Priority 1: Pull Request Management - Comments
     async createRepositoryPullComment(owner, repo, pullNumber, commentData) {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`, commentData);
         return response.data;
@@ -313,26 +280,22 @@ export class AtomGitService {
         });
         return response.data;
     }
-    // Priority 1: Pull Request Management - Files
     async getRepositoryPullFiles(owner, repo, pullNumber, page = 1, perPage = 30) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files`, {
             params: { page, per_page: perPage }
         });
         return response.data;
     }
-    // Priority 1: Pull Request Management - Update
     async updateRepositoryPull(owner, repo, pullNumber, updateData) {
         const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`, updateData);
         return response.data;
     }
-    // Priority 1: Pull Request Management - Commits
     async getRepositoryPullCommits(owner, repo, pullNumber, page = 1, perPage = 30) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/commits`, {
             params: { page, per_page: perPage }
         });
         return response.data;
     }
-    // Priority 1: Pull Request Management - Labels
     async createRepositoryPullLabel(owner, repo, pullNumber, labels) {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
         return response.data;
@@ -351,7 +314,6 @@ export class AtomGitService {
         const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels/${name}`);
         return response.data;
     }
-    // Priority 1: Pull Request Management - Testing & Review
     async processRepositoryPullTest(owner, repo, pullNumber, testData) {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test`, testData);
         return response.data;
@@ -398,7 +360,6 @@ export class AtomGitService {
         });
         return response.data;
     }
-    // Priority 1: Pull Request Management - Additional Features
     async getRepositoryPullFilesJson(owner, repo, pullNumber) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files_json`);
         return response.data;
@@ -431,7 +392,6 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_approval_reviewers`);
         return response.data;
     }
-    // Priority 1: Repository File Content Management
     async getRepositoryContent(owner, repo, path = '', ref) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contents/${path}`, {
             params: ref ? { ref } : {}
@@ -481,17 +441,14 @@ export class AtomGitService {
         });
         return response.data;
     }
-    // Priority 1: User Management - Subscriptions
     async getUserSubscriptions() {
         const response = await this.client.get('/api/v5/user/subscriptions');
         return response.data;
     }
-    // Priority 1: User Management - Namespaces
     async getUserNamespaces() {
         const response = await this.client.get('/api/v5/user/namespaces');
         return response.data;
     }
-    // Priority 1: Repository Settings & Configuration
     async getRepositorySettings(owner, repo) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/repo_settings`);
         return response.data;
@@ -516,7 +473,6 @@ export class AtomGitService {
         const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/push-config`, config);
         return response.data;
     }
-    // Priority 1: Repository Advanced Features
     async getRepositoryLanguages(owner, repo) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/languages`);
         return response.data;
@@ -537,7 +493,6 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/events`);
         return response.data;
     }
-    // Priority 1: Repository Management
     async updateRepository(owner, repo, updateData) {
         const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}`, updateData);
         return response.data;
@@ -594,7 +549,6 @@ export class AtomGitService {
         const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/members/${username}`, roleData);
         return response.data;
     }
-    // Priority 2: Labels & Milestones Management
     async getRepositoryLabels(owner, repo) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/labels`);
         return response.data;
@@ -637,7 +591,6 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones/${number}`);
         return response.data;
     }
-    // Priority 2: Commit Advanced Management
     async getRepositoryCommitComments(owner, repo, sha, page = 1, perPage = 30) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, {
             params: {
@@ -688,7 +641,6 @@ export class AtomGitService {
         const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
         return response.data;
     }
-    // Priority 2: Member Management
     async getRepositoryCollaborators(owner, repo) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators`);
         return response.data;
@@ -705,7 +657,6 @@ export class AtomGitService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
         return response.data;
     }
-    // Priority 2: Search Functionality
     async searchIssues(owner, repo, query, page = 1, perPage = 30) {
         const response = await this.client.get(`/api/v5/search/issues`, {
             params: {
@@ -726,7 +677,6 @@ export class AtomGitService {
         });
         return response.data;
     }
-    // Priority 2: User Advanced Features
     async getUserFollowers(username) {
         const response = await this.client.get(`/api/v5/users/${username}/followers`);
         return response.data;
@@ -759,7 +709,6 @@ export class AtomGitService {
         const response = await this.client.get('/api/v5/user/orgs');
         return response.data;
     }
-    // Priority 2: Release Advanced Management
     async updateRelease(owner, repo, tag, releaseData) {
         const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, releaseData);
         return response.data;
@@ -788,7 +737,6 @@ export class AtomGitService {
         const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
         return response.data;
     }
-    // Priority 3: Organization Management
     async getOrganization(org) {
         const response = await this.client.get(`/api/v5/orgs/${org}`);
         return response.data;
@@ -849,7 +797,6 @@ export class AtomGitService {
         const response = await this.client.put(`/api/v5/orgs/${org}/teams/${team}/members/${username}`, memberData);
         return response.data;
     }
-    // Priority 3: Webhooks Management
     async getRepositoryWebhooks(owner, repo) {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/hooks`);
         return response.data;
@@ -874,7 +821,6 @@ export class AtomGitService {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/hooks/${id}/test`);
         return response.data;
     }
-    // Priority 3: Enterprise Management
     async getEnterprise(enterprise) {
         const response = await this.client.get(`/api/v8/enterprises/${enterprise}`);
         return response.data;
@@ -935,7 +881,6 @@ export class AtomGitService {
         const response = await this.client.post(`/api/v8/enterprises/${enterprise}/projects`, projectData);
         return response.data;
     }
-    // Priority 4: Dashboard (Kanban) Management
     async getOrganizationKanbans(owner) {
         const response = await this.client.get(`/api/v5/org/${owner}/kanban/list`);
         return response.data;
@@ -964,7 +909,6 @@ export class AtomGitService {
         const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/content`, contentData);
         return response.data;
     }
-    // Priority 4: AI Hub Features
     async chatCompletion(data) {
         const response = await this.client.post('/api/v5/chat/completions', data);
         return response.data;

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Test script for Priority 3: Organization, Webhooks, and Enterprise APIs
+ * Test script for Organization, Webhooks, and Enterprise APIs
  */
 
 import { config } from 'dotenv';

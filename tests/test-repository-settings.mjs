@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Test script for Priority 1: Repository Settings & Configuration APIs
+ * Test script for Repository Settings & Configuration APIs
  */
 
 import { config } from 'dotenv';
@@ -24,11 +24,10 @@ if (!TOKEN) {
 
 console.log(`🔧 测试配置:`);
 console.log(`   API URL: ${API_BASE_URL}`);
-console.log(`   测试仓库: ${TEST_REPO_OWNER}/${TEST_REPOSITORY}`);
-console.log('');
+console.log(`   Test Repository: ${TEST_REPO_OWNER}/${TEST_REPOSITORY}`);
 
-async function testPriority1Features() {
-  console.log('Testing Priority 1: Repository Settings & Configuration...\n');
+async function testRepositorySettingsFeatures() {
+  console.log('Testing Repository Settings & Configuration...\n');
 
   const service = new AtomGitService({
     apiBaseUrl: API_BASE_URL,
@@ -145,11 +144,11 @@ async function testPriority1Features() {
     }
   }
 
-  console.log(`\n🎉 Priority 1 tests completed!`);
+console.log(`\n🎉 Repository Settings tests completed!`);
   console.log(`📊 Results: ${passedTests}/${totalTests} tests passed`);
   
   return { passedTests, totalTests };
 }
 
 // Run tests
-testPriority1Features().catch(console.error);
+testRepositorySettingsFeatures().catch(console.error);
