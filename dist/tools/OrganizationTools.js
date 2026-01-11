@@ -6,6 +6,28 @@ export class OrganizationTools {
     getTools() {
         return [
             {
+                name: 'create_organization',
+                description: '创建新组织',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        name: {
+                            type: 'string',
+                            description: '组织显示名称'
+                        },
+                        org: {
+                            type: 'string',
+                            description: '组织命名空间（URL标识符）'
+                        },
+                        description: {
+                            type: 'string',
+                            description: '组织描述（可选）'
+                        }
+                    },
+                    required: ['name', 'org']
+                }
+            },
+            {
                 name: 'get_organization',
                 description: '获取组织信息',
                 inputSchema: {
@@ -283,6 +305,12 @@ export class OrganizationTools {
     }
     async callTool(name, args) {
         switch (name) {
+            case 'create_organization':
+                return await this.atomGitService.createOrganization({
+                    name: args.name,
+                    org: args.org,
+                    description: args.description
+                });
             case 'get_organization':
                 return await this.atomGitService.getOrganization(args.org);
             case 'create_organization_repository':

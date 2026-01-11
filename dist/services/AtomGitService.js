@@ -753,6 +753,10 @@ export class AtomGitService {
         const response = await this.client.put(`/api/v5/orgs/${org}/members/${username}`, memberData);
         return response.data;
     }
+    async createOrganization(orgData) {
+        const response = await this.client.post('/api/v5/orgs', orgData);
+        return response.data;
+    }
     async removeOrganizationMember(org, username) {
         const response = await this.client.delete(`/api/v5/orgs/${org}/members/${username}`);
         return response.data;

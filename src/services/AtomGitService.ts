@@ -903,6 +903,11 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
+  async createOrganization(orgData: { name: string; org: string; description?: string }): Promise<any> {
+    const response = await this.client.post('/api/v5/orgs', orgData);
+    return response.data;
+  }
+
   async removeOrganizationMember(org: string, username: string): Promise<void> {
     const response = await this.client.delete(`/api/v5/orgs/${org}/members/${username}`);
     return response.data;

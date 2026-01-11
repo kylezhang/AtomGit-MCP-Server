@@ -1,4 +1,4 @@
-根据 [AtomGit 官方 API](https://docs.atomgit.com/docs/apis/)，已实现 **246 个工具**，测试成功率 **91.2%**。
+根据 [AtomGit 官方 API](https://docs.atomgit.com/docs/apis/)，已实现 **247 个工具**，测试成功率 **91.2%**。
 
 ---
 
@@ -35,13 +35,14 @@
 
 ### 🏢 组织管理 (19 个工具)
 
-| 工具名称 | 功能描述 | 测试状态 |
-|----------|----------|----------|
-| `get_organization` | 获取组织信息 | ✅ 已测试 |
-| `create_organization_repository` | 为组织创建仓库 | ⏳ 已实现待测试 |
-| `get_organization_members` | 获取组织成员列表 | ⏳ 已实现待测试 |
-| `add_organization_member` | 添加组织成员 | ⏳ 已实现待测试 |
-| `remove_organization_member` | 移除组织成员 | ⏳ 已实现待测试 |
+ | 工具名称 | 功能描述 | 测试状态 |
+ |----------|----------|----------|
+ | `create_organization` | 创建新组织 | ⏳ 已实现待测试 |
+ | `get_organization` | 获取组织信息 | ✅ 已测试 |
+ | `create_organization_repository` | 为组织创建仓库 | ⏳ 已实现待测试 |
+ | `get_organization_members` | 获取组织成员列表 | ⏳ 已实现待测试 |
+ | `add_organization_member` | 添加组织成员 | ⏳ 已实现待测试 |
+ | `remove_organization_member` | 移除组织成员 | ⏳ 已实现待测试 |
 | `get_organization_projects` | 获取组织项目列表 | ⏳ 已实现待测试 |
 | `create_organization_project` | 创建组织项目 | ⏳ 已实现待测试 |
 | `update_organization_project` | 更新组织项目 | ⏳ 已实现待测试 |

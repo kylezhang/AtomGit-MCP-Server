@@ -159,6 +159,11 @@ export declare class AtomGitService {
     createOrganizationRepository(org: string, repoData: any): Promise<any>;
     getOrganizationMembers(org: string): Promise<any[]>;
     addOrganizationMember(org: string, username: string, memberData: any): Promise<any>;
+    createOrganization(orgData: {
+        name: string;
+        org: string;
+        description?: string;
+    }): Promise<any>;
     removeOrganizationMember(org: string, username: string): Promise<void>;
     getOrganizationProjects(org: string): Promise<any[]>;
     createOrganizationProject(org: string, projectData: any): Promise<any>;
