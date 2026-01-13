@@ -46,6 +46,15 @@ async function testPriority3Features() {
   // Test Organization Management
   const orgTests = [
     {
+      name: 'Create organization',
+      tool: 'create_organization',
+      args: { 
+        name: 'test-atomgit-mcp-org',
+        org: 'test-atomgit-mcp-org',
+        description: 'Test organization for MCP server development'
+      }
+    },
+    {
       name: 'Get organization',
       tool: 'get_organization',
       args: { org: TEST_ORG }
