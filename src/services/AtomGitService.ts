@@ -36,76 +36,264 @@ export class AtomGitService {
     });
   }
 
-  async getCurrentUser(): Promise<AtomGitUser> {
-    const response = await this.client.get('/api/v5/user');
-    return response.data;
-  }
-
-async getUser(username: string): Promise<AtomGitUser> {
-    const response = await this.client.get(`/api/v5/users/${username}`);
-    return response.data;
-  }
-
-  async getUserRepos(username: string): Promise<AtomGitRepository[]> {
-    const response = await this.client.get(`/api/v5/users/${username}/repos`);
-    return response.data;
-  }
-
-  async getCurrentUserRepos(): Promise<AtomGitRepository[]> {
-    const response = await this.client.get('/api/v5/user/repos');
-    return response.data;
-  }
-
-  async getRepository(owner: string, repo: string): Promise<AtomGitRepository> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}`);
-    return response.data;
-  }
-
+  // ===== Repositories (36 methods) =====
+  
   async getRepositoryTree(owner: string, repo: string, sha?: string): Promise<AtomGitTree> {
     const url = sha ? `/api/v5/repos/${owner}/${repo}/git/trees/${sha}` : `/api/v5/repos/${owner}/${repo}/git/trees/main`;
     const response = await this.client.get(url);
     return response.data;
   }
 
-  async getUserStarredRepos(username: string): Promise<AtomGitRepository[]> {
-    const response = await this.client.get(`/api/v5/users/${username}/starred`);
+  async getRepositoryContent(owner: string, repo: string, path: string = '', ref?: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contents/${path}`, {
+      params: ref ? { ref } : {}
+    });
     return response.data;
   }
 
-  async getCurrentUserStarredRepos(): Promise<AtomGitRepository[]> {
-    const response = await this.client.get('/api/v5/user/starred');
+  async createRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
     return response.data;
   }
 
-  async searchRepositories(query: string, page = 1, perPage = 30): Promise<AtomGitRepository[]> {
-    const response = await this.client.get('/api/v5/search/repositories', {
+  async updateRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+    return response.data;
+  }
+
+  async deleteRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, {
+      data: fileData
+    });
+    return response.data;
+  }
+
+  async getRepositoryFileList(owner: string, repo: string, path: string = '', ref?: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/file_list`, {
       params: {
-        q: query,
+        path,
+        ref,
         page,
         per_page: perPage
       }
     });
-    return response.data; // Direct array, not wrapped in items
-  }
-
-  async searchUsers(query: string, page = 1, perPage = 30): Promise<AtomGitUser[]> {
-    const response = await this.client.get('/api/v5/search/users', {
-      params: {
-        q: query,
-        page,
-        per_page: perPage
-      }
-    });
-    return response.data; // Direct array, not wrapped in items
-  }
-
-  async createRepository(repoData: CreateRepositoryRequest): Promise<AtomGitRepository> {
-    const response = await this.client.post('/api/v5/user/repos', repoData);
     return response.data;
   }
 
+  async getRepositoryFileBlob(owner: string, repo: string, sha: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/git/blobs/${sha}`);
+    return response.data;
+  }
+
+  async getRepositoryLanguages(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/languages`);
+    return response.data;
+  }
+
+  async getRepositoryContributors(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors`);
+    return response.data;
+  }
+
+  async setRepositoryModuleSetting(owner: string, repo: string, moduleData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/module-setting`, moduleData);
+    return response.data;
+  }
+
+  async updateRepositorySettings(owner: string, repo: string, updateData: any): Promise<AtomGitRepository> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}`, updateData);
+    return response.data;
+  }
+
+  async deleteRepository(owner: string, repo: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}`);
+    return response.data;
+  }
+
+  async updateRepositoryReviewer(owner: string, repo: string, reviewerData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/reviewer`, reviewerData);
+    return response.data;
+  }
+
+  async archiveRepository(org: string, repository: string, archiveData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/org/${org}/repo/${repository}/status`, archiveData);
+    return response.data;
+  }
+
+  async transferRepositoryToOrg(org: string, repository: string, transferData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/org/${org}/projects/${repository}/transfer`, transferData);
+    return response.data;
+  }
+
+  async getRepositoryTransition(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/transition`);
+    return response.data;
+  }
+
+  async updateRepositoryTransition(owner: string, repo: string, transitionData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/transition`, transitionData);
+    return response.data;
+  }
+
+  async setRepositoryPushConfig(owner: string, repo: string, config: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/push-config`, config);
+    return response.data;
+  }
+
+  async getRepositoryPushConfig(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/push-config`);
+    return response.data;
+  }
+
+  async forkRepository(owner: string, repo: string, forkData?: any): Promise<AtomGitRepository> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/forks`, forkData || {});
+    return response.data;
+  }
+
+  async getRepositoryForks(owner: string, repo: string, page = 1, perPage = 30): Promise<AtomGitRepository[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/forks`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async uploadRepositoryImage(owner: string, repo: string, fileData: string, filename: string): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/img/upload`, {
+      file: fileData,
+      filename
+    });
+    return response.data;
+  }
+
+  async uploadRepositoryFile(owner: string, repo: string, fileData: string, filename: string): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/file/upload`, {
+      file: fileData,
+      filename
+    });
+    return response.data;
+  }
+
+  async getRepositorySubscribers(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/subscribers`);
+    return response.data;
+  }
+
+  async getRepositoryStargazers(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/stargazers`);
+    return response.data;
+  }
+
+  async updateRepositoryRepoSettings(owner: string, repo: string, settings: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/repo_settings`, settings);
+    return response.data;
+  }
+
+  async getRepositoryRepoSettings(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/repo_settings`);
+    return response.data;
+  }
+
+  async getRepositoryPullRequestSettings(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pull-request-settings`);
+    return response.data;
+  }
+
+  async updateRepositoryPullRequestSettings(owner: string, repo: string, settings: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pull-request-settings`, settings);
+    return response.data;
+  }
+
+  async updateRepositoryMemberRole(owner: string, repo: string, username: string, roleData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/members/${username}`, roleData);
+    return response.data;
+  }
+
+  async transferRepository(owner: string, repo: string, transferData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/transfer`, transferData);
+    return response.data;
+  }
+
+  async getRepositoryCustomizedRoles(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/customized-roles`);
+    return response.data;
+  }
+
+  async getRepositoryDownloadStatistics(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/download-statistics`);
+    return response.data;
+  }
+
+  async getRepositoryRawFile(owner: string, repo: string, path: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${path}`);
+    return response.data;
+  }
+
+  async getRepositoryContributorsStatistic(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors-statistic`);
+    return response.data;
+  }
+
+  async getRepositoryEvents(owner: string, repo: string, accessToken: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/events/access-token/${accessToken}`);
+    return response.data;
+  }
+
+  // ===== Branch (8 methods) =====
+  
   async getRepositoryBranches(owner: string, repo: string): Promise<Branch[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches`);
+    return response.data;
+  }
+
+  async createRepositoryBranch(owner: string, repo: string, branch: string, sha?: string): Promise<Branch> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, { branch, sha });
+    return response.data;
+  }
+
+  async deleteRepositoryBranch(owner: string, repo: string, branch: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+    return response.data;
+  }
+
+  async getRepositoryBranch(owner: string, repo: string, branch: string): Promise<Branch> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+    return response.data;
+  }
+
+  async createBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/setting/new`, ruleData);
+    return response.data;
+  }
+
+  async deleteBranchProtectionRule(owner: string, repo: string, wildcard: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`);
+    return response.data;
+  }
+
+  async getBranchProtectionRules(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protect_branches`);
+    return response.data;
+  }
+
+  async updateBranchProtectionRule(owner: string, repo: string, wildcard: string, ruleData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`, ruleData);
+    return response.data;
+  }
+
+  // ===== Issues (26 methods) =====
+  
+  async createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/issues`, issueData);
+    return response.data;
+  }
+
+  async updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: any): Promise<Issue> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/issues/${issueNumber}`, updateData);
+    return response.data;
+  }
+
+  async getRepositoryIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}`);
     return response.data;
   }
 
@@ -117,20 +305,6 @@ async getUser(username: string): Promise<AtomGitUser> {
         per_page: perPage
       }
     });
-    return response.data;
-  }
-
-  async createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues`, issueData);
-    return response.data;
-  }
-
-  async getRepositoryIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}`);
-    return response.data;
-  }
-  async updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: any): Promise<Issue> {
-    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}`, updateData);
     return response.data;
   }
 
@@ -146,8 +320,51 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
-  async getRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`);
+  async getRepositoryAllIssueComments(owner: string, repo: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comments`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getRepositoryIssuePullRequests(owner: string, repo: string, issueNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/pull_requests`);
+    return response.data;
+  }
+
+  async getEnterpriseIssueLabels(enterprise: string, issueId: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueId}/labels`);
+    return response.data;
+  }
+
+  async createRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
+    return response.data;
+  }
+
+  async deleteRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, name: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}`);
+    return response.data;
+  }
+
+  async getRepositoryIssueOperateLogs(owner: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getEnterpriseIssues(enterprise: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getUserIssues(page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/user/issues', {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
@@ -161,25 +378,32 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
-  async createRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
+  async getRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`);
     return response.data;
   }
 
-  async replaceRepositoryIssueLabels(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
-    return response.data;
-  }
-
-  async deleteRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, name: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}`);
-    return response.data;
-  }
-
-  async getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
+  async getOrganizationIssues(org: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/issues`, {
       params: { page, per_page: perPage }
     });
+    return response.data;
+  }
+
+  async getEnterpriseIssueComments(enterprise: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueNumber}/comments`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getEnterpriseIssue(enterprise: string, issueNumber: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueNumber}`);
+    return response.data;
+  }
+
+  async getEnterpriseIssueStatuses(enterprise: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issue_statuses`);
     return response.data;
   }
 
@@ -207,31 +431,44 @@ async getUser(username: string): Promise<AtomGitUser> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/modify_history`);
     return response.data;
   }
-  async getRepositoryBranch(owner: string, repo: string, branch: string): Promise<Branch> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+
+  // ===== Search (3 methods) =====
+  
+  async searchUsers(query: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/search/users', {
+      params: {
+        q: query,
+        page,
+        per_page: perPage
+      }
+    });
     return response.data;
   }
 
-  async createBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/setting/new`, ruleData);
+  async searchIssues(query: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/search/issues', {
+      params: {
+        q: query,
+        page,
+        per_page: perPage
+      }
+    });
     return response.data;
   }
 
-  async deleteBranchProtectionRule(owner: string, repo: string, wildcard: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`);
+  async searchRepositories(query: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/search/repositories', {
+      params: {
+        q: query,
+        page,
+        per_page: perPage
+      }
+    });
     return response.data;
   }
 
-  async getBranchProtectionRules(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protect_branches`);
-    return response.data;
-  }
-
-  async updateBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/${ruleData.wildcard}/setting`, ruleData);
-    return response.data;
-  }
-
+  // ===== Pull Requests (44 methods) =====
+  
   async getRepositoryPulls(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open', page = 1, perPage = 30): Promise<PullRequest[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls`, {
       params: {
@@ -243,96 +480,26 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
-  async getRepositoryPull(owner: string, repo: string, pullNumber: number): Promise<PullRequest> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`);
-    return response.data;
-  }
-
-  // Commit APIs
-  async getRepositoryCommits(owner: string, repo: string, sha?: string, page = 1, perPage = 30): Promise<Commit[]> {
-    const url = sha ? `/api/v5/repos/${owner}/${repo}/commits` : `/api/v5/repos/${owner}/${repo}/commits`;
-    const response = await this.client.get(url, {
-      params: {
-        sha,
-        page,
-        per_page: perPage
-      }
-    });
-    return response.data;
-  }
-
-  async getRepositoryCommit(owner: string, repo: string, sha: string): Promise<Commit> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}`);
-    return response.data;
-  }
-
-  // Tag APIs
-  async getRepositoryTags(owner: string, repo: string, page = 1, perPage = 30): Promise<Tag[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/tags`, {
-      params: {
-        page,
-        per_page: perPage
-      }
-    });
-    return response.data;
-  }
-
-  // Release APIs
-  async createRelease(owner: string, repo: string, releaseData: CreateReleaseRequest): Promise<Release> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/releases`, releaseData);
-    return response.data;
-  }
-
-  async getRepositoryReleases(owner: string, repo: string, page = 1, perPage = 30): Promise<Release[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases`, {
-      params: {
-        page,
-        per_page: perPage
-      }
-    });
-    return response.data;
-  }
-
-  async getRepositoryRelease(owner: string, repo: string, tag: string): Promise<Release> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
-    return response.data;
-  }
-
-  async getLatestRelease(owner: string, repo: string): Promise<Release> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`);
-    return response.data;
-  }
-  async getRepositoryForks(owner: string, repo: string, page = 1, perPage = 30): Promise<AtomGitRepository[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/forks`, {
-      params: { page, per_page: perPage }
-    });
-    return response.data;
-  }
-  // async createRepository(repoData: CreateRepositoryRequest): Promise<AtomGitRepository> {
-  async createRepositoryBranch(owner: string, repo: string, branch: string, sha?: string): Promise<Branch> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, { branch, sha });
-    return response.data;
-  }
-  async deleteRepositoryBranch(owner: string, repo: string, branch: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
-    return response.data;
-  }
   async createRepositoryPull(owner: string, repo: string, pullData: CreatePullRequestRequest): Promise<PullRequest> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls`, pullData);
     return response.data;
   }
+
   async mergeRepositoryPull(owner: string, repo: string, pullNumber: number, mergeData: MergePullRequestRequest): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`, mergeData);
     return response.data;
   }
+
   async getRepositoryPullMergeStatus(owner: string, repo: string, pullNumber: number): Promise<any> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`);
     return response.data;
   }
+
   async getRepositoryPullIssues(owner: string, repo: string, pullNumber: number): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`);
     return response.data;
   }
+
   async createRepositoryPullComment(owner: string, repo: string, pullNumber: number, commentData: CreatePullRequestCommentRequest): Promise<any> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`, commentData);
     return response.data;
@@ -344,22 +511,31 @@ async getUser(username: string): Promise<AtomGitUser> {
     });
     return response.data;
   }
+
   async getRepositoryPullFiles(owner: string, repo: string, pullNumber: number, page = 1, perPage = 30): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files`, {
       params: { page, per_page: perPage }
     });
     return response.data;
   }
+
   async updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: UpdatePullRequestRequest): Promise<PullRequest> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`, updateData);
     return response.data;
   }
+
+  async getRepositoryPull(owner: string, repo: string, pullNumber: number): Promise<PullRequest> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`);
+    return response.data;
+  }
+
   async getRepositoryPullCommits(owner: string, repo: string, pullNumber: number, page = 1, perPage = 30): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/commits`, {
       params: { page, per_page: perPage }
     });
     return response.data;
   }
+
   async createRepositoryPullLabel(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any[]> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
     return response.data;
@@ -381,6 +557,7 @@ async getUser(username: string): Promise<AtomGitUser> {
     const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels/${name}`);
     return response.data;
   }
+
   async processRepositoryPullTest(owner: string, repo: string, pullNumber: number, testData: any): Promise<any> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test`, testData);
     return response.data;
@@ -436,6 +613,7 @@ async getUser(username: string): Promise<AtomGitUser> {
     });
     return response.data;
   }
+
   async getRepositoryPullFilesJson(owner: string, repo: string, pullNumber: number): Promise<any> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files_json`);
     return response.data;
@@ -443,6 +621,40 @@ async getUser(username: string): Promise<AtomGitUser> {
 
   async getRepositoryPullFileContent(owner: string, repo: string, head: string, sha: string, name: string): Promise<any> {
     const response = await this.client.get(`/${owner}/${repo}/raw/${head}/${sha}/${name}`);
+    return response.data;
+  }
+
+  async getEnterprisePullRequests(enterprise: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/pull_requests`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getRepositoryPullComment(owner: string, repo: string, commentId: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/comments/${commentId}`);
+    return response.data;
+  }
+
+  async updateRepositoryPullComment(owner: string, repo: string, commentId: number, updateData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/comments/${commentId}`, updateData);
+    return response.data;
+  }
+
+  async deleteRepositoryPullComment(owner: string, repo: string, commentId: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/comments/${commentId}`);
+    return response.data;
+  }
+
+  async getOrganizationPullRequests(org: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/org/${org}/pull_requests`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getEnterprisePullRequestIssues(enterprise: string, issueNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueNumber}/pull_requests`);
     return response.data;
   }
 
@@ -455,6 +667,16 @@ async getUser(username: string): Promise<AtomGitUser> {
     const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`, {
       data: { issues }
     });
+    return response.data;
+  }
+
+  async replyRepositoryPullDiscussion(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`, commentData);
+    return response.data;
+  }
+
+  async updateRepositoryPullDiscussionComment(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments/discussions/${discussionId}`, commentData);
     return response.data;
   }
 
@@ -474,35 +696,33 @@ async getUser(username: string): Promise<AtomGitUser> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_approval_reviewers`);
     return response.data;
   }
-  async getRepositoryContent(owner: string, repo: string, path: string = '', ref?: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contents/${path}`, {
-      params: ref ? { ref } : {}
-    });
+
+  async getRepositoryPullReactions(owner: string, repo: string, pullNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/user_reactions`);
     return response.data;
   }
 
-  async createRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+  async getRepositoryPullCommentReactions(owner: string, repo: string, commentId: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/comment/${commentId}/user_reactions`);
     return response.data;
   }
 
-  async updateRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+  async getRepositoryPullModifyHistory(owner: string, repo: string, pullNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/modify_history`);
     return response.data;
   }
 
-  async deleteRepositoryFile(owner: string, repo: string, fileData: any): Promise<any> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, {
-      data: fileData
-    });
+  async getRepositoryPullCommentModifyHistory(owner: string, repo: string, commentId: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/comment/${commentId}/modify_history`);
     return response.data;
   }
 
-  async get_repository_file_list($owner: string, repo: string, path: string = '', ref?: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${$owner}/${repo}/file_list`, {
+  // ===== Commit (12 methods) =====
+  
+  async getRepositoryCommits(owner: string, repo: string, sha?: string, page = 1, perPage = 30): Promise<Commit[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits`, {
       params: {
-        path,
-        ref,
+        sha,
         page,
         per_page: perPage
       }
@@ -510,156 +730,133 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
-  async getRepositoryFileBlob(owner: string, repo: string, sha: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/git/blobs/${sha}`);
+  async getRepositoryCommit(owner: string, repo: string, sha: string): Promise<Commit> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}`);
     return response.data;
   }
 
-  async uploadRepositoryImage(owner: string, repo: string, fileData: string, filename: string): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/img/upload`, {
-      file: fileData,
-      filename
+  async compareRepositoryCommits(owner: string, repo: string, base: string, head: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/compare/${base}...${head}`);
+    return response.data;
+  }
+
+  async createRepositoryCommitComment(owner: string, repo: string, sha: string, commentData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, commentData);
+    return response.data;
+  }
+
+  async deleteRepositoryCommitComment(owner: string, repo: string, commentId: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
+    return response.data;
+  }
+
+  async getRepositoryCommitComment(owner: string, repo: string, commentId: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
+    return response.data;
+  }
+
+  async updateRepositoryCommitComment(owner: string, repo: string, commentId: number, commentData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`, commentData);
+    return response.data;
+  }
+
+  async getRepositoryCommitComments(owner: string, repo: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/comments`, {
+      params: { page, per_page: perPage }
     });
     return response.data;
   }
 
-  async uploadRepositoryFile(owner: string, repo: string, fileData: string, filename: string): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/file/upload`, {
-      file: fileData,
-      filename
+  async getRepositoryCommitStatistics(owner: string, repo: string, sha?: string): Promise<any> {
+    const url = sha ? `/api/v5/repos/${owner}/${repo}/repository-commit-statistics?sha=${sha}` : `/api/v5/repos/${owner}/${repo}/repository-commit-statistics`;
+    const response = await this.client.get(url);
+    return response.data;
+  }
+
+  async getRepositoryCommitRefComments(owner: string, repo: string, ref: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${ref}/comments`);
+    return response.data;
+  }
+
+  async getRepositoryCommitDiff(owner: string, repo: string, sha: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/diff`);
+    return response.data;
+  }
+
+  async getRepositoryCommitPatch(owner: string, repo: string, sha: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/patch`);
+    return response.data;
+  }
+
+  // ===== Tag (8 methods) =====
+  
+  async getRepositoryTags(owner: string, repo: string, page = 1, perPage = 30): Promise<Tag[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/tags`, {
+      params: {
+        page,
+        per_page: perPage
+      }
     });
     return response.data;
   }
-  async getUserSubscriptions(): Promise<AtomGitRepository[]> {
-    const response = await this.client.get('/api/v5/user/subscriptions');
-    return response.data;
-  }
-  async getUserNamespaces(): Promise<string[]> {
-    const response = await this.client.get('/api/v5/user/namespaces');
-    return response.data;
-  }
-  async getRepositorySettings(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/repo_settings`);
+
+  async createRepositoryTag(owner: string, repo: string, tagData: any): Promise<Tag> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/tags`, tagData);
     return response.data;
   }
 
-  async updateRepositorySettings(owner: string, repo: string, settings: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/repo_settings`, settings);
+  async deleteRepositoryTag(owner: string, repo: string, tagName: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/tags/${tagName}`);
     return response.data;
   }
 
-  async getRepositoryPullRequestSettings(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pull-request-settings`);
+  async getRepositoryProtectedTags(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protected_tags`);
     return response.data;
   }
 
-  async updateRepositoryPullRequestSettings(owner: string, repo: string, settings: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pull-request-settings`, settings);
+  async createRepositoryProtectedTag(owner: string, repo: string, tagData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/protected_tags`, tagData);
     return response.data;
   }
 
-  async getRepositoryPushConfig(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/push-config`);
+  async updateRepositoryProtectedTag(owner: string, repo: string, tagData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/protected_tags`, tagData);
     return response.data;
   }
 
-  async setRepositoryPushConfig(owner: string, repo: string, config: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/push-config`, config);
-    return response.data;
-  }
-  async getRepositoryLanguages(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/languages`);
+  async deleteRepositoryProtectedTag(owner: string, repo: string, tagName: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/protected_tags/${tagName}`);
     return response.data;
   }
 
-  async getRepositoryContributors(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors`);
+  async getRepositoryProtectedTag(owner: string, repo: string, tagName: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protected_tags/${tagName}`);
     return response.data;
   }
 
-  async getRepositoryContributorsStatistic(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors-statistic`);
+  // ===== Labels (9 methods) =====
+  
+  async replaceRepositoryProjectLabels(owner: string, repo: string, labels: string[]): Promise<any[]> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/project_labels`, { labels });
     return response.data;
   }
 
-  async getRepositoryDownloadStatistics(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/download-statistics`);
+  async deleteRepositoryIssueAllLabels(owner: string, repo: string, issueNumber: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`);
     return response.data;
   }
 
-  async getRepositoryEvents(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/events`);
-    return response.data;
-  }
-  async updateRepository(owner: string, repo: string, updateData: any): Promise<AtomGitRepository> {
-    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}`, updateData);
+  async replaceRepositoryIssueAllLabels(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
     return response.data;
   }
 
-  async deleteRepository(owner: string, repo: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}`);
+  async updateRepositoryLabel(owner: string, repo: string, originalName: string, labelData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/labels/${originalName}`, labelData);
     return response.data;
   }
 
-  async forkRepository(owner: string, repo: string, forkData?: any): Promise<AtomGitRepository> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/forks`, forkData || {});
-    return response.data;
-  }
-
-  async archiveRepository(org: string, repository: string, archiveData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/org/${org}/repo/${repository}/status`, archiveData);
-    return response.data;
-  }
-
-  async transferRepository(org: string, repository: string, transferData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/org/${org}/projects/${repository}/transfer`, transferData);
-    return response.data;
-  }
-
-  async getRepositoryRawFile(owner: string, repo: string, path: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${path}`);
-    return response.data;
-  }
-
-  async getRepositorySubscribers(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/subscribers`);
-    return response.data;
-  }
-
-  async getRepositoryStargazers(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/stargazers`);
-    return response.data;
-  }
-
-  async updateRepositoryModuleSetting(owner: string, repo: string, moduleData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/module-setting`, moduleData);
-    return response.data;
-  }
-
-  async updateRepositoryReviewer(owner: string, repo: string, reviewerData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/reviewer`, reviewerData);
-    return response.data;
-  }
-
-  async getRepositoryTransition(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/transition`);
-    return response.data;
-  }
-
-  async updateRepositoryTransition(owner: string, repo: string, transitionData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/transition`, transitionData);
-    return response.data;
-  }
-
-  async getRepositoryCustomizedRoles(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/customized-roles`);
-    return response.data;
-  }
-
-  async updateRepositoryMemberRole(owner: string, repo: string, username: string, roleData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/members/${username}`, roleData);
-    return response.data;
-  }
   async getRepositoryLabels(owner: string, repo: string): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/labels`);
     return response.data;
@@ -675,11 +872,18 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
-  async updateRepositoryLabel(owner: string, repo: string, name: string, labelData: any): Promise<any> {
-    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/labels/${name}`, labelData);
+  async getEnterpriseLabels(enterprise: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/labels`);
     return response.data;
   }
 
+  async getEnterpriseLabelsV8(enterprise: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/labels`);
+    return response.data;
+  }
+
+  // ===== Milestone (5 methods) =====
+  
   async getRepositoryMilestones(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open', page = 1, perPage = 30): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones`, {
       params: {
@@ -696,8 +900,8 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
-  async updateRepositoryMilestone(owner: string, repo: string, number: number, milestoneData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/milestones/${number}`, milestoneData);
+  async getRepositoryMilestone(owner: string, repo: string, number: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones/${number}`);
     return response.data;
   }
 
@@ -706,262 +910,249 @@ async getUser(username: string): Promise<AtomGitUser> {
     return response.data;
   }
 
-  async getRepositoryMilestone(owner: string, repo: string, number: number): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones/${number}`);
+  async updateRepositoryMilestone(owner: string, repo: string, number: number, milestoneData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/milestones/${number}`, milestoneData);
     return response.data;
   }
-  async getRepositoryCommitComments(owner: string, repo: string, sha: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, {
-      params: {
-        page,
-        per_page: perPage
-      }
+
+  // ===== Users (22 methods) =====
+  
+  async getUserStarredRepos(username: string, page = 1, perPage = 30): Promise<AtomGitRepository[]> {
+    const response = await this.client.get(`/api/v5/user/${username}/starred`, {
+      params: { page, per_page: perPage }
     });
     return response.data;
   }
 
-  async createRepositoryCommitComment(owner: string, repo: string, sha: string, commentData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, commentData);
-    return response.data;
-  }
-
-  async getRepositoryCommitDiff(owner: string, repo: string, sha: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commit/${sha}/diff`);
-    return response.data;
-  }
-
-  async compareRepositoryCommits(owner: string, repo: string, base: string, head: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/compare/${base}...${head}`);
-    return response.data;
-  }
-
-  async getRepositoryCommitPatch(owner: string, repo: string, sha: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commit/${sha}/patch`);
-    return response.data;
-  }
-
-  async getRepositoryCommitStats(owner: string, repo: string, sha?: string): Promise<any> {
-    const url = sha ? `/api/v5/repos/${owner}/${repo}/commits/${sha}/stats` : `/api/v5/repos/${owner}/${repo}/stats`;
-    const response = await this.client.get(url);
-    return response.data;
-  }
-
-  async getRepositoryCommitStatuses(owner: string, repo: string, sha: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/statuses`);
-    return response.data;
-  }
-
-  async createRepositoryCommitStatus(owner: string, repo: string, sha: string, statusData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/statuses`, statusData);
-    return response.data;
-  }
-
-  async getRepositoryCommitComment(owner: string, repo: string, commentId: number): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
-    return response.data;
-  }
-
-  async updateRepositoryCommitComment(owner: string, repo: string, commentId: number, commentData: any): Promise<any> {
-    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`, commentData);
-    return response.data;
-  }
-
-  async deleteRepositoryCommitComment(owner: string, repo: string, commentId: number): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`);
-    return response.data;
-  }
-  async getRepositoryCollaborators(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators`);
-    return response.data;
-  }
-
-  async addRepositoryCollaborator(owner: string, repo: string, username: string, collaboratorData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`, collaboratorData);
-    return response.data;
-  }
-
-  async removeRepositoryCollaborator(owner: string, repo: string, username: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
-    return response.data;
-  }
-
-  async getRepositoryCollaborator(owner: string, repo: string, username: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
-    return response.data;
-  }
-  async searchIssues(owner: string, repo: string, query: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/search/issues`, {
-      params: {
-        q: `repo:${owner}/${repo} ${query}`,
-        page,
-        per_page: perPage
-      }
+  async getUserSubscriptions(username: string, page = 1, perPage = 30): Promise<AtomGitRepository[]> {
+    const response = await this.client.get(`/api/v5/user/${username}/subscriptions`, {
+      params: { page, per_page: perPage }
     });
     return response.data;
   }
 
-  async searchCode(owner: string, repo: string, query: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/search/code`, {
-      params: {
-        q: `repo:${owner}/${repo} ${query}`,
-        page,
-        per_page: perPage
-      }
+  async getCurrentUserSubscriptions(page = 1, perPage = 30): Promise<AtomGitRepository[]> {
+    const response = await this.client.get('/api/v5/user/subscriptions', {
+      params: { page, per_page: perPage }
     });
     return response.data;
   }
-  async getUserFollowers(username: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/users/${username}/followers`);
+
+  async getCurrentUserNamespaces(): Promise<string[]> {
+    const response = await this.client.get('/api/v5/user/namespaces');
     return response.data;
   }
 
-  async getUserFollowing(username: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/users/${username}/following`);
+  async getRepositoryNotifications(owner: string, repo: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/notifications`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async followUser(username: string): Promise<void> {
-    const response = await this.client.put(`/api/v5/user/following/${username}`);
+  async markRepositoryNotificationsRead(owner: string, repo: string): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/notifications`);
     return response.data;
   }
 
-  async unfollowUser(username: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/user/following/${username}`);
+  async createUserRepository(repoData: CreateRepositoryRequest): Promise<AtomGitRepository> {
+    const response = await this.client.post('/api/v5/user/repos', repoData);
     return response.data;
   }
 
-  async getCurrentUserFollowers(): Promise<any[]> {
-    const response = await this.client.get('/api/v5/user/followers');
+  async getCurrentUserRepos(page = 1, perPage = 30): Promise<AtomGitRepository[]> {
+    const response = await this.client.get('/api/v5/user/repos', {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async getCurrentUserFollowing(): Promise<any[]> {
-    const response = await this.client.get('/api/v5/user/following');
+  async getRepository(owner: string, repo: string): Promise<AtomGitRepository> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}`);
     return response.data;
   }
 
-  async getUserOrganizations(username: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/users/${username}/orgs`);
+  async getUser(username: string): Promise<AtomGitUser> {
+    const response = await this.client.get(`/api/v5/users/${username}`);
     return response.data;
   }
 
-  async getCurrentUserOrganizations(): Promise<any[]> {
-    const response = await this.client.get('/api/v5/user/orgs');
-    return response.data;
-  }
-  async updateRelease(owner: string, repo: string, tag: string, releaseData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, releaseData);
+  async updateCurrentUser(updateData: any): Promise<AtomGitUser> {
+    const response = await this.client.patch('/api/v5/user', updateData);
     return response.data;
   }
 
-  async deleteRelease(owner: string, repo: string, tag: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
+  async getCurrentUser(): Promise<AtomGitUser> {
+    const response = await this.client.get('/api/v5/user');
     return response.data;
   }
 
-  async getReleaseAssets(owner: string, repo: string, tag: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/assets`);
+  async getCurrentUserEmails(): Promise<any[]> {
+    const response = await this.client.get('/api/v5/emails');
     return response.data;
   }
 
-  async uploadReleaseAsset(owner: string, repo: string, tag: string, assetData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/releases/${tag}/assets`, assetData);
+  async getUserEvents(username: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/events`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async getReleaseAsset(owner: string, repo: string, assetId: number): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
+  async getUserRepos(username: string, page = 1, perPage = 30): Promise<AtomGitRepository[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/repos`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async updateReleaseAsset(owner: string, repo: string, assetId: number, assetData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`, assetData);
+  async addUserKey(keyData: any): Promise<any> {
+    const response = await this.client.post('/api/v5/user/keys', keyData);
     return response.data;
   }
 
-  async deleteReleaseAsset(owner: string, repo: string, assetId: number): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/assets/${assetId}`);
-    return response.data;
-  }
-  async getOrganization(org: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/orgs/${org}`);
+  async getCurrentUserKeys(page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/user/keys', {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
+  async deleteUserKey(keyId: number): Promise<void> {
+    const response = await this.client.delete(`/api/v5/user/keys/${keyId}`);
+    return response.data;
+  }
+
+  async getUserKey(keyId: number): Promise<any> {
+    const response = await this.client.get(`/api/v5/user/keys/${keyId}`);
+    return response.data;
+  }
+
+  async getCurrentUserNamespace(): Promise<string> {
+    const response = await this.client.get('/api/v5/user/namespace');
+    return response.data;
+  }
+
+  async getCurrentUserStarredRepos(page = 1, perPage = 30): Promise<AtomGitRepository[]> {
+    const response = await this.client.get('/api/v5/user/starred', {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getCurrentUserPullRequests(page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/users/merge_requests', {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  // ===== Organizations (18 methods) =====
+  
   async createOrganizationRepository(org: string, repoData: any): Promise<any> {
     const response = await this.client.post(`/api/v5/orgs/${org}/repos`, repoData);
     return response.data;
   }
 
-  async getOrganizationMembers(org: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/members`);
+  async getOrganizationRepositories(org: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/repos`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async addOrganizationMember(org: string, username: string, memberData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/orgs/${org}/members/${username}`, memberData);
+  async getUserOrganizations(username: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/orgs`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async createOrganization(orgData: { name: string; org: string; description?: string }): Promise<any> {
-    const response = await this.client.post('/api/v5/orgs', orgData);
+  async getCurrentUserOrganizations(page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/users/orgs', {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getOrganizationMember(org: string, username: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/members/${username}`);
+    return response.data;
+  }
+
+  async getOrganization(org: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/orgs/${org}`);
+    return response.data;
+  }
+
+  async updateOrganization(org: string, updateData: any): Promise<any> {
+    const response = await this.client.patch(`/api/v5/orgs/${org}`, updateData);
+    return response.data;
+  }
+
+  async getEnterpriseMember(enterprise: string, username: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/members/${username}`);
+    return response.data;
+  }
+
+  async updateEnterpriseMember(enterprise: string, username: string, memberData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/enterprises/${enterprise}/members/${username}`, memberData);
+    return response.data;
+  }
+
+  async getCurrentUserOrganizationMembership(org: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/user/memberships/orgs/${org}`);
+    return response.data;
+  }
+
+  async leaveOrganization(org: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/user/memberships/orgs/${org}`);
+    return response.data;
+  }
+
+  async getOrganizationMembers(org: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/members`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async getEnterpriseMembers(enterprise: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/members`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
   async removeOrganizationMember(org: string, username: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/orgs/${org}/members/${username}`);
+    const response = await this.client.delete(`/api/v5/orgs/${org}/memberships/${username}`);
     return response.data;
   }
 
-  async getOrganizationProjects(org: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/projects`);
+  async inviteOrganizationMember(org: string, username: string, memberData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/orgs/${org}/memberships/${username}`, memberData);
     return response.data;
   }
 
-  async createOrganizationProject(org: string, projectData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/orgs/${org}/projects`, projectData);
+  async getOrganizationFollowers(owner: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${owner}/followers`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async updateOrganizationProject(org: string, project: string, projectData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/orgs/${org}/projects/${project}`, projectData);
+  async getOrganizationIssueExtendSettings(org: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/issue_extend_settings`);
     return response.data;
   }
 
-  async deleteOrganizationProject(org: string, project: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/orgs/${org}/projects/${project}`);
+  async getOrganizationCustomizedRoles(org: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/org/${org}/customized_roles`);
     return response.data;
   }
 
-  async getOrganizationTeams(org: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/teams`);
-    return response.data;
-  }
-
-  async createOrganizationTeam(org: string, teamData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/orgs/${org}/teams`, teamData);
-    return response.data;
-  }
-
-  async updateOrganizationTeam(org: string, team: string, teamData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/orgs/${org}/teams/${team}`, teamData);
-    return response.data;
-  }
-
-  async deleteOrganizationTeam(org: string, team: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/orgs/${org}/teams/${team}`);
-    return response.data;
-  }
-
-  async getOrganizationTeamMembers(org: string, team: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/teams/${team}/members`);
-    return response.data;
-  }
-
-  async addOrganizationTeamMember(org: string, team: string, username: string, memberData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/orgs/${org}/teams/${team}/members/${username}`, memberData);
-    return response.data;
-  }
+  // ===== Webhooks (6 methods) =====
+  
   async getRepositoryWebhooks(owner: string, repo: string): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/hooks`);
     return response.data;
@@ -978,7 +1169,7 @@ async getUser(username: string): Promise<AtomGitUser> {
   }
 
   async updateRepositoryWebhook(owner: string, repo: string, id: number, webhookData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/hooks/${id}`, webhookData);
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/hooks/${id}`, webhookData);
     return response.data;
   }
 
@@ -988,149 +1179,249 @@ async getUser(username: string): Promise<AtomGitUser> {
   }
 
   async testRepositoryWebhook(owner: string, repo: string, id: number): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/hooks/${id}/test`);
-    return response.data;
-  }
-  async getEnterprise(enterprise: string): Promise<any> {
-    const response = await this.client.get(`/api/v8/enterprises/${enterprise}`);
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/hooks/${id}/tests`);
     return response.data;
   }
 
-  async getEnterpriseMembers(enterprise: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members`);
+  // ===== Member (6 methods) =====
+  
+  async addRepositoryCollaborator(owner: string, repo: string, username: string, collaboratorData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`, collaboratorData);
     return response.data;
   }
 
-  async getEnterpriseMember(enterprise: string, username: string): Promise<any> {
+  async removeRepositoryCollaborator(owner: string, repo: string, username: string): Promise<void> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
+    return response.data;
+  }
+
+  async isRepositoryCollaborator(owner: string, repo: string, username: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`);
+    return response.data;
+  }
+
+  async getRepositoryCollaborators(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators`);
+    return response.data;
+  }
+
+  async getRepositoryCollaboratorPermission(owner: string, repo: string, username: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/${username}/permission`);
+    return response.data;
+  }
+
+  async getRepositoryCollaboratorSelfPermission(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/self_permission`);
+    return response.data;
+  }
+
+  // ===== Release (8 methods) =====
+  
+  async createRelease(owner: string, repo: string, releaseData: CreateReleaseRequest): Promise<Release> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/releases`, releaseData);
+    return response.data;
+  }
+
+  async updateRelease(owner: string, repo: string, tag: string, releaseData: any): Promise<Release> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, releaseData);
+    return response.data;
+  }
+
+  async getReleaseUploadUrl(owner: string, repo: string, tag: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/upload_url`);
+    return response.data;
+  }
+
+  async getRelease(owner: string, repo: string, tag: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
+    return response.data;
+  }
+
+  async getLatestRelease(owner: string, repo: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`);
+    return response.data;
+  }
+
+  async getReleaseByTag(owner: string, repo: string, tag: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/tags/${tag}`);
+    return response.data;
+  }
+
+  async getReleases(owner: string, repo: string, page = 1, perPage = 30): Promise<Release[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async downloadReleaseAsset(owner: string, repo: string, fileName: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/attach_files/${fileName}/download`);
+    return response.data;
+  }
+
+  // ===== Enterprise (14 methods) =====
+  
+  async getEnterpriseMemberV8(enterprise: string, username: string): Promise<any> {
     const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members/${username}`);
     return response.data;
   }
 
-  async updateEnterpriseMember(enterprise: string, username: string, memberData: any): Promise<any> {
+  async getEnterpriseMembersV8(enterprise: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members`, {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
+  async inviteEnterpriseMember(enterprise: string, username: string, memberData: any): Promise<any> {
+    const response = await this.client.post(`/api/v8/enterprises/${enterprise}/memberships/${username}`, memberData);
+    return response.data;
+  }
+
+  async deleteEnterpriseMembers(enterprise: string, usernames: string[]): Promise<void> {
+    const response = await this.client.delete(`/api/v8/enterprises/${enterprise}/members/${usernames.join(',')}`);
+    return response.data;
+  }
+
+  async updateEnterpriseMemberV8(enterprise: string, username: string, memberData: any): Promise<any> {
     const response = await this.client.put(`/api/v8/enterprises/${enterprise}/members/${username}`, memberData);
     return response.data;
   }
 
-  async removeEnterpriseMember(enterprise: string, username: string): Promise<void> {
-    const response = await this.client.delete(`/api/v8/enterprises/${enterprise}/members/${username}`);
+  async getOrganizationEnterprise(org: string): Promise<any> {
+    const response = await this.client.get(`/api/v8/org/${org}/enterprise`);
     return response.data;
   }
 
-  async getEnterpriseRoles(enterprise: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/roles`);
+  async getEnterpriseCustomizedRoles(enterprise: string, enterpriseId: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v8/enterprise/${enterpriseId}/customized_roles`);
     return response.data;
   }
 
-  async createEnterpriseRole(enterprise: string, roleData: any): Promise<any> {
-    const response = await this.client.post(`/api/v8/enterprises/${enterprise}/roles`, roleData);
+  async createEnterpriseMilestone(enterprise: string, enterpriseId: string, milestoneData: any): Promise<any> {
+    const response = await this.client.post(`/api/v8/enterprise/${enterpriseId}/milestones`, milestoneData);
     return response.data;
   }
 
-  async updateEnterpriseRole(enterprise: string, role: string, roleData: any): Promise<any> {
-    const response = await this.client.put(`/api/v8/enterprises/${enterprise}/roles/${role}`, roleData);
+  async updateEnterpriseMilestone(enterprise: string, enterpriseId: string, milestoneId: string, milestoneData: any): Promise<any> {
+    const response = await this.client.put(`/api/v8/enterprise/${enterpriseId}/milestones/${milestoneId}`, milestoneData);
     return response.data;
   }
 
-  async deleteEnterpriseRole(enterprise: string, role: string): Promise<void> {
-    const response = await this.client.delete(`/api/v8/enterprises/${enterprise}/roles/${role}`);
+  async getEnterpriseMilestone(enterprise: string, enterpriseId: string, milestoneId: string): Promise<any> {
+    const response = await this.client.get(`/api/v8/enterprise/${enterpriseId}/milestones/${milestoneId}`);
     return response.data;
   }
 
-  async getEnterpriseMilestones(enterprise: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/milestones`);
+  async deleteEnterpriseMilestone(enterprise: string, enterpriseId: string, milestoneId: string): Promise<void> {
+    const response = await this.client.delete(`/api/v8/enterprise/${enterpriseId}/milestones/${milestoneId}`);
     return response.data;
   }
 
-  async createEnterpriseMilestone(enterprise: string, milestoneData: any): Promise<any> {
-    const response = await this.client.post(`/api/v8/enterprises/${enterprise}/milestones`, milestoneData);
+  async getEnterpriseMilestones(enterprise: string, enterpriseId: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v8/enterprise/${enterpriseId}/milestones`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async updateEnterpriseMilestone(enterprise: string, milestone: string, milestoneData: any): Promise<any> {
-    const response = await this.client.put(`/api/v8/enterprises/${enterprise}/milestones/${milestone}`, milestoneData);
+  async getEnterpriseProjects(enterprise: string, enterpriseId: string, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v8/enterprise/${enterpriseId}/groups/projects`, {
+      params: { page, per_page: perPage }
+    });
     return response.data;
   }
 
-  async deleteEnterpriseMilestone(enterprise: string, milestone: string): Promise<void> {
-    const response = await this.client.delete(`/api/v8/enterprises/${enterprise}/milestones/${milestone}`);
+  async getEnterpriseIssueExtendFields(enterprise: string, enterprisesId: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v8/enterprises/${enterprisesId}/issue_extend_field`);
     return response.data;
   }
 
-  async getEnterpriseProjects(enterprise: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/projects`);
-    return response.data;
-  }
-
-  async createEnterpriseProject(enterprise: string, projectData: any): Promise<any> {
-    const response = await this.client.post(`/api/v8/enterprises/${enterprise}/projects`, projectData);
-    return response.data;
-  }
-  async getOrganizationKanbans(owner: string): Promise<any[]> {
+  // ===== Dashboard (7 methods) =====
+  
+  async getOrganizationKanbanList(owner: string): Promise<any[]> {
     const response = await this.client.get(`/api/v5/org/${owner}/kanban/list`);
     return response.data;
   }
 
-  async createOrganizationKanban(owner: string, kanbanData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/org/${owner}/kanban`, kanbanData);
+  async getOrganizationKanbanDetail(owner: string, id: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/detail`);
     return response.data;
   }
 
-  async getOrganizationKanban(owner: string, id: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}`);
+  async addKanbanItem(owner: string, id: string, itemData: any): Promise<any> {
+    const response = await this.client.post(`/api/v5/org/${owner}/kanban/${id}/add_item`, itemData);
     return response.data;
   }
 
-  async updateOrganizationKanban(owner: string, id: string, kanbanData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}`, kanbanData);
+  async updateKanbanItem(owner: string, repo: string, type: string, iid: number, newData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${repo}/${type}/${iid}/new`, newData);
     return response.data;
   }
 
-  async deleteOrganizationKanban(owner: string, id: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${id}`);
+  async removeKanbanItem(owner: string, kanbanId: string, itemData: any): Promise<void> {
+    const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${kanbanId}/remove_item_new`, {
+      data: itemData
+    });
     return response.data;
   }
 
-  async getOrganizationKanbanContent(owner: string, id: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/content`);
+  async getKanbanItemList(owner: string, kanbanId: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${kanbanId}/item_list`);
     return response.data;
   }
 
-  async updateOrganizationKanbanContent(owner: string, id: string, contentData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/content`, contentData);
+  async updateKanbanState(owner: string, kanbanId: string, stateData: any): Promise<any> {
+    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${kanbanId}/state`, stateData);
     return response.data;
   }
+
+  // ===== Oauth2.0 (1 method) =====
+  
+  async getOauthToken(code: string, clientId: string, clientSecret: string): Promise<any> {
+    const response = await this.client.post('/oauth/token', {
+      grant_type: 'authorization_code',
+      code,
+      client_id: clientId,
+      client_secret: clientSecret
+    });
+    return response.data;
+  }
+
+  // ===== AI hub (7 methods) =====
+  
   async chatCompletion(data: any): Promise<any> {
     const response = await this.client.post('/api/v5/chat/completions', data);
     return response.data;
   }
 
-  async speechRecognition(data: any): Promise<any> {
-    const response = await this.client.post('/api/v5/speech/recognition', data);
+  async similarity(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/similarity', data);
     return response.data;
   }
 
-  async objectDetection(data: any): Promise<any> {
-    const response = await this.client.post('/api/v5/object/detection', data);
+  async audioTranscription(data: any): Promise<any> {
+    const response = await this.client.post('/api/v1/audio/transcriptions', data);
     return response.data;
   }
 
-  async textEmbedding(data: any): Promise<any> {
-    const response = await this.client.post('/api/v5/text/embedding', data);
+  async detectYolo(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/detect/yolo', data);
     return response.data;
   }
 
-  async imageGeneration(data: any): Promise<any> {
-    const response = await this.client.post('/api/v5/image/generation', data);
+  async videoGenerate(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/video/generate', data);
     return response.data;
   }
 
-  async audioSynthesis(data: any): Promise<any> {
-    const response = await this.client.post('/api/v5/audio/synthesis', data);
+  async videoStatus(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/video/status', data);
     return response.data;
   }
 
-  async translation(data: any): Promise<any> {
-    const response = await this.client.post('/api/v5/translation', data);
+  async audioClassification(data: any): Promise<any> {
+    const response = await this.client.post('/api/v5/audio/classification', data);
     return response.data;
   }
 }

@@ -491,9 +491,9 @@ export class IssuesTools {
           required: ['owner', 'repo', 'issueNumber']
         }
       },
-      {
+{
         name: 'get_repository_issue_comment_modify_history',
-        description: 'Get modification history for an issue comment',
+        description: 'Get modification history of an issue comment',
         inputSchema: {
           type: 'object',
           properties: {
@@ -509,6 +509,142 @@ export class IssuesTools {
               type: 'number',
               description: 'The ID of the comment'
             }
+          },
+          required: ['owner', 'repo', 'commentId']
+        }
+      },
+      {
+        name: 'get_enterprise_issue_labels',
+        description: 'Get labels for an enterprise issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            },
+            issueId: {
+              type: 'string',
+              description: 'The issue ID'
+            }
+          },
+          required: ['enterprise', 'issueId']
+        }
+      },
+      {
+        name: 'get_enterprise_issues',
+        description: 'Get all issues for an enterprise',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
+            }
+          },
+          required: ['enterprise']
+        }
+      },
+      {
+        name: 'get_user_issues',
+        description: 'Get all issues for the authenticated user',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
+            }
+          },
+          required: []
+        }
+      },
+      {
+        name: 'get_organization_issues',
+        description: 'Get issues for an organization',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: 'The organization name'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
+            }
+          },
+          required: ['org']
+        }
+      },
+      {
+        name: 'get_enterprise_issue_comments',
+        description: 'Get comments for an enterprise issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The issue number'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
+            }
+          },
+          required: ['enterprise', 'issueNumber']
+        }
+      },
+      {
+        name: 'get_enterprise_issue',
+        description: 'Get a specific enterprise issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The issue number'
+            }
+          },
+          required: ['enterprise', 'issueNumber']
+        }
+      }
           },
           required: ['owner', 'repo', 'commentId']
         }
@@ -607,6 +743,24 @@ export class IssuesTools {
 
       case 'get_repository_issue_comment_modify_history':
         return await this.atomGitService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, args.commentId);
+
+case 'get_enterprise_issue_labels':
+        return await this.atomGitService.getEnterpriseIssueLabels(args.enterprise, args.issueId);
+
+      case 'get_enterprise_issues':
+        return await this.atomGitService.getEnterpriseIssues(args.enterprise, args.page, args.perPage);
+
+      case 'get_user_issues':
+        return await this.atomGitService.getUserIssues(args.page, args.perPage);
+
+      case 'get_organization_issues':
+        return await this.atomGitService.getOrganizationIssues(args.org, args.page, args.perPage);
+
+      case 'get_enterprise_issue_comments':
+        return await this.atomGitService.getEnterpriseIssueComments(args.enterprise, args.issueNumber, args.page, args.perPage);
+
+      case 'get_enterprise_issue':
+        return await this.atomGitService.getEnterpriseIssue(args.enterprise, args.issueNumber);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

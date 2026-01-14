@@ -334,9 +334,8 @@ export class BranchTools {
       case 'get_branch_protection_rules':
         return await this.atomGitService.getBranchProtectionRules(args.owner, args.repo);
 
-      case 'update_branch_protection_rule':
-        return await this.atomGitService.updateBranchProtectionRule(args.owner, args.repo, {
-          wildcard: args.wildcard,
+case 'update_branch_protection_rule':
+        return await this.atomGitService.updateBranchProtectionRule(args.owner, args.repo, args.wildcard, {
           allow_force_push: args.allow_force_push,
           allow_deletion: args.allow_deletion,
           required_status_checks: args.required_status_checks,

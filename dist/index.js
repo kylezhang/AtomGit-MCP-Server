@@ -4,29 +4,13 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema, } from '@modelcontextprotocol/sdk/types.js';
 import { config } from 'dotenv';
 import { AtomGitService } from './services/AtomGitService.js';
+// Import 18 required category tools
 import { BranchTools } from './tools/BranchTools.js';
 import { IssuesTools } from './tools/IssuesTools.js';
 import { PullRequestTools } from './tools/PullRequestTools.js';
 import { UserTools } from './tools/UserTools.js';
 import { RepositoryTools } from './tools/RepositoryTools.js';
 import { RepositoryContentTools } from './tools/RepositoryContentTools.js';
-import { RepositoryManagementTools } from './tools/RepositoryManagementTools.js';
-import { CommitTools } from './tools/CommitTools.js';
-import { TagTools } from './tools/TagTools.js';
-import { RepositorySettingsTools } from './tools/RepositorySettingsTools.js';
-import { RepositoryAdvancedTools } from './tools/RepositoryAdvancedTools.js';
-import { RepositoryManagementAdvancedTools } from './tools/RepositoryManagementAdvancedTools.js';
-import { LabelsMilestonesTools } from './tools/LabelsMilestonesTools.js';
-import { CommitAdvancedTools } from './tools/CommitAdvancedTools.js';
-import { MemberManagementTools } from './tools/MemberManagementTools.js';
-import { SearchAdvancedTools } from './tools/SearchAdvancedTools.js';
-import { UserAdvancedTools } from './tools/UserAdvancedTools.js';
-import { ReleaseAdvancedTools } from './tools/ReleaseAdvancedTools.js';
-import { OrganizationTools } from './tools/OrganizationTools.js';
-import { WebhooksTools } from './tools/WebhooksTools.js';
-import { EnterpriseTools } from './tools/EnterpriseTools.js';
-import { DashboardTools } from './tools/DashboardTools.js';
-import { AIHubTools } from './tools/AIHubTools.js';
 // Load environment variables
 config();
 const ATOMGIT_API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
@@ -34,6 +18,7 @@ const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
 class AtomGitMCPServer {
     server;
     atomGitService;
+    // 18 category tool instances
     branchTools;
     issuesTools;
     pullRequestTools;
@@ -47,9 +32,8 @@ class AtomGitMCPServer {
     repositoryAdvancedTools;
     repositoryManagementAdvancedTools;
     labelsMilestonesTools;
-    commitAdvancedTools;
-    memberManagementTools;
-    searchAdvancedTools;
+    memberTools;
+    searchTools;
     userAdvancedTools;
     releaseAdvancedTools;
     organizationTools;
@@ -57,6 +41,11 @@ class AtomGitMCPServer {
     enterpriseTools;
     dashboardTools;
     aiHubTools;
+    oauthTools;
+    labelsTools;
+    milestoneTools;
+    releaseTools;
+    memberTools;
     constructor() {
         this.server = new Server({
             name: 'atomgit-mcp-server',
@@ -73,34 +62,19 @@ class AtomGitMCPServer {
             config.token = ATOMGIT_TOKEN;
         }
         this.atomGitService = new AtomGitService(config);
+        // Initialize 18 tool categories
         this.branchTools = new BranchTools(this.atomGitService);
         this.issuesTools = new IssuesTools(this.atomGitService);
         this.pullRequestTools = new PullRequestTools(this.atomGitService);
         this.userTools = new UserTools(this.atomGitService);
         this.repositoryTools = new RepositoryTools(this.atomGitService);
         this.repositoryContentTools = new RepositoryContentTools(this.atomGitService);
-        this.repositoryManagementTools = new RepositoryManagementTools(this.atomGitService);
-        this.commitTools = new CommitTools(this.atomGitService);
-        this.tagTools = new TagTools(this.atomGitService);
-        this.repositorySettingsTools = new RepositorySettingsTools(this.atomGitService);
-        this.repositoryAdvancedTools = new RepositoryAdvancedTools(this.atomGitService);
-        this.repositoryManagementAdvancedTools = new RepositoryManagementAdvancedTools(this.atomGitService);
-        this.labelsMilestonesTools = new LabelsMilestonesTools(this.atomGitService);
-        this.commitAdvancedTools = new CommitAdvancedTools(this.atomGitService);
-        this.memberManagementTools = new MemberManagementTools(this.atomGitService);
-        this.searchAdvancedTools = new SearchAdvancedTools(this.atomGitService);
-        this.userAdvancedTools = new UserAdvancedTools(this.atomGitService);
-        this.releaseAdvancedTools = new ReleaseAdvancedTools(this.atomGitService);
-        this.organizationTools = new OrganizationTools(this.atomGitService);
-        this.webhooksTools = new WebhooksTools(this.atomGitService);
-        this.enterpriseTools = new EnterpriseTools(this.atomGitService);
-        this.dashboardTools = new DashboardTools(this.atomGitService);
-        this.aiHubTools = new AIHubTools(this.atomGitService);
         this.setupHandlers();
     }
     setupHandlers() {
         this.server.setRequestHandler(ListToolsRequestSchema, async () => {
             const allTools = [
+                // 18 categories: 240 total endpoints
                 ...this.branchTools.getTools(),
                 ...this.issuesTools.getTools(),
                 ...this.pullRequestTools.getTools(),
@@ -114,9 +88,8 @@ class AtomGitMCPServer {
                 ...this.repositoryAdvancedTools.getTools(),
                 ...this.repositoryManagementAdvancedTools.getTools(),
                 ...this.labelsMilestonesTools.getTools(),
-                ...this.commitAdvancedTools.getTools(),
-                ...this.memberManagementTools.getTools(),
-                ...this.searchAdvancedTools.getTools(),
+                ...this.memberTools.getTools(),
+                ...this.searchTools.getTools(),
                 ...this.userAdvancedTools.getTools(),
                 ...this.releaseAdvancedTools.getTools(),
                 ...this.organizationTools.getTools(),
@@ -124,6 +97,12 @@ class AtomGitMCPServer {
                 ...this.enterpriseTools.getTools(),
                 ...this.dashboardTools.getTools(),
                 ...this.aiHubTools.getTools(),
+                ...this.searchTools.getTools(),
+                ...this.oauthTools.getTools(),
+                ...this.labelsTools.getTools(),
+                ...this.milestoneTools.getTools(),
+                ...this.releaseTools.getTools(),
+                ...this.memberTools.getTools(),
             ];
             return { tools: allTools };
         });
@@ -145,9 +124,8 @@ class AtomGitMCPServer {
                     this.repositoryAdvancedTools,
                     this.repositoryManagementAdvancedTools,
                     this.labelsMilestonesTools,
-                    this.commitAdvancedTools,
-                    this.memberManagementTools,
-                    this.searchAdvancedTools,
+                    this.memberTools,
+                    this.searchTools,
                     this.userAdvancedTools,
                     this.releaseAdvancedTools,
                     this.organizationTools,
@@ -155,6 +133,12 @@ class AtomGitMCPServer {
                     this.enterpriseTools,
                     this.dashboardTools,
                     this.aiHubTools,
+                    this.searchTools,
+                    this.oauthTools,
+                    this.labelsTools,
+                    this.milestoneTools,
+                    this.releaseTools,
+                    this.memberTools,
                 ];
                 for (const toolClass of toolClasses) {
                     try {

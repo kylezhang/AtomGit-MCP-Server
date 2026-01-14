@@ -941,5 +941,186 @@ export class AtomGitService {
         const response = await this.client.post('/api/v5/translation', data);
         return response.data;
     }
+    // OAuth2.0 methods
+    async getOauthToken(code, clientId, clientSecret) {
+        const response = await this.client.post('/oauth/token', {
+            grant_type: 'authorization_code',
+            code,
+            client_id: clientId,
+            client_secret: clientSecret
+        });
+        return response.data;
+    }
+    // Additional enterprise methods
+    async getEnterpriseRoles(enterprise) {
+        const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issue_statuses`);
+        return response.data;
+    }
+    // Additional organization methods  
+    async createOrganizationProject(org, projectData) {
+        const response = await this.client.post(`/api/v5/orgs/${org}/repos`, projectData);
+        return response.data;
+    }
+    async updateOrganizationProject(org, project, projectData) {
+        const response = await this.client.put(`/api/v5/orgs/${org}/repos/${project}`, projectData);
+        return response.data;
+    }
+    async deleteOrganizationProject(org, project) {
+        const response = await this.client.delete(`/api/v5/orgs/${org}/repos/${project}`);
+        return response.data;
+    }
+    async createOrganizationTeam(org, teamData) {
+        const response = await this.client.post(`/api/v5/orgs/${org}/teams`, teamData);
+        return response.data;
+    }
+    async updateOrganizationTeam(org, team, teamData) {
+        const response = await this.client.put(`/api/v5/orgs/${org}/teams/${team}`, teamData);
+        return response.data;
+    }
+    async deleteOrganizationTeam(org, team) {
+        const response = await this.client.delete(`/api/v5/orgs/${org}/teams/${team}`);
+        return response.data;
+    }
+    async getOrganizationTeamMembers(org, team) {
+        const response = await this.client.get(`/api/v5/orgs/${org}/teams/${team}/members`);
+        return response.data;
+    }
+    async addOrganizationTeamMember(org, team, username, memberData) {
+        const response = await this.client.put(`/api/v5/orgs/${org}/teams/${team}/members/${username}`, memberData);
+        return response.data;
+    }
+    async removeOrganizationTeamMember(org, team, username) {
+        const response = await this.client.delete(`/api/v5/orgs/${org}/teams/${team}/members/${username}`);
+        return response.data;
+    }
+    // Additional repository methods (stats and archive)
+    async getRepositoryCommitsStats(owner, repo, sha) {
+        const url = sha ? `/api/v5/repos/${owner}/${repo}/stats/participation?sha=${sha}` : `/api/v5/repos/${owner}/${repo}/stats/participation`;
+        const response = await this.client.get(url);
+        return response.data;
+    }
+    async getRepositoryCommitsActivity(owner, repo, sha) {
+        const url = sha ? `/api/v5/repos/${owner}/${repo}/stats/commit_activity?sha=${sha}` : `/api/v5/repos/${owner}/${repo}/stats/commit_activity`;
+        const response = await this.client.get(url);
+        return response.data;
+    }
+    async getRepositoryCodeFrequency(owner, repo, sha) {
+        const url = sha ? `/api/v5/repos/${owner}/${repo}/stats/code_frequency?sha=${sha}` : `/api/v5/repos/${owner}/${repo}/stats/code_frequency`;
+        const response = await this.client.get(url);
+        return response.data;
+    }
+    async getRepositoryWeekCount(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/stats/participation`);
+        return response.data;
+    }
+    async getRepositoryHourlyCommits(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/stats/punch_card`);
+        return response.data;
+    }
+    // Additional enterprise project methods
+    async getEnterpriseProjects(enterprise) {
+        const response = await this.client.get(`/api/v5/enterprises/${enterprise}/projects`);
+        return response.data;
+    }
+    async getEnterpriseProject(enterprise, project) {
+        const response = await this.client.get(`/api/v5/enterprises/${enterprise}/projects/${project}`);
+        return response.data;
+    }
+    async getEnterpriseMembers(enterprise) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members`);
+        return response.data;
+    }
+    async getEnterpriseMember(enterprise, username) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members/${username}`);
+        return response.data;
+    }
+    async getEnterpriseProjects(enterprise) {
+        const response = await this.client.get(`/api/v8/enterprises/${enterprise}/projects`);
+        return response.data;
+    }
+    async createEnterpriseProject(enterprise, projectData) {
+        const response = await this.client.post(`/api/v5/enterprises/${enterprise}/projects`, projectData);
+        return response.data;
+    }
+    async updateEnterpriseProject(enterprise, project, projectData) {
+        const response = await this.client.put(`/api/v5/enterprises/${enterprise}/projects/${project}`, projectData);
+        return response.data;
+    }
+    async deleteEnterpriseProject(enterprise, project) {
+        const response = await this.client.delete(`/api/v5/enterprises/${enterprise}/projects/${project}`);
+        return response.data;
+    }
+    // Additional enterprise team methods
+    async getEnterpriseTeams(enterprise) {
+        const response = await this.client.get(`/api/v5/enterprises/${enterprise}/teams`);
+        return response.data;
+    }
+    async getEnterpriseTeam(enterprise, team) {
+        const response = await this.client.get(`/api/v5/enterprises/${enterprise}/teams/${team}`);
+        return response.data;
+    }
+    async createEnterpriseTeam(enterprise, teamData) {
+        const response = await this.client.post(`/api/v5/enterprises/${enterprise}/teams`, teamData);
+        return response.data;
+    }
+    async updateEnterpriseTeam(enterprise, team, teamData) {
+        const response = await this.client.put(`/api/v5/enterprises/${enterprise}/teams/${team}`, teamData);
+        return response.data;
+    }
+    async deleteEnterpriseTeam(enterprise, team) {
+        const response = await this.client.delete(`/api/v5/enterprises/${enterprise}/teams/${team}`);
+        return response.data;
+    }
+    async getEnterpriseTeamMembers(enterprise, team) {
+        const response = await this.client.get(`/api/v5/enterprises/${enterprise}/teams/${team}/members`);
+        return response.data;
+    }
+    async addEnterpriseTeamMember(enterprise, team, username, memberData) {
+        const response = await this.client.put(`/api/v5/enterprises/${enterprise}/teams/${team}/members/${username}`, memberData);
+        return response.data;
+    }
+    async removeEnterpriseTeamMember(enterprise, team, username) {
+        const response = await this.client.delete(`/api/v5/enterprises/${enterprise}/teams/${team}/members/${username}`);
+        return response.data;
+    }
+    // Additional webhook methods  
+    async testRepositoryWebhook(owner, repo, id) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/hooks/${id}/test`);
+        return response.data;
+    }
+    async pingRepositoryWebhook(owner, repo, id) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/hooks/${id}/pings`);
+        return response.data;
+    }
+    // Additional dashboard kanban methods
+    async getOrganizationKanbanContent(owner, id, type) {
+        const url = type ? `/api/v5/org/${owner}/kanban/${id}/content?type=${type}` : `/api/v5/org/${owner}/kanban/${id}/content`;
+        const response = await this.client.get(url);
+        return response.data;
+    }
+    async addOrganizationKanbanCard(owner, id, cardData) {
+        const response = await this.client.post(`/api/v5/org/${owner}/kanban/${id}/card`, cardData);
+        return response.data;
+    }
+    async updateOrganizationKanbanCard(owner, id, cardData) {
+        const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/card`, cardData);
+        return response.data;
+    }
+    async deleteOrganizationKanbanCard(owner, id) {
+        const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${id}/card`);
+        return response.data;
+    }
+    async getOrganizationKanban(owner, id) {
+        const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/detail`);
+        return response.data;
+    }
+    async getOrganizationKanbans(owner) {
+        const response = await this.client.get(`/api/v5/org/${owner}/kanban/list`);
+        return response.data;
+    }
+    async updateOrganizationKanbanContent(owner, id, contentData) {
+        const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/content`, contentData);
+        return response.data;
+    }
 }
 //# sourceMappingURL=AtomGitService.js.map

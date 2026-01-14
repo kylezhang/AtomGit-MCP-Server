@@ -1,0 +1,213 @@
+import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { AtomGitService } from '../services/AtomGitService.js';
+
+export class LabelsTools {
+  constructor(private atomGitService: AtomGitService) {}
+
+  getTools(): Tool[] {
+    return [
+      {
+        name: 'get_repository_labels',
+        description: '获取仓库所有任务标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库名称'
+            }
+          },
+          required: ['owner', 'repo']
+        }
+      },
+      {
+        name: 'create_repository_label',
+        description: '创建仓库任务标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库名称'
+            },
+            name: {
+              type: 'string',
+              description: '标签名称'
+            },
+            color: {
+              type: 'string',
+              description: '标签颜色'
+            },
+            description: {
+              type: 'string',
+              description: '标签描述'
+            }
+          },
+          required: ['owner', 'repo', 'name']
+        }
+      },
+      {
+        name: 'update_repository_label',
+        description: '更新一个仓库的任务标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库名称'
+            },
+            originalName: {
+              type: 'string',
+              description: '原标签名称'
+            },
+            name: {
+              type: 'string',
+              description: '新标签名称'
+            },
+            color: {
+              type: 'string',
+              description: '标签颜色'
+            },
+            description: {
+              type: 'string',
+              description: '标签描述'
+            }
+          },
+          required: ['owner', 'repo', 'originalName', 'name']
+        }
+      },
+      {
+        name: 'delete_repository_label',
+        description: '删除一个仓库任务标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库名称'
+            },
+            name: {
+              type: 'string',
+              description: '标签名称'
+            }
+          },
+          required: ['owner', 'repo', 'name']
+        }
+      },
+      {
+        name: 'replace_all_repository_labels',
+        description: '替换所有仓库标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库名称'
+            },
+            labels: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                    description: '标签名称'
+                  },
+                  color: {
+                    type: 'string',
+                    description: '标签颜色'
+                  }
+                }
+              }
+            }
+          },
+          required: ['owner', 'repo', 'labels']
+        }
+      },
+      {
+        name: 'get_enterprise_labels',
+        description: '获取企业所有的标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: '企业名称'
+            }
+          },
+          required: ['enterprise']
+        }
+      },
+      {
+        name: 'get_labels_list',
+        description: '获取标签列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: '企业ID'
+            }
+          },
+          required: ['enterprise']
+        }
+      }
+    ];
+  }
+
+  async callTool(name: string, args: any): Promise<any> {
+    switch (name) {
+      case 'get_repository_labels':
+        return await this.atomGitService.getRepositoryLabels(args.owner, args.repo);
+      
+      case 'create_repository_label':
+        return await this.atomGitService.createRepositoryLabel(args.owner, args.repo, {
+          name: args.name,
+          color: args.color,
+          description: args.description
+        });
+      
+      case 'update_repository_label':
+        return await this.atomGitService.updateRepositoryLabel(args.owner, args.repo, args.originalName, {
+          name: args.name,
+          color: args.color,
+          description: args.description
+        });
+      
+      case 'delete_repository_label':
+        return await this.atomGitService.deleteRepositoryLabel(args.owner, args.repo, args.name);
+      
+      case 'replace_all_repository_labels':
+        return await this.atomGitService.replaceRepositoryIssueLabels(args.owner, args.repo, 0, args.labels);
+      
+      case 'get_enterprise_labels':
+        return await this.atomGitService.getEnterpriseRoles(args.enterprise);
+      
+      case 'get_labels_list':
+        return await this.atomGitService.getEnterpriseRoles(args.enterprise);
+      
+      default:
+        throw new Error(`Unknown tool: ${name}`);
+    }
+  }
+}
