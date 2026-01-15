@@ -27,7 +27,7 @@
   },
   "include": [
     "src/**/*"
-  ],
+, "docs/AtomGitService.ts.bak"  ],
   "exclude": [
     "node_modules",
     "dist",

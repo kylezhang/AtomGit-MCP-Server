@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { BranchService } from '../services/BranchService.js';
 export declare class BranchTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private branchService;
+    constructor(branchService: BranchService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

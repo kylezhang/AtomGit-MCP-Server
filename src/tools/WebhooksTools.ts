@@ -1,11 +1,11 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { WebhooksService } from '../services/WebhooksService.js';
 
 export class WebhooksTools {
-  private atomGitService: AtomGitService;
+  private webhooksService: WebhooksService;
 
-  constructor(atomGitService: AtomGitService) {
-    this.atomGitService = atomGitService;
+  constructor(webhooksService: WebhooksService) {
+    this.webhooksService = webhooksService;
   }
 
   getTools(): Tool[] {
@@ -148,22 +148,22 @@ export class WebhooksTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_webhooks':
-        return await this.atomGitService.getRepositoryWebhooks(args.owner, args.repo);
+        return await this.webhooksService.getRepositoryWebhooks(args.owner, args.repo);
       
       case 'create_repository_webhook':
-        return await this.atomGitService.createRepositoryWebhook(args.owner, args.repo, args.webhookData);
+        return await this.webhooksService.createRepositoryWebhook(args.owner, args.repo, args.webhookData);
       
       case 'get_repository_webhook':
-        return await this.atomGitService.getRepositoryWebhook(args.owner, args.repo, args.id);
+        return await this.webhooksService.getRepositoryWebhook(args.owner, args.repo, args.id);
       
       case 'update_repository_webhook':
-        return await this.atomGitService.updateRepositoryWebhook(args.owner, args.repo, args.id, args.webhookData);
+        return await this.webhooksService.updateRepositoryWebhook(args.owner, args.repo, args.id, args.webhookData);
       
       case 'delete_repository_webhook':
-        return await this.atomGitService.deleteRepositoryWebhook(args.owner, args.repo, args.id);
+        return await this.webhooksService.deleteRepositoryWebhook(args.owner, args.repo, args.id);
       
       case 'test_repository_webhook':
-        return await this.atomGitService.testRepositoryWebhook(args.owner, args.repo, args.id);
+        return await this.webhooksService.testRepositoryWebhook(args.owner, args.repo, args.id);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { IssuesService } from '../services/IssuesService.js';
 
 export class IssuesTools {
-  constructor(private atomGitService: AtomGitService) {}
+  constructor(private issuesService: IssuesService) {}
 
   getTools(): Tool[] {
     return [
@@ -644,9 +644,41 @@ export class IssuesTools {
           },
           required: ['enterprise', 'issueNumber']
         }
-      }
+      },
+      {
+        name: 'get_enterprise_issue_statuses',
+        description: 'Get enterprise issue statuses',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['enterprise']
+        }
+      },
+      {
+        name: 'get_repository_issue_related_branches',
+        description: 'Get related branches for an issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The issue number'
+            }
+          },
+          required: ['owner', 'repo', 'issueNumber']
         }
       }
     ];
@@ -655,7 +687,7 @@ export class IssuesTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_issues':
-        return await this.atomGitService.getRepositoryIssues(
+        return await this.issuesService.getRepositoryIssues(
           args.owner, 
           args.repo, 
           args.state, 
@@ -671,13 +703,13 @@ export class IssuesTools {
           milestone: args.milestone,
           labels: args.labels
         };
-        return await this.atomGitService.createRepositoryIssue(args.owner, args.repo, issueData);
+        return await this.issuesService.createRepositoryIssue(args.owner, args.repo, issueData);
       
       case 'get_repository_issue':
-        return await this.atomGitService.getRepositoryIssue(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssue(args.owner, args.repo, args.issueNumber);
 
       case 'update_repository_issue':
-        return await this.atomGitService.updateRepositoryIssue(args.owner, args.repo, args.issueNumber, {
+        return await this.issuesService.updateRepositoryIssue(args.owner, args.repo, args.issueNumber, {
           title: args.title,
           body: args.body,
           state: args.state,
@@ -687,7 +719,7 @@ export class IssuesTools {
         });
 
       case 'get_repository_issue_comments':
-        return await this.atomGitService.getRepositoryIssueComments(
+        return await this.issuesService.getRepositoryIssueComments(
           args.owner,
           args.repo,
           args.issueNumber,
@@ -696,71 +728,76 @@ export class IssuesTools {
         );
 
       case 'create_repository_issue_comment':
-        return await this.atomGitService.createRepositoryIssueComment(args.owner, args.repo, args.issueNumber, {
+        return await this.issuesService.createRepositoryIssueComment(args.owner, args.repo, args.issueNumber, {
           body: args.body
         });
 
       case 'get_repository_issue_comment':
-        return await this.atomGitService.getRepositoryIssueComment(args.owner, args.repo, args.commentId);
+        return await this.issuesService.getRepositoryIssueComment(args.owner, args.repo, args.commentId);
 
       case 'update_repository_issue_comment':
-        return await this.atomGitService.updateRepositoryIssueComment(args.owner, args.repo, args.commentId, {
+        return await this.issuesService.updateRepositoryIssueComment(args.owner, args.repo, args.commentId, {
           body: args.body
         });
 
       case 'delete_repository_issue_comment':
-        return await this.atomGitService.deleteRepositoryIssueComment(args.owner, args.repo, args.commentId);
+        return await this.issuesService.deleteRepositoryIssueComment(args.owner, args.repo, args.commentId);
 
       case 'create_repository_issue_label':
-        return await this.atomGitService.createRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.labels);
+        return await this.issuesService.createRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.labels);
 
       case 'replace_repository_issue_labels':
-        return await this.atomGitService.replaceRepositoryIssueLabels(args.owner, args.repo, args.issueNumber, args.labels);
+        return await this.issuesService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber, args.labels);
 
       case 'delete_repository_issue_label':
-        return await this.atomGitService.deleteRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.name);
+        return await this.issuesService.deleteRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.name);
 
       case 'get_repository_issue_operate_logs':
-        return await this.atomGitService.getRepositoryIssueOperateLogs(
+        return await this.issuesService.getRepositoryIssueOperateLogs(
           args.owner,
-          args.repo,
           args.issueNumber,
           args.page,
           args.perPage
         );
 
       case 'get_repository_issue_related_branches':
-        return await this.atomGitService.getRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber);
 
       case 'get_repository_issue_reactions':
-        return await this.atomGitService.getRepositoryIssueReactions(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssueReactions(args.owner, args.repo, args.issueNumber);
 
       case 'get_repository_issue_comment_reactions':
-        return await this.atomGitService.getRepositoryIssueCommentReactions(args.owner, args.repo, args.commentId);
+        return await this.issuesService.getRepositoryIssueCommentReactions(args.owner, args.repo, args.commentId);
 
       case 'get_repository_issue_modify_history':
-        return await this.atomGitService.getRepositoryIssueModifyHistory(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssueModifyHistory(args.owner, args.repo, args.issueNumber);
 
       case 'get_repository_issue_comment_modify_history':
-        return await this.atomGitService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, args.commentId);
+        return await this.issuesService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, args.commentId);
 
 case 'get_enterprise_issue_labels':
-        return await this.atomGitService.getEnterpriseIssueLabels(args.enterprise, args.issueId);
+        return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, args.issueId);
 
       case 'get_enterprise_issues':
-        return await this.atomGitService.getEnterpriseIssues(args.enterprise, args.page, args.perPage);
+        return await this.issuesService.getEnterpriseIssues(args.enterprise, args.page, args.perPage);
 
       case 'get_user_issues':
-        return await this.atomGitService.getUserIssues(args.page, args.perPage);
+        return await this.issuesService.getUserIssues(args.page, args.perPage);
 
       case 'get_organization_issues':
-        return await this.atomGitService.getOrganizationIssues(args.org, args.page, args.perPage);
+        return await this.issuesService.getOrganizationIssues(args.org, args.page, args.perPage);
 
       case 'get_enterprise_issue_comments':
-        return await this.atomGitService.getEnterpriseIssueComments(args.enterprise, args.issueNumber, args.page, args.perPage);
+        return await this.issuesService.getEnterpriseIssueComments(args.enterprise, args.issueNumber, args.page, args.perPage);
 
       case 'get_enterprise_issue':
-        return await this.atomGitService.getEnterpriseIssue(args.enterprise, args.issueNumber);
+        return await this.issuesService.getEnterpriseIssue(args.enterprise, args.issueNumber);
+
+      case 'delete_repository_all_issue_labels':
+        return await this.issuesService.deleteRepositoryAllIssueLabels(args.owner, args.repo, args.issueNumber);
+      
+      case 'get_all_repository_issue_comments':
+        return await this.issuesService.getAllRepositoryIssueComments(args.owner, args.repo, args.page, args.perPage);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

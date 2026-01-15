@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { OauthService } from '../services/OauthService.js';
 
 export class OauthTools {
-  constructor(private atomGitService: AtomGitService) {}
+  constructor(private oauthService: OauthService) {}
 
   getTools(): Tool[] {
     return [
@@ -34,7 +34,7 @@ export class OauthTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_oauth_token':
-        return await this.atomGitService.getOauthToken(
+        return await this.oauthService.getOauthToken(
           args.code,
           args.clientId,
           args.clientSecret

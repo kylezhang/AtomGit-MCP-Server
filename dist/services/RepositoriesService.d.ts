@@ -1,0 +1,41 @@
+import { BaseService } from './BaseService.js';
+import { AtomGitRepository, AtomGitTree } from '../types/index.js';
+export declare class RepositoriesService extends BaseService {
+    getRepositoryTree(owner: string, repo: string, sha?: string): Promise<AtomGitTree>;
+    getRepositoryContent(owner: string, repo: string, path?: string, ref?: string): Promise<any>;
+    createRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
+    updateRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
+    deleteRepositoryFile(owner: string, repo: string, fileData: any): Promise<any>;
+    getRepositoryFileList(owner: string, repo: string, path?: string, ref?: string, page?: number, perPage?: number): Promise<any[]>;
+    getRepositoryFileBlob(owner: string, repo: string, sha: string): Promise<any>;
+    getRepositoryLanguages(owner: string, repo: string): Promise<any>;
+    getRepositoryContributors(owner: string, repo: string): Promise<any[]>;
+    setRepositoryModuleSetting(owner: string, repo: string, moduleData: any): Promise<any>;
+    updateRepositorySettings(owner: string, repo: string, updateData: any): Promise<AtomGitRepository>;
+    deleteRepository(owner: string, repo: string): Promise<void>;
+    updateRepositoryReviewer(owner: string, repo: string, reviewerData: any): Promise<any>;
+    archiveRepository(org: string, repository: string, archiveData: any): Promise<any>;
+    transferRepositoryToOrg(org: string, repository: string, transferData: any): Promise<any>;
+    getRepositoryTransition(owner: string, repo: string): Promise<any>;
+    updateRepositoryTransition(owner: string, repo: string, transitionData: any): Promise<any>;
+    setRepositoryPushConfig(owner: string, repo: string, config: any): Promise<any>;
+    getRepositoryPushConfig(owner: string, repo: string): Promise<any>;
+    forkRepository(owner: string, repo: string, forkData?: any): Promise<AtomGitRepository>;
+    getRepositoryForks(owner: string, repo: string, page?: number, perPage?: number): Promise<AtomGitRepository[]>;
+    uploadRepositoryImage(owner: string, repo: string, fileData: string, filename: string): Promise<any>;
+    uploadRepositoryFile(owner: string, repo: string, fileData: string, filename: string): Promise<any>;
+    getRepositorySubscribers(owner: string, repo: string): Promise<any[]>;
+    getRepositoryStargazers(owner: string, repo: string): Promise<any[]>;
+    updateRepositoryRepoSettings(owner: string, repo: string, settings: any): Promise<any>;
+    getRepositoryRepoSettings(owner: string, repo: string): Promise<any>;
+    getRepositoryPullRequestSettings(owner: string, repo: string): Promise<any>;
+    updateRepositoryPullRequestSettings(owner: string, repo: string, settings: any): Promise<any>;
+    updateRepositoryMemberRole(owner: string, repo: string, username: string, roleData: any): Promise<any>;
+    transferRepository(owner: string, repo: string, transferData: any): Promise<any>;
+    getRepositoryCustomizedRoles(owner: string, repo: string): Promise<any[]>;
+    getRepositoryDownloadStatistics(owner: string, repo: string): Promise<any>;
+    getRepositoryRawFile(owner: string, repo: string, path: string): Promise<any>;
+    getRepositoryContributorsStatistic(owner: string, repo: string): Promise<any>;
+    getRepositoryEvents(owner: string, repo: string, accessToken: string): Promise<any[]>;
+}
+//# sourceMappingURL=RepositoriesService.d.ts.map

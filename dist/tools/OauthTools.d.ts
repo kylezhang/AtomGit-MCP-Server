@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { OauthService } from '../services/OauthService.js';
 export declare class OauthTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private oauthService;
+    constructor(oauthService: OauthService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

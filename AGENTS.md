@@ -1,99 +1,122 @@
-# AtomGit MCP Server - Developer Guidelines
+# AtomGit MCP Server - Project Knowledge Base
 
-**ROLE:** You are an expert TypeScript developer building the AtomGit MCP Server. You must strictly follow the file structure, coding standards, and implementation priorities defined below.
+**Generated:** 2025-01-15
+**Commit:** Working Directory
+**Branch:** Main Development
 
-## 🚨 CRITICAL CONSTRAINTS (Read First)
+## OVERVIEW
+AtomGit MCP Server provides 240+ tools for interacting with AtomGit platform via Model Context Protocol. Built with TypeScript, strict configuration, and comprehensive testing requirements.
 
-1. **Environment Integrity (`.env`)**:
-* **NEVER** modify, recreate, or delete the `.env` file.
-* **NEVER** copy `.env.example` to `.env`.
-* **ALWAYS** use the existing `.env` configuration provided by the user (Token, Repo Owner, etc.).
+## STRUCTURE
+```
+AtomGit-MCP-Server/
+├── src/
+│   ├── services/    # 19 API service classes (AtomGit API wrappers)
+│   ├── tools/       # 19 MCP tool classes (MCP protocol interface)
+│   ├── types/       # TypeScript interfaces for AtomGit API
+│   └── index.ts     # Main entry point (334 lines, manual routing)
+├── dist/            # Compiled output (80+ files)
+├── docs/            # Task documentation & API extraction data
+└── AGENTS.md        # Developer guidelines (this file)
+```
 
-2. **Root Directory Hygiene**:
-* **NEVER** create test scripts, debug scripts, or docs in the root directory.
-* **ONLY** core config files (`package.json`, `tsconfig.json`, `README.md`, etc.) and `src/` are allowed in root.
+## WHERE TO LOOK
+| Task | Location | Notes |
+|------|----------|-------|
+| API endpoints | `docs/api_endpoints_extracted.json` | Complete 240-endpoint specification |
+| Service patterns | `src/services/BaseService.ts` | Base class with dual auth headers |
+| MCP tool patterns | `src/tools/BranchTools.ts` | Example tool implementation |
+| Environment config | `.env.example` | Token and API base URL template |
+| Build scripts | `package.json` | ESM module with custom scripts |
 
----
+## CODE MAP
+| Symbol | Type | Location | Role |
+|--------|------|----------|------|
+| `BaseService` | Class | `src/services/BaseService.ts` | Base API client with auth |
+| `AtomGitService` | Class | `src/services/AtomGitService.ts` | Original service (to be refactored) |
+| `index.ts` | Entry | `src/index.ts` | Main MCP server setup |
 
-## 📂 File Organization & Structure
+## CONVENTIONS
+### TypeScript Configuration
+- **ESM only**: `type: "module"` in package.json
+- **Strict mode**: `exactOptionalPropertyTypes: true`, `noUncheckedIndexedAccess: true`
+- **Imports**: Use `.js` extension for local imports (ESM requirement)
+- **Compilation**: Source → `dist/` with type declarations
 
-### Directory Mandates
+### Project-Specific Rules
+- **API headers**: Dual authorization (`Bearer` + `PRIVATE-TOKEN`) + custom `X-Api-Version: 2023-02-21`
+- **File organization**: Strict mapping by file type (see AGENTS.md for details)
+- **Tool count**: Exactly 240 MCP tools required (no more, no less)
+- **Service pattern**: One Service class per API category (18 total)
 
-Follow this strict mapping for new files:
+### Anti-Patterns (THIS PROJECT)
+- **NEVER** modify `.env` file (use existing config)
+- **NEVER** create files in root directory except core config
+- **NEVER** copy `.env.example` to `.env`
+- **FORBIDDEN**: Backup files in repository (`*.backup`, `*.bak`)
+- **FORBIDDEN**: Free interpretation of API specifications
 
-| File Type | Target Directory | Naming Pattern |
-| --- | --- | --- |
-| **Source Code** | `src/` | `*.ts` |
-| **Tests** | `tests/` | `test-*.mjs` |
-| **Debug Scripts** | `scripts/debug/` | `debug-*.mjs` |
-| **Documentation** | `docs/` | `*_REPORT.md`, `*_SUMMARY.md` |
+## UNIQUE STYLES
+### Service Layer Pattern
+```typescript
+export class CategoryService extends BaseService {
+  constructor(config: AtomGitConfig) {
+    super(config);
+  }
+  
+  async methodName(params: Type): Promise<ReturnType> {
+    try {
+      const response = await this.client.get('/endpoint', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error message:', error);
+      throw error;
+    }
+  }
+}
+```
 
-### Project Architecture (`src/`)
+### MCP Tool Pattern
+```typescript
+export class CategoryTools {
+  constructor(private categoryService: CategoryService) {}
+  
+  getTools(): Tool[] {
+    return [{
+      name: 'tool_name',
+      description: '...',
+      inputSchema: {
+        type: 'object',
+        properties: { /* ... */ },
+        required: ['param1', 'param2']
+      }
+    }];
+  }
+  
+  async callTool(name: string, args: any): Promise<any> {
+    switch(name) {
+      case 'tool_name':
+        return await this.categoryService.methodName(args);
+      default:
+        throw new Error(`Unknown tool: ${name}`);
+    }
+  }
+}
+```
 
-* `src/services/` - API service logic (e.g., `AtomGitService.ts`).
-* `src/tools/` - MCP tool definitions & implementations.
-* `src/types/` - TypeScript interfaces and types.
+## COMMANDS
+```bash
+npm run dev          # Development mode with tsx
+npm run build        # Compile TypeScript to dist/
+npm run typecheck    # Type checking without emit
+npm run test:auth    # Authenticated tests (recommended)
+npm run test:mcp     # MCP server functionality tests
+npm run clean        # Remove dist/ directory
+```
 
----
-
-## 💻 Code Style & Standards
-
-### TypeScript & Imports
-
-* **Extension:** Use `.js` extension for all local imports (ESM requirement).
-* **Strictness:** No implicit `any`. Use `exactOptionalPropertyTypes: true`.
-* **Return Types:** Explicitly define return types. Avoid `any` or `unknown`.
-* **MCP SDK:** Import types from `@modelcontextprotocol/sdk/types.js`.
-
-### Naming Conventions
-
-* **Classes:** PascalCase (`BranchTools`)
-* **Methods:** camelCase (`createRepositoryIssue`)
-* **Files:** PascalCase for classes (`AtomGitService.ts`)
-* **Constants:** UPPER_SNAKE_CASE (`API_BASE_URL`)
-
-### API & Error Handling
-
-* **Wrappers:** All async API calls must be wrapped in `try/catch`.
-* **Errors:** Throw meaningful errors with context. Log to `stderr` for debugging.
-* **Tool Schema:** Every tool MUST have a `description` and `inputSchema` (with defaults for optional params).
-* **Pattern:** Use `getTools()` and `callTool(name, args)` pattern. Throw error if tool name is unknown.
-
----
-
-## 📖 Documentation (README.md) Editing
-
-**Goal:** Maintain the manually optimized human-readable structure.
-
-* **ALLOWED to Edit:** Only the `## 🛠️ 已实现工具` (Implemented Tools) section and its subsections (tables).
-* **FORBIDDEN to Edit:** Project intro, `Features`, `Quick Start`, `Structure`, `License`, or the order of sections.
-
----
-
-## 🚀 Implementation Plan & Workflow
-
-**Strategy:** Prioritize "Core Repository Operations" (PRs, Files, Issues) before moving to "Collaboration" or "Enterprise" features.
-
-### Development Loop (Repeat for each feature)
-
-1. **Develop:** Implement Service method + MCP Tool.
-2. **Test:** Create/Run unit & integration tests in `tests/` using **real** `.env` vars.
-3. **Doc:** Update `README.md` tool list.
-4. **Verify:** Ensure `npm run typecheck` and `npm test` pass.
-
-### Priority Roadmap
-
-1. **Priority 1: Core Ops** (PRs, File Content, Issues, Branches).
-2. **Priority 2: Collaboration** (Labels, Milestones, Commits, Members, Search).
-3. **Priority 3: Org & Enterprise** (Orgs, Releases, Webhooks, Ent. Features).
-4. **Priority 4: Advanced** (Kanban, AI Hub, User Settings).
-
----
-
-## 🛠️ Development Commands
-
-* `npm run dev` - Start development mode
-* `npm run build` - Build to `dist/`
-* `npm run typecheck` - Verify types
-* `npm run test:mcp` - Test MCP server functionality
-* `npm run test:auth` - Run authenticated tests
+## NOTES
+- **Critical issue**: File named "nul" in root (Windows device name) - needs immediate removal
+- **Missing directories**: `tests/` and `scripts/` referenced in package.json but don't exist
+- **API specification**: `docs/api_endpoints_extracted.json` contains complete 240-endpoint definition
+- **Service-Tool mapping**: Must maintain exact 1:1 correspondence between API categories and Service/Tool files
+- **Parameter consistency**: Tool call parameters MUST match Service method signatures exactly

@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { WebhooksService } from '../services/WebhooksService.js';
 export declare class WebhooksTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private webhooksService;
+    constructor(webhooksService: WebhooksService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

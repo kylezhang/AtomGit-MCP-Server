@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { LabelsService } from '../services/LabelsService.js';
 
 export class LabelsTools {
-  constructor(private atomGitService: AtomGitService) {}
+  constructor(private labelsService: LabelsService) {}
 
   getTools(): Tool[] {
     return [
@@ -159,7 +159,7 @@ export class LabelsTools {
         }
       },
       {
-        name: 'get_labels_list',
+        name: 'get_enterprise_labels_v8',
         description: '获取标签列表',
         inputSchema: {
           type: 'object',
@@ -171,6 +171,57 @@ export class LabelsTools {
           },
           required: ['enterprise']
         }
+      },
+      {
+        name: 'replace_repository_issue_all_labels',
+        description: 'Replace all labels for an issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The issue number'
+            },
+            labels: {
+              type: 'array',
+              items: {
+                type: 'string'
+              },
+              description: 'Array of label names'
+            }
+          },
+          required: ['owner', 'repo', 'issueNumber', 'labels']
+        }
+      },
+      {
+        name: 'delete_repository_all_issue_labels',
+        description: 'Delete all labels for an issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The issue number'
+            }
+          },
+          required: ['owner', 'repo', 'issueNumber']
+        }
       }
     ];
   }
@@ -178,34 +229,40 @@ export class LabelsTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_labels':
-        return await this.atomGitService.getRepositoryLabels(args.owner, args.repo);
+        return await this.labelsService.getRepositoryLabels(args.owner, args.repo);
       
       case 'create_repository_label':
-        return await this.atomGitService.createRepositoryLabel(args.owner, args.repo, {
+        return await this.labelsService.createRepositoryLabel(args.owner, args.repo, {
           name: args.name,
           color: args.color,
           description: args.description
         });
       
       case 'update_repository_label':
-        return await this.atomGitService.updateRepositoryLabel(args.owner, args.repo, args.originalName, {
+        return await this.labelsService.updateRepositoryLabel(args.owner, args.repo, args.originalName, {
           name: args.name,
           color: args.color,
           description: args.description
         });
       
       case 'delete_repository_label':
-        return await this.atomGitService.deleteRepositoryLabel(args.owner, args.repo, args.name);
+        return await this.labelsService.deleteRepositoryLabel(args.owner, args.repo, args.name);
       
       case 'replace_all_repository_labels':
-        return await this.atomGitService.replaceRepositoryIssueLabels(args.owner, args.repo, 0, args.labels);
+        return await this.labelsService.replaceRepositoryProjectLabels(args.owner, args.repo, args.labels);
       
       case 'get_enterprise_labels':
-        return await this.atomGitService.getEnterpriseRoles(args.enterprise);
+        return await this.labelsService.getEnterpriseLabels(args.enterprise);
       
       case 'get_labels_list':
-        return await this.atomGitService.getEnterpriseRoles(args.enterprise);
-      
+        return await this.labelsService.getEnterpriseLabelsV8(args.enterprise);
+
+      case 'delete_repository_all_issue_labels':
+        return await this.labelsService.deleteRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber);
+
+      case 'replace_repository_issue_all_labels':
+        return await this.labelsService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber, args.labels);
+
       default:
         throw new Error(`Unknown tool: ${name}`);
     }

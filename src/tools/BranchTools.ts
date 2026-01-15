@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { BranchService } from '../services/BranchService.js';
 
 export class BranchTools {
-  constructor(private atomGitService: AtomGitService) {}
+  constructor(private branchService: BranchService) { }
 
   getTools(): Tool[] {
     return [
@@ -307,19 +307,19 @@ export class BranchTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_branches':
-        return await this.atomGitService.getRepositoryBranches(args.owner, args.repo);
+        return await this.branchService.getRepositoryBranches(args.owner, args.repo);
 
       case 'create_repository_branch':
-        return await this.atomGitService.createRepositoryBranch(args.owner, args.repo, args.branch, args.sha);
+        return await this.branchService.createRepositoryBranch(args.owner, args.repo, args.branch, args.sha);
 
       case 'delete_repository_branch':
-        return await this.atomGitService.deleteRepositoryBranch(args.owner, args.repo, args.branch);
+        return await this.branchService.deleteRepositoryBranch(args.owner, args.repo, args.branch);
 
       case 'get_repository_branch':
-        return await this.atomGitService.getRepositoryBranch(args.owner, args.repo, args.branch);
+        return await this.branchService.getRepositoryBranch(args.owner, args.repo, args.branch);
 
       case 'create_branch_protection_rule':
-        return await this.atomGitService.createBranchProtectionRule(args.owner, args.repo, {
+        return await this.branchService.createBranchProtectionRule(args.owner, args.repo, {
           wildcard: args.wildcard,
           allow_force_push: args.allow_force_push,
           allow_deletion: args.allow_deletion,
@@ -329,13 +329,13 @@ export class BranchTools {
         });
 
       case 'delete_branch_protection_rule':
-        return await this.atomGitService.deleteBranchProtectionRule(args.owner, args.repo, args.wildcard);
+        return await this.branchService.deleteBranchProtectionRule(args.owner, args.repo, args.wildcard);
 
       case 'get_branch_protection_rules':
-        return await this.atomGitService.getBranchProtectionRules(args.owner, args.repo);
+        return await this.branchService.getBranchProtectionRules(args.owner, args.repo);
 
-case 'update_branch_protection_rule':
-        return await this.atomGitService.updateBranchProtectionRule(args.owner, args.repo, args.wildcard, {
+      case 'update_branch_protection_rule':
+        return await this.branchService.updateBranchProtectionRule(args.owner, args.repo, args.wildcard, {
           allow_force_push: args.allow_force_push,
           allow_deletion: args.allow_deletion,
           required_status_checks: args.required_status_checks,

@@ -1,11 +1,11 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { AIHubService } from '../services/AIHubService.js';
 
 export class AIHubTools {
-  private atomGitService: AtomGitService;
+  private aiHubService: AIHubService;
 
-  constructor(atomGitService: AtomGitService) {
-    this.atomGitService = atomGitService;
+  constructor(aiHubService: AIHubService) {
+    this.aiHubService = aiHubService;
   }
 
   getTools(): Tool[] {
@@ -114,25 +114,25 @@ export class AIHubTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'chat_completion':
-        return await this.atomGitService.chatCompletion(args.data);
+        return await this.aiHubService.chatCompletion(args.data);
       
 case 'speech_recognition':
-        return await this.atomGitService.audioTranscription(args.data);
+        return await this.aiHubService.audioTranscription(args.data);
       
       case 'object_detection':
-        return await this.atomGitService.detectYolo(args.data);
+        return await this.aiHubService.detectYolo(args.data);
       
       case 'text_embedding':
-        return await this.atomGitService.similarity(args.data);
+        return await this.aiHubService.similarity(args.data);
       
       case 'image_generation':
-        return await this.atomGitService.videoGenerate(args.data);
+        return await this.aiHubService.videoGenerate(args.data);
       
       case 'audio_synthesis':
-        return await this.atomGitService.audioClassification(args.data);
+        return await this.aiHubService.audioClassification(args.data);
       
       case 'translation':
-        return await this.atomGitService.videoStatus(args.data);
+        return await this.aiHubService.videoStatus(args.data);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

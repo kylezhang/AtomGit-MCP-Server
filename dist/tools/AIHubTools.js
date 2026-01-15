@@ -1,7 +1,7 @@
 export class AIHubTools {
-    atomGitService;
-    constructor(atomGitService) {
-        this.atomGitService = atomGitService;
+    aiHubService;
+    constructor(aiHubService) {
+        this.aiHubService = aiHubService;
     }
     getTools() {
         return [
@@ -108,19 +108,19 @@ export class AIHubTools {
     async callTool(name, args) {
         switch (name) {
             case 'chat_completion':
-                return await this.atomGitService.chatCompletion(args.data);
+                return await this.aiHubService.chatCompletion(args.data);
             case 'speech_recognition':
-                return await this.atomGitService.speechRecognition(args.data);
+                return await this.aiHubService.audioTranscription(args.data);
             case 'object_detection':
-                return await this.atomGitService.objectDetection(args.data);
+                return await this.aiHubService.detectYolo(args.data);
             case 'text_embedding':
-                return await this.atomGitService.textEmbedding(args.data);
+                return await this.aiHubService.similarity(args.data);
             case 'image_generation':
-                return await this.atomGitService.imageGeneration(args.data);
+                return await this.aiHubService.videoGenerate(args.data);
             case 'audio_synthesis':
-                return await this.atomGitService.audioSynthesis(args.data);
+                return await this.aiHubService.audioClassification(args.data);
             case 'translation':
-                return await this.atomGitService.translation(args.data);
+                return await this.aiHubService.videoStatus(args.data);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

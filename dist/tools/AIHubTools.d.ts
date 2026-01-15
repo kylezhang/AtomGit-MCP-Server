@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { AIHubService } from '../services/AIHubService.js';
 export declare class AIHubTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private aiHubService;
+    constructor(aiHubService: AIHubService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

@@ -1,0 +1,50 @@
+import { BaseService } from './BaseService.js';
+import { CreateReleaseRequest, Release } from '../types/index.js';
+
+export class ReleaseService extends BaseService {
+  
+  async createRelease(owner: string, repo: string, releaseData: CreateReleaseRequest): Promise<Release> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/releases`, releaseData);
+    return response.data;
+  }
+
+  async updateRelease(owner: string, repo: string, tag: string, releaseData: any): Promise<Release> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, releaseData);
+    return response.data;
+  }
+
+  async getReleaseUploadUrl(owner: string, repo: string, tag: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/upload_url`);
+    return response.data;
+  }
+
+  async getRelease(owner: string, repo: string, tag: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
+    return response.data;
+  }
+
+  async getLatestRelease(owner: string, repo: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`);
+    return response.data;
+  }
+
+  async getReleaseByTag(owner: string, repo: string, tag: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/tags/${tag}`);
+    return response.data;
+  }
+
+  async getReleases(owner: string, repo: string, page = 1, perPage = 30): Promise<Release[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases`, {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
+    return response.data;
+  }
+
+  async downloadReleaseAsset(owner: string, repo: string, fileName: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/attach_files/${fileName}/download`);
+    return response.data;
+  }
+}

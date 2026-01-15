@@ -1,7 +1,7 @@
 export class WebhooksTools {
-    atomGitService;
-    constructor(atomGitService) {
-        this.atomGitService = atomGitService;
+    webhooksService;
+    constructor(webhooksService) {
+        this.webhooksService = webhooksService;
     }
     getTools() {
         return [
@@ -142,17 +142,17 @@ export class WebhooksTools {
     async callTool(name, args) {
         switch (name) {
             case 'get_repository_webhooks':
-                return await this.atomGitService.getRepositoryWebhooks(args.owner, args.repo);
+                return await this.webhooksService.getRepositoryWebhooks(args.owner, args.repo);
             case 'create_repository_webhook':
-                return await this.atomGitService.createRepositoryWebhook(args.owner, args.repo, args.webhookData);
+                return await this.webhooksService.createRepositoryWebhook(args.owner, args.repo, args.webhookData);
             case 'get_repository_webhook':
-                return await this.atomGitService.getRepositoryWebhook(args.owner, args.repo, args.id);
+                return await this.webhooksService.getRepositoryWebhook(args.owner, args.repo, args.id);
             case 'update_repository_webhook':
-                return await this.atomGitService.updateRepositoryWebhook(args.owner, args.repo, args.id, args.webhookData);
+                return await this.webhooksService.updateRepositoryWebhook(args.owner, args.repo, args.id, args.webhookData);
             case 'delete_repository_webhook':
-                return await this.atomGitService.deleteRepositoryWebhook(args.owner, args.repo, args.id);
+                return await this.webhooksService.deleteRepositoryWebhook(args.owner, args.repo, args.id);
             case 'test_repository_webhook':
-                return await this.atomGitService.testRepositoryWebhook(args.owner, args.repo, args.id);
+                return await this.webhooksService.testRepositoryWebhook(args.owner, args.repo, args.id);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

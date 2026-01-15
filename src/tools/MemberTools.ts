@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { MemberService } from '../services/MemberService.js';
 
 export class MemberTools {
-  constructor(private atomGitService: AtomGitService) {}
+  constructor(private memberService: MemberService) {}
 
   getTools(): Tool[] {
     return [
@@ -140,24 +140,24 @@ export class MemberTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'add_repository_collaborator':
-        return await this.atomGitService.addRepositoryCollaborator(args.owner, args.repo, args.username, {
+        return await this.memberService.addRepositoryCollaborator(args.owner, args.repo, args.username, {
           permission: args.permission
         });
       
       case 'remove_repository_collaborator':
-        return await this.atomGitService.removeRepositoryCollaborator(args.owner, args.repo, args.username);
+        return await this.memberService.removeRepositoryCollaborator(args.owner, args.repo, args.username);
       
       case 'get_repository_collaborators':
-        return await this.atomGitService.getRepositoryCollaborators(args.owner, args.repo);
+        return await this.memberService.getRepositoryCollaborators(args.owner, args.repo);
       
       case 'check_repository_collaborator':
-        return await this.atomGitService.getRepositoryCollaborator(args.owner, args.repo, args.username);
+        return await this.memberService.isRepositoryCollaborator(args.owner, args.repo, args.username);
       
       case 'get_repository_collaborator_permission':
-        return await this.atomGitService.getRepositoryCollaborator(args.owner, args.repo, args.username);
+        return await this.memberService.getRepositoryCollaboratorPermission(args.owner, args.repo, args.username);
       
       case 'get_self_collaborator_permission':
-        return await this.atomGitService.getRepositoryCollaborator(args.owner, args.repo, args.username);
+        return await this.memberService.getRepositoryCollaboratorSelfPermission(args.owner, args.repo);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -1,10 +1,10 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { RepositoriesService } from '../services/RepositoriesService.js';
 
 export class RepositoriesTools {
-  private service: AtomGitService;
+  private service: RepositoriesService;
 
-  constructor(service: AtomGitService) {
+  constructor(service: RepositoriesService) {
     this.service = service;
   }
 
@@ -496,9 +496,7 @@ export class RepositoriesTools {
         return await this.service.getRepositoryContent(args.owner, args.repo, args.path, args.ref);
       
       case 'create_repository_file':
-        return await this.service.createRepositoryFile({
-          owner: args.owner,
-          repo: args.repo,
+        return await this.service.createRepositoryFile(args.owner, args.repo, {
           path: args.path,
           content: args.content,
           message: args.message,
@@ -506,9 +504,7 @@ export class RepositoriesTools {
         });
       
       case 'update_repository_file':
-        return await this.service.updateRepositoryFile({
-          owner: args.owner,
-          repo: args.repo,
+        return await this.service.updateRepositoryFile(args.owner, args.repo, {
           path: args.path,
           content: args.content,
           message: args.message,
@@ -517,9 +513,7 @@ export class RepositoriesTools {
         });
       
       case 'delete_repository_file':
-        return await this.service.deleteRepositoryFile({
-          owner: args.owner,
-          repo: args.repo,
+        return await this.service.deleteRepositoryFile(args.owner, args.repo, {
           path: args.path,
           message: args.message,
           sha: args.sha,

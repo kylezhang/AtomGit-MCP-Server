@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { ReleaseService } from '../services/ReleaseService.js';
 export declare class ReleaseTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private releaseService;
+    constructor(releaseService: ReleaseService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

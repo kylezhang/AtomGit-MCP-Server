@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { DashboardService } from '../services/DashboardService.js';
 export declare class DashboardTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private dashboardService;
+    constructor(dashboardService: DashboardService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

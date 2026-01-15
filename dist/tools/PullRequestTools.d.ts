@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { PullRequestService } from '../services/PullRequestService.js';
 export declare class PullRequestTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private pullRequestService;
+    constructor(pullRequestService: PullRequestService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

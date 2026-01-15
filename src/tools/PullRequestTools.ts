@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { PullRequestService } from '../services/PullRequestService.js';
 
 export class PullRequestTools {
-  constructor(private atomGitService: AtomGitService) {}
+  constructor(private pullRequestService: PullRequestService) {}
 
   getTools(): Tool[] {
     return [
@@ -946,6 +946,290 @@ export class PullRequestTools {
           },
           required: ['owner', 'repo', 'pullNumber']
         }
+      },
+      {
+        name: 'get_pull_request_comment',
+        description: 'Get a specific pull request comment',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            commentId: {
+              type: 'number',
+              description: 'The ID of comment'
+            }
+          },
+          required: ['owner', 'repo', 'commentId']
+        }
+      },
+      {
+        name: 'edit_pull_request_comment',
+        description: 'Edit a pull request comment',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            commentId: {
+              type: 'number',
+              description: 'The ID of comment to edit'
+            },
+            body: {
+              type: 'string',
+              description: 'The updated comment content'
+            }
+          },
+          required: ['owner', 'repo', 'commentId', 'body']
+        }
+      },
+      {
+        name: 'delete_pull_request_comment',
+        description: 'Delete a pull request comment',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            commentId: {
+              type: 'number',
+              description: 'The ID of comment to delete'
+            }
+          },
+          required: ['owner', 'repo', 'commentId']
+        }
+      },
+      {
+        name: 'reply_pull_request_discussion',
+        description: 'Reply to a pull request discussion comment',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            pullNumber: {
+              type: 'number',
+              description: 'The number of pull request'
+            },
+            discussionId: {
+              type: 'number',
+              description: 'The ID of discussion'
+            },
+            body: {
+              type: 'string',
+              description: 'The reply content'
+            }
+          },
+          required: ['owner', 'repo', 'pullNumber', 'discussionId', 'body']
+        }
+      },
+      {
+        name: 'update_pull_request_discussion_comment',
+        description: 'Update pull request discussion comment resolve status',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            pullNumber: {
+              type: 'number',
+              description: 'The number of pull request'
+            },
+            discussionId: {
+              type: 'number',
+              description: 'The ID of discussion'
+            },
+            resolved: {
+              type: 'boolean',
+              description: 'Whether the comment is resolved'
+            }
+          },
+          required: ['owner', 'repo', 'pullNumber', 'discussionId', 'resolved']
+        }
+      },
+      {
+        name: 'get_pull_request_reactions',
+        description: 'Get reactions for a pull request',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            pullNumber: {
+              type: 'number',
+              description: 'The number of pull request'
+            }
+          },
+          required: ['owner', 'repo', 'pullNumber']
+        }
+      },
+      {
+        name: 'get_pull_request_comment_reactions',
+        description: 'Get reactions for a pull request comment',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            commentId: {
+              type: 'number',
+              description: 'The ID of comment'
+            }
+          },
+          required: ['owner', 'repo', 'commentId']
+        }
+      },
+      {
+        name: 'get_pull_request_modify_history',
+        description: 'Get modification history for a pull request',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            pullNumber: {
+              type: 'number',
+              description: 'The number of pull request'
+            }
+          },
+          required: ['owner', 'repo', 'pullNumber']
+        }
+      },
+      {
+        name: 'get_pull_request_comment_modify_history',
+        description: 'Get modification history for a pull request comment',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of repository'
+            },
+            commentId: {
+              type: 'number',
+              description: 'The ID of comment'
+            }
+          },
+          required: ['owner', 'repo', 'commentId']
+        }
+      },
+      {
+        name: 'get_enterprise_pull_requests',
+        description: 'Get enterprise pull requests list',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
+            }
+          },
+          required: ['enterprise']
+        }
+      },
+      {
+        name: 'get_organization_pull_requests',
+        description: 'Get organization pull requests list',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: 'The organization name'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
+            }
+          },
+          required: ['org']
+        }
+      },
+      {
+        name: 'get_enterprise_pull_request_issues',
+        description: 'Get enterprise issue related pull requests',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The issue number'
+            }
+          },
+          required: ['enterprise', 'issueNumber']
+        }
       }
     ];
   }
@@ -953,7 +1237,7 @@ export class PullRequestTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_pulls':
-        return await this.atomGitService.getRepositoryPulls(
+        return await this.pullRequestService.getRepositoryPulls(
           args.owner,
           args.repo,
           args.state,
@@ -962,10 +1246,10 @@ export class PullRequestTools {
         );
 
       case 'get_repository_pull':
-        return await this.atomGitService.getRepositoryPull(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPull(args.owner, args.repo, args.pullNumber);
 
       case 'create_repository_pull':
-        return await this.atomGitService.createRepositoryPull(args.owner, args.repo, {
+        return await this.pullRequestService.createRepositoryPull(args.owner, args.repo, {
           title: args.title,
           head: args.head,
           base: args.base,
@@ -975,20 +1259,20 @@ export class PullRequestTools {
         });
 
       case 'merge_repository_pull':
-        return await this.atomGitService.mergeRepositoryPull(args.owner, args.repo, args.pullNumber, {
+        return await this.pullRequestService.mergeRepositoryPull(args.owner, args.repo, args.pullNumber, {
           commit_title: args.commit_title,
           commit_message: args.commit_message,
           merge_method: args.merge_method
         });
 
       case 'get_repository_pull_merge_status':
-        return await this.atomGitService.getRepositoryPullMergeStatus(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullMergeStatus(args.owner, args.repo, args.pullNumber);
 
       case 'get_repository_pull_issues':
-        return await this.atomGitService.getRepositoryPullIssues(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullIssues(args.owner, args.repo, args.pullNumber);
 
       case 'create_repository_pull_comment':
-        return await this.atomGitService.createRepositoryPullComment(args.owner, args.repo, args.pullNumber, {
+        return await this.pullRequestService.createRepositoryPullComment(args.owner, args.repo, args.pullNumber, {
           body: args.body,
           commit_id: args.commit_id,
           path: args.path,
@@ -996,7 +1280,7 @@ export class PullRequestTools {
         });
 
       case 'get_repository_pull_comments':
-        return await this.atomGitService.getRepositoryPullComments(
+        return await this.pullRequestService.getRepositoryPullComments(
           args.owner,
           args.repo,
           args.pullNumber,
@@ -1005,7 +1289,7 @@ export class PullRequestTools {
         );
 
       case 'get_repository_pull_files':
-        return await this.atomGitService.getRepositoryPullFiles(
+        return await this.pullRequestService.getRepositoryPullFiles(
           args.owner,
           args.repo,
           args.pullNumber,
@@ -1014,7 +1298,7 @@ export class PullRequestTools {
         );
 
       case 'update_repository_pull':
-        return await this.atomGitService.updateRepositoryPull(args.owner, args.repo, args.pullNumber, {
+        return await this.pullRequestService.updateRepositoryPull(args.owner, args.repo, args.pullNumber, {
           title: args.title,
           body: args.body,
           state: args.state,
@@ -1023,94 +1307,118 @@ export class PullRequestTools {
         });
 
       case 'get_repository_pull_commits':
-        return await this.atomGitService.getRepositoryPullCommits(
+        return await this.pullRequestService.getRepositoryPullCommits(
           args.owner,
           args.repo,
-          args.pullNumber,
-          args.page,
-          args.perPage
+          args.pullNumber
         );
 
       case 'create_repository_pull_label':
-        return await this.atomGitService.createRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.labels);
+        return await this.pullRequestService.createRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.labels);
 
       case 'get_repository_pull_labels':
-        return await this.atomGitService.getRepositoryPullLabels(
+        return await this.pullRequestService.getRepositoryPullLabels(
           args.owner,
           args.repo,
-          args.pullNumber,
-          args.page,
-          args.perPage
+          args.pullNumber
         );
 
       case 'replace_repository_pull_labels':
-        return await this.atomGitService.replaceRepositoryPullLabels(args.owner, args.repo, args.pullNumber, args.labels);
+        return await this.pullRequestService.replaceRepositoryPullLabels(args.owner, args.repo, args.pullNumber, args.labels);
 
       case 'delete_repository_pull_label':
-        return await this.atomGitService.deleteRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.name);
+        return await this.pullRequestService.deleteRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.name);
 
       case 'process_repository_pull_test':
-        return await this.atomGitService.processRepositoryPullTest(args.owner, args.repo, args.pullNumber, {
-          action: args.action,
-          comment: args.comment
-        });
+        return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, args.pullNumber);
 
       case 'process_repository_pull_review':
-        return await this.atomGitService.processRepositoryPullReview(args.owner, args.repo, args.pullNumber, {
-          action: args.action,
-          comment: args.comment
-        });
+        return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, args.pullNumber);
 
       case 'get_repository_pull_operate_logs':
-        return await this.atomGitService.getRepositoryPullOperateLogs(
+        return await this.pullRequestService.getRepositoryPullOperateLogs(
           args.owner,
           args.repo,
-          args.pullNumber,
-          args.page,
-          args.perPage
+          args.pullNumber
         );
 
       case 'reset_repository_pull_testers':
-        return await this.atomGitService.resetRepositoryPullTesters(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.resetRepositoryPullTesters(args.owner, args.repo, args.pullNumber);
 
       case 'assign_repository_pull_testers':
-        return await this.atomGitService.assignRepositoryPullTesters(args.owner, args.repo, args.pullNumber, args.testers);
+        return await this.pullRequestService.assignRepositoryPullTesters(args.owner, args.repo, args.pullNumber, args.testers);
 
       case 'remove_repository_pull_testers':
-        return await this.atomGitService.removeRepositoryPullTesters(args.owner, args.repo, args.pullNumber, args.testers);
+        return await this.pullRequestService.removeRepositoryPullTesters(args.owner, args.repo, args.pullNumber, args.testers);
 
       case 'get_repository_pull_tester_options':
-        return await this.atomGitService.getRepositoryPullTesterOptions(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullTesterOptions(args.owner, args.repo);
 
       case 'reset_repository_pull_assignees':
-        return await this.atomGitService.resetRepositoryPullAssignees(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.resetRepositoryPullAssignees(args.owner, args.repo, args.pullNumber);
 
       case 'assign_repository_pull_assignees':
-        return await this.atomGitService.assignRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
+        return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, [args.assignees]);
 
       case 'remove_repository_pull_assignees':
-        return await this.atomGitService.removeRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
+        return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, [args.assignees]);
 
       case 'get_repository_pull_files_json':
-        return await this.atomGitService.getRepositoryPullFilesJson(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullFilesJson(args.owner, args.repo, args.pullNumber);
 
       case 'get_repository_pull_file_content':
-        return await this.atomGitService.getRepositoryPullFileContent(args.owner, args.repo, args.head, args.sha, args.name);
+        return await this.pullRequestService.getRepositoryPullFileContent(args.owner, args.repo, args.pullNumber, args.filePath);
 
       case 'link_repository_pull_issues':
-        return await this.atomGitService.linkRepositoryPullIssues(args.owner, args.repo, args.pullNumber, args.issues);
+        return await this.pullRequestService.linkRepositoryPullIssues(args.owner, args.repo, args.pullNumber, args.issues);
 
       case 'unlink_repository_pull_issues':
-        return await this.atomGitService.unlinkRepositoryPullIssues(args.owner, args.repo, args.pullNumber, args.issues);
+        return await this.pullRequestService.unlinkRepositoryPullIssues(args.owner, args.repo, args.pullNumber, args.issues);
 
       case 'assign_repository_pull_approval_reviewers':
-        return await this.atomGitService.assignRepositoryPullApprovalReviewers(args.owner, args.repo, args.pullNumber, args.reviewers);
+        return await this.pullRequestService.assignRepositoryPullApprovalReviewers(args.owner, args.repo, args.pullNumber, args.reviewers);
 
       case 'remove_repository_pull_approval_reviewers':
-        return await this.atomGitService.removeRepositoryPullApprovalReviewers(args.owner, args.repo, args.pullNumber, args.reviewers);
+        return await this.pullRequestService.removeRepositoryPullApprovalReviewers(args.owner, args.repo, args.pullNumber, args.reviewers);
 
       case 'get_repository_pull_approval_reviewer_options':
-        return await this.atomGitService.getRepositoryPullApprovalReviewerOptions(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullApprovalReviewerOptions(args.owner, args.repo);
+
+      case 'get_pull_request_comment':
+        return await this.pullRequestService.getPullRequestComment(args.owner, args.repo, args.commentId);
+      
+      case 'edit_pull_request_comment':
+        return await this.pullRequestService.editPullRequestComment(args.owner, args.repo, args.commentId, { body: args.body });
+      
+      case 'delete_pull_request_comment':
+        return await this.pullRequestService.deletePullRequestComment(args.owner, args.repo, args.commentId);
+      
+      case 'reply_pull_request_discussion':
+        return await this.pullRequestService.replyPullRequestDiscussion(args.owner, args.repo, args.pullNumber, args.discussionId, { body: args.body });
+      
+      case 'update_pull_request_discussion_comment':
+        return await this.pullRequestService.updatePullRequestDiscussionComment(args.owner, args.repo, args.pullNumber, args.discussionId, { resolved: args.resolved });
+      
+      case 'get_pull_request_reactions':
+        return await this.pullRequestService.getPullRequestReactions(args.owner, args.repo, args.pullNumber);
+      
+      case 'get_pull_request_comment_reactions':
+        return await this.pullRequestService.getPullRequestCommentReactions(args.owner, args.repo, args.commentId);
+      
+      case 'get_pull_request_modify_history':
+        return await this.pullRequestService.getPullRequestModifyHistory(args.owner, args.repo, args.pullNumber);
+      
+      case 'get_pull_request_comment_modify_history':
+        return await this.pullRequestService.getPullRequestCommentModifyHistory(args.owner, args.repo, args.commentId);
+      
+      case 'get_enterprise_pull_requests':
+        return await this.pullRequestService.getEnterprisePullRequests(args.enterprise, args.page, args.perPage);
+      
+      case 'get_organization_pull_requests':
+        return await this.pullRequestService.getOrganizationPullRequests(args.org, args.page, args.perPage);
+      
+      case 'get_enterprise_pull_request_issues':
+        return await this.pullRequestService.getEnterprisePullRequestIssues(args.enterprise, args.issueNumber);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -1,7 +1,7 @@
 export class IssuesTools {
-    atomGitService;
-    constructor(atomGitService) {
-        this.atomGitService = atomGitService;
+    issuesService;
+    constructor(issuesService) {
+        this.issuesService = issuesService;
     }
     getTools() {
         return [
@@ -492,7 +492,7 @@ export class IssuesTools {
             },
             {
                 name: 'get_repository_issue_comment_modify_history',
-                description: 'Get modification history for an issue comment',
+                description: 'Get modification history of an issue comment',
                 inputSchema: {
                     type: 'object',
                     properties: {
@@ -511,13 +511,181 @@ export class IssuesTools {
                     },
                     required: ['owner', 'repo', 'commentId']
                 }
+            },
+            {
+                name: 'get_enterprise_issue_labels',
+                description: 'Get labels for an enterprise issue',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        enterprise: {
+                            type: 'string',
+                            description: 'The enterprise name'
+                        },
+                        issueId: {
+                            type: 'string',
+                            description: 'The issue ID'
+                        }
+                    },
+                    required: ['enterprise', 'issueId']
+                }
+            },
+            {
+                name: 'get_enterprise_issues',
+                description: 'Get all issues for an enterprise',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        enterprise: {
+                            type: 'string',
+                            description: 'The enterprise name'
+                        },
+                        page: {
+                            type: 'number',
+                            description: 'Page number for pagination',
+                            default: 1
+                        },
+                        perPage: {
+                            type: 'number',
+                            description: 'Number of results per page',
+                            default: 30
+                        }
+                    },
+                    required: ['enterprise']
+                }
+            },
+            {
+                name: 'get_user_issues',
+                description: 'Get all issues for the authenticated user',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        page: {
+                            type: 'number',
+                            description: 'Page number for pagination',
+                            default: 1
+                        },
+                        perPage: {
+                            type: 'number',
+                            description: 'Number of results per page',
+                            default: 30
+                        }
+                    },
+                    required: []
+                }
+            },
+            {
+                name: 'get_organization_issues',
+                description: 'Get issues for an organization',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        org: {
+                            type: 'string',
+                            description: 'The organization name'
+                        },
+                        page: {
+                            type: 'number',
+                            description: 'Page number for pagination',
+                            default: 1
+                        },
+                        perPage: {
+                            type: 'number',
+                            description: 'Number of results per page',
+                            default: 30
+                        }
+                    },
+                    required: ['org']
+                }
+            },
+            {
+                name: 'get_enterprise_issue_comments',
+                description: 'Get comments for an enterprise issue',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        enterprise: {
+                            type: 'string',
+                            description: 'The enterprise name'
+                        },
+                        issueNumber: {
+                            type: 'number',
+                            description: 'The issue number'
+                        },
+                        page: {
+                            type: 'number',
+                            description: 'Page number for pagination',
+                            default: 1
+                        },
+                        perPage: {
+                            type: 'number',
+                            description: 'Number of results per page',
+                            default: 30
+                        }
+                    },
+                    required: ['enterprise', 'issueNumber']
+                }
+            },
+            {
+                name: 'get_enterprise_issue',
+                description: 'Get a specific enterprise issue',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        enterprise: {
+                            type: 'string',
+                            description: 'The enterprise name'
+                        },
+                        issueNumber: {
+                            type: 'number',
+                            description: 'The issue number'
+                        }
+                    },
+                    required: ['enterprise', 'issueNumber']
+                }
+            },
+            {
+                name: 'get_enterprise_issue_statuses',
+                description: 'Get enterprise issue statuses',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        enterprise: {
+                            type: 'string',
+                            description: 'The enterprise name'
+                        }
+                    },
+                    required: ['enterprise']
+                }
+            },
+            {
+                name: 'get_repository_issue_related_branches',
+                description: 'Get related branches for an issue',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        owner: {
+                            type: 'string',
+                            description: 'The owner of repository'
+                        },
+                        repo: {
+                            type: 'string',
+                            description: 'The name of repository'
+                        },
+                        issueNumber: {
+                            type: 'number',
+                            description: 'The issue number'
+                        }
+                    },
+                    required: ['owner', 'repo', 'issueNumber']
+                }
             }
         ];
     }
     async callTool(name, args) {
         switch (name) {
             case 'get_repository_issues':
-                return await this.atomGitService.getRepositoryIssues(args.owner, args.repo, args.state, args.page, args.perPage);
+                return await this.issuesService.getRepositoryIssues(args.owner, args.repo, args.state, args.page, args.perPage);
             case 'create_repository_issue':
                 const issueData = {
                     title: args.title,
@@ -526,11 +694,11 @@ export class IssuesTools {
                     milestone: args.milestone,
                     labels: args.labels
                 };
-                return await this.atomGitService.createRepositoryIssue(args.owner, args.repo, issueData);
+                return await this.issuesService.createRepositoryIssue(args.owner, args.repo, issueData);
             case 'get_repository_issue':
-                return await this.atomGitService.getRepositoryIssue(args.owner, args.repo, args.issueNumber);
+                return await this.issuesService.getRepositoryIssue(args.owner, args.repo, args.issueNumber);
             case 'update_repository_issue':
-                return await this.atomGitService.updateRepositoryIssue(args.owner, args.repo, args.issueNumber, {
+                return await this.issuesService.updateRepositoryIssue(args.owner, args.repo, args.issueNumber, {
                     title: args.title,
                     body: args.body,
                     state: args.state,
@@ -539,37 +707,53 @@ export class IssuesTools {
                     labels: args.labels
                 });
             case 'get_repository_issue_comments':
-                return await this.atomGitService.getRepositoryIssueComments(args.owner, args.repo, args.issueNumber, args.page, args.perPage);
+                return await this.issuesService.getRepositoryIssueComments(args.owner, args.repo, args.issueNumber, args.page, args.perPage);
             case 'create_repository_issue_comment':
-                return await this.atomGitService.createRepositoryIssueComment(args.owner, args.repo, args.issueNumber, {
+                return await this.issuesService.createRepositoryIssueComment(args.owner, args.repo, args.issueNumber, {
                     body: args.body
                 });
             case 'get_repository_issue_comment':
-                return await this.atomGitService.getRepositoryIssueComment(args.owner, args.repo, args.commentId);
+                return await this.issuesService.getRepositoryIssueComment(args.owner, args.repo, args.commentId);
             case 'update_repository_issue_comment':
-                return await this.atomGitService.updateRepositoryIssueComment(args.owner, args.repo, args.commentId, {
+                return await this.issuesService.updateRepositoryIssueComment(args.owner, args.repo, args.commentId, {
                     body: args.body
                 });
             case 'delete_repository_issue_comment':
-                return await this.atomGitService.deleteRepositoryIssueComment(args.owner, args.repo, args.commentId);
+                return await this.issuesService.deleteRepositoryIssueComment(args.owner, args.repo, args.commentId);
             case 'create_repository_issue_label':
-                return await this.atomGitService.createRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.labels);
+                return await this.issuesService.createRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.labels);
             case 'replace_repository_issue_labels':
-                return await this.atomGitService.replaceRepositoryIssueLabels(args.owner, args.repo, args.issueNumber, args.labels);
+                return await this.issuesService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber, args.labels);
             case 'delete_repository_issue_label':
-                return await this.atomGitService.deleteRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.name);
+                return await this.issuesService.deleteRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.name);
             case 'get_repository_issue_operate_logs':
-                return await this.atomGitService.getRepositoryIssueOperateLogs(args.owner, args.repo, args.issueNumber, args.page, args.perPage);
+                return await this.issuesService.getRepositoryIssueOperateLogs(args.owner, args.issueNumber, args.page, args.perPage);
             case 'get_repository_issue_related_branches':
-                return await this.atomGitService.getRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber);
+                return await this.issuesService.getRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber);
             case 'get_repository_issue_reactions':
-                return await this.atomGitService.getRepositoryIssueReactions(args.owner, args.repo, args.issueNumber);
+                return await this.issuesService.getRepositoryIssueReactions(args.owner, args.repo, args.issueNumber);
             case 'get_repository_issue_comment_reactions':
-                return await this.atomGitService.getRepositoryIssueCommentReactions(args.owner, args.repo, args.commentId);
+                return await this.issuesService.getRepositoryIssueCommentReactions(args.owner, args.repo, args.commentId);
             case 'get_repository_issue_modify_history':
-                return await this.atomGitService.getRepositoryIssueModifyHistory(args.owner, args.repo, args.issueNumber);
+                return await this.issuesService.getRepositoryIssueModifyHistory(args.owner, args.repo, args.issueNumber);
             case 'get_repository_issue_comment_modify_history':
-                return await this.atomGitService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, args.commentId);
+                return await this.issuesService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, args.commentId);
+            case 'get_enterprise_issue_labels':
+                return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, args.issueId);
+            case 'get_enterprise_issues':
+                return await this.issuesService.getEnterpriseIssues(args.enterprise, args.page, args.perPage);
+            case 'get_user_issues':
+                return await this.issuesService.getUserIssues(args.page, args.perPage);
+            case 'get_organization_issues':
+                return await this.issuesService.getOrganizationIssues(args.org, args.page, args.perPage);
+            case 'get_enterprise_issue_comments':
+                return await this.issuesService.getEnterpriseIssueComments(args.enterprise, args.issueNumber, args.page, args.perPage);
+            case 'get_enterprise_issue':
+                return await this.issuesService.getEnterpriseIssue(args.enterprise, args.issueNumber);
+            case 'delete_repository_all_issue_labels':
+                return await this.issuesService.deleteRepositoryAllIssueLabels(args.owner, args.repo, args.issueNumber);
+            case 'get_all_repository_issue_comments':
+                return await this.issuesService.getAllRepositoryIssueComments(args.owner, args.repo, args.page, args.perPage);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

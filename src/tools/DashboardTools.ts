@@ -1,11 +1,11 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { DashboardService } from '../services/DashboardService.js';
 
 export class DashboardTools {
-  private atomGitService: AtomGitService;
+  private dashboardService: DashboardService;
 
-  constructor(atomGitService: AtomGitService) {
-    this.atomGitService = atomGitService;
+  constructor(dashboardService: DashboardService) {
+    this.dashboardService = dashboardService;
   }
 
   getTools(): Tool[] {
@@ -146,25 +146,25 @@ export class DashboardTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_organization_kanbans':
-        return await this.atomGitService.getOrganizationKanbans(args.owner);
+        return await this.dashboardService.getOrganizationKanbanList(args.owner);
       
       case 'create_organization_kanban':
-        return await this.atomGitService.createOrganizationKanban(args.owner, args.kanbanData);
+        return await this.dashboardService.createOrganizationKanban(args.owner, args.kanbanData);
       
       case 'get_organization_kanban':
-        return await this.atomGitService.getOrganizationKanban(args.owner, args.id);
+        return await this.dashboardService.getOrganizationKanban(args.owner, args.id);
       
       case 'update_organization_kanban':
-        return await this.atomGitService.updateOrganizationKanban(args.owner, args.id, args.kanbanData);
+        return await this.dashboardService.updateOrganizationKanban(args.owner, args.id, args.kanbanData);
       
       case 'delete_organization_kanban':
-        return await this.atomGitService.deleteOrganizationKanban(args.owner, args.id);
+        return await this.dashboardService.deleteOrganizationKanban(args.owner, args.id);
       
       case 'get_organization_kanban_content':
-        return await this.atomGitService.getOrganizationKanbanContent(args.owner, args.id);
+        return await this.dashboardService.getOrganizationKanbanContent(args.owner, args.id);
       
       case 'update_organization_kanban_content':
-        return await this.atomGitService.updateOrganizationKanbanContent(args.owner, args.id, args.contentData);
+        return await this.dashboardService.updateOrganizationKanbanContent(args.owner, args.id, args.contentData);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -1,7 +1,7 @@
 export class MilestoneTools {
-    atomGitService;
-    constructor(atomGitService) {
-        this.atomGitService = atomGitService;
+    milestoneService;
+    constructor(milestoneService) {
+        this.milestoneService = milestoneService;
     }
     getTools() {
         return [
@@ -163,20 +163,20 @@ export class MilestoneTools {
     async callTool(name, args) {
         switch (name) {
             case 'get_repository_milestones':
-                return await this.atomGitService.getRepositoryMilestones(args.owner, args.repo, args.state, args.page, args.perPage);
+                return await this.milestoneService.getRepositoryMilestones(args.owner, args.repo, args.state, args.page, args.perPage);
             case 'create_repository_milestone':
-                return await this.atomGitService.createRepositoryMilestone(args.owner, args.repo, {
+                return await this.milestoneService.createRepositoryMilestone(args.owner, args.repo, {
                     title: args.title,
                     description: args.description,
                     state: args.state,
                     due_on: args.dueOn
                 });
             case 'get_repository_milestone':
-                return await this.atomGitService.getRepositoryMilestone(args.owner, args.repo, args.number);
+                return await this.milestoneService.getRepositoryMilestone(args.owner, args.repo, args.number);
             case 'delete_repository_milestone':
-                return await this.atomGitService.deleteRepositoryMilestone(args.owner, args.repo, args.number);
+                return await this.milestoneService.deleteRepositoryMilestone(args.owner, args.repo, args.number);
             case 'update_repository_milestone':
-                return await this.atomGitService.updateRepositoryMilestone(args.owner, args.repo, args.number, {
+                return await this.milestoneService.updateRepositoryMilestone(args.owner, args.repo, args.number, {
                     title: args.title,
                     description: args.description,
                     state: args.state,

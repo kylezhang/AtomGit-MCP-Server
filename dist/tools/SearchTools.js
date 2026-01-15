@@ -1,7 +1,7 @@
 export class SearchTools {
-    atomGitService;
-    constructor(atomGitService) {
-        this.atomGitService = atomGitService;
+    searchService;
+    constructor(searchService) {
+        this.searchService = searchService;
     }
     getTools() {
         return [
@@ -82,11 +82,11 @@ export class SearchTools {
     async callTool(name, args) {
         switch (name) {
             case 'search_users':
-                return await this.atomGitService.searchUsers(args.query, args.page, args.perPage);
+                return await this.searchService.searchUsers(args.query, args.page, args.perPage);
             case 'search_issues':
-                return await this.atomGitService.searchIssues(args.query, args.page, args.perPage);
+                return await this.searchService.searchIssues(args.query, args.page, args.perPage);
             case 'search_repositories':
-                return await this.atomGitService.searchRepositories(args.query, args.page, args.perPage);
+                return await this.searchService.searchRepositories(args.query, args.page, args.perPage);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

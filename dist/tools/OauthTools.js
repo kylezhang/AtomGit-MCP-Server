@@ -1,7 +1,7 @@
 export class OauthTools {
-    atomGitService;
-    constructor(atomGitService) {
-        this.atomGitService = atomGitService;
+    oauthService;
+    constructor(oauthService) {
+        this.oauthService = oauthService;
     }
     getTools() {
         return [
@@ -32,7 +32,7 @@ export class OauthTools {
     async callTool(name, args) {
         switch (name) {
             case 'get_oauth_token':
-                return await this.atomGitService.getOauthToken(args.code, args.clientId, args.clientSecret);
+                return await this.oauthService.getOauthToken(args.code, args.clientId, args.clientSecret);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

@@ -1,7 +1,7 @@
 export class ReleaseTools {
-    atomGitService;
-    constructor(atomGitService) {
-        this.atomGitService = atomGitService;
+    releaseService;
+    constructor(releaseService) {
+        this.releaseService = releaseService;
     }
     getTools() {
         return [
@@ -192,13 +192,35 @@ export class ReleaseTools {
                     },
                     required: ['owner', 'repo', 'fileName']
                 }
+            },
+            {
+                name: 'get_release_upload_url',
+                description: 'Get release asset upload URL',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        owner: {
+                            type: 'string',
+                            description: 'The owner of repository'
+                        },
+                        repo: {
+                            type: 'string',
+                            description: 'The name of repository'
+                        },
+                        tag: {
+                            type: 'string',
+                            description: 'The tag name'
+                        }
+                    },
+                    required: ['owner', 'repo', 'tag']
+                }
             }
         ];
     }
     async callTool(name, args) {
         switch (name) {
             case 'create_repository_release':
-                return await this.atomGitService.createRelease(args.owner, args.repo, {
+                return await this.releaseService.createRelease(args.owner, args.repo, {
                     tag_name: args.tagName,
                     name: args.name,
                     body: args.body,
@@ -206,22 +228,24 @@ export class ReleaseTools {
                     prerelease: args.prerelease
                 });
             case 'update_repository_release':
-                return await this.atomGitService.updateRelease(args.owner, args.repo, args.tagName, {
+                return await this.releaseService.updateRelease(args.owner, args.repo, args.tagName, {
                     name: args.name,
                     body: args.body,
                     draft: args.draft,
                     prerelease: args.prerelease
                 });
             case 'get_repository_releases':
-                return await this.atomGitService.getRepositoryReleases(args.owner, args.repo, args.page, args.perPage);
+                return await this.releaseService.getReleases(args.owner, args.repo, args.page, args.perPage);
             case 'get_repository_release':
-                return await this.atomGitService.getRepositoryRelease(args.owner, args.repo, args.tag);
+                return await this.releaseService.getRelease(args.owner, args.repo, args.tag);
             case 'get_latest_release':
-                return await this.atomGitService.getLatestRelease(args.owner, args.repo);
+                return await this.releaseService.getLatestRelease(args.owner, args.repo);
             case 'get_release_by_tag':
-                return await this.atomGitService.getRepositoryRelease(args.owner, args.repo, args.tag);
+                return await this.releaseService.getReleaseByTag(args.owner, args.repo, args.tag);
             case 'download_release_asset':
-                return await this.atomGitService.uploadReleaseAsset(args.owner, args.repo, args.tag, args.assetData);
+                return await this.releaseService.downloadReleaseAsset(args.owner, args.repo, args.fileName);
+            case 'get_release_upload_url':
+                return await this.releaseService.getReleaseUploadUrl(args.owner, args.repo, args.tag);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

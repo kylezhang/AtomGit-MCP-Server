@@ -1,8 +1,8 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { LabelsService } from '../services/LabelsService.js';
 export declare class LabelsTools {
-    private atomGitService;
-    constructor(atomGitService: AtomGitService);
+    private labelsService;
+    constructor(labelsService: LabelsService);
     getTools(): Tool[];
     callTool(name: string, args: any): Promise<any>;
 }

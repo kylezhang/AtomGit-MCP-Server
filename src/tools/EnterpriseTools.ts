@@ -1,46 +1,18 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { AtomGitService } from '../services/AtomGitService.js';
+import { EnterpriseService } from '../services/EnterpriseService.js';
 
 export class EnterpriseTools {
-  private atomGitService: AtomGitService;
+  private enterpriseService: EnterpriseService;
 
-  constructor(atomGitService: AtomGitService) {
-    this.atomGitService = atomGitService;
+  constructor(enterpriseService: EnterpriseService) {
+    this.enterpriseService = enterpriseService;
   }
 
   getTools(): Tool[] {
     return [
       {
-        name: 'get_enterprise',
-        description: '获取企业信息',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            }
-          },
-          required: ['enterprise']
-        }
-      },
-      {
-        name: 'get_enterprise_members',
-        description: '获取企业成员列表',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            }
-          },
-          required: ['enterprise']
-        }
-      },
-      {
-        name: 'get_enterprise_member',
-        description: '获取特定企业成员信息',
+        name: 'get_enterprise_member_v8',
+        description: '获取企业的一个成员',
         inputSchema: {
           type: 'object',
           properties: {
@@ -57,8 +29,71 @@ export class EnterpriseTools {
         }
       },
       {
-        name: 'update_enterprise_member',
-        description: '更新企业成员信息',
+        name: 'get_enterprise_members_v8',
+        description: '列出企业的所有成员',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: '企业名'
+            },
+            page: {
+              type: 'number',
+              description: '页码 (可选)'
+            },
+            perPage: {
+              type: 'number',
+              description: '每页数量 (可选)'
+            }
+          },
+          required: ['enterprise']
+        }
+      },
+      {
+        name: 'invite_enterprise_member_v8',
+        description: '邀请企业成员',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: '企业名'
+            },
+            username: {
+              type: 'string',
+              description: '用户名'
+            },
+            memberData: {
+              type: 'object',
+              description: '邀请数据'
+            }
+          },
+          required: ['enterprise', 'username', 'memberData']
+        }
+      },
+      {
+        name: 'delete_enterprise_members_v8',
+        description: '删除企业成员',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: '企业名'
+            },
+            usernames: {
+              type: 'array',
+              items: { type: 'string' },
+              description: '要删除的用户名列表'
+            }
+          },
+          required: ['enterprise', 'usernames']
+        }
+      },
+      {
+        name: 'update_enterprise_member_v8',
+        description: '修改企业成员权限',
         inputSchema: {
           type: 'object',
           properties: {
@@ -79,8 +114,22 @@ export class EnterpriseTools {
         }
       },
       {
-        name: 'remove_enterprise_member',
-        description: '移除企业成员',
+        name: 'get_organization_enterprise_v8',
+        description: '获取组织关联的企业',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: '组织名'
+            }
+          },
+          required: ['org']
+        }
+      },
+      {
+        name: 'get_enterprise_customized_roles_v8',
+        description: '获取企业自定义角色',
         inputSchema: {
           type: 'object',
           properties: {
@@ -88,188 +137,150 @@ export class EnterpriseTools {
               type: 'string',
               description: '企业名'
             },
-            username: {
+            enterpriseId: {
               type: 'string',
-              description: '要移除的用户名'
+              description: '企业ID'
             }
           },
-          required: ['enterprise', 'username']
+          required: ['enterprise', 'enterpriseId']
         }
       },
       {
-        name: 'get_enterprise_roles',
-        description: '获取企业角色列表',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            }
-          },
-          required: ['enterprise']
-        }
-      },
-      {
-        name: 'create_enterprise_role',
-        description: '创建企业角色',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
-            roleData: {
-              type: 'object',
-              description: '角色数据（包含name、description、permissions等）'
-            }
-          },
-          required: ['enterprise', 'roleData']
-        }
-      },
-      {
-        name: 'update_enterprise_role',
-        description: '更新企业角色',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
-            role: {
-              type: 'string',
-              description: '角色名'
-            },
-            roleData: {
-              type: 'object',
-              description: '角色更新数据'
-            }
-          },
-          required: ['enterprise', 'role', 'roleData']
-        }
-      },
-      {
-        name: 'delete_enterprise_role',
-        description: '删除企业角色',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
-            role: {
-              type: 'string',
-              description: '角色名'
-            }
-          },
-          required: ['enterprise', 'role']
-        }
-      },
-      {
-        name: 'get_enterprise_milestones',
-        description: '获取企业里程碑列表',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            }
-          },
-          required: ['enterprise']
-        }
-      },
-      {
-        name: 'create_enterprise_milestone',
+        name: 'create_enterprise_milestone_v8',
         description: '创建企业里程碑',
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
+            enterpriseId: {
               type: 'string',
-              description: '企业名'
+              description: '企业ID'
             },
             milestoneData: {
               type: 'object',
-              description: '里程碑数据（包含title、description、due_on等）'
+              description: '里程碑数据'
             }
           },
-          required: ['enterprise', 'milestoneData']
+          required: ['enterpriseId', 'milestoneData']
         }
       },
       {
-        name: 'update_enterprise_milestone',
-        description: '更新企业里程碑',
+        name: 'update_enterprise_milestone_v8',
+        description: '修改企业里程碑',
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
+            enterpriseId: {
               type: 'string',
-              description: '企业名'
+              description: '企业ID'
             },
-            milestone: {
+            milestoneId: {
               type: 'string',
-              description: '里程碑ID或标题'
+              description: '里程碑ID'
             },
             milestoneData: {
               type: 'object',
               description: '里程碑更新数据'
             }
           },
-          required: ['enterprise', 'milestone', 'milestoneData']
+          required: ['enterpriseId', 'milestoneId', 'milestoneData']
         }
       },
       {
-        name: 'delete_enterprise_milestone',
+        name: 'get_enterprise_milestone_v8',
+        description: '获取企业里程碑详情',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterpriseId: {
+              type: 'string',
+              description: '企业ID'
+            },
+            milestoneId: {
+              type: 'string',
+              description: '里程碑ID'
+            }
+          },
+          required: ['enterpriseId', 'milestoneId']
+        }
+      },
+      {
+        name: 'delete_enterprise_milestone_v8',
         description: '删除企业里程碑',
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
+            enterpriseId: {
               type: 'string',
-              description: '企业名'
+              description: '企业ID'
             },
-            milestone: {
+            milestoneId: {
               type: 'string',
-              description: '里程碑ID或标题'
+              description: '里程碑ID'
             }
           },
-          required: ['enterprise', 'milestone']
+          required: ['enterpriseId', 'milestoneId']
         }
       },
       {
-        name: 'get_enterprise_projects',
-        description: '获取企业项目列表',
+        name: 'get_enterprise_milestones_v8',
+        description: '获取企业里程碑列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterpriseId: {
+              type: 'string',
+              description: '企业ID'
+            },
+            page: {
+              type: 'number',
+              description: '页码 (可选)'
+            },
+            perPage: {
+              type: 'number',
+              description: '每页数量 (可选)'
+            }
+          },
+          required: ['enterpriseId']
+        }
+      },
+      {
+        name: 'get_enterprise_projects_v8',
+        description: '获取企业里程碑可以关联的项目列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterpriseId: {
+              type: 'string',
+              description: '企业ID'
+            },
+            page: {
+              type: 'number',
+              description: '页码 (可选)'
+            },
+            perPage: {
+              type: 'number',
+              description: '每页数量 (可选)'
+            }
+          },
+          required: ['enterpriseId']
+        }
+      },
+      {
+        name: 'get_enterprise_issue_extend_fields_v8',
+        description: '获取企业Issue自定义字段列表',
         inputSchema: {
           type: 'object',
           properties: {
             enterprise: {
               type: 'string',
               description: '企业名'
-            }
-          },
-          required: ['enterprise']
-        }
-      },
-      {
-        name: 'create_enterprise_project',
-        description: '创建企业项目',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
             },
-            projectData: {
-              type: 'object',
-              description: '项目数据（包含name、description等）'
+            enterprisesId: {
+              type: 'string',
+              description: '企业ID'
             }
           },
-          required: ['enterprise', 'projectData']
+          required: ['enterprise', 'enterprisesId']
         }
       }
     ];
@@ -277,50 +288,47 @@ export class EnterpriseTools {
 
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
-      case 'get_enterprise':
-        return await this.atomGitService.getEnterprise(args.enterprise);
+      case 'get_enterprise_member_v8':
+        return await this.enterpriseService.getEnterpriseMemberV8(args.enterprise, args.username);
       
-      case 'get_enterprise_members':
-        return await this.atomGitService.getEnterpriseMembers(args.enterprise);
+      case 'get_enterprise_members_v8':
+        return await this.enterpriseService.getEnterpriseMembersV8(args.enterprise, args.page, args.perPage);
       
-      case 'get_enterprise_member':
-        return await this.atomGitService.getEnterpriseMember(args.enterprise, args.username);
+      case 'invite_enterprise_member_v8':
+        return await this.enterpriseService.inviteEnterpriseMember(args.enterprise, args.username, args.memberData);
       
-      case 'update_enterprise_member':
-        return await this.atomGitService.updateEnterpriseMember(args.enterprise, args.username, args.memberData);
+      case 'delete_enterprise_members_v8':
+        return await this.enterpriseService.deleteEnterpriseMembers(args.enterprise, args.usernames);
       
-      case 'remove_enterprise_member':
-        return await this.atomGitService.removeEnterpriseMember(args.enterprise, args.username);
+      case 'update_enterprise_member_v8':
+        return await this.enterpriseService.updateEnterpriseMemberV8(args.enterprise, args.username, args.memberData);
       
-      case 'get_enterprise_roles':
-        return await this.atomGitService.getEnterpriseRoles(args.enterprise);
+      case 'get_organization_enterprise_v8':
+        return await this.enterpriseService.getOrganizationEnterprise(args.org);
       
-      case 'create_enterprise_role':
-        return await this.atomGitService.createEnterpriseRole(args.enterprise, args.roleData);
+      case 'get_enterprise_customized_roles_v8':
+        return await this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise, args.enterpriseId);
       
-      case 'update_enterprise_role':
-        return await this.atomGitService.updateEnterpriseRole(args.enterprise, args.role, args.roleData);
+      case 'create_enterprise_milestone_v8':
+        return await this.enterpriseService.createEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneData);
       
-      case 'delete_enterprise_role':
-        return await this.atomGitService.deleteEnterpriseRole(args.enterprise, args.role);
+      case 'update_enterprise_milestone_v8':
+        return await this.enterpriseService.updateEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneId, args.milestoneData);
       
-      case 'get_enterprise_milestones':
-        return await this.atomGitService.getEnterpriseMilestones(args.enterprise);
+      case 'get_enterprise_milestone_v8':
+        return await this.enterpriseService.getEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneId);
       
-      case 'create_enterprise_milestone':
-        return await this.atomGitService.createEnterpriseMilestone(args.enterprise, args.milestoneData);
+      case 'delete_enterprise_milestone_v8':
+        return await this.enterpriseService.deleteEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneId);
       
-      case 'update_enterprise_milestone':
-        return await this.atomGitService.updateEnterpriseMilestone(args.enterprise, args.milestone, args.milestoneData);
+      case 'get_enterprise_milestones_v8':
+        return await this.enterpriseService.getEnterpriseMilestones(args.enterprise, args.enterpriseId, args.page, args.perPage);
       
-      case 'delete_enterprise_milestone':
-        return await this.atomGitService.deleteEnterpriseMilestone(args.enterprise, args.milestone);
+      case 'get_enterprise_projects_v8':
+        return await this.enterpriseService.getEnterpriseProjects(args.enterprise, args.enterpriseId, args.page, args.perPage);
       
-      case 'get_enterprise_projects':
-        return await this.atomGitService.getEnterpriseProjects(args.enterprise);
-      
-      case 'create_enterprise_project':
-        return await this.atomGitService.createEnterpriseProject(args.enterprise, args.projectData);
+      case 'get_enterprise_issue_extend_fields_v8':
+        return await this.enterpriseService.getEnterpriseIssueExtendFields(args.enterprise, args.enterprisesId);
       
       default:
         throw new Error(`Unknown tool: ${name}`);
