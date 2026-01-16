@@ -1,5 +1,5 @@
 import { BaseService } from './BaseService.js';
-import { Tag } from '../types/index.js';
+import { Tag, CreateTagRequest, CreateProtectedTagRequest } from '../types/index.js';
 
 export class TagService extends BaseService {
   
@@ -13,7 +13,7 @@ export class TagService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryTag(owner: string, repo: string, tagData: any): Promise<Tag> {
+  async createRepositoryTag(owner: string, repo: string, tagData: CreateTagRequest): Promise<Tag> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/tags`, tagData);
     return response.data;
   }
@@ -28,12 +28,12 @@ export class TagService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryProtectedTag(owner: string, repo: string, tagData: any): Promise<any> {
+  async createRepositoryProtectedTag(owner: string, repo: string, tagData: CreateProtectedTagRequest): Promise<any> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/protected_tags`, tagData);
     return response.data;
   }
 
-  async updateRepositoryProtectedTag(owner: string, repo: string, tagData: any): Promise<any> {
+  async updateRepositoryProtectedTag(owner: string, repo: string, tagData: CreateProtectedTagRequest): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/protected_tags`, tagData);
     return response.data;
   }

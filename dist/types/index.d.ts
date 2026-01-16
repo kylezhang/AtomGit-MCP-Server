@@ -187,6 +187,7 @@ export interface CreatePullRequestCommentRequest {
 }
 export interface UpdatePullRequestCommentRequest {
     body?: string;
+    resolved?: boolean;
 }
 export interface AtomGitConfig {
     apiBaseUrl: string;
@@ -318,8 +319,13 @@ export interface BranchProtectionRuleCreate {
     allow_force_push?: boolean;
     allow_deletion?: boolean;
     required_status_checks?: {
-        enforcement_level: string;
+        strict?: boolean;
         contexts: string[];
+    };
+    required_pull_request_reviews?: {
+        required_approving_review_count?: number;
+        dismiss_stale_reviews?: boolean;
+        require_code_owner_reviews?: boolean;
     };
     restrictions?: {
         users: any[];
@@ -330,8 +336,13 @@ export interface BranchProtectionRuleUpdate {
     allow_force_push?: boolean;
     allow_deletion?: boolean;
     required_status_checks?: {
-        enforcement_level: string;
+        strict?: boolean;
         contexts: string[];
+    };
+    required_pull_request_reviews?: {
+        required_approving_review_count?: number;
+        dismiss_stale_reviews?: boolean;
+        require_code_owner_reviews?: boolean;
     };
     restrictions?: {
         users: any[];
@@ -341,7 +352,13 @@ export interface BranchProtectionRuleUpdate {
 export interface CreateMilestoneRequest {
     title: string;
     description?: string;
-    state_event?: 'close' | 'open';
+    state?: 'open' | 'closed';
+    due_on?: string;
+}
+export interface UpdateMilestoneRequest {
+    title?: string;
+    state?: 'open' | 'closed';
+    description?: string;
     due_on?: string;
 }
 export interface UpdateMilestoneRequest {
@@ -354,6 +371,7 @@ export interface CreateTagRequest {
     tag_name: string;
     target_commitish?: string;
     message?: string;
+    target?: string;
 }
 export interface CreateProtectedTagRequest {
     tag_name: string;
@@ -369,5 +387,141 @@ export interface CreateProtectedTagRequest {
         users: any[];
         teams: any[];
     };
+}
+export interface ModuleSettingRequest {
+    issue?: boolean;
+    wiki?: boolean;
+    pr?: boolean;
+    commits?: boolean;
+}
+export interface UpdateRepositorySettingsRequest {
+    name?: string;
+    description?: string;
+    private?: boolean;
+    has_issues?: boolean;
+    has_wiki?: boolean;
+    default_branch?: string;
+    allow_merge_commit?: boolean;
+    allow_squash_merge?: boolean;
+    allow_rebase_merge?: boolean;
+    allow_fast_forward_merge?: boolean;
+    website?: string;
+}
+export interface UpdateReviewerRequest {
+    assignees?: string[];
+    testers?: string[];
+    reviewers?: string[];
+    auto_assign?: boolean;
+}
+export interface ArchiveRepositoryRequest {
+    status: 'archived' | 'active';
+}
+export interface TransferRepositoryRequest {
+    to?: string;
+    team_id?: number;
+}
+export interface TransitionModeRequest {
+    transition_mode: 'private' | 'public';
+}
+export interface PushConfigRequest {
+    allow_force_pushes?: boolean;
+    require_signed_commits?: boolean;
+    require_linear_history?: boolean;
+}
+export interface ForkRepositoryRequest {
+    namespace?: string;
+}
+export interface RepoSettingsRequest {
+    auto_init?: boolean;
+    gitignore_template?: string;
+    license_template?: string;
+    readme?: string;
+}
+export interface PullRequestSettingsRequest {
+    allow_merge_commits?: boolean;
+    allow_squash_commits?: boolean;
+    allow_rebase_commits?: boolean;
+    allow_force_push?: boolean;
+}
+export interface UpdateMemberRoleRequest {
+    role: string;
+}
+export interface UploadFileRequest {
+    file: string;
+    filename: string;
+}
+export interface CreateLabelRequest {
+    name: string;
+    color: string;
+    description?: string;
+}
+export interface UpdateLabelRequest {
+    name?: string;
+    color?: string;
+    description?: string;
+}
+export interface UpdateMilestoneRequest {
+    title?: string;
+    state?: 'open' | 'closed';
+    description?: string;
+    due_on?: string;
+}
+export interface CreateIssueRequest {
+    title: string;
+    body?: string;
+    assignees?: string[];
+    milestone?: number;
+    labels?: string[];
+}
+export interface UpdateIssueRequest {
+    title?: string;
+    body?: string;
+    state?: 'open' | 'closed';
+    assignees?: string[];
+    milestone?: number;
+    labels?: string[];
+}
+export interface CreateIssueCommentRequest {
+    body: string;
+}
+export interface UpdateIssueCommentRequest {
+    body?: string;
+}
+export interface AddCollaboratorRequest {
+    permission: 'pull' | 'push' | 'admin';
+}
+export interface CreateWebhookRequest {
+    name: string;
+    url: string;
+    active?: boolean;
+    events?: string[];
+}
+export interface UpdateWebhookRequest {
+    name?: string;
+    url?: string;
+    active?: boolean;
+    events?: string[];
+}
+export interface EnterpriseMemberRequest {
+    role: string;
+}
+export interface KanbanItemRequest {
+    iid: number;
+    repo_id: number;
+    type: string;
+}
+export interface UpdateKanbanRequest {
+    iid?: number;
+    repo_id?: number;
+    type?: string;
+    new_kanban_id?: number;
+}
+export interface RemoveKanbanItemRequest {
+    iid?: number;
+    repo_id?: number;
+    type?: string;
+}
+export interface UpdateKanbanStateRequest {
+    state: 'archived' | 'active';
 }
 //# sourceMappingURL=index.d.ts.map

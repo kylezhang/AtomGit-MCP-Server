@@ -1,5 +1,5 @@
 import { BaseService } from './BaseService.js';
-import { CreateReleaseRequest, Release } from '../types/index.js';
+import { CreateReleaseRequest, UpdateReleaseRequest, Release } from '../types/index.js';
 
 export class ReleaseService extends BaseService {
   
@@ -8,7 +8,7 @@ export class ReleaseService extends BaseService {
     return response.data;
   }
 
-  async updateRelease(owner: string, repo: string, tag: string, releaseData: any): Promise<Release> {
+  async updateRelease(owner: string, repo: string, tag: string, releaseData: UpdateReleaseRequest): Promise<Release> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, releaseData);
     return response.data;
   }

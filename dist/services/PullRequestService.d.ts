@@ -1,15 +1,15 @@
 import { BaseService } from './BaseService.js';
-import { PullRequest } from '../types/index.js';
+import { PullRequest, CreatePullRequestRequest, MergePullRequestRequest, UpdatePullRequestRequest, CreatePullRequestCommentRequest, UpdatePullRequestCommentRequest } from '../types/index.js';
 export declare class PullRequestService extends BaseService {
     getRepositoryPulls(owner: string, repo: string, state?: 'open' | 'closed' | 'all', page?: number, perPage?: number): Promise<PullRequest[]>;
-    createRepositoryPull(owner: string, repo: string, pullData: any): Promise<PullRequest>;
-    mergeRepositoryPull(owner: string, repo: string, pullNumber: number, mergeData: any): Promise<any>;
+    createRepositoryPull(owner: string, repo: string, pullData: CreatePullRequestRequest): Promise<PullRequest>;
+    mergeRepositoryPull(owner: string, repo: string, pullNumber: number, mergeData: MergePullRequestRequest): Promise<any>;
     getRepositoryPullMergeStatus(owner: string, repo: string, pullNumber: number): Promise<any>;
     getRepositoryPullIssues(owner: string, repo: string, pullNumber: number): Promise<any[]>;
-    createRepositoryPullComment(owner: string, repo: string, pullNumber: number, commentData: any): Promise<any>;
+    createRepositoryPullComment(owner: string, repo: string, pullNumber: number, commentData: CreatePullRequestCommentRequest): Promise<any>;
     getRepositoryPullComments(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
     getRepositoryPullFiles(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
-    updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: any): Promise<PullRequest>;
+    updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: UpdatePullRequestRequest): Promise<PullRequest>;
     getRepositoryPull(owner: string, repo: string, pullNumber: number): Promise<PullRequest>;
     getRepositoryPullCommits(owner: string, repo: string, pullNumber: number): Promise<any[]>;
     createRepositoryPullLabel(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any>;
@@ -34,9 +34,10 @@ export declare class PullRequestService extends BaseService {
     removeRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any>;
     getRepositoryPullApprovalReviewerOptions(owner: string, repo: string): Promise<any[]>;
     getPullRequestComment(owner: string, repo: string, commentId: number): Promise<any>;
-    editPullRequestComment(owner: string, repo: string, commentId: number, commentData: any): Promise<any>;
+    editPullRequestComment(owner: string, repo: string, commentId: number, commentData: UpdatePullRequestCommentRequest): Promise<any>;
+    replyPullRequestDiscussion(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: CreatePullRequestCommentRequest): Promise<any>;
+    updatePullRequestDiscussionComment(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: UpdatePullRequestCommentRequest): Promise<any>;
     deletePullRequestComment(owner: string, repo: string, commentId: number): Promise<void>;
-    replyPullRequestDiscussion(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: any): Promise<any>;
     getPullRequestReactions(owner: string, repo: string, pullNumber: number): Promise<any[]>;
     getPullRequestCommentReactions(owner: string, repo: string, commentId: number): Promise<any[]>;
     getPullRequestModifyHistory(owner: string, repo: string, pullNumber: number): Promise<any[]>;
@@ -44,6 +45,5 @@ export declare class PullRequestService extends BaseService {
     getEnterprisePullRequests(enterprise: string, page?: number, perPage?: number): Promise<any[]>;
     getOrganizationPullRequests(org: string, page?: number, perPage?: number): Promise<any[]>;
     getEnterprisePullRequestIssues(enterprise: string, issueNumber: number): Promise<any[]>;
-    updatePullRequestDiscussionComment(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: any): Promise<any>;
 }
 //# sourceMappingURL=PullRequestService.d.ts.map

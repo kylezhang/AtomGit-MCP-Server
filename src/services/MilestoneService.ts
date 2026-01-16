@@ -1,4 +1,5 @@
 import { BaseService } from './BaseService.js';
+import { CreateMilestoneRequest, UpdateMilestoneRequest } from '../types/index.js';
 
 export class MilestoneService extends BaseService {
   
@@ -13,7 +14,7 @@ export class MilestoneService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryMilestone(owner: string, repo: string, milestoneData: any): Promise<any> {
+  async createRepositoryMilestone(owner: string, repo: string, milestoneData: CreateMilestoneRequest): Promise<any> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/milestones`, milestoneData);
     return response.data;
   }
@@ -28,7 +29,7 @@ export class MilestoneService extends BaseService {
     return response.data;
   }
 
-  async updateRepositoryMilestone(owner: string, repo: string, number: number, milestoneData: any): Promise<any> {
+  async updateRepositoryMilestone(owner: string, repo: string, number: number, milestoneData: UpdateMilestoneRequest): Promise<any> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/milestones/${number}`, milestoneData);
     return response.data;
   }

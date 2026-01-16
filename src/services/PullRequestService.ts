@@ -1,5 +1,12 @@
 import { BaseService } from './BaseService.js';
-import { PullRequest } from '../types/index.js';
+import { 
+  PullRequest, 
+  CreatePullRequestRequest, 
+  MergePullRequestRequest, 
+  UpdatePullRequestRequest,
+  CreatePullRequestCommentRequest,
+  UpdatePullRequestCommentRequest
+} from '../types/index.js';
 
 export class PullRequestService extends BaseService {
   
@@ -14,12 +21,12 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryPull(owner: string, repo: string, pullData: any): Promise<PullRequest> {
+  async createRepositoryPull(owner: string, repo: string, pullData: CreatePullRequestRequest): Promise<PullRequest> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls`, pullData);
     return response.data;
   }
 
-  async mergeRepositoryPull(owner: string, repo: string, pullNumber: number, mergeData: any): Promise<any> {
+  async mergeRepositoryPull(owner: string, repo: string, pullNumber: number, mergeData: MergePullRequestRequest): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`, mergeData);
     return response.data;
   }
@@ -34,7 +41,7 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryPullComment(owner: string, repo: string, pullNumber: number, commentData: any): Promise<any> {
+  async createRepositoryPullComment(owner: string, repo: string, pullNumber: number, commentData: CreatePullRequestCommentRequest): Promise<any> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`, commentData);
     return response.data;
   }
@@ -53,7 +60,7 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: any): Promise<PullRequest> {
+  async updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: UpdatePullRequestRequest): Promise<PullRequest> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`, updateData);
     return response.data;
   }
@@ -180,8 +187,18 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async editPullRequestComment(owner: string, repo: string, commentId: number, commentData: any): Promise<any> {
+  async editPullRequestComment(owner: string, repo: string, commentId: number, commentData: UpdatePullRequestCommentRequest): Promise<any> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/comments/${commentId}`, commentData);
+    return response.data;
+  }
+
+  async replyPullRequestDiscussion(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: CreatePullRequestCommentRequest): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`, commentData);
+    return response.data;
+  }
+
+  async updatePullRequestDiscussionComment(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: UpdatePullRequestCommentRequest): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments/discussions/${discussionId}`, commentData);
     return response.data;
   }
 
@@ -190,10 +207,7 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async replyPullRequestDiscussion(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`, commentData);
-    return response.data;
-  }
+
 
   async getPullRequestReactions(owner: string, repo: string, pullNumber: number): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/user_reactions`);
@@ -234,8 +248,5 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async updatePullRequestDiscussionComment(owner: string, repo: string, pullNumber: number, discussionId: number, commentData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments/discussions/${discussionId}`, commentData);
-    return response.data;
-  }
+
 }

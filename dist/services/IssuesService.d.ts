@@ -1,12 +1,12 @@
 import { BaseService } from './BaseService.js';
-import { Issue } from '../types/index.js';
+import { Issue, CreateIssueRequest, UpdateIssueRequest, CreateIssueCommentRequest, UpdateIssueCommentRequest } from '../types/index.js';
 export declare class IssuesService extends BaseService {
-    createRepositoryIssue(owner: string, repo: string, issueData: any): Promise<Issue>;
-    updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: any): Promise<Issue>;
+    createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue>;
+    updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: UpdateIssueRequest): Promise<Issue>;
     getRepositoryIssue(owner: string, repo: string, issueNumber: number): Promise<Issue>;
     getRepositoryIssues(owner: string, repo: string, state?: 'open' | 'closed' | 'all', page?: number, perPage?: number): Promise<Issue[]>;
     getRepositoryIssueComments(owner: string, repo: string, issueNumber: number, page?: number, perPage?: number): Promise<any[]>;
-    createRepositoryIssueComment(owner: string, repo: string, issueNumber: number, commentData: any): Promise<any>;
+    createRepositoryIssueComment(owner: string, repo: string, issueNumber: number, commentData: CreateIssueCommentRequest): Promise<any>;
     getRepositoryAllIssueComments(owner: string, repo: string, page?: number, perPage?: number): Promise<any[]>;
     getRepositoryIssuePullRequests(owner: string, repo: string, issueNumber: number): Promise<any[]>;
     getEnterpriseIssueLabels(enterprise: string, issueId: string): Promise<any[]>;
@@ -15,7 +15,7 @@ export declare class IssuesService extends BaseService {
     getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page?: number, perPage?: number): Promise<any[]>;
     getEnterpriseIssues(enterprise: string, page?: number, perPage?: number): Promise<any[]>;
     getUserIssues(page?: number, perPage?: number): Promise<any[]>;
-    updateRepositoryIssueComment(owner: string, repo: string, commentId: number, updateData: any): Promise<any>;
+    updateRepositoryIssueComment(owner: string, repo: string, commentId: number, updateData: UpdateIssueCommentRequest): Promise<any>;
     deleteRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<void>;
     getRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<any>;
     getOrganizationIssues(org: string, page?: number, perPage?: number): Promise<any[]>;

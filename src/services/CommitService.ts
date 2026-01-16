@@ -1,5 +1,5 @@
 import { BaseService } from './BaseService.js';
-import { Commit } from '../types/index.js';
+import { Commit, CreatePullRequestCommentRequest, UpdatePullRequestCommentRequest } from '../types/index.js';
 
 export class CommitService extends BaseService {
   
@@ -24,7 +24,7 @@ export class CommitService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryCommitComment(owner: string, repo: string, sha: string, commentData: any): Promise<any> {
+  async createRepositoryCommitComment(owner: string, repo: string, sha: string, commentData: CreatePullRequestCommentRequest): Promise<any> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/commits/${sha}/comments`, commentData);
     return response.data;
   }
@@ -39,7 +39,7 @@ export class CommitService extends BaseService {
     return response.data;
   }
 
-  async updateRepositoryCommitComment(owner: string, repo: string, commentId: number, commentData: any): Promise<any> {
+  async updateRepositoryCommitComment(owner: string, repo: string, commentId: number, commentData: UpdatePullRequestCommentRequest): Promise<any> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/comments/${commentId}`, commentData);
     return response.data;
   }

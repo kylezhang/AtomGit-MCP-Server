@@ -1,8 +1,10 @@
 import { BaseService } from './BaseService.js';
 export class RepositoriesService extends BaseService {
-    async getRepositoryTree(owner, repo, sha) {
+    async getRepositoryTree(owner, repo, sha, recursive) {
         const url = sha ? `/api/v5/repos/${owner}/${repo}/git/trees/${sha}` : `/api/v5/repos/${owner}/${repo}/git/trees/main`;
-        const response = await this.client.get(url);
+        const response = await this.client.get(url, {
+            params: recursive ? { recursive } : {}
+        });
         return response.data;
     }
     async getRepositoryContent(owner, repo, path = '', ref) {
@@ -98,18 +100,12 @@ export class RepositoriesService extends BaseService {
         });
         return response.data;
     }
-    async uploadRepositoryImage(owner, repo, fileData, filename) {
-        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/img/upload`, {
-            file: fileData,
-            filename
-        });
+    async uploadRepositoryImage(owner, repo, fileData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/img/upload`, fileData);
         return response.data;
     }
-    async uploadRepositoryFile(owner, repo, fileData, filename) {
-        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/file/upload`, {
-            file: fileData,
-            filename
-        });
+    async uploadRepositoryFile(owner, repo, fileData) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/file/upload`, fileData);
         return response.data;
     }
     async getRepositorySubscribers(owner, repo) {

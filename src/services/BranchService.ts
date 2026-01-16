@@ -1,8 +1,8 @@
 import { BaseService } from './BaseService.js';
-import { Branch } from '../types/index.js';
+import { Branch, BranchProtectionRuleCreate, BranchProtectionRuleUpdate } from '../types/index.js';
 
 export class BranchService extends BaseService {
-  
+
   async getRepositoryBranches(owner: string, repo: string): Promise<Branch[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches`);
     return response.data;
@@ -23,7 +23,7 @@ export class BranchService extends BaseService {
     return response.data;
   }
 
-  async createBranchProtectionRule(owner: string, repo: string, ruleData: any): Promise<any> {
+  async createBranchProtectionRule(owner: string, repo: string, ruleData: BranchProtectionRuleCreate): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/setting/new`, ruleData);
     return response.data;
   }
@@ -38,7 +38,7 @@ export class BranchService extends BaseService {
     return response.data;
   }
 
-  async updateBranchProtectionRule(owner: string, repo: string, wildcard: string, ruleData: any): Promise<any> {
+  async updateBranchProtectionRule(owner: string, repo: string, wildcard: string, ruleData: BranchProtectionRuleUpdate): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`, ruleData);
     return response.data;
   }

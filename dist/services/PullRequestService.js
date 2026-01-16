@@ -148,12 +148,16 @@ export class PullRequestService extends BaseService {
         const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/comments/${commentId}`, commentData);
         return response.data;
     }
-    async deletePullRequestComment(owner, repo, commentId) {
-        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/comments/${commentId}`);
-        return response.data;
-    }
     async replyPullRequestDiscussion(owner, repo, pullNumber, discussionId, commentData) {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`, commentData);
+        return response.data;
+    }
+    async updatePullRequestDiscussionComment(owner, repo, pullNumber, discussionId, commentData) {
+        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments/discussions/${discussionId}`, commentData);
+        return response.data;
+    }
+    async deletePullRequestComment(owner, repo, commentId) {
+        const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/comments/${commentId}`);
         return response.data;
     }
     async getPullRequestReactions(owner, repo, pullNumber) {
@@ -186,10 +190,6 @@ export class PullRequestService extends BaseService {
     }
     async getEnterprisePullRequestIssues(enterprise, issueNumber) {
         const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueNumber}/pull_requests`);
-        return response.data;
-    }
-    async updatePullRequestDiscussionComment(owner, repo, pullNumber, discussionId, commentData) {
-        const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments/discussions/${discussionId}`, commentData);
         return response.data;
     }
 }

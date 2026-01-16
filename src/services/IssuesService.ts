@@ -1,14 +1,14 @@
 import { BaseService } from './BaseService.js';
-import { Issue } from '../types/index.js';
+import { Issue, CreateIssueRequest, UpdateIssueRequest, CreateIssueCommentRequest, UpdateIssueCommentRequest } from '../types/index.js';
 
 export class IssuesService extends BaseService {
   
-  async createRepositoryIssue(owner: string, repo: string, issueData: any): Promise<Issue> {
+  async createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue> {
     const response = await this.client.post(`/api/v5/repos/${owner}/issues`, issueData);
     return response.data;
   }
 
-  async updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: any): Promise<Issue> {
+  async updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: UpdateIssueRequest): Promise<Issue> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/issues/${issueNumber}`, updateData);
     return response.data;
   }
@@ -36,7 +36,7 @@ export class IssuesService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryIssueComment(owner: string, repo: string, issueNumber: number, commentData: any): Promise<any> {
+  async createRepositoryIssueComment(owner: string, repo: string, issueNumber: number, commentData: CreateIssueCommentRequest): Promise<any> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/comments`, commentData);
     return response.data;
   }
@@ -89,7 +89,7 @@ export class IssuesService extends BaseService {
     return response.data;
   }
 
-  async updateRepositoryIssueComment(owner: string, repo: string, commentId: number, updateData: any): Promise<any> {
+  async updateRepositoryIssueComment(owner: string, repo: string, commentId: number, updateData: UpdateIssueCommentRequest): Promise<any> {
     const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`, updateData);
     return response.data;
   }
