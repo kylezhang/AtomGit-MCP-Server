@@ -68,7 +68,7 @@ export class MilestoneTools {
               enum: ['open', 'closed'],
               default: 'open'
             },
-            dueOn: {
+            due_on: {
               type: 'string',
               description: '截止日期'
             }
@@ -151,7 +151,7 @@ export class MilestoneTools {
               description: '状态（open, closed）',
               enum: ['open', 'closed']
             },
-            dueOn: {
+            due_on: {
               type: 'string',
               description: '截止日期'
             }
@@ -178,7 +178,7 @@ export class MilestoneTools {
           title: args.title,
           description: args.description,
           state: args.state,
-          due_on: args.dueOn
+          due_on: args.due_on
         });
       
       case 'get_repository_milestone':
@@ -192,7 +192,7 @@ export class MilestoneTools {
           title: args.title,
           description: args.description,
           state: args.state,
-          due_on: args.dueOn
+          due_on: args.due_on
         });
       
       default:

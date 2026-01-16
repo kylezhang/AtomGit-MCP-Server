@@ -12,7 +12,7 @@ export declare class IssuesService extends BaseService {
     getEnterpriseIssueLabels(enterprise: string, issueId: string): Promise<any[]>;
     createRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]>;
     deleteRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, name: string): Promise<void>;
-    getRepositoryIssueOperateLogs(owner: string, issueNumber: number, page?: number, perPage?: number): Promise<any[]>;
+    getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page?: number, perPage?: number): Promise<any[]>;
     getEnterpriseIssues(enterprise: string, page?: number, perPage?: number): Promise<any[]>;
     getUserIssues(page?: number, perPage?: number): Promise<any[]>;
     updateRepositoryIssueComment(owner: string, repo: string, commentId: number, updateData: any): Promise<any>;

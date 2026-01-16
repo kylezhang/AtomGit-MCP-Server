@@ -141,7 +141,23 @@ export class TagTools {
                         },
                         tagName: {
                             type: 'string',
-                            description: 'The name of the protected tag'
+                            description: 'The name of protected tag'
+                        },
+                        allowForcePush: {
+                            type: 'boolean',
+                            description: 'Allow force pushes for this protected tag'
+                        },
+                        allowDeletion: {
+                            type: 'boolean',
+                            description: 'Allow deletion of this protected tag'
+                        },
+                        requiredStatusChecks: {
+                            type: 'object',
+                            description: 'Required status checks configuration for this protected tag'
+                        },
+                        restrictions: {
+                            type: 'object',
+                            description: 'Restrictions on who can push to this protected tag'
                         }
                     },
                     required: ['owner', 'repo', 'tagName']
@@ -185,7 +201,7 @@ export class TagTools {
                         },
                         tagName: {
                             type: 'string',
-                            description: 'The name of the protected tag'
+                            description: 'The name of protected tag'
                         }
                     },
                     required: ['owner', 'repo', 'tagName']
@@ -209,11 +225,19 @@ export class TagTools {
                 return await this.tagService.getRepositoryProtectedTags(args.owner, args.repo);
             case 'create_repository_protected_tag':
                 return await this.tagService.createRepositoryProtectedTag(args.owner, args.repo, {
-                    tag_name: args.tagName
+                    tag_name: args.tagName,
+                    allow_force_push: args.allowForcePush,
+                    allow_deletion: args.allowDeletion,
+                    required_status_checks: args.requiredStatusChecks,
+                    restrictions: args.restrictions
                 });
             case 'update_repository_protected_tag':
                 return await this.tagService.updateRepositoryProtectedTag(args.owner, args.repo, {
-                    tag_name: args.tagName
+                    tag_name: args.tagName,
+                    allow_force_push: args.allowForcePush,
+                    allow_deletion: args.allowDeletion,
+                    required_status_checks: args.requiredStatusChecks,
+                    restrictions: args.restrictions
                 });
             case 'delete_repository_protected_tag':
                 return await this.tagService.deleteRepositoryProtectedTag(args.owner, args.repo, args.tagName);

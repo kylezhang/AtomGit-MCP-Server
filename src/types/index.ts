@@ -198,6 +198,10 @@ export interface CreatePullRequestCommentRequest {
   position?: number;
 }
 
+export interface UpdatePullRequestCommentRequest {
+  body?: string;
+}
+
 export interface AtomGitConfig {
   apiBaseUrl: string;
   token?: string;
@@ -269,6 +273,15 @@ export interface CreateReleaseRequest {
   prerelease?: boolean;
 }
 
+export interface UpdateReleaseRequest {
+  tag_name?: string;
+  target_commitish?: string;
+  name?: string;
+  body?: string;
+  draft?: boolean;
+  prerelease?: boolean;
+}
+
 export interface Release {
   id: number;
   tag_name: string;
@@ -298,4 +311,90 @@ export interface Release {
   html_url: string;
   url: string;
   upload_url: string;
+}
+
+export interface CreateFileRequest {
+  path: string;
+  content: string;
+  message: string;
+  branch?: string;
+  sha?: string;
+}
+
+export interface UpdateFileRequest {
+  path: string;
+  content: string;
+  message: string;
+  sha: string;
+  branch?: string;
+}
+
+export interface DeleteFileRequest {
+  path: string;
+  message: string;
+  sha: string;
+  branch?: string;
+}
+
+export interface BranchProtectionRuleCreate {
+  wildcard: string;
+  allow_force_push?: boolean;
+  allow_deletion?: boolean;
+  required_status_checks?: {
+    enforcement_level: string;
+    contexts: string[];
+  };
+  restrictions?: {
+    users: any[];
+    teams: any[];
+  };
+}
+
+export interface BranchProtectionRuleUpdate {
+  allow_force_push?: boolean;
+  allow_deletion?: boolean;
+  required_status_checks?: {
+    enforcement_level: string;
+    contexts: string[];
+  };
+  restrictions?: {
+    users: any[];
+    teams: any[];
+  };
+}
+
+export interface CreateMilestoneRequest {
+  title: string;
+  description?: string;
+  state_event?: 'close' | 'open';
+  due_on?: string;
+}
+
+export interface UpdateMilestoneRequest {
+  title?: string;
+  description?: string;
+  state_event?: 'close' | 'open';
+  due_on?: string;
+}
+
+export interface CreateTagRequest {
+  tag_name: string;
+  target_commitish?: string;
+  message?: string;
+}
+
+export interface CreateProtectedTagRequest {
+  tag_name: string;
+  target_commitish?: string;
+  message?: string;
+  allow_force_push?: boolean;
+  allow_deletion?: boolean;
+  required_status_checks?: {
+    enforcement_level: string;
+    contexts: string[];
+  };
+  restrictions?: {
+    users: any[];
+    teams: any[];
+  };
 }

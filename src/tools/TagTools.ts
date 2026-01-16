@@ -2,7 +2,7 @@ import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { TagService } from '../services/TagService.js';
 
 export class TagTools {
-  constructor(private tagService: TagService) {}
+  constructor(private tagService: TagService) { }
 
   getTools(): Tool[] {
     return [
@@ -142,7 +142,23 @@ export class TagTools {
             },
             tagName: {
               type: 'string',
-              description: 'The name of the protected tag'
+              description: 'The name of protected tag'
+            },
+            allowForcePush: {
+              type: 'boolean',
+              description: 'Allow force pushes for this protected tag'
+            },
+            allowDeletion: {
+              type: 'boolean',
+              description: 'Allow deletion of this protected tag'
+            },
+            requiredStatusChecks: {
+              type: 'object',
+              description: 'Required status checks configuration for this protected tag'
+            },
+            restrictions: {
+              type: 'object',
+              description: 'Restrictions on who can push to this protected tag'
             }
           },
           required: ['owner', 'repo', 'tagName']
@@ -186,7 +202,7 @@ export class TagTools {
             },
             tagName: {
               type: 'string',
-              description: 'The name of the protected tag'
+              description: 'The name of protected tag'
             }
           },
           required: ['owner', 'repo', 'tagName']
@@ -196,44 +212,52 @@ export class TagTools {
   }
 
   async callTool(name: string, args: any): Promise<any> {
-    switch (name) {
+    switch(name) {
       case 'get_repository_tags':
         return await this.tagService.getRepositoryTags(
-          args.owner, 
-          args.repo, 
-          args.page, 
+          args.owner,
+          args.repo,
+          args.page,
           args.perPage
         );
-      
+
       case 'create_repository_tag':
         return await this.tagService.createRepositoryTag(args.owner, args.repo, {
           tag_name: args.tagName,
           target: args.target,
           message: args.message
         });
-      
+
       case 'delete_repository_tag':
         return await this.tagService.deleteRepositoryTag(args.owner, args.repo, args.tagName);
-      
+
       case 'get_repository_protected_tags':
         return await this.tagService.getRepositoryProtectedTags(args.owner, args.repo);
-      
+
       case 'create_repository_protected_tag':
         return await this.tagService.createRepositoryProtectedTag(args.owner, args.repo, {
-          tag_name: args.tagName
+          tag_name: args.tagName,
+          allow_force_push: args.allowForcePush,
+          allow_deletion: args.allowDeletion,
+          required_status_checks: args.requiredStatusChecks,
+          restrictions: args.restrictions
         });
-      
+
       case 'update_repository_protected_tag':
         return await this.tagService.updateRepositoryProtectedTag(args.owner, args.repo, {
-          tag_name: args.tagName
+          tag_name: args.tagName,
+          allow_force_push: args.allowForcePush,
+          allow_deletion: args.allowDeletion,
+          required_status_checks: args.requiredStatusChecks,
+          restrictions: args.restrictions
         });
-      
+
       case 'delete_repository_protected_tag':
         return await this.tagService.deleteRepositoryProtectedTag(args.owner, args.repo, args.tagName);
-      
+
       case 'get_repository_protected_tag':
         return await this.tagService.getRepositoryProtectedTag(args.owner, args.repo, args.tagName);
-      
+
       default:
         throw new Error(`Unknown tool: ${name}`);
     }

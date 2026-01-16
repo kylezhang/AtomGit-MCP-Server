@@ -54,8 +54,8 @@ export class IssuesService extends BaseService {
         const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}`);
         return response.data;
     }
-    async getRepositoryIssueOperateLogs(owner, issueNumber, page = 1, perPage = 30) {
-        const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
+    async getRepositoryIssueOperateLogs(owner, repo, issueNumber, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/operate_logs`, {
             params: { page, per_page: perPage }
         });
         return response.data;

@@ -548,7 +548,7 @@ export class RepositoriesTools {
         return await this.service.archiveRepository(args.org, args.repository, args.archiveData);
       
       case 'transfer_repository_to_org':
-        return await this.service.transferRepository(args.org, args.repository, args.transferData);
+        return await this.service.transferRepositoryToOrg(args.org, args.repository, args.transferData);
       
       case 'get_repository_transition':
         return await this.service.getRepositoryTransition(args.owner, args.repo);
@@ -581,7 +581,7 @@ export class RepositoriesTools {
         return await this.service.getRepositoryStargazers(args.owner, args.repo);
       
       case 'update_repository_settings':
-        return await this.service.updateRepositorySettings(args.owner, args.repo, args.settings);
+        return await this.service.updateRepositoryRepoSettings(args.owner, args.repo, args.settings);
       
       case 'get_repository_settings':
         return await this.service.getRepositoryRepoSettings(args.owner, args.repo);

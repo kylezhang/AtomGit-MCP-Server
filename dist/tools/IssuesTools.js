@@ -658,28 +658,6 @@ export class IssuesTools {
                     required: ['enterprise']
                 }
             },
-            {
-                name: 'get_repository_issue_related_branches',
-                description: 'Get related branches for an issue',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        owner: {
-                            type: 'string',
-                            description: 'The owner of repository'
-                        },
-                        repo: {
-                            type: 'string',
-                            description: 'The name of repository'
-                        },
-                        issueNumber: {
-                            type: 'number',
-                            description: 'The issue number'
-                        }
-                    },
-                    required: ['owner', 'repo', 'issueNumber']
-                }
-            }
         ];
     }
     async callTool(name, args) {
@@ -727,7 +705,7 @@ export class IssuesTools {
             case 'delete_repository_issue_label':
                 return await this.issuesService.deleteRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.name);
             case 'get_repository_issue_operate_logs':
-                return await this.issuesService.getRepositoryIssueOperateLogs(args.owner, args.issueNumber, args.page, args.perPage);
+                return await this.issuesService.getRepositoryIssueOperateLogs(args.owner, args.repo, args.issueNumber, args.page, args.perPage);
             case 'get_repository_issue_related_branches':
                 return await this.issuesService.getRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber);
             case 'get_repository_issue_reactions':

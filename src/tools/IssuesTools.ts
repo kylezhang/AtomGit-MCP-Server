@@ -2,7 +2,7 @@ import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { IssuesService } from '../services/IssuesService.js';
 
 export class IssuesTools {
-  constructor(private issuesService: IssuesService) {}
+  constructor(private issuesService: IssuesService) { }
 
   getTools(): Tool[] {
     return [
@@ -491,7 +491,7 @@ export class IssuesTools {
           required: ['owner', 'repo', 'issueNumber']
         }
       },
-{
+      {
         name: 'get_repository_issue_comment_modify_history',
         description: 'Get modification history of an issue comment',
         inputSchema: {
@@ -659,28 +659,6 @@ export class IssuesTools {
           required: ['enterprise']
         }
       },
-      {
-        name: 'get_repository_issue_related_branches',
-        description: 'Get related branches for an issue',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: {
-              type: 'string',
-              description: 'The owner of repository'
-            },
-            repo: {
-              type: 'string',
-              description: 'The name of repository'
-            },
-            issueNumber: {
-              type: 'number',
-              description: 'The issue number'
-            }
-          },
-          required: ['owner', 'repo', 'issueNumber']
-        }
-      }
     ];
   }
 
@@ -688,13 +666,13 @@ export class IssuesTools {
     switch (name) {
       case 'get_repository_issues':
         return await this.issuesService.getRepositoryIssues(
-          args.owner, 
-          args.repo, 
-          args.state, 
-          args.page, 
+          args.owner,
+          args.repo,
+          args.state,
+          args.page,
           args.perPage
         );
-      
+
       case 'create_repository_issue':
         const issueData = {
           title: args.title,
@@ -704,7 +682,7 @@ export class IssuesTools {
           labels: args.labels
         };
         return await this.issuesService.createRepositoryIssue(args.owner, args.repo, issueData);
-      
+
       case 'get_repository_issue':
         return await this.issuesService.getRepositoryIssue(args.owner, args.repo, args.issueNumber);
 
@@ -755,6 +733,7 @@ export class IssuesTools {
       case 'get_repository_issue_operate_logs':
         return await this.issuesService.getRepositoryIssueOperateLogs(
           args.owner,
+          args.repo,
           args.issueNumber,
           args.page,
           args.perPage
@@ -775,7 +754,7 @@ export class IssuesTools {
       case 'get_repository_issue_comment_modify_history':
         return await this.issuesService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, args.commentId);
 
-case 'get_enterprise_issue_labels':
+      case 'get_enterprise_issue_labels':
         return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, args.issueId);
 
       case 'get_enterprise_issues':
@@ -795,7 +774,7 @@ case 'get_enterprise_issue_labels':
 
       case 'delete_repository_all_issue_labels':
         return await this.issuesService.deleteRepositoryAllIssueLabels(args.owner, args.repo, args.issueNumber);
-      
+
       case 'get_all_repository_issue_comments':
         return await this.issuesService.getAllRepositoryIssueComments(args.owner, args.repo, args.page, args.perPage);
 

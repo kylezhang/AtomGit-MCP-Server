@@ -68,8 +68,8 @@ export class IssuesService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryIssueOperateLogs(owner: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
+  async getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/operate_logs`, {
       params: { page, per_page: perPage }
     });
     return response.data;
