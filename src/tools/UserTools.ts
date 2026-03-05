@@ -37,9 +37,37 @@ export class UserTools {
             username: {
               type: 'string',
               description: 'The username of the user'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
             }
           },
           required: ['username']
+        }
+      },
+      {
+        name: 'get_repository',
+        description: 'Get a specific repository',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of the repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of the repository'
+            }
+          },
+          required: ['owner', 'repo']
         }
       },
       {
@@ -70,30 +98,6 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {},
-        }
-      },
-      {
-        name: 'search_users',
-        description: 'Search users',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            query: {
-              type: 'string',
-              description: 'Search query'
-            },
-            page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
-            },
-            perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
-            }
-          },
-          required: ['query']
         }
       },
       {
@@ -383,8 +387,11 @@ export class UserTools {
         return await this.userService.getUser(args.username);
       
       case 'get_user_repos':
-        return await this.userService.getUserRepos(args.username);
+        return await this.userService.getUserRepos(args.username, args.page, args.perPage);
       
+      case 'get_repository':
+        return await this.userService.getUserRepository(args.owner, args.repo);
+
       case 'get_current_user_repos':
         return await this.userService.getUserRepos('current');
       
@@ -394,13 +401,6 @@ export class UserTools {
       case 'get_current_user_starred_repos':
         return await this.userService.getCurrentUserStarredRepos();
       
-      case 'search_users':
-        return await this.userService.searchUsers(
-          args.query, 
-          args.page, 
-          args.perPage
-        );
-
       case 'get_user_subscriptions':
         return await this.userService.getUserSubscriptions(args.username, args.page, args.perPage);
       

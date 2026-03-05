@@ -1,6 +1,7 @@
 # AtomGit MCP Server - Project Knowledge Base
 
 **Generated:** 2025-01-15
+**Updated:** 2026-03-05
 **Commit:** Working Directory
 **Branch:** Main Development
 
@@ -11,12 +12,13 @@ AtomGit MCP Server provides 240+ tools for interacting with AtomGit platform via
 ```
 AtomGit-MCP-Server/
 ├── src/
-│   ├── services/    # 19 API service classes (AtomGit API wrappers)
-│   ├── tools/       # 19 MCP tool classes (MCP protocol interface)
+│   ├── services/    # 18 API service classes (AtomGit API wrappers)
+│   ├── tools/       # 18 MCP tool classes (MCP protocol interface)
 │   ├── types/       # TypeScript interfaces for AtomGit API
-│   └── index.ts     # Main entry point (334 lines, manual routing)
-├── dist/            # Compiled output (80+ files)
+│   └── index.ts     # Main entry point
+├── dist/            # Compiled output
 ├── docs/            # Task documentation & API extraction data
+├── tests/           # Test scripts
 └── AGENTS.md        # Developer guidelines (this file)
 ```
 
@@ -33,7 +35,7 @@ AtomGit-MCP-Server/
 | Symbol | Type | Location | Role |
 |--------|------|----------|------|
 | `BaseService` | Class | `src/services/BaseService.ts` | Base API client with auth |
-| `AtomGitService` | Class | `src/services/AtomGitService.ts` | Original service (to be refactored) |
+| `AIHubService` | Class | `src/services/AIHubService.ts` | AI Hub functionality |
 | `index.ts` | Entry | `src/index.ts` | Main MCP server setup |
 
 ## CONVENTIONS
@@ -55,6 +57,7 @@ AtomGit-MCP-Server/
 - **NEVER** copy `.env.example` to `.env`
 - **FORBIDDEN**: Backup files in repository (`*.backup`, `*.bak`)
 - **FORBIDDEN**: Free interpretation of API specifications
+- **FORBIDDEN**: Cross-service calls (each service handles one category only)
 
 ## UNIQUE STYLES
 ### Service Layer Pattern
@@ -115,8 +118,6 @@ npm run clean        # Remove dist/ directory
 ```
 
 ## NOTES
-- **Critical issue**: File named "nul" in root (Windows device name) - needs immediate removal
-- **Missing directories**: `tests/` and `scripts/` referenced in package.json but don't exist
 - **API specification**: `docs/api_endpoints_extracted.json` contains complete 240-endpoint definition
 - **Service-Tool mapping**: Must maintain exact 1:1 correspondence between API categories and Service/Tool files
 - **Parameter consistency**: Tool call parameters MUST match Service method signatures exactly

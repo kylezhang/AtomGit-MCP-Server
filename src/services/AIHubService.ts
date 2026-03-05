@@ -1,7 +1,12 @@
 import { BaseService } from './BaseService.js';
+import { AtomGitConfig } from '../types/index.js';
 
 export class AIHubService extends BaseService {
   
+  constructor(config: AtomGitConfig) {
+    super(config);
+  }
+
   async chatCompletion(data: any): Promise<any> {
     const response = await this.client.post('/api/v5/chat/completions', data);
     return response.data;

@@ -159,7 +159,7 @@ export class LabelsTools {
         }
       },
       {
-        name: 'get_enterprise_labels_v8',
+        name: 'get_labels_list',
         description: '获取标签列表',
         inputSchema: {
           type: 'object',
