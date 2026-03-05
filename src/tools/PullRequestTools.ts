@@ -1310,7 +1310,9 @@ export class PullRequestTools {
         return await this.pullRequestService.getRepositoryPullCommits(
           args.owner,
           args.repo,
-          args.pullNumber
+          args.pullNumber,
+          args.page,
+          args.perPage
         );
 
       case 'create_repository_pull_label':
@@ -1330,10 +1332,10 @@ export class PullRequestTools {
         return await this.pullRequestService.deleteRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.name);
 
       case 'process_repository_pull_test':
-        return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, args.pullNumber, args.action, args.comment);
 
       case 'process_repository_pull_review':
-        return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, args.pullNumber, args.action, args.comment);
 
       case 'get_repository_pull_operate_logs':
         return await this.pullRequestService.getRepositoryPullOperateLogs(
@@ -1358,10 +1360,10 @@ export class PullRequestTools {
         return await this.pullRequestService.resetRepositoryPullAssignees(args.owner, args.repo, args.pullNumber);
 
       case 'assign_repository_pull_assignees':
-        return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, [args.assignees]);
+        return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
 
       case 'remove_repository_pull_assignees':
-        return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, [args.assignees]);
+        return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
 
       case 'get_repository_pull_files_json':
         return await this.pullRequestService.getRepositoryPullFilesJson(args.owner, args.repo, args.pullNumber);

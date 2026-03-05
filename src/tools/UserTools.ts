@@ -87,6 +87,16 @@ export class UserTools {
             username: {
               type: 'string',
               description: 'The username of the user'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
             }
           },
           required: ['username']
@@ -396,7 +406,7 @@ export class UserTools {
         return await this.userService.getUserRepos('current');
       
       case 'get_user_starred_repos':
-        return await this.userService.getUserStarredRepos(args.username);
+        return await this.userService.getUserStarredRepos(args.username, args.page, args.perPage);
       
       case 'get_current_user_starred_repos':
         return await this.userService.getCurrentUserStarredRepos();
@@ -417,10 +427,18 @@ export class UserTools {
         return await this.userService.markRepositoryNotificationsRead(args.owner, args.repo);
       
       case 'create_user_repository':
-        return await this.userService.createUserRepository(args);
+        return await this.userService.createUserRepository({
+          name: args.name,
+          description: args.description,
+          private: args.private
+        });
       
       case 'update_current_user':
-        return await this.userService.updateCurrentUser(args);
+        return await this.userService.updateCurrentUser({
+          name: args.name,
+          email: args.email,
+          bio: args.bio
+        });
       
       case 'get_current_user_emails':
         return await this.userService.getCurrentUserEmails();
@@ -429,7 +447,10 @@ export class UserTools {
         return await this.userService.getUserEvents(args.username, args.page, args.perPage);
       
       case 'add_user_key':
-        return await this.userService.addUserKey(args);
+        return await this.userService.addUserKey({
+          title: args.title,
+          key: args.key
+        });
       
       case 'get_current_user_keys':
         return await this.userService.getCurrentUserKeys(args.page, args.perPage);

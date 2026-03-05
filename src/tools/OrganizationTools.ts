@@ -363,6 +363,9 @@ export class OrganizationTools {
       case 'get_current_user_organizations':
         return await this.organizationService.getCurrentUserOrganizations(args.page, args.perPage);
        
+      case 'update_organization':
+        return await this.organizationService.updateOrganization(args.org, args.updateData);
+
       case 'get_organization_member':
         return await this.organizationService.getOrganizationMember(args.org, args.username);
         

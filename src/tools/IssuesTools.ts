@@ -343,6 +343,28 @@ export class IssuesTools {
         }
       },
       {
+        name: 'delete_repository_all_issue_labels',
+        description: 'Delete all labels from an issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of the repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of the repository'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The number of the issue'
+            }
+          },
+          required: ['owner', 'repo', 'issueNumber']
+        }
+      },
+      {
         name: 'get_repository_issue_operate_logs',
         description: 'Get operation logs for an issue',
         inputSchema: {
