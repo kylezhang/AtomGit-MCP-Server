@@ -10,9 +10,7 @@
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "test": "tsx tests/verify-tools.ts",
-    "test:auth": "node tests/test-auth.mjs",
-    "test:mcp": "node tests/test-mcp.mjs",
-    "test:comprehensive": "node tests/test-comprehensive.mjs",
+    "test:comprehensive": "tsx tests/test-comprehensive.ts",
     "clean": "rimraf dist"
   },
   "keywords": [

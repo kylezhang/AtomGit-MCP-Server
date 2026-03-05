@@ -1,7 +1,7 @@
 # AtomGit MCP Server
 
 ## 🎯 项目概述
-AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 **247 个工具**，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能、组织管理、Webhook管理、企业功能、看板管理、AI Hub功能等全面功能。
+AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 AI 助手直接与 AtomGit 平台进行交互。它提供了 **240 个工具**，涵盖了仓库管理、用户管理、分支管理、提交管理、标签管理、问题管理、Pull Request 管理、仓库设置、高级仓库功能、标签里程碑管理、高级提交管理、成员管理、搜索功能、高级用户功能、高级发布功能、组织管理、Webhook管理、企业功能、看板管理、AI Hub功能等全面功能。
 
 ### ✨ 主要特性
 
@@ -83,9 +83,7 @@ AtomGit MCP Server 是一个基于 Model Context Protocol 的服务器，允许 
 
 ## 🛠️ 已实现工具
 
-根据 [AtomGit 官方 API](https://docs.atomgit.com/docs/apis/)，已实现 **246 个工具**，测试成功率 **91.2%**。
-
-详细的完整工具列表请参考：[📖 README_additional_sections.md](./README_additional_sections.md)
+根据 [AtomGit 官方 API](https://docs.atomgit.com/docs/apis/)，已实现 **240 个工具**，测试成功率 **91.2%**。
 
 ---
 
