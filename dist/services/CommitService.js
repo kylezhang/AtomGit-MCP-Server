@@ -41,8 +41,12 @@ export class CommitService extends BaseService {
         return response.data;
     }
     async getRepositoryCommitStatistics(owner, repo, sha) {
-        const url = sha ? `/api/v5/repos/${owner}/${repo}/repository-commit-statistics?sha=${sha}` : `/api/v5/repos/${owner}/${repo}/repository-commit-statistics`;
-        const response = await this.client.get(url);
+        const url = `/api/v5/repos/${owner}/${repo}/repository-commit-statistics`;
+        const params = {};
+        if (sha) {
+            params.sha = sha;
+        }
+        const response = await this.client.get(url, { params });
         return response.data;
     }
     async getRepositoryCommitRefComments(owner, repo, ref) {

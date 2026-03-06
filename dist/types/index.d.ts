@@ -369,7 +369,7 @@ export interface UpdateMilestoneRequest {
 }
 export interface CreateTagRequest {
     tag_name: string;
-    target_commitish?: string;
+    ref: string;
     message?: string;
     target?: string;
 }

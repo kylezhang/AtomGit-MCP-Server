@@ -225,7 +225,8 @@ export class TagTools {
         return await this.tagService.createRepositoryTag(args.owner, args.repo, {
           tag_name: args.tagName,
           target: args.target,
-          message: args.message
+          message: args.message,
+          ref: args.target
         });
 
       case 'delete_repository_tag':

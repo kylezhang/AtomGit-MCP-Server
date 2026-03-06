@@ -345,6 +345,14 @@ export class UserTools {
         }
       },
       {
+        name: 'get_current_user_namespace',
+        description: 'Get a namespace for current user',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+        }
+      },
+      {
         name: 'get_user_key',
         description: 'Get a specific public key',
         inputSchema: {
@@ -358,14 +366,7 @@ export class UserTools {
           required: ['keyId']
         }
       },
-      {
-        name: 'get_current_user_namespace',
-        description: 'Get a namespace for current user',
-        inputSchema: {
-          type: 'object',
-          properties: {}
-        }
-      },
+
       {
         name: 'get_current_user_pull_requests',
         description: 'List pull requests for current user',
