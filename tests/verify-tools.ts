@@ -123,13 +123,13 @@ async function verifyTools() {
 
     // Verify AI Hub tools specifically
     const aiTools = tools.filter(t => [
-      'chat_completion', 
-      'sentence_similarity', 
-      'audio_transcription', 
-      'object_detection', 
-      'video_generation_create', 
-      'video_generation_status', 
-      'audio_classification'
+      'atomgit:chat_completion', 
+      'atomgit:sentence_similarity', 
+      'atomgit:audio_transcription', 
+      'atomgit:object_detection', 
+      'atomgit:video_generation_create', 
+      'atomgit:video_generation_status', 
+      'atomgit:audio_classification'
     ].includes(t.name));
 
     if (aiTools.length !== 7) {
