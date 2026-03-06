@@ -47,7 +47,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/zkxw2008/AtomGit-MCP-Server.git
+git clone https://atomgit.com/zkxw2008/AtomGit-MCP-Server.git
 cd AtomGit-MCP-Server
 
 # 安装依赖
@@ -57,7 +57,7 @@ npm install
 npm run build
 ```
 
-### 3. 配置 Claude Desktop
+### 3. 配置 AtomGit MCP Server 到 Claude Desktop 为例
 
 找到 Claude Desktop 的配置文件：
 *   **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
