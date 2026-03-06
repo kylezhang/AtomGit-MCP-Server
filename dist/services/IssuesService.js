@@ -1,7 +1,7 @@
 import { BaseService } from './BaseService.js';
 export class IssuesService extends BaseService {
     async createRepositoryIssue(owner, repo, issueData) {
-        const response = await this.client.post(`/api/v5/repos/${owner}/issues`, issueData);
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues`, issueData);
         return response.data;
     }
     async updateRepositoryIssue(owner, repo, issueNumber, updateData) {

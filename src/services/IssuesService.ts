@@ -4,7 +4,7 @@ import { Issue, CreateIssueRequest, UpdateIssueRequest, CreateIssueCommentReques
 export class IssuesService extends BaseService {
   
   async createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/issues`, issueData);
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues`, issueData);
     return response.data;
   }
 
