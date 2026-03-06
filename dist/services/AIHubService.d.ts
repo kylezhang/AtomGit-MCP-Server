@@ -1,5 +1,7 @@
 import { BaseService } from './BaseService.js';
+import { AtomGitConfig } from '../types/index.js';
 export declare class AIHubService extends BaseService {
+    constructor(config: AtomGitConfig);
     chatCompletion(data: any): Promise<any>;
     similarity(data: any): Promise<any>;
     audioTranscription(data: any): Promise<any>;

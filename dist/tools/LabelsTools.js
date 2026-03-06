@@ -158,7 +158,7 @@ export class LabelsTools {
                 }
             },
             {
-                name: 'get_enterprise_labels_v8',
+                name: 'get_labels_list',
                 description: '获取标签列表',
                 inputSchema: {
                     type: 'object',
@@ -199,28 +199,6 @@ export class LabelsTools {
                     },
                     required: ['owner', 'repo', 'issueNumber', 'labels']
                 }
-            },
-            {
-                name: 'delete_repository_all_issue_labels',
-                description: 'Delete all labels for an issue',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        owner: {
-                            type: 'string',
-                            description: 'The owner of repository'
-                        },
-                        repo: {
-                            type: 'string',
-                            description: 'The name of repository'
-                        },
-                        issueNumber: {
-                            type: 'number',
-                            description: 'The issue number'
-                        }
-                    },
-                    required: ['owner', 'repo', 'issueNumber']
-                }
             }
         ];
     }
@@ -248,8 +226,6 @@ export class LabelsTools {
                 return await this.labelsService.getEnterpriseLabels(args.enterprise);
             case 'get_labels_list':
                 return await this.labelsService.getEnterpriseLabelsV8(args.enterprise);
-            case 'delete_repository_all_issue_labels':
-                return await this.labelsService.deleteRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber);
             case 'replace_repository_issue_all_labels':
                 return await this.labelsService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber, args.labels);
             default:

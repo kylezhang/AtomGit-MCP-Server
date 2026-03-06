@@ -316,35 +316,6 @@ export class IssuesTools {
                 }
             },
             {
-                name: 'replace_repository_issue_labels',
-                description: 'Replace all labels for an issue',
-                inputSchema: {
-                    type: 'object',
-                    properties: {
-                        owner: {
-                            type: 'string',
-                            description: 'The owner of the repository'
-                        },
-                        repo: {
-                            type: 'string',
-                            description: 'The name of the repository'
-                        },
-                        issueNumber: {
-                            type: 'number',
-                            description: 'The number of the issue'
-                        },
-                        labels: {
-                            type: 'array',
-                            description: 'Array of label names to set',
-                            items: {
-                                type: 'string'
-                            }
-                        }
-                    },
-                    required: ['owner', 'repo', 'issueNumber', 'labels']
-                }
-            },
-            {
                 name: 'delete_repository_issue_label',
                 description: 'Delete a label from an issue',
                 inputSchema: {
@@ -368,6 +339,28 @@ export class IssuesTools {
                         }
                     },
                     required: ['owner', 'repo', 'issueNumber', 'name']
+                }
+            },
+            {
+                name: 'delete_repository_all_issue_labels',
+                description: 'Delete all labels from an issue',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        owner: {
+                            type: 'string',
+                            description: 'The owner of the repository'
+                        },
+                        repo: {
+                            type: 'string',
+                            description: 'The name of the repository'
+                        },
+                        issueNumber: {
+                            type: 'number',
+                            description: 'The number of the issue'
+                        }
+                    },
+                    required: ['owner', 'repo', 'issueNumber']
                 }
             },
             {
@@ -658,6 +651,56 @@ export class IssuesTools {
                     required: ['enterprise']
                 }
             },
+            {
+                name: 'get_all_repository_issue_comments',
+                description: 'Get all issue comments in a repository',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        owner: {
+                            type: 'string',
+                            description: 'The owner of the repository'
+                        },
+                        repo: {
+                            type: 'string',
+                            description: 'The name of the repository'
+                        },
+                        page: {
+                            type: 'number',
+                            description: 'Page number for pagination',
+                            default: 1
+                        },
+                        perPage: {
+                            type: 'number',
+                            description: 'Number of results per page',
+                            default: 30
+                        }
+                    },
+                    required: ['owner', 'repo']
+                }
+            },
+            {
+                name: 'get_repository_issue_pull_requests',
+                description: 'Get pull requests associated with an issue',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        owner: {
+                            type: 'string',
+                            description: 'The owner of the repository'
+                        },
+                        repo: {
+                            type: 'string',
+                            description: 'The name of the repository'
+                        },
+                        issueNumber: {
+                            type: 'number',
+                            description: 'The issue number'
+                        }
+                    },
+                    required: ['owner', 'repo', 'issueNumber']
+                }
+            }
         ];
     }
     async callTool(name, args) {
@@ -700,8 +743,6 @@ export class IssuesTools {
                 return await this.issuesService.deleteRepositoryIssueComment(args.owner, args.repo, args.commentId);
             case 'create_repository_issue_label':
                 return await this.issuesService.createRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.labels);
-            case 'replace_repository_issue_labels':
-                return await this.issuesService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber, args.labels);
             case 'delete_repository_issue_label':
                 return await this.issuesService.deleteRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.name);
             case 'get_repository_issue_operate_logs':
@@ -732,6 +773,10 @@ export class IssuesTools {
                 return await this.issuesService.deleteRepositoryAllIssueLabels(args.owner, args.repo, args.issueNumber);
             case 'get_all_repository_issue_comments':
                 return await this.issuesService.getAllRepositoryIssueComments(args.owner, args.repo, args.page, args.perPage);
+            case 'get_repository_issue_pull_requests':
+                return await this.issuesService.getRepositoryIssuePullRequests(args.owner, args.repo, args.issueNumber);
+            case 'get_enterprise_issue_statuses':
+                return await this.issuesService.getEnterpriseIssueStatuses(args.enterprise);
             default:
                 throw new Error(`Unknown tool: ${name}`);
         }

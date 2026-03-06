@@ -1277,7 +1277,7 @@ export class PullRequestTools {
                     maintainer_can_modify: args.maintainer_can_modify
                 });
             case 'get_repository_pull_commits':
-                return await this.pullRequestService.getRepositoryPullCommits(args.owner, args.repo, args.pullNumber);
+                return await this.pullRequestService.getRepositoryPullCommits(args.owner, args.repo, args.pullNumber, args.page, args.perPage);
             case 'create_repository_pull_label':
                 return await this.pullRequestService.createRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.labels);
             case 'get_repository_pull_labels':
@@ -1287,9 +1287,9 @@ export class PullRequestTools {
             case 'delete_repository_pull_label':
                 return await this.pullRequestService.deleteRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.name);
             case 'process_repository_pull_test':
-                return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, args.pullNumber);
+                return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, args.pullNumber, args.action, args.comment);
             case 'process_repository_pull_review':
-                return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, args.pullNumber);
+                return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, args.pullNumber, args.action, args.comment);
             case 'get_repository_pull_operate_logs':
                 return await this.pullRequestService.getRepositoryPullOperateLogs(args.owner, args.repo, args.pullNumber);
             case 'reset_repository_pull_testers':
@@ -1303,9 +1303,9 @@ export class PullRequestTools {
             case 'reset_repository_pull_assignees':
                 return await this.pullRequestService.resetRepositoryPullAssignees(args.owner, args.repo, args.pullNumber);
             case 'assign_repository_pull_assignees':
-                return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, [args.assignees]);
+                return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
             case 'remove_repository_pull_assignees':
-                return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, [args.assignees]);
+                return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
             case 'get_repository_pull_files_json':
                 return await this.pullRequestService.getRepositoryPullFilesJson(args.owner, args.repo, args.pullNumber);
             case 'get_repository_pull_file_content':

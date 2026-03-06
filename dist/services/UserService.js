@@ -20,6 +20,10 @@ export class UserService extends BaseService {
         });
         return response.data;
     }
+    async getUserRepository(owner, repo) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}`);
+        return response.data;
+    }
     async getCurrentUserStarredRepos(page = 1, perPage = 30) {
         const response = await this.client.get('/api/v5/user/starred', {
             params: { page, per_page: perPage }

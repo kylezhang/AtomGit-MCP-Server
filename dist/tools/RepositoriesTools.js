@@ -542,9 +542,15 @@ export class RepositoriesTools {
             case 'get_repository_forks':
                 return await this.service.getRepositoryForks(args.owner, args.repo, args.page, args.perPage);
             case 'upload_repository_image':
-                return await this.service.uploadRepositoryImage(args.owner, args.repo, args.fileData);
+                return await this.service.uploadRepositoryImage(args.owner, args.repo, {
+                    file: args.fileData,
+                    filename: args.filename
+                });
             case 'upload_repository_file':
-                return await this.service.uploadRepositoryFile(args.owner, args.repo, args.fileData);
+                return await this.service.uploadRepositoryFile(args.owner, args.repo, {
+                    file: args.fileData,
+                    filename: args.filename
+                });
             case 'get_repository_subscribers':
                 return await this.service.getRepositorySubscribers(args.owner, args.repo);
             case 'get_repository_stargazers':

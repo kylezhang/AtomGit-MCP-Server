@@ -11,7 +11,7 @@ export declare class PullRequestService extends BaseService {
     getRepositoryPullFiles(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
     updateRepositoryPull(owner: string, repo: string, pullNumber: number, updateData: UpdatePullRequestRequest): Promise<PullRequest>;
     getRepositoryPull(owner: string, repo: string, pullNumber: number): Promise<PullRequest>;
-    getRepositoryPullCommits(owner: string, repo: string, pullNumber: number): Promise<any[]>;
+    getRepositoryPullCommits(owner: string, repo: string, pullNumber: number, page?: number, perPage?: number): Promise<any[]>;
     createRepositoryPullLabel(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any>;
     getRepositoryPullLabels(owner: string, repo: string, pullNumber: number): Promise<any[]>;
     replaceRepositoryPullLabels(owner: string, repo: string, pullNumber: number, labels: string[]): Promise<any>;
@@ -23,8 +23,8 @@ export declare class PullRequestService extends BaseService {
     getRepositoryPullFileContent(owner: string, repo: string, pullNumber: number, filePath: string): Promise<any>;
     resetRepositoryPullTesters(owner: string, repo: string, pullNumber: number): Promise<any>;
     resetRepositoryPullAssignees(owner: string, repo: string, pullNumber: number): Promise<any>;
-    processRepositoryPullTest(owner: string, repo: string, pullNumber: number): Promise<any>;
-    processRepositoryPullReview(owner: string, repo: string, pullNumber: number): Promise<any>;
+    processRepositoryPullTest(owner: string, repo: string, pullNumber: number, action: string, comment?: string): Promise<any>;
+    processRepositoryPullReview(owner: string, repo: string, pullNumber: number, action: string, comment?: string): Promise<any>;
     assignRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any>;
     removeRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any>;
     getRepositoryPullTesterOptions(owner: string, repo: string): Promise<any[]>;

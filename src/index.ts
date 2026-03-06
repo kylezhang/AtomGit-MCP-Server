@@ -7,6 +7,7 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { config } from 'dotenv';
+import { AxiosError } from 'axios';
 
 // Import all services
 import { SearchService } from './services/SearchService.js';
@@ -120,10 +121,39 @@ class AtomGitMCPServer {
         if (!handler) {
           throw new Error(`Unknown tool: ${name}`);
         }
-        return await handler.execute(args);
+        const result = await handler.execute(args);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(result, null, 2) ?? 'null',
+            },
+          ],
+        };
       } catch (error) {
         console.error(`Error in tool ${name}:`, error);
-        throw error;
+        
+        if (error instanceof AxiosError) {
+          return {
+            isError: true,
+            content: [
+              {
+                type: 'text',
+                text: `AtomGit API Error: ${error.response?.status} ${error.response?.statusText}\n${JSON.stringify(error.response?.data || error.message, null, 2)}`
+              }
+            ]
+          };
+        }
+
+        return {
+          isError: true,
+          content: [
+            {
+              type: 'text',
+              text: `Tool Execution Error: ${error instanceof Error ? error.message : String(error)}`
+            }
+          ]
+        };
       }
     });
   }

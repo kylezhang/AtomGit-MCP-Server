@@ -5,6 +5,7 @@ export declare class UserService extends BaseService {
     getUser(username: string): Promise<AtomGitUser>;
     getCurrentUser(): Promise<AtomGitUser>;
     getUserRepos(username: string, page?: number, perPage?: number): Promise<any[]>;
+    getUserRepository(owner: string, repo: string): Promise<AtomGitRepository>;
     getCurrentUserStarredRepos(page?: number, perPage?: number): Promise<any[]>;
     searchUsers(query: string, page?: number, perPage?: number): Promise<any[]>;
     getUserSubscriptions(username: string, page?: number, perPage?: number): Promise<any[]>;

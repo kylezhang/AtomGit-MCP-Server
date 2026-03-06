@@ -50,8 +50,10 @@ export class PullRequestService extends BaseService {
         const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}`);
         return response.data;
     }
-    async getRepositoryPullCommits(owner, repo, pullNumber) {
-        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/commits`);
+    async getRepositoryPullCommits(owner, repo, pullNumber, page = 1, perPage = 30) {
+        const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/commits`, {
+            params: { page, per_page: perPage }
+        });
         return response.data;
     }
     async createRepositoryPullLabel(owner, repo, pullNumber, labels) {
@@ -100,12 +102,18 @@ export class PullRequestService extends BaseService {
         const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assign/reset`);
         return response.data;
     }
-    async processRepositoryPullTest(owner, repo, pullNumber) {
-        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test`);
+    async processRepositoryPullTest(owner, repo, pullNumber, action, comment) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test`, {
+            action,
+            comment
+        });
         return response.data;
     }
-    async processRepositoryPullReview(owner, repo, pullNumber) {
-        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/review`);
+    async processRepositoryPullReview(owner, repo, pullNumber, action, comment) {
+        const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/review`, {
+            action,
+            comment
+        });
         return response.data;
     }
     async assignRepositoryPullTesters(owner, repo, pullNumber, testers) {

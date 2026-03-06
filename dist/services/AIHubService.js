@@ -1,5 +1,8 @@
 import { BaseService } from './BaseService.js';
 export class AIHubService extends BaseService {
+    constructor(config) {
+        super(config);
+    }
     async chatCompletion(data) {
         const response = await this.client.post('/api/v5/chat/completions', data);
         return response.data;
