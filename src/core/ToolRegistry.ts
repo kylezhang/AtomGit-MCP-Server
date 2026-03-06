@@ -30,8 +30,12 @@ export class ToolRegistry {
   registerTools(toolsInstance: any): void {
     const tools = toolsInstance.getTools();
     for (const tool of tools) {
-      this.register(tool.name, {
-        tool,
+      // Add 'atomgit:' prefix to all tool names
+      const prefixedName = `atomgit:${tool.name}`;
+      const prefixedTool = { ...tool, name: prefixedName };
+      
+      this.register(prefixedName, {
+        tool: prefixedTool,
         execute: (args) => toolsInstance.callTool(tool.name, args),
       });
     }
