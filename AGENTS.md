@@ -23,6 +23,9 @@ AtomGit-MCP-Server/
 │   ├── tools/          # MCP Tool Layer (Schema Definitions)
 │   ├── types/          # TypeScript Interfaces
 │   └── index.ts        # Application Entry Point
+├── scripts/            # Maintenance Scripts
+│   ├── generate_map.ts # Documentation generator
+│   └── update_apis.ts  # API JSON updater
 ├── docs/               # Documentation
 │   └── api_tool_map.md # Detailed API vs Tool Mapping
 ├── dist/               # Compiled Output
@@ -46,12 +49,13 @@ AtomGit-MCP-Server/
 - **Services**: CamelCase method names (e.g., `getRepositoryTree`).
 
 ### Documentation Standards
-- **API Tool Map**: Keep `docs/api_tool_map.md` updated using `generate_map.ts`.
+- **API Tool Map**: Keep `docs/api_tool_map.md` updated using `scripts/generate_map.ts`.
   - Tool Name: Link to source file in `src/tools/`.
   - Service Method: Link to source file in `src/services/`.
   - API Endpoint: **MUST** be a Markdown link to the official AtomGit documentation URL.
     - Source of URLs: `docs/apis_url.json`.
-    - Use `generate_map.ts` to automatically match endpoints and generate links.
+    - Use `scripts/update_apis.ts` to automatically update `docs/apis_url.json` from the official website.
+    - Use `scripts/generate_map.ts` to automatically match endpoints and generate links.
 
 
 ### Adding a New Feature
