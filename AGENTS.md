@@ -1,123 +1,126 @@
-# AtomGit MCP Server - Project Knowledge Base
+# AtomGit MCP Server - Developer Guide
 
-**Generated:** 2025-01-15
-**Updated:** 2026-03-05
-**Commit:** Working Directory
-**Branch:** Main Development
+**Generated:** 2026-03-07
+**Status:** Active
 
-## OVERVIEW
-AtomGit MCP Server provides 240+ tools for interacting with AtomGit platform via Model Context Protocol. Built with TypeScript, strict configuration, and comprehensive testing requirements.
+## 1. Project Overview
+AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that provides AI assistants with access to the AtomGit code hosting platform. It exposes over 240+ tools covering the full range of AtomGit API capabilities.
 
-## STRUCTURE
+**Key Technologies:**
+- **Language:** TypeScript (ESM)
+- **Protocol:** Model Context Protocol (MCP) SDK
+- **Runtime:** Node.js >= 18
+
+## 2. Core Architecture
+
+### Directory Structure
 ```
 AtomGit-MCP-Server/
 ├── src/
-│   ├── services/    # 18 API service classes (AtomGit API wrappers)
-│   ├── tools/       # 18 MCP tool classes (MCP protocol interface)
-│   ├── types/       # TypeScript interfaces for AtomGit API
-│   └── index.ts     # Main entry point
-├── dist/            # Compiled output
-├── docs/            # Task documentation & API extraction data
-├── tests/           # Test scripts
-└── AGENTS.md        # Developer guidelines (this file)
+│   ├── core/           # Core infrastructure
+│   │   └── ToolRegistry.ts  # Central tool registration (handles 'atomgit:' prefix)
+│   ├── services/       # API Service Layer (HTTP Clients)
+│   ├── tools/          # MCP Tool Layer (Schema Definitions)
+│   ├── types/          # TypeScript Interfaces
+│   └── index.ts        # Application Entry Point
+├── docs/               # Documentation
+│   └── api_tool_map.md # Detailed API vs Tool Mapping
+├── dist/               # Compiled Output
+└── package.json        # Project Configuration
 ```
 
-## WHERE TO LOOK
-| Task | Location | Notes |
-|------|----------|-------|
-| API endpoints | `docs/api_endpoints_extracted.json` | Complete 240-endpoint specification |
-| Service patterns | `src/services/BaseService.ts` | Base class with dual auth headers |
-| MCP tool patterns | `src/tools/BranchTools.ts` | Example tool implementation |
-| Environment config | `.env.example` | Token and API base URL template |
-| Build scripts | `package.json` | ESM module with custom scripts |
+### Data Flow
+1.  **MCP Client** (e.g., Claude Desktop) sends a tool call request (e.g., `atomgit:get_repository_tree`).
+2.  **ToolRegistry** routes the request to the appropriate `Tool` class.
+3.  **Tool Layer** (`src/tools/*.ts`) validates parameters and calls the Service layer.
+4.  **Service Layer** (`src/services/*.ts`) executes the HTTP request to AtomGit API (`/api/v5/...`).
+5.  **AtomGit API** processes the request and returns data.
 
-## CODE MAP
-| Symbol | Type | Location | Role |
-|--------|------|----------|------|
-| `BaseService` | Class | `src/services/BaseService.ts` | Base API client with auth |
-| `AIHubService` | Class | `src/services/AIHubService.ts` | AI Hub functionality |
-| `index.ts` | Entry | `src/index.ts` | Main MCP server setup |
+## 3. Development Standards
 
-## CONVENTIONS
-### TypeScript Configuration
-- **ESM only**: `type: "module"` in package.json
-- **Strict mode**: `exactOptionalPropertyTypes: true`, `noUncheckedIndexedAccess: true`
-- **Imports**: Use `.js` extension for local imports (ESM requirement)
-- **Compilation**: Source → `dist/` with type declarations
+### Naming Conventions
+- **Tools**: Must match the underlying API function.
+  - *Internal Name*: `get_repository_tree`
+  - *Public Name*: `atomgit:get_repository_tree` (Automatically prefixed by `ToolRegistry`)
+  - *Description*: **MUST** be in Chinese in the generated documentation (`docs/api_tool_map.md`). The generator script extracts these from `docs/apis_url.json`.
+- **Services**: CamelCase method names (e.g., `getRepositoryTree`).
 
-### Project-Specific Rules
-- **API headers**: Dual authorization (`Bearer` + `PRIVATE-TOKEN`) + custom `X-Api-Version: 2023-02-21`
-- **File organization**: Strict mapping by file type (see AGENTS.md for details)
-- **Tool count**: Exactly 240 MCP tools required (no more, no less)
-- **Service pattern**: One Service class per API category (18 total)
+### Documentation Standards
+- **API Tool Map**: Keep `docs/api_tool_map.md` updated using `generate_map.ts`.
+  - Tool Name: Link to source file in `src/tools/`.
+  - Service Method: Link to source file in `src/services/`.
+  - API Endpoint: **MUST** be a Markdown link to the official AtomGit documentation URL.
+    - Source of URLs: `docs/apis_url.json`.
+    - Use `generate_map.ts` to automatically match endpoints and generate links.
 
-### Anti-Patterns (THIS PROJECT)
-- **NEVER** modify `.env` file (use existing config)
-- **NEVER** create files in root directory except core config
-- **NEVER** copy `.env.example` to `.env`
-- **FORBIDDEN**: Backup files in repository (`*.backup`, `*.bak`)
-- **FORBIDDEN**: Free interpretation of API specifications
-- **FORBIDDEN**: Cross-service calls (each service handles one category only)
 
-## UNIQUE STYLES
-### Service Layer Pattern
+### Adding a New Feature
+1.  **Service Implementation**:
+    - Extend `BaseService` in `src/services/`.
+    - Implement the API call using `this.client.get/post`.
+    - Add proper error handling.
+2.  **Tool Implementation**:
+    - Create/Update corresponding file in `src/tools/`.
+    - Define `InputSchema` using JSON Schema.
+    - Map the tool name to the service method in `callTool()`.
+
+### Service Pattern Example
 ```typescript
-export class CategoryService extends BaseService {
-  constructor(config: AtomGitConfig) {
-    super(config);
-  }
-  
-  async methodName(params: Type): Promise<ReturnType> {
-    try {
-      const response = await this.client.get('/endpoint', { params });
-      return response.data;
-    } catch (error) {
-      console.error('Error message:', error);
-      throw error;
-    }
+// src/services/ExampleService.ts
+export class ExampleService extends BaseService {
+  async getData(id: string) {
+    const response = await this.client.get(`/api/v5/data/${id}`);
+    return response.data;
   }
 }
 ```
 
-### MCP Tool Pattern
+### Tool Pattern Example
 ```typescript
-export class CategoryTools {
-  constructor(private categoryService: CategoryService) {}
-  
+// src/tools/ExampleTools.ts
+export class ExampleTools {
+  constructor(private service: ExampleService) {}
+
   getTools(): Tool[] {
     return [{
-      name: 'tool_name',
-      description: '...',
+      name: "get_data", // Will become atomgit:get_data
+      description: "Get data by ID",
       inputSchema: {
-        type: 'object',
-        properties: { /* ... */ },
-        required: ['param1', 'param2']
+        type: "object",
+        properties: {
+          id: { type: "string" }
+        },
+        required: ["id"]
       }
     }];
   }
-  
-  async callTool(name: string, args: any): Promise<any> {
-    switch(name) {
-      case 'tool_name':
-        return await this.categoryService.methodName(args);
-      default:
-        throw new Error(`Unknown tool: ${name}`);
-    }
-  }
 }
 ```
 
-## COMMANDS
+## 4. Workflow
+
+### Setup
+1.  Copy `.env.example` to `.env`.
+2.  Configure your `ATOMGIT_TOKEN`.
+
+### Build & Run
 ```bash
-npm run dev          # Development mode with tsx
-npm run build        # Compile TypeScript to dist/
-npm run typecheck    # Type checking without emit
-npm run test:auth    # Authenticated tests (recommended)
-npm run test:mcp     # MCP server functionality tests
-npm run clean        # Remove dist/ directory
+# Install dependencies
+npm install
+
+# Development mode (hot reload)
+npm run dev
+
+# Build for production
+npm run build
+
+# Clean build artifacts
+npm run clean
 ```
 
-## NOTES
-- **API specification**: `docs/api_endpoints_extracted.json` contains complete 240-endpoint definition
-- **Service-Tool mapping**: Must maintain exact 1:1 correspondence between API categories and Service/Tool files
-- **Parameter consistency**: Tool call parameters MUST match Service method signatures exactly
+### Verification
+- **Unit Testing**: (Tests are currently being refactored)
+- **Manual Verification**: Use `npm run dev` and connect via an MCP inspector or client.
+
+## 5. Reference
+- [API to Tool Mapping](docs/api_tool_map.md): Detailed list of available tools and their corresponding API endpoints.
