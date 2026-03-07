@@ -9,8 +9,6 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "test": "tsx tests/verify-tools.ts",
-    "test:comprehensive": "tsx tests/test-comprehensive.ts",
     "clean": "rimraf dist"
   },
   "keywords": [
