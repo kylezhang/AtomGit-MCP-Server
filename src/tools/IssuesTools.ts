@@ -653,6 +653,20 @@ export class IssuesTools {
         }
       },
       {
+        name: 'get_enterprise_issue_statuses_v5',
+        description: '获取企业issue状态',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise: {
+              type: 'string',
+              description: 'The enterprise name'
+            }
+          },
+          required: ['enterprise']
+        }
+      },
+      {
         name: 'get_all_repository_issue_comments',
         description: 'Get all issue comments in a repository',
         inputSchema: {
@@ -700,6 +714,32 @@ export class IssuesTools {
             }
           },
           required: ['owner', 'repo', 'issueNumber']
+        }
+      }
+      {
+        name: 'update_repository_issue_related_branches',
+        description: 'Update branches related to an issue',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of the repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of the repository'
+            },
+            issueNumber: {
+              type: 'number',
+              description: 'The number of the issue'
+            },
+            branchName: {
+              type: 'string',
+              description: 'The name of the branch'
+            }
+          },
+          required: ['owner', 'repo', 'issueNumber', 'branchName']
         }
       }
     ];
@@ -823,6 +863,12 @@ export class IssuesTools {
 
       case 'get_enterprise_issue_statuses':
         return await this.issuesService.getEnterpriseIssueStatuses(args.enterprise);
+
+      case 'get_enterprise_issue_statuses_v5':
+        return await this.issuesService.getEnterpriseIssueStatuses(args.enterprise);
+
+      case 'update_repository_issue_related_branches':
+        return await this.issuesService.updateRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber, args.branchName);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -25,7 +25,9 @@ AtomGit-MCP-Server/
 │   └── index.ts        # Application Entry Point
 ├── scripts/            # Maintenance Scripts
 │   ├── generate_map.ts # Documentation generator
-│   └── update_apis.ts  # API JSON updater
+│   ├── update_apis.ts  # API JSON updater
+│   ├── analyze_coverage.ts # API coverage analyzer
+│   └── scaffold_tool.ts    # Code generator
 ├── docs/               # Documentation
 │   └── api_tool_map.md # Detailed API vs Tool Mapping
 ├── dist/               # Compiled Output
@@ -128,3 +130,34 @@ npm run clean
 
 ## 5. Reference
 - [API to Tool Mapping](docs/api_tool_map.md): Detailed list of available tools and their corresponding API endpoints.
+
+## 6. Automation Workflow
+
+The project includes several scripts to streamline the development process.
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run api:sync` | Fetches the latest API definitions from the official documentation and updates `docs/apis_url.json`. |
+| `npm run api:map` | Generates the `docs/api_tool_map.md` documentation based on implemented tools. |
+| `npm run api:check` | Analyzes code coverage and lists APIs that have not yet been implemented. |
+| `npm run api:scaffold -- "query"` | Generates boilerplate code for a specific API. Query can be a URL, path, or keyword. |
+
+### Typical Workflow
+
+1.  **Check Missing APIs**:
+    ```bash
+    npm run api:check
+    ```
+2.  **Scaffold New Tool**:
+    ```bash
+    npm run api:scaffold -- "branches/:name"
+    ```
+3.  **Implement Code**:
+    - Copy the generated Service code to `src/services/`.
+    - Copy the generated Tool definition to `src/tools/`.
+4.  **Update Documentation**:
+    ```bash
+    npm run api:map
+    ```

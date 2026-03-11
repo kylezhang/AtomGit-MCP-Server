@@ -13,7 +13,8 @@ const OUTPUT_FILE = path.join(__dirname, '../docs/api_tool_map.md');
 
 interface ToolInfo {
   name: string;
-  description: string;
+  description: string; // Tool's English description
+  apiName?: string;    // API's Chinese name from JSON
   serviceMethod: string;
   apiEndpoint?: string;
   httpMethod?: string;
@@ -74,17 +75,54 @@ const MANUAL_OVERRIDES: Record<string, string> = {
   'get_pull_request_comment_modify_history': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-comment-comment-id-modify-history',
   'get_pull_request_comment_reactions': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-comment-comment-id-user-reactions',
   'compare_repository_commits': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-compare-base-head',
+  'create_repository_issue': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-issues',
+  'audio_transcription': 'https://docs.gitcode.com/docs/apis/post-api-v-1-audio-transcriptions',
+  'get_repository_commit_diff': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff',
+  'get_repository_commit_patch': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff',
   'get_repository_commit_statistics': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-repository-commit-statistics',
-  'delete_repository_protected_tag': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-protected-tags-tag-name',
-  'delete_repository_tag': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-tags-tag-name',
-  'get_repository_protected_tag': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-protected-tags-tag-name',
-  'update_repository_protected_tag': 'https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-protected-tags-tag-name',
-  'create_repository_issue': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-issues'
+  'create_organization_kanban': 'https://docs.gitcode.com/docs/apis/post-api-v-5-org-owner-kanban-create',
+  'delete_organization_kanban': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-org-owner-kanban-id',
+  'update_organization_kanban': 'https://docs.gitcode.com/docs/apis/put-api-v-5-org-owner-kanban-id',
+  'update_organization_kanban_content': 'https://docs.gitcode.com/docs/apis/put-api-v-5-org-owner-kanban-id-content'
 };
 
 interface ApiUrlMapValue {
   url: string;
   name: string;
+}
+
+function generateUnifiedPattern(pathStr: string): string {
+    // 1. Remove leading slash
+    let clean = pathStr.startsWith('/') ? pathStr.substring(1) : pathStr;
+    
+    // 2. Handle known prefixes to ensure consistency
+    // JSON often has /api/v5/..., code has /api/v5/...
+    clean = clean.replace(/^api\/v5\//, 'api-v5-');
+    clean = clean.replace(/^api\/v1\//, 'api-v1-');
+    clean = clean.replace(/^api\/v8\//, 'api-v8-');
+    
+    // 3. Split by separator (could be / or -)
+    // If it comes from code: /api/v5/repos/${owner}
+    // If it comes from JSON endpointPath: /api/v5/repos/:owner
+    // If it comes from JSON docUrl: api-v5-repos-owner
+    
+    // Normalize / to -
+    clean = clean.replace(/\//g, '-');
+    
+    const parts = clean.split('-');
+    
+    const patternParts = parts.map(p => {
+        // Variable detection
+        if (p.startsWith(':')) return '*'; // JSON style :id
+        if (p.startsWith('${') && p.endsWith('}')) return '*'; // Code style ${id}
+        if (KNOWN_VARS.has(p)) return '*'; // Known variable names in slug
+        
+        // Normalize underscores in segment names (e.g. pull_requests -> pull-requests)
+        // But NOT if it's a variable (handled above)
+        return p.replace(/_/g, '-');
+    });
+    
+    return patternParts.join('-');
 }
 
 // Map: normalized path key -> documentation URL info
@@ -107,33 +145,27 @@ function loadApiUrls(): Map<string, ApiUrlMapValue> {
 
         // Key 2: Method + Slug Path (e.g., "GET /api/v5-repos-owner-repo-git-trees-sha")
         // Extract slug from documentationUrl
-        // https://docs.gitcode.com/docs/apis/METHOD-SLUG
         const urlParts = endpoint.documentationUrl.split('/');
-        let urlSlug = urlParts[urlParts.length - 1]; // put-api-v-5-repos-...
+        let urlSlug = urlParts[urlParts.length - 1]; 
         
-        // Remove method prefix if present (put-, post-, get-, delete-, patch-)
         const methodPrefix = endpoint.httpMethod.toLowerCase() + '-';
         if (urlSlug.startsWith(methodPrefix)) {
             urlSlug = urlSlug.substring(methodPrefix.length);
         }
         
         let normalizedSlug = '/' + urlSlug;
-        // Handle gitcode docs format (api-v-5)
-        normalizedSlug = normalizedSlug.replace('/api-v-5-', '/api/v5-');
-        normalizedSlug = normalizedSlug.replace('/api-v-1-', '/api/v1-');
-        normalizedSlug = normalizedSlug.replace('/api-v-8-', '/api/v8-');
-        
-        // Handle potentially standard format (api-v5) if any
         normalizedSlug = normalizedSlug.replace('/api-v5-', '/api/v5-');
         normalizedSlug = normalizedSlug.replace('/api-v1-', '/api/v1-');
         normalizedSlug = normalizedSlug.replace('/api-v8-', '/api/v8-');
+        normalizedSlug = normalizedSlug.replace('/api-v5-', '/api/v5-');
 
         const slugKey = `SLUG:${endpoint.httpMethod.toUpperCase()}:${normalizedSlug}`;
         urlMap.set(slugKey, val);
         
-        // Key 3: Pattern Match
-        const pattern = generatePatternFromSlug(endpoint.endpointPath);
+        // Key 3: Unified Pattern Match from Endpoint Path
+        const pattern = generateUnifiedPattern(endpoint.endpointPath);
         const patternKey = `PATTERN:${endpoint.httpMethod.toUpperCase()}:${pattern}`;
+        // console.log(`JSON Pattern: ${patternKey}`); // Debug
         if (!urlMap.has(patternKey)) {
              urlMap.set(patternKey, val);
         }
@@ -143,60 +175,6 @@ function loadApiUrls(): Map<string, ApiUrlMapValue> {
     console.error('Error parsing apis_url.json:', e);
   }
   return urlMap;
-}
-
-function generatePatternFromSlug(slug: string): string {
-    // Slug example: /api/v5-repos-owner-repo-branches-name
-    // Split by '-'
-    // Note: the slug usually starts with /api/v5-...
-    
-    // Remove leading /
-    let cleanSlug = slug.startsWith('/') ? slug.substring(1) : slug;
-    
-    // Normalize api/vX to api-vX to match code path splitting
-    cleanSlug = cleanSlug.replace('api/v5', 'api-v5');
-    cleanSlug = cleanSlug.replace('api/v8', 'api-v8');
-    cleanSlug = cleanSlug.replace('api/v1', 'api-v1');
-    
-    // Normalize discussions-discussions -> discussions
-    cleanSlug = cleanSlug.replace('discussions-discussions', 'discussions');
-    
-    const parts = cleanSlug.split('-');
-    const patternParts = parts.map(p => {
-        // If it's a known variable, replace with *
-        if (KNOWN_VARS.has(p)) return '*';
-        // Also if it looks like an ID? 
-        return p;
-    });
-    
-    return patternParts.join('-');
-}
-
-function generatePatternFromCodePath(pathStr: string): string {
-    // Code Path: /api/v5/repos/${owner}/${repo}/branches/${branch}
-    
-    // 1. Remove leading /
-    const cleanPath = pathStr.startsWith('/') ? pathStr.substring(1) : pathStr;
-    
-    // 2. Split by '/'
-     const parts = cleanPath.split('/');
-     
-     const patternParts = parts.map(p => {
-         // If it is a variable ${...}, replace with *
-         if (p.startsWith('${') && p.endsWith('}')) {
-             return '*';
-         }
-         // Handle "protect_branches" -> "protect-branches"
-         // Replace _ with - in non-variable segments
-         let seg = p.replace(/_/g, '-');
-         
-         // Normalize orgs -> org
-         if (seg === 'orgs') seg = 'org';
-         
-         return seg;
-     });
-    
-    return patternParts.join('-');
 }
 
 // Convert code path to slug format found in apis_url.json
@@ -380,6 +358,7 @@ async function main() {
       let endpoint = 'Unknown';
       let method = 'Unknown';
       let docUrl = '';
+      let apiName = '';
       
       // Check overrides first (independent of endpoint extraction)
       if (MANUAL_OVERRIDES[name]) {
@@ -387,7 +366,7 @@ async function main() {
           // Try to find description for overridden URL if possible
           for (const val of urlMap.values()) {
               if (val.url === docUrl) {
-                  info.description = val.name;
+                  apiName = val.name;
                   break;
               }
           }
@@ -405,16 +384,17 @@ async function main() {
             if (urlMap.has(slugKey)) {
                 const val = urlMap.get(slugKey)!;
                 docUrl = val.url;
-                info.description = val.name;
+                apiName = val.name;
             } else {
                  // Strategy 3: Pattern Match
-                 const codePattern = generatePatternFromCodePath(endpoint);
+                 const codePattern = generateUnifiedPattern(endpoint);
                  const patternKey = `PATTERN:${method}:${codePattern}`;
+                 // console.log(`Code Pattern: ${patternKey}`); // Debug
 
                  if (urlMap.has(patternKey)) {
                      const val = urlMap.get(patternKey)!;
                      docUrl = val.url;
-                     info.description = val.name;
+                     apiName = val.name;
                  }
             }
         }
@@ -427,17 +407,17 @@ async function main() {
         if (urlMap.has(nameKey)) {
           const val = urlMap.get(nameKey)!;
           docUrl = val.url;
-          info.description = val.name;
+          apiName = val.name;
         } else {
            // Partial name match search
            // Iterate all NAME keys
            for (const [key, val] of urlMap.entries()) {
              if (key.startsWith('NAME:')) {
-               const apiName = key.substring(5);
+               const mapApiName = key.substring(5);
                // Strict check: if description contains API Name (or vice versa) AND length difference isn't massive
-               if (info.description.includes(apiName) || apiName.includes(info.description)) {
+               if (info.description.includes(mapApiName) || mapApiName.includes(info.description)) {
                  docUrl = val.url;
-                 info.description = val.name;
+                 apiName = val.name;
                  break;
                }
              }
@@ -445,9 +425,35 @@ async function main() {
         }
       }
 
+      // Strategy 5: Fallback - try matching tool name to api url parts
+      if (!docUrl) {
+          // e.g. get_repository_tree -> repositories/get-tree ? No, usually url is different
+          // But maybe we can match "get_repository_tree" to "Get Repository Tree" in NAME?
+          // Convert tool name to possible sentence
+          const sentence = name.replace(/_/g, ' ');
+          // Try matching this sentence against names
+          for (const [key, val] of urlMap.entries()) {
+             if (key.startsWith('NAME:')) {
+               const mapApiName = key.substring(5);
+               if (mapApiName.toLowerCase() === sentence.toLowerCase()) {
+                   docUrl = val.url;
+                   apiName = val.name;
+                   break;
+               }
+             }
+          }
+      }
+
+      if (!docUrl) {
+          console.warn(`[WARNING] No URL found for tool: ${name} (Endpoint: ${endpoint})`);
+          // Mark as Missing URL in the output so it's visible
+          docUrl = 'MISSING_URL';
+      }
+
       toolInfos.push({
         name,
         description: info.description,
+        apiName: apiName,
         serviceMethod: info.serviceMethod,
         apiEndpoint: endpoint,
         httpMethod: method,
@@ -512,13 +518,30 @@ async function main() {
         ? `${tool.httpMethod} ${tool.apiEndpoint}` 
         : tool.apiEndpoint === 'Unknown' ? '复杂/动态' : tool.apiEndpoint;
       
-      if (tool.documentationUrl) {
+      if (tool.documentationUrl && tool.documentationUrl !== 'MISSING_URL') {
         endpointDisplay = `[\`${endpointDisplay}\`](${tool.documentationUrl})`;
       } else {
-        endpointDisplay = `\`${endpointDisplay}\``;
+        endpointDisplay = `**[MISSING URL]** \`${endpointDisplay}\``;
       }
 
-      md += `| ${toolLink} | ${tool.description} | ${serviceLink} | ${endpointDisplay} |\n`;
+      // Bilingual Description Logic
+      // apiName is Chinese (from JSON), description is English (from Tool)
+      let descriptionDisplay = tool.description;
+      
+      if (tool.apiName) {
+         // Clean up potential duplicates or similar text
+         const apiNameClean = tool.apiName.trim();
+         const descClean = tool.description.trim();
+         
+         // If they are different enough, show both
+         if (apiNameClean && descClean && apiNameClean !== descClean) {
+             descriptionDisplay = `**${apiNameClean}**<br>${descClean}`;
+         } else if (apiNameClean) {
+             descriptionDisplay = apiNameClean;
+         }
+      }
+
+      md += `| ${toolLink} | ${descriptionDisplay} | ${serviceLink} | ${endpointDisplay} |\n`;
     }
     md += `\n`;
   }
