@@ -18,7 +18,7 @@ AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that 
 AtomGit-MCP-Server/
 ├── src/
 │   ├── core/           # Core infrastructure
-│   │   └── ToolRegistry.ts  # Central tool registration (handles 'atomgit:' prefix)
+│   │   └── ToolRegistry.ts  # Central tool registration (handles 'atomgit_' prefix)
 │   ├── services/       # API Service Layer (HTTP Clients)
 │   ├── tools/          # MCP Tool Layer (Schema Definitions)
 │   ├── types/          # TypeScript Interfaces
@@ -36,7 +36,7 @@ AtomGit-MCP-Server/
 ```
 
 ### Data Flow
-1.  **MCP Client** (e.g., Claude Desktop) sends a tool call request (e.g., `atomgit:get_repository_tree`).
+1.  **MCP Client** (e.g., Claude Desktop) sends a tool call request (e.g., `atomgit_get_repository_tree`).
 2.  **ToolRegistry** routes the request to the appropriate `Tool` class.
 3.  **Tool Layer** (`src/tools/*.ts`) validates parameters and calls the Service layer.
 4.  **Service Layer** (`src/services/*.ts`) executes the HTTP request to AtomGit API (`/api/v5/...`).
@@ -47,7 +47,7 @@ AtomGit-MCP-Server/
 ### Naming Conventions
 - **Tools**: Must match the underlying API function.
   - *Internal Name*: `get_repository_tree`
-  - *Public Name*: `atomgit:get_repository_tree` (Automatically prefixed by `ToolRegistry`)
+  - *Public Name*: `atomgit_get_repository_tree` (Automatically prefixed by `ToolRegistry`)
   - *Description*: **MUST** be in Chinese in the generated documentation (`docs/api_tool_map.md`). The generator script extracts these from `docs/apis_url.json` and combines them with English descriptions from the code.
 - **Services**: CamelCase method names (e.g., `getRepositoryTree`).
 

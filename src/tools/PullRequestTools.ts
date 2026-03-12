@@ -1230,7 +1230,7 @@ export class PullRequestTools {
           },
           required: ['enterprise', 'issueNumber']
         }
-      }
+      },
       {
         name: 'reply_pull_request_discussion_comment',
         description: '回复pr评论',

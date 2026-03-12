@@ -715,7 +715,7 @@ export class IssuesTools {
           },
           required: ['owner', 'repo', 'issueNumber']
         }
-      }
+      },
       {
         name: 'update_repository_issue_related_branches',
         description: 'Update branches related to an issue',

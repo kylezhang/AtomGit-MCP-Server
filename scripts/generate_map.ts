@@ -512,7 +512,7 @@ async function main() {
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
 
 ## 约定
-- **工具名称前缀:** 所有工具在运行时都会自动加上 \`atomgit:\` 前缀。
+- **工具名称前缀:** 所有工具在运行时都会自动加上 \`atomgit_\` 前缀。
 - **Service 层:** 位于 \`src/services/\`。
 - **Tool 层:** 位于 \`src/tools/\`。
 

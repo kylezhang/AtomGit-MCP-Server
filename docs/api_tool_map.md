@@ -8,7 +8,7 @@
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
 
 ## 约定
-- **工具名称前缀:** 所有工具在运行时都会自动加上 `atomgit:` 前缀。
+- **工具名称前缀:** 所有工具在运行时都会自动加上 `atomgit_` 前缀。
 - **Service 层:** 位于 `src/services/`。
 - **Tool 层:** 位于 `src/tools/`。
 
@@ -38,7 +38,7 @@
 | [`get_repository_commit_diff`](../src/tools/CommitTools.ts) | **获取commit的diff**<br>Get the diff for a specific commit | [`getRepositoryCommitDiff`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits/${sha}/diff`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff) |
 | [`get_repository_commit_patch`](../src/tools/CommitTools.ts) | **获取commit的diff**<br>Get the patch for a specific commit | [`getRepositoryCommitPatch`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits/${sha}/patch`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff) |
 | [`get_repository_commit_ref_comments`](../src/tools/CommitTools.ts) | **获取单个commit评论**<br>Get comments for a specific commit reference | [`getRepositoryCommitRefComments`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits/${ref}/comments`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-ref-comments) |
-| [`get_repository_commit_statistics`](../src/tools/CommitTools.ts) | Get code contribution statistics for a repository | [`getRepositoryCommitStatistics`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/repository/commit_statistics`](https://docs.gitcode.com/docs/apis/get-api-v-5-owner-repo-repository-commit-statistics/) |
+| [`get_repository_commit_statistics`](../src/tools/CommitTools.ts) | Get code contribution statistics for a repository | [`getRepositoryCommitStatistics`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/repository/commit_statistics`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-repository-commit-statistics) |
 | [`get_repository_commits`](../src/tools/CommitTools.ts) | **获取仓库所有提交**<br>Get all commits in a repository | [`getRepositoryCommits`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits) |
 | [`update_repository_commit_comment`](../src/tools/CommitTools.ts) | **更新Commit评论**<br>Update a commit comment | [`updateRepositoryCommitComment`](../src/services/CommitService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/comments/${commentId}`](https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-comments-id) |
 
