@@ -86,6 +86,11 @@ const MANUAL_OVERRIDES: Record<string, string> = {
   'update_organization_kanban_content': 'https://docs.gitcode.com/docs/apis/put-api-v-5-org-owner-kanban-id-content'
 };
 
+const MANUAL_ENDPOINT_OVERRIDES: Record<string, string> = {
+    'getRepositoryCommitStatistics': 'GET /api/v5/repos/${owner}/${repo}/repository/commit_statistics',
+    'getRepositoryTree': 'GET /api/v5/repos/${owner}/${repo}/git/trees/${sha}'
+};
+
 interface ApiUrlMapValue {
   url: string;
   name: string;
@@ -360,6 +365,15 @@ async function main() {
       let docUrl = '';
       let apiName = '';
       
+      // Check Manual Endpoint Overrides first
+      if (MANUAL_ENDPOINT_OVERRIDES[info.serviceMethod]) {
+          const parts = MANUAL_ENDPOINT_OVERRIDES[info.serviceMethod].split(' ');
+          if (parts.length >= 2) {
+              method = parts[0];
+              endpoint = parts[1];
+          }
+      }
+
       // Check overrides first (independent of endpoint extraction)
       if (MANUAL_OVERRIDES[name]) {
           docUrl = MANUAL_OVERRIDES[name];
@@ -372,7 +386,7 @@ async function main() {
           }
       }
 
-      if (endpointInfo) {
+      if (endpoint === 'Unknown' && endpointInfo) {
         endpoint = endpointInfo.endpoint;
         method = endpointInfo.method;
 

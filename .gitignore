@@ -3,6 +3,7 @@ node_modules/
 jspm_packages/
 
 # TypeScript Build Output
+dist/
 *.tsbuildinfo
 typings/
 
@@ -58,4 +59,3 @@ Desktop.ini
 
 # Next.js (if applicable)
 .next
-.trae/

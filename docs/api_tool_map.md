@@ -1,8 +1,8 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-03-11
+**生成时间:** 2026-03-12
 **分类总数:** 18
-**工具总数:** 246
+**工具总数:** 248
 
 ## 概览
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
@@ -38,7 +38,7 @@
 | [`get_repository_commit_diff`](../src/tools/CommitTools.ts) | **获取commit的diff**<br>Get the diff for a specific commit | [`getRepositoryCommitDiff`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits/${sha}/diff`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff) |
 | [`get_repository_commit_patch`](../src/tools/CommitTools.ts) | **获取commit的diff**<br>Get the patch for a specific commit | [`getRepositoryCommitPatch`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits/${sha}/patch`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff) |
 | [`get_repository_commit_ref_comments`](../src/tools/CommitTools.ts) | **获取单个commit评论**<br>Get comments for a specific commit reference | [`getRepositoryCommitRefComments`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits/${ref}/comments`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-ref-comments) |
-| [`get_repository_commit_statistics`](../src/tools/CommitTools.ts) | Get code contribution statistics for a repository | [`getRepositoryCommitStatistics`](../src/services/CommitService.ts) | [`复杂/动态`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-repository-commit-statistics) |
+| [`get_repository_commit_statistics`](../src/tools/CommitTools.ts) | Get code contribution statistics for a repository | [`getRepositoryCommitStatistics`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/repository/commit_statistics`](https://docs.gitcode.com/docs/apis/get-api-v-5-owner-repo-repository-commit-statistics/) |
 | [`get_repository_commits`](../src/tools/CommitTools.ts) | **获取仓库所有提交**<br>Get all commits in a repository | [`getRepositoryCommits`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits) |
 | [`update_repository_commit_comment`](../src/tools/CommitTools.ts) | **更新Commit评论**<br>Update a commit comment | [`updateRepositoryCommitComment`](../src/services/CommitService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/comments/${commentId}`](https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-comments-id) |
 
@@ -49,7 +49,7 @@
 | [`create_organization_kanban`](../src/tools/DashboardTools.ts) | 创建组织看板 | [`createOrganizationKanban`](../src/services/DashboardService.ts) | [`POST /api/v5/org/${owner}/kanban/create`](https://docs.gitcode.com/docs/apis/post-api-v-5-org-owner-kanban-create) |
 | [`delete_org_kanban_remove_item`](../src/tools/DashboardTools.ts) | 删除看板关联的Issue或者Pull Request | [`removeKanbanItem`](../src/services/DashboardService.ts) | [`DELETE /api/v5/org/${owner}/kanban/${kanbanId}/remove_item`](https://docs.gitcode.com/docs/apis/delete-api-v-5-org-owner-kanban-kanban-id-remove-item-new) |
 | [`delete_organization_kanban`](../src/tools/DashboardTools.ts) | 删除组织看板 | [`deleteOrganizationKanban`](../src/services/DashboardService.ts) | [`DELETE /api/v5/org/${owner}/kanban/${id}`](https://docs.gitcode.com/docs/apis/delete-api-v-5-org-owner-kanban-id) |
-| [`get_org_kanban_item_list`](../src/tools/DashboardTools.ts) | **获取看板内容列表**<br>查询看板内容列表 | [`getKanbanContent`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/${kanbanId}/item_list`](https://docs.gitcode.com/docs/apis/get-api-v-5-org-owner-kanban-kanban-id-item-list) |
+| [`get_org_kanban_item_list`](../src/tools/DashboardTools.ts) | **获取看板内容列表**<br>查询看板内容列表 | [`getKanbanItemList`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/${kanbanId}/item_list`](https://docs.gitcode.com/docs/apis/get-api-v-5-org-owner-kanban-kanban-id-item-list) |
 | [`get_organization_kanban`](../src/tools/DashboardTools.ts) | **获取单个看板详情**<br>获取特定看板详情 | [`getOrganizationKanban`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/${id}/detail`](https://docs.gitcode.com/docs/apis/get-api-v-5-org-owner-kanban-id-detail) |
 | [`get_organization_kanban_content`](../src/tools/DashboardTools.ts) | **获取看板内容列表**<br>获取看板内容 | [`getOrganizationKanbanContent`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/${id}/content`](https://docs.gitcode.com/docs/apis/get-api-v-5-org-owner-kanban-kanban-id-item-list) |
 | [`get_organization_kanbans`](../src/tools/DashboardTools.ts) | 获取组织看板列表 | [`getOrganizationKanbanList`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/list`](https://docs.gitcode.com/docs/apis/get-api-v-5-org-owner-kanban-list) |
@@ -76,7 +76,7 @@
 | [`update_enterprise_member_v8`](../src/tools/EnterpriseTools.ts) | 修改企业成员权限 | [`updateEnterpriseMemberV8`](../src/services/EnterpriseService.ts) | [`PUT /api/v8/enterprises/${enterprise}/members/${username}`](https://docs.gitcode.com/docs/apis/put-api-v-5-enterprises-enterprise-members-username) |
 | [`update_enterprise_milestone_v8`](../src/tools/EnterpriseTools.ts) | 修改企业里程碑 | [`updateEnterpriseMilestone`](../src/services/EnterpriseService.ts) | [`PUT /api/v8/enterprise/${enterpriseId}/milestones/${milestoneId}`](https://docs.gitcode.com/docs/apis/put-api-v-8-enterprise-enterprise-id-milestones-milestone-id) |
 
-### Issues (28)
+### Issues (29)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`create_repository_issue`](../src/tools/IssuesTools.ts) | **创建Issue**<br>Create an issue in a repository | [`createRepositoryIssue`](../src/services/IssuesService.ts) | [`POST /api/v5/repos/${owner}/${repo}/issues`](https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-issues) |
@@ -90,6 +90,7 @@
 | [`get_enterprise_issue_comments`](../src/tools/IssuesTools.ts) | **获取企业某个Issue所有评论**<br>Get comments for an enterprise issue | [`getEnterpriseIssueComments`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issues/${issueNumber}/comments`](https://docs.gitcode.com/docs/apis/get-api-v-5-enterprises-enterprise-issues-number-comments) |
 | [`get_enterprise_issue_labels`](../src/tools/IssuesTools.ts) | **获取企业某个Issue所有标签**<br>Get labels for an enterprise issue | [`getEnterpriseIssueLabels`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issues/${issueId}/labels`](https://docs.gitcode.com/docs/apis/get-api-v-5-enterprises-enterprise-issues-issue-id-labels) |
 | [`get_enterprise_issue_statuses`](../src/tools/IssuesTools.ts) | **获取企业issue状态**<br>Get enterprise issue statuses | [`getEnterpriseIssueStatuses`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issue/statuses`](https://docs.gitcode.com/docs/apis/get-api-v-5-enterprises-enterprise-issue-statuses) |
+| [`get_enterprise_issue_statuses_v5`](../src/tools/IssuesTools.ts) | 获取企业issue状态 | [`getEnterpriseIssueStatuses`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issue/statuses`](https://docs.gitcode.com/docs/apis/get-api-v-5-enterprises-enterprise-issue-statuses) |
 | [`get_enterprise_issues`](../src/tools/IssuesTools.ts) | **获取某个企业的所有Issues**<br>Get all issues for an enterprise | [`getEnterpriseIssues`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issues`](https://docs.gitcode.com/docs/apis/get-api-v-5-enterprises-enterprise-issues) |
 | [`get_organization_issues`](../src/tools/IssuesTools.ts) | **获取当前用户某个组织的Issues**<br>Get issues for an organization | [`getOrganizationIssues`](../src/services/IssuesService.ts) | [`GET /api/v5/orgs/${org}/issues`](https://docs.gitcode.com/docs/apis/get-api-v-5-orgs-org-issues) |
 | [`get_repository_issue`](../src/tools/IssuesTools.ts) | **获取仓库的某个Issue**<br>Get a specific issue in a repository | [`getRepositoryIssue`](../src/services/IssuesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/issues/${issueNumber}`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-issues-number) |
@@ -198,7 +199,7 @@
 | [`get_repository_stargazers`](../src/tools/RepositoriesTools.ts) | 列出 star 了仓库的用户 | [`getRepositoryStargazers`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/stargazers`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-stargazers) |
 | [`get_repository_subscribers`](../src/tools/RepositoriesTools.ts) | 列出 watch 了仓库的用户 | [`getRepositorySubscribers`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/subscribers`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-subscribers) |
 | [`get_repository_transition`](../src/tools/RepositoriesTools.ts) | 获取项目的权限模式 | [`getRepositoryTransition`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/transition`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-transition) |
-| [`get_repository_tree`](../src/tools/RepositoriesTools.ts) | 获取仓库目录Tree | [`getRepositoryTree`](../src/services/RepositoriesService.ts) | [`复杂/动态`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-git-trees-sha) |
+| [`get_repository_tree`](../src/tools/RepositoriesTools.ts) | 获取仓库目录Tree | [`getRepositoryTree`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/git/trees/${sha}`](https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-git-trees-sha) |
 | [`set_repository_module_setting`](../src/tools/RepositoriesTools.ts) | 设置项目模块 | [`setRepositoryModuleSetting`](../src/services/RepositoriesService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/module-setting`](https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-module-setting) |
 | [`set_repository_push_config`](../src/tools/RepositoriesTools.ts) | 设置项目推送规则 | [`setRepositoryPushConfig`](../src/services/RepositoriesService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/push-config`](https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-push-config) |
 | [`transfer_repository`](../src/tools/RepositoriesTools.ts) | 仓库转移 | [`transferRepository`](../src/services/RepositoriesService.ts) | [`POST /api/v5/repos/${owner}/${repo}/transfer`](https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-transfer) |
@@ -284,7 +285,7 @@
 |-----------|-------------|----------------|--------------|
 | [`get_oauth_token`](../src/tools/OauthTools.ts) | 获取或刷新授权 Token 接口 | [`getOauthToken`](../src/services/OauthService.ts) | [`POST /oauth/token`](https://docs.gitcode.com/docs/apis/post-oauth-token-grant-type-authorization-code-code-code-client-id-client-id-client-secret-client-secret) |
 
-### PullRequest (44)
+### PullRequest (45)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`assign_repository_pull_approval_reviewers`](../src/tools/PullRequestTools.ts) | **指派用户评审Pull Request**<br>Assign users to approve pull request | [`assignRepositoryPullApprovalReviewers`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/approval_reviewers/assign`](https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers) |
@@ -326,6 +327,7 @@
 | [`remove_repository_pull_testers`](../src/tools/PullRequestTools.ts) | **取消用户测试Pull Request**<br>Remove testers from pull request | [`removeRepositoryPullTesters`](../src/services/PullRequestService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test/remove`](https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-testers) |
 | [`replace_repository_pull_labels`](../src/tools/PullRequestTools.ts) | **替换 Pull Request所有标签**<br>Replace all labels for a pull request | [`replaceRepositoryPullLabels`](../src/services/PullRequestService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`](https://docs.gitcode.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-labels) |
 | [`reply_pull_request_discussion`](../src/tools/PullRequestTools.ts) | **回复Pull Request评论**<br>Reply to a pull request discussion comment | [`replyPullRequestDiscussion`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`](https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-discussions-discussions-id-comments) |
+| [`reply_pull_request_discussion_comment`](../src/tools/PullRequestTools.ts) | **回复Pull Request评论**<br>回复pr评论 | [`replyPullRequestDiscussionComment`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`](https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-discussions-discussions-id-comments) |
 | [`reset_repository_pull_assignees`](../src/tools/PullRequestTools.ts) | **重置 Pull Request审查 的状态**<br>Reset pull request assignees status | [`resetRepositoryPullAssignees`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assign/reset`](https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-assignees) |
 | [`reset_repository_pull_testers`](../src/tools/PullRequestTools.ts) | **重置 Pull Request测试 的状态**<br>Reset pull request testers status | [`resetRepositoryPullTesters`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test/reset`](https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-testers) |
 | [`unlink_repository_pull_issues`](../src/tools/PullRequestTools.ts) | **Pull Request删除关联的issue**<br>Unlink issues from pull request | [`unlinkRepositoryPullIssues`](../src/services/PullRequestService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`](https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-issues) |

@@ -139,7 +139,7 @@ export class DashboardTools {
           },
           required: ['owner', 'id', 'contentData']
         }
-      }
+      },
       {
         name: 'add_org_kanban_item',
         description: '添加Issue或者Pull Request到看板',

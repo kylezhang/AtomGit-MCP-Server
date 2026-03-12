@@ -1,10 +1,10 @@
 # AtomGit MCP Server - Developer Guide
 
-**Generated:** 2026-03-07
-**Status:** Active
+**Generated:** 2026-03-12
+**Status:** Stable / Complete
 
 ## 1. Project Overview
-AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that provides AI assistants with access to the AtomGit code hosting platform. It exposes over 240+ tools covering the full range of AtomGit API capabilities.
+AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that provides AI assistants with access to the AtomGit code hosting platform. It exposes **248 tools** covering the full range of AtomGit API capabilities (excluding OAuth).
 
 **Key Technologies:**
 - **Language:** TypeScript (ESM)
@@ -24,12 +24,13 @@ AtomGit-MCP-Server/
 │   ├── types/          # TypeScript Interfaces
 │   └── index.ts        # Application Entry Point
 ├── scripts/            # Maintenance Scripts
-│   ├── generate_map.ts # Documentation generator
+│   ├── generate_map.ts # Documentation generator (Bilingual support)
 │   ├── update_apis.ts  # API JSON updater
 │   ├── analyze_coverage.ts # API coverage analyzer
-│   └── scaffold_tool.ts    # Code generator
+│   └── scaffold_tool.ts    # Code generator (Direct file injection)
 ├── docs/               # Documentation
-│   └── api_tool_map.md # Detailed API vs Tool Mapping
+│   ├── api_tool_map.md # Detailed API vs Tool Mapping
+│   └── apis_url.json   # Source of Truth for API Definitions
 ├── dist/               # Compiled Output
 └── package.json        # Project Configuration
 ```
@@ -47,18 +48,17 @@ AtomGit-MCP-Server/
 - **Tools**: Must match the underlying API function.
   - *Internal Name*: `get_repository_tree`
   - *Public Name*: `atomgit:get_repository_tree` (Automatically prefixed by `ToolRegistry`)
-  - *Description*: **MUST** be in Chinese in the generated documentation (`docs/api_tool_map.md`). The generator script extracts these from `docs/apis_url.json`.
+  - *Description*: **MUST** be in Chinese in the generated documentation (`docs/api_tool_map.md`). The generator script extracts these from `docs/apis_url.json` and combines them with English descriptions from the code.
 - **Services**: CamelCase method names (e.g., `getRepositoryTree`).
 
 ### Documentation Standards
 - **API Tool Map**: Keep `docs/api_tool_map.md` updated using `scripts/generate_map.ts`.
-  - Tool Name: Link to source file in `src/tools/`.
-  - Service Method: Link to source file in `src/services/`.
-  - API Endpoint: **MUST** be a Markdown link to the official AtomGit documentation URL.
+  - **Tool Name**: Link to source file in `src/tools/`.
+  - **Description**: Bilingual (Chinese from official docs + English from code).
+  - **API Endpoint**: **MUST** be a Markdown link to the official AtomGit documentation URL.
     - Source of URLs: `docs/apis_url.json`.
     - Use `scripts/update_apis.ts` to automatically update `docs/apis_url.json` from the official website.
     - Use `scripts/generate_map.ts` to automatically match endpoints and generate links.
-
 
 ### Adding a New Feature
 1.  **Service Implementation**:
@@ -69,39 +69,6 @@ AtomGit-MCP-Server/
     - Create/Update corresponding file in `src/tools/`.
     - Define `InputSchema` using JSON Schema.
     - Map the tool name to the service method in `callTool()`.
-
-### Service Pattern Example
-```typescript
-// src/services/ExampleService.ts
-export class ExampleService extends BaseService {
-  async getData(id: string) {
-    const response = await this.client.get(`/api/v5/data/${id}`);
-    return response.data;
-  }
-}
-```
-
-### Tool Pattern Example
-```typescript
-// src/tools/ExampleTools.ts
-export class ExampleTools {
-  constructor(private service: ExampleService) {}
-
-  getTools(): Tool[] {
-    return [{
-      name: "get_data", // Will become atomgit:get_data
-      description: "Get data by ID",
-      inputSchema: {
-        type: "object",
-        properties: {
-          id: { type: "string" }
-        },
-        required: ["id"]
-      }
-    }];
-  }
-}
-```
 
 ## 4. Workflow
 
@@ -140,24 +107,29 @@ The project includes several scripts to streamline the development process.
 | Command | Description |
 |---------|-------------|
 | `npm run api:sync` | Fetches the latest API definitions from the official documentation and updates `docs/apis_url.json`. |
-| `npm run api:map` | Generates the `docs/api_tool_map.md` documentation based on implemented tools. |
-| `npm run api:check` | Analyzes code coverage and lists APIs that have not yet been implemented. |
-| `npm run api:scaffold -- "query"` | Generates boilerplate code for a specific API. Query can be a URL, path, or keyword. |
+| `npm run api:map` | Generates the `docs/api_tool_map.md` documentation based on implemented tools, with bilingual descriptions and official API links. |
+| `npm run api:check` | Analyzes code coverage and lists APIs that have not yet been implemented (compares code against `docs/apis_url.json`). |
+| `npm run api:scaffold -- "query"` | Generates boilerplate code for a specific API and **injects it directly** into the corresponding Service and Tool files. |
 
 ### Typical Workflow
 
-1.  **Check Missing APIs**:
+1.  **Sync Official APIs**:
+    ```bash
+    npm run api:sync
+    ```
+2.  **Check Missing APIs**:
     ```bash
     npm run api:check
     ```
-2.  **Scaffold New Tool**:
+3.  **Scaffold New Tool**:
+    This command will automatically find the matching API, generate the code, and write it to the correct `src/services/` and `src/tools/` files.
     ```bash
     npm run api:scaffold -- "branches/:name"
     ```
-3.  **Implement Code**:
-    - Copy the generated Service code to `src/services/`.
-    - Copy the generated Tool definition to `src/tools/`.
-4.  **Update Documentation**:
+4.  **Verify & Refine**:
+    - Check the modified files using `git diff`.
+    - Ensure parameter types and logic are correct.
+5.  **Update Documentation**:
     ```bash
     npm run api:map
     ```
