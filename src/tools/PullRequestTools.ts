@@ -1231,6 +1231,21 @@ export class PullRequestTools {
           required: ['enterprise', 'issueNumber']
         }
       }
+      {
+        name: 'reply_pull_request_discussion_comment',
+        description: '回复pr评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所属空间地址' },
+            repo: { type: 'string', description: '仓库路径' },
+            pullNumber: { type: 'number', description: 'Pull Request ID' },
+            discussionId: { type: 'number', description: '讨论ID' },
+            body: { type: 'string', description: '回复内容' }
+          },
+          required: ['owner', 'repo', 'pullNumber', 'discussionId', 'body']
+        }
+      }
     ];
   }
 
@@ -1398,6 +1413,9 @@ export class PullRequestTools {
       case 'reply_pull_request_discussion':
         return await this.pullRequestService.replyPullRequestDiscussion(args.owner, args.repo, args.pullNumber, args.discussionId, { body: args.body });
       
+      case 'reply_pull_request_discussion_comment':
+        return await this.pullRequestService.replyPullRequestDiscussionComment(args.owner, args.repo, args.pullNumber, args.discussionId, { body: args.body });
+
       case 'update_pull_request_discussion_comment':
         return await this.pullRequestService.updatePullRequestDiscussionComment(args.owner, args.repo, args.pullNumber, args.discussionId, { resolved: args.resolved });
       

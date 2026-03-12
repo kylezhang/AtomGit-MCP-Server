@@ -27,6 +27,13 @@ export class UserService extends BaseService {
     return response.data;
   }
 
+  async getCurrentUserRepos(page = 1, perPage = 30): Promise<any[]> {
+    const response = await this.client.get('/api/v5/user/repos', {
+      params: { page, per_page: perPage }
+    });
+    return response.data;
+  }
+
   async getUserRepository(owner: string, repo: string): Promise<AtomGitRepository> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}`);
     return response.data;
@@ -129,7 +136,7 @@ export class UserService extends BaseService {
   }
 
   async getCurrentUserPullRequests(page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get('/api/v5/users/merge_requests', {
+    const response = await this.client.get('/api/v5/user/pulls', {
       params: { page, per_page: perPage }
     });
     return response.data;

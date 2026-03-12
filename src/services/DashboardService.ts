@@ -18,12 +18,12 @@ export class DashboardService extends BaseService {
   }
 
   async updateKanbanItem(owner: string, repo: string, type: string, iid: number, newData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${repo}/${type}/${iid}/new`, newData);
+    const response = await this.client.put(`/api/v5/org/${owner}/kanban/repo/${repo}/${type}/${iid}`, newData);
     return response.data;
   }
 
   async removeKanbanItem(owner: string, kanbanId: string, itemData: any): Promise<any> {
-    const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${kanbanId}/remove_item_new`, {
+    const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${kanbanId}/remove_item`, {
       data: itemData
     });
     return response.data;
@@ -61,6 +61,11 @@ export class DashboardService extends BaseService {
 
   async updateOrganizationKanbanContent(owner: string, id: string, contentData: any): Promise<any> {
     const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/content`, contentData);
+    return response.data;
+  }
+
+  async getKanbanItemList(owner: string, kanbanId: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${kanbanId}/item_list`);
     return response.data;
   }
 }

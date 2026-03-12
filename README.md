@@ -1,32 +1,38 @@
 # AtomGit MCP Server
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
-![Tools](https://img.shields.io/badge/tools-240%2B-orange.svg)
+![Tools](https://img.shields.io/badge/tools-248-orange.svg)
 
 **AtomGit MCP Server** 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，允许 AI 助手（如 Claude Desktop、Cursor 等）直接与 [AtomGit](https://atomgit.com/) 代码托管平台进行交互。
 
-它提供了 **240 个工具**，覆盖了 AtomGit 平台绝大多数公开 API，让 AI 能够协助你完成仓库管理、代码检索、Issue 追踪、PR 评审等全流程开发任务。
+它提供了 **248 个工具**，覆盖了 AtomGit 平台公开的 APIs，让 AI 能够协助你完成仓库管理、代码检索、Issue 追踪、PR 评审等全流程开发任务。
 
 ## 主要特性
 
-*   🚀 **全面覆盖**：实现了 18 个分类共 240 个工具，涵盖仓库、用户、分支、标签、Issue、Pull Request、成员管理等。
+*   🚀 **全面覆盖**：实现了 18 个分类共 248 个工具，涵盖仓库、用户、分支、标签、Issue、Pull Request、成员管理等。
 *   🔐 **安全认证**：基于 AtomGit Personal Access Token (PAT) 进行认证，支持权限细粒度控制。
 *   🛠️ **标准协议**：完全兼容 Model Context Protocol 规范，可无缝集成到支持 MCP 的客户端中。
 *   ⚡ **类型安全**：全项目采用 TypeScript 编写，提供完整的类型定义和参数校验。
-*   🐛 **健壮性**：内置完善的错误处理机制，能够将 API 错误（如 404、400）转换为清晰的自然语言反馈。
 
 ## 功能列表
 
-目前支持以下核心功能模块：
+目前支持以下核心功能模块（共 18 个分类）：
 
-*   **仓库管理**：创建/删除/查询仓库、Fork、Star、Watch
-*   **文件操作**：获取文件内容、创建/更新/删除文件、获取目录树
-*   **分支与标签**：创建/删除分支、创建/删除标签、受保护分支管理
-*   **Issue 管理**：创建/查询/更新/评论 Issue、添加标签/指派
-*   **Pull Request**：创建/查询/合并 PR、代码评审、获取 Diff
-*   **用户与组织**：获取用户信息、SSH 密钥管理、组织成员管理
-*   **统计与动态**：获取贡献者统计、仓库动态、提交历史
+*   **仓库管理 (Repositories)**：创建/删除/查询仓库、Fork、Star、Watch、文件操作
+*   **分支与标签 (Branch & Tag)**：创建/删除分支、标签管理、受保护分支
+*   **提交与发布 (Commit & Release)**：获取提交历史、版本发布管理
+*   **合并请求 (Pull Request)**：创建/查询/合并 PR、代码评审、Diff 获取
+*   **工单管理 (Issues)**：Issue 增删改查、评论管理、指派与状态
+*   **项目规划 (Milestone & Labels)**：里程碑管理、标签管理
+*   **看板管理 (Dashboard)**：组织看板、工作项管理 (Kanban)
+*   **用户与组织 (User & Organization)**：个人信息、SSH 密钥、组织成员管理
+*   **企业管理 (Enterprise)**：企业级资源管理
+*   **成员管理 (Member)**：仓库/组织成员权限管理
+*   **搜索服务 (Search)**：代码、仓库、用户搜索
+*   **Webhooks**：仓库 Webhook 的增删改查
+*   **AI 模型 (AIHub)**：AIHub 模型列表与交互
+*   **认证 (OAuth)**：OAuth 授权流程支持
 
 ## 快速开始
 
@@ -117,8 +123,9 @@ npm run build
 | `npm run build` | 编译 TypeScript 代码到 `dist/` 目录 |
 | `npm run typecheck` | 运行 TypeScript 类型检查 |
 | `npm run test` | 运行基础工具验证脚本 |
-| `npm run test:comprehensive` | 运行全面的功能测试 |
-| `npm run clean` | 清理构建产物 |
+| `npm run api:check` | 检查 API 覆盖率 |
+| `npm run api:scaffold` | 生成新工具代码 (直接注入到文件中) |
+| `npm run api:map` | 更新 API 映射文档 |
 
 ### 项目结构
 
@@ -130,8 +137,8 @@ AtomGit-MCP-Server/
 │   ├── types/       # TypeScript 类型定义
 │   └── index.ts     # 程序入口 (MCP Server 实例)
 ├── dist/            # 编译后的产物
-├── scripts/         # 辅助脚本
-└── tests/           # 测试文件
+├── scripts/         # 辅助脚本 (自动化代码生成与文档更新)
+└── docs/            # 文档 (包含详细的 API 映射表)
 ```
 
 ## 常见问题 (FAQ)

@@ -2,8 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const TOOLS_DIR = './src/tools';
-const MD_FILE = './docs/api_tool_map.md';
+const TOOLS_DIR = path.join(__dirname, '../src/tools');
+const MD_FILE = path.join(__dirname, '../docs/api_tool_map.md');
 
 function getDefinedTools() {
   const tools = new Set();

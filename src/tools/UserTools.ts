@@ -404,7 +404,7 @@ export class UserTools {
         return await this.userService.getUserRepository(args.owner, args.repo);
 
       case 'get_current_user_repos':
-        return await this.userService.getUserRepos('current');
+        return await this.userService.getCurrentUserRepos(args.page, args.perPage);
       
       case 'get_user_starred_repos':
         return await this.userService.getUserStarredRepos(args.username, args.page, args.perPage);

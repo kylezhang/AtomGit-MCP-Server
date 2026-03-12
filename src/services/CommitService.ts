@@ -52,7 +52,7 @@ export class CommitService extends BaseService {
   }
 
   async getRepositoryCommitStatistics(owner: string, repo: string, sha?: string): Promise<any> {
-    const url = `/api/v5/repos/${owner}/${repo}/repository-commit-statistics`;
+    const url = `/api/v5/${owner}/${repo}/repository/commit_statistics`;
     const params: any = {};
     if (sha) {
       params.sha = sha;
