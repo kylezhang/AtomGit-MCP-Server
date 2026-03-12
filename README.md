@@ -1,6 +1,6 @@
 # AtomGit MCP Server
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
 ![Tools](https://img.shields.io/badge/tools-248-orange.svg)
 
@@ -157,4 +157,4 @@ AtomGit-MCP-Server/
 
 ## 📄 许可证
 
-本项目采用 [MIT License](LICENSE) 许可证。
+本项目采用 [Apache License 2.0](LICENSE) 许可证。
