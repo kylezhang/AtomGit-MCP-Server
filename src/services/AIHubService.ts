@@ -18,7 +18,7 @@ export class AIHubService extends BaseService {
   }
 
   async audioTranscription(data: any): Promise<any> {
-    const response = await this.client.post('/api/v1/audio/transcriptions', data);
+    const response = await this.client.post('/api/v5/audio/transcriptions', data);
     return response.data;
   }
 

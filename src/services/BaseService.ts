@@ -12,7 +12,9 @@ export abstract class BaseService {
         'X-Api-Version': '2023-02-21',
         ...(config.token && {
           'Authorization': `Bearer ${config.token}`,
-          'PRIVATE-TOKEN': config.token
+          'PRIVATE-TOKEN': config.token,
+          'Private-Token': config.token,
+          'token': config.token
         })
       }
     });

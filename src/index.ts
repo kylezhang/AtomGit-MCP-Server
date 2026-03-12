@@ -56,6 +56,10 @@ config();
 const ATOMGIT_API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
 const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
 
+if (!ATOMGIT_TOKEN) {
+  console.error('Warning: ATOMGIT_TOKEN environment variable is not set. Many API calls will fail.');
+}
+
 class AtomGitMCPServer {
   private server: Server;
   private registry: ToolRegistry;
