@@ -124,7 +124,12 @@ export class IssuesService extends BaseService {
   }
 
   async getEnterpriseIssueStatuses(enterprise: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issue_statuses`);
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issue/statuses`);
+    return response.data;
+  }
+
+  async updateRepositoryIssueRelatedBranches(owner: string, repo: string, issueNumber: number, branchName: string): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/related_branches`, { branch_name: branchName });
     return response.data;
   }
 
