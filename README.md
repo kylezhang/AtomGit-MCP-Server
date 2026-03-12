@@ -63,7 +63,7 @@ npm install
 npm run build
 ```
 
-### 3. 配置 AtomGit MCP Server 到 Claude Desktop 为例
+### 3.以配置 AtomGit MCP Server 到 Claude Desktop 为例
 
 找到 Claude Desktop 的配置文件：
 *   **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
@@ -157,4 +157,4 @@ AtomGit-MCP-Server/
 
 ## 📄 许可证
 
-本项目采用 [Apache License 2.0](LICENSE) 许可证。
+本项目采用 Apache  2.0 许可证。
