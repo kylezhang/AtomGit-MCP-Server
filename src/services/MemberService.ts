@@ -28,7 +28,7 @@ export class MemberService extends BaseService {
   }
 
   async getRepositoryCollaboratorSelfPermission(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/self_permission`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators/self-permission`);
     return response.data;
   }
 }

@@ -126,12 +126,12 @@ export class CommitTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of the comment to delete'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'id']
         }
       },
       {
@@ -148,12 +148,12 @@ export class CommitTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of the comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'id']
         }
       },
       {
@@ -170,7 +170,7 @@ export class CommitTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of the comment to update'
             },
@@ -179,7 +179,7 @@ export class CommitTools {
               description: 'The updated comment content'
             }
           },
-          required: ['owner', 'repo', 'commentId', 'body']
+          required: ['owner', 'repo', 'id', 'body']
         }
       },
       {
@@ -302,6 +302,8 @@ export class CommitTools {
   }
 
   async callTool(name: string, args: any): Promise<any> {
+    const id = args.id ?? args.commentId;
+
     switch (name) {
       case 'get_repository_commits':
         return await this.commitService.getRepositoryCommits(
@@ -322,13 +324,13 @@ export class CommitTools {
         return await this.commitService.createRepositoryCommitComment(args.owner, args.repo, args.sha, { body: args.body });
       
       case 'delete_repository_commit_comment':
-        return await this.commitService.deleteRepositoryCommitComment(args.owner, args.repo, args.commentId);
+        return await this.commitService.deleteRepositoryCommitComment(args.owner, args.repo, id);
       
       case 'get_repository_commit_comment':
-        return await this.commitService.getRepositoryCommitComment(args.owner, args.repo, args.commentId);
+        return await this.commitService.getRepositoryCommitComment(args.owner, args.repo, id);
       
       case 'update_repository_commit_comment':
-        return await this.commitService.updateRepositoryCommitComment(args.owner, args.repo, args.commentId, { body: args.body });
+        return await this.commitService.updateRepositoryCommitComment(args.owner, args.repo, id, { body: args.body });
       
       case 'get_repository_commit_comments':
         return await this.commitService.getRepositoryCommitComments(args.owner, args.repo, args.page, args.perPage);

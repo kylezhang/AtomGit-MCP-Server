@@ -78,12 +78,12 @@ export class TagTools {
               type: 'string',
               description: 'The name of repository'
             },
-            tagName: {
+            tag_name: {
               type: 'string',
               description: 'The name of the tag to delete'
             }
           },
-          required: ['owner', 'repo', 'tagName']
+          required: ['owner', 'repo', 'tag_name']
         }
       },
       {
@@ -178,12 +178,12 @@ export class TagTools {
               type: 'string',
               description: 'The name of repository'
             },
-            tagName: {
+            tag_name: {
               type: 'string',
               description: 'The name of the protected tag to delete'
             }
           },
-          required: ['owner', 'repo', 'tagName']
+          required: ['owner', 'repo', 'tag_name']
         }
       },
       {
@@ -200,12 +200,12 @@ export class TagTools {
               type: 'string',
               description: 'The name of repository'
             },
-            tagName: {
+            tag_name: {
               type: 'string',
               description: 'The name of protected tag'
             }
           },
-          required: ['owner', 'repo', 'tagName']
+          required: ['owner', 'repo', 'tag_name']
         }
       }
     ];
@@ -230,7 +230,7 @@ export class TagTools {
         });
 
       case 'delete_repository_tag':
-        return await this.tagService.deleteRepositoryTag(args.owner, args.repo, args.tagName);
+        return await this.tagService.deleteRepositoryTag(args.owner, args.repo, args.tag_name ?? args.tagName);
 
       case 'get_repository_protected_tags':
         return await this.tagService.getRepositoryProtectedTags(args.owner, args.repo);
@@ -254,10 +254,10 @@ export class TagTools {
         });
 
       case 'delete_repository_protected_tag':
-        return await this.tagService.deleteRepositoryProtectedTag(args.owner, args.repo, args.tagName);
+        return await this.tagService.deleteRepositoryProtectedTag(args.owner, args.repo, args.tag_name ?? args.tagName);
 
       case 'get_repository_protected_tag':
-        return await this.tagService.getRepositoryProtectedTag(args.owner, args.repo, args.tagName);
+        return await this.tagService.getRepositoryProtectedTag(args.owner, args.repo, args.tag_name ?? args.tagName);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

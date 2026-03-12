@@ -20,7 +20,7 @@ export class ReleaseTools {
               type: 'string',
               description: '仓库名称'
             },
-            tagName: {
+            tag: {
               type: 'string',
               description: '标签名称'
             },
@@ -41,7 +41,7 @@ export class ReleaseTools {
               description: '是否为预发布'
             }
           },
-          required: ['owner', 'repo', 'tagName']
+          required: ['owner', 'repo', 'tag']
         }
       },
       {
@@ -58,7 +58,7 @@ export class ReleaseTools {
               type: 'string',
               description: '仓库名称'
             },
-            tagName: {
+            tag: {
               type: 'string',
               description: '标签名称'
             },
@@ -79,7 +79,7 @@ export class ReleaseTools {
               description: '是否为预发布'
             }
           },
-          required: ['owner', 'repo', 'tagName']
+          required: ['owner', 'repo', 'tag']
         }
       },
       {
@@ -186,12 +186,16 @@ export class ReleaseTools {
               type: 'string',
               description: '仓库名称'
             },
-            fileName: {
+            tag: {
+              type: 'string',
+              description: 'Release 标签名'
+            },
+            file_name: {
               type: 'string',
               description: '文件名'
             }
           },
-          required: ['owner', 'repo', 'fileName']
+          required: ['owner', 'repo', 'tag', 'file_name']
         }
       },
       {
@@ -231,7 +235,7 @@ export class ReleaseTools {
         });
       
       case 'update_repository_release':
-        return await this.releaseService.updateRelease(args.owner, args.repo, args.tagName, {
+        return await this.releaseService.updateRelease(args.owner, args.repo, args.tag ?? args.tagName, {
           name: args.name,
           body: args.body,
           draft: args.draft,
@@ -251,7 +255,12 @@ export class ReleaseTools {
         return await this.releaseService.getReleaseByTag(args.owner, args.repo, args.tag);
       
       case 'download_release_asset':
-        return await this.releaseService.downloadReleaseAsset(args.owner, args.repo, args.fileName);
+        return await this.releaseService.downloadReleaseAsset(
+          args.owner,
+          args.repo,
+          args.tag,
+          args.file_name ?? args.fileName,
+        );
 
       case 'get_release_upload_url':
         return await this.releaseService.getReleaseUploadUrl(args.owner, args.repo, args.tag);

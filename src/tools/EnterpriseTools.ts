@@ -82,13 +82,12 @@ export class EnterpriseTools {
               type: 'string',
               description: '企业名'
             },
-            usernames: {
-              type: 'array',
-              items: { type: 'string' },
-              description: '要删除的用户名列表'
+            username: {
+              type: 'string',
+              description: '用户名'
             }
           },
-          required: ['enterprise', 'usernames']
+          required: ['enterprise', 'username']
         }
       },
       {
@@ -137,12 +136,12 @@ export class EnterpriseTools {
               type: 'string',
               description: '企业名'
             },
-            enterpriseId: {
+            enterprise_id: {
               type: 'string',
               description: '企业ID'
             }
           },
-          required: ['enterprise', 'enterpriseId']
+          required: ['enterprise', 'enterprise_id']
         }
       },
       {
@@ -151,16 +150,16 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterpriseId: {
+            enterprise: {
               type: 'string',
-              description: '企业ID'
+              description: '企业名'
             },
             milestoneData: {
               type: 'object',
               description: '里程碑数据'
             }
           },
-          required: ['enterpriseId', 'milestoneData']
+          required: ['enterprise', 'milestoneData']
         }
       },
       {
@@ -169,11 +168,11 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterpriseId: {
+            enterprise: {
               type: 'string',
-              description: '企业ID'
+              description: '企业名'
             },
-            milestoneId: {
+            milestone_id: {
               type: 'string',
               description: '里程碑ID'
             },
@@ -182,7 +181,7 @@ export class EnterpriseTools {
               description: '里程碑更新数据'
             }
           },
-          required: ['enterpriseId', 'milestoneId', 'milestoneData']
+          required: ['enterprise', 'milestone_id', 'milestoneData']
         }
       },
       {
@@ -191,16 +190,16 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterpriseId: {
+            enterprise: {
               type: 'string',
-              description: '企业ID'
+              description: '企业名'
             },
-            milestoneId: {
+            milestone_id: {
               type: 'string',
               description: '里程碑ID'
             }
           },
-          required: ['enterpriseId', 'milestoneId']
+          required: ['enterprise', 'milestone_id']
         }
       },
       {
@@ -209,16 +208,16 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterpriseId: {
+            enterprise: {
               type: 'string',
-              description: '企业ID'
+              description: '企业名'
             },
-            milestoneId: {
+            milestone_id: {
               type: 'string',
               description: '里程碑ID'
             }
           },
-          required: ['enterpriseId', 'milestoneId']
+          required: ['enterprise', 'milestone_id']
         }
       },
       {
@@ -227,9 +226,9 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterpriseId: {
+            enterprise: {
               type: 'string',
-              description: '企业ID'
+              description: '企业名'
             },
             page: {
               type: 'number',
@@ -240,7 +239,7 @@ export class EnterpriseTools {
               description: '每页数量 (可选)'
             }
           },
-          required: ['enterpriseId']
+          required: ['enterprise']
         }
       },
       {
@@ -249,9 +248,9 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterpriseId: {
+            enterprise: {
               type: 'string',
-              description: '企业ID'
+              description: '企业名'
             },
             page: {
               type: 'number',
@@ -262,7 +261,7 @@ export class EnterpriseTools {
               description: '每页数量 (可选)'
             }
           },
-          required: ['enterpriseId']
+          required: ['enterprise']
         }
       },
       {
@@ -275,12 +274,12 @@ export class EnterpriseTools {
               type: 'string',
               description: '企业名'
             },
-            enterprisesId: {
+            enterprise_id: {
               type: 'string',
               description: '企业ID'
             }
           },
-          required: ['enterprise', 'enterprisesId']
+          required: ['enterprise', 'enterprise_id']
         }
       }
     ];
@@ -298,7 +297,7 @@ export class EnterpriseTools {
         return await this.enterpriseService.inviteEnterpriseMember(args.enterprise, args.username, args.memberData);
       
       case 'delete_enterprise_members_v8':
-        return await this.enterpriseService.deleteEnterpriseMembers(args.enterprise, args.usernames);
+        return await this.enterpriseService.deleteEnterpriseMembers(args.enterprise, args.usernames ?? [args.username]);
       
       case 'update_enterprise_member_v8':
         return await this.enterpriseService.updateEnterpriseMemberV8(args.enterprise, args.username, args.memberData);
@@ -307,28 +306,38 @@ export class EnterpriseTools {
         return await this.enterpriseService.getOrganizationEnterprise(args.org);
       
       case 'get_enterprise_customized_roles_v8':
-        return await this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise, args.enterpriseId);
+        return await this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise, args.enterprise_id ?? args.enterpriseId);
       
       case 'create_enterprise_milestone_v8':
-        return await this.enterpriseService.createEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneData);
+        return await this.enterpriseService.createEnterpriseMilestone(args.enterprise, args.milestoneData);
       
       case 'update_enterprise_milestone_v8':
-        return await this.enterpriseService.updateEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneId, args.milestoneData);
+        return await this.enterpriseService.updateEnterpriseMilestone(
+          args.enterprise,
+          args.milestone_id ?? args.milestoneId,
+          args.milestoneData,
+        );
       
       case 'get_enterprise_milestone_v8':
-        return await this.enterpriseService.getEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneId);
+        return await this.enterpriseService.getEnterpriseMilestone(
+          args.enterprise,
+          args.milestone_id ?? args.milestoneId,
+        );
       
       case 'delete_enterprise_milestone_v8':
-        return await this.enterpriseService.deleteEnterpriseMilestone(args.enterprise, args.enterpriseId, args.milestoneId);
+        return await this.enterpriseService.deleteEnterpriseMilestone(
+          args.enterprise,
+          args.milestone_id ?? args.milestoneId,
+        );
       
       case 'get_enterprise_milestones_v8':
-        return await this.enterpriseService.getEnterpriseMilestones(args.enterprise, args.enterpriseId, args.page, args.perPage);
+        return await this.enterpriseService.getEnterpriseMilestones(args.enterprise, args.page, args.perPage);
       
       case 'get_enterprise_projects_v8':
-        return await this.enterpriseService.getEnterpriseProjects(args.enterprise, args.enterpriseId, args.page, args.perPage);
+        return await this.enterpriseService.getEnterpriseProjects(args.enterprise, args.page, args.perPage);
       
       case 'get_enterprise_issue_extend_fields_v8':
-        return await this.enterpriseService.getEnterpriseIssueExtendFields(args.enterprise, args.enterprisesId);
+        return await this.enterpriseService.getEnterpriseIssueExtendFields(args.enterprise, args.enterprise_id ?? args.enterprisesId);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

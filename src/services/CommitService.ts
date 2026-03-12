@@ -67,12 +67,12 @@ export class CommitService extends BaseService {
   }
 
   async getRepositoryCommitDiff(owner: string, repo: string, sha: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/diff`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commit/${sha}/diff`);
     return response.data;
   }
 
   async getRepositoryCommitPatch(owner: string, repo: string, sha: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${sha}/patch`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commit/${sha}/patch`);
     return response.data;
   }
 }

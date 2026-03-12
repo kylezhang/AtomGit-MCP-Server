@@ -98,12 +98,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -120,7 +120,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             },
@@ -156,7 +156,7 @@ export class IssuesTools {
               }
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -173,7 +173,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             },
@@ -188,7 +188,7 @@ export class IssuesTools {
               default: 30
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -205,7 +205,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             },
@@ -214,7 +214,7 @@ export class IssuesTools {
               description: 'The text of the comment'
             }
           },
-          required: ['owner', 'repo', 'issueNumber', 'body']
+          required: ['owner', 'repo', 'number', 'body']
         }
       },
       {
@@ -231,12 +231,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of the comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'id']
         }
       },
       {
@@ -253,7 +253,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of the comment'
             },
@@ -262,7 +262,7 @@ export class IssuesTools {
               description: 'The updated text of the comment'
             }
           },
-          required: ['owner', 'repo', 'commentId', 'body']
+          required: ['owner', 'repo', 'id', 'body']
         }
       },
       {
@@ -279,12 +279,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of the comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'id']
         }
       },
       {
@@ -301,7 +301,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             },
@@ -313,7 +313,7 @@ export class IssuesTools {
               }
             }
           },
-          required: ['owner', 'repo', 'issueNumber', 'labels']
+          required: ['owner', 'repo', 'number', 'labels']
         }
       },
       {
@@ -330,7 +330,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             },
@@ -339,7 +339,7 @@ export class IssuesTools {
               description: 'The name of the label to delete'
             }
           },
-          required: ['owner', 'repo', 'issueNumber', 'name']
+          required: ['owner', 'repo', 'number', 'name']
         }
       },
       {
@@ -356,12 +356,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -378,7 +378,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             },
@@ -393,7 +393,7 @@ export class IssuesTools {
               default: 30
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -410,12 +410,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -432,12 +432,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -454,12 +454,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            commentId: {
+            comment_id: {
               type: 'number',
               description: 'The ID of the comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'comment_id']
         }
       },
       {
@@ -476,12 +476,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -498,12 +498,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            commentId: {
+            comment_id: {
               type: 'number',
               description: 'The ID of the comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'comment_id']
         }
       },
       {
@@ -516,12 +516,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The enterprise name'
             },
-            issueId: {
+            issue_id: {
               type: 'string',
               description: 'The issue ID'
             }
           },
-          required: ['enterprise', 'issueId']
+          required: ['enterprise', 'issue_id']
         }
       },
       {
@@ -602,7 +602,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The enterprise name'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The issue number'
             },
@@ -617,7 +617,7 @@ export class IssuesTools {
               default: 30
             }
           },
-          required: ['enterprise', 'issueNumber']
+          required: ['enterprise', 'number']
         }
       },
       {
@@ -630,12 +630,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The enterprise name'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The issue number'
             }
           },
-          required: ['enterprise', 'issueNumber']
+          required: ['enterprise', 'number']
         }
       },
       {
@@ -708,12 +708,12 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The issue number'
             }
           },
-          required: ['owner', 'repo', 'issueNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -730,7 +730,7 @@ export class IssuesTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The number of the issue'
             },
@@ -739,13 +739,18 @@ export class IssuesTools {
               description: 'The name of the branch'
             }
           },
-          required: ['owner', 'repo', 'issueNumber', 'branchName']
+          required: ['owner', 'repo', 'number', 'branchName']
         }
       }
     ];
   }
 
   async callTool(name: string, args: any): Promise<any> {
+    const number = args.number ?? args.issueNumber;
+    const id = args.id ?? args.commentId;
+    const commentId = args.comment_id ?? args.commentId;
+    const issueId = args.issue_id ?? args.issueId;
+
     switch (name) {
       case 'get_repository_issues':
         return await this.issuesService.getRepositoryIssues(
@@ -767,10 +772,10 @@ export class IssuesTools {
         return await this.issuesService.createRepositoryIssue(args.owner, args.repo, issueData);
 
       case 'get_repository_issue':
-        return await this.issuesService.getRepositoryIssue(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssue(args.owner, args.repo, number);
 
       case 'update_repository_issue':
-        return await this.issuesService.updateRepositoryIssue(args.owner, args.repo, args.issueNumber, {
+        return await this.issuesService.updateRepositoryIssue(args.owner, args.repo, number, {
           title: args.title,
           body: args.body,
           state: args.state,
@@ -783,59 +788,59 @@ export class IssuesTools {
         return await this.issuesService.getRepositoryIssueComments(
           args.owner,
           args.repo,
-          args.issueNumber,
+          number,
           args.page,
           args.perPage
         );
 
       case 'create_repository_issue_comment':
-        return await this.issuesService.createRepositoryIssueComment(args.owner, args.repo, args.issueNumber, {
+        return await this.issuesService.createRepositoryIssueComment(args.owner, args.repo, number, {
           body: args.body
         });
 
       case 'get_repository_issue_comment':
-        return await this.issuesService.getRepositoryIssueComment(args.owner, args.repo, args.commentId);
+        return await this.issuesService.getRepositoryIssueComment(args.owner, args.repo, id);
 
       case 'update_repository_issue_comment':
-        return await this.issuesService.updateRepositoryIssueComment(args.owner, args.repo, args.commentId, {
+        return await this.issuesService.updateRepositoryIssueComment(args.owner, args.repo, id, {
           body: args.body
         });
 
       case 'delete_repository_issue_comment':
-        return await this.issuesService.deleteRepositoryIssueComment(args.owner, args.repo, args.commentId);
+        return await this.issuesService.deleteRepositoryIssueComment(args.owner, args.repo, id);
 
       case 'create_repository_issue_label':
-        return await this.issuesService.createRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.labels);
+        return await this.issuesService.createRepositoryIssueLabel(args.owner, args.repo, number, args.labels);
 
       case 'delete_repository_issue_label':
-        return await this.issuesService.deleteRepositoryIssueLabel(args.owner, args.repo, args.issueNumber, args.name);
+        return await this.issuesService.deleteRepositoryIssueLabel(args.owner, args.repo, number, args.name);
 
       case 'get_repository_issue_operate_logs':
         return await this.issuesService.getRepositoryIssueOperateLogs(
           args.owner,
           args.repo,
-          args.issueNumber,
+          number,
           args.page,
           args.perPage
         );
 
       case 'get_repository_issue_related_branches':
-        return await this.issuesService.getRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssueRelatedBranches(args.owner, args.repo, number);
 
       case 'get_repository_issue_reactions':
-        return await this.issuesService.getRepositoryIssueReactions(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssueReactions(args.owner, args.repo, number);
 
       case 'get_repository_issue_comment_reactions':
-        return await this.issuesService.getRepositoryIssueCommentReactions(args.owner, args.repo, args.commentId);
+        return await this.issuesService.getRepositoryIssueCommentReactions(args.owner, args.repo, commentId);
 
       case 'get_repository_issue_modify_history':
-        return await this.issuesService.getRepositoryIssueModifyHistory(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssueModifyHistory(args.owner, args.repo, number);
 
       case 'get_repository_issue_comment_modify_history':
-        return await this.issuesService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, args.commentId);
+        return await this.issuesService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, commentId);
 
       case 'get_enterprise_issue_labels':
-        return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, args.issueId);
+        return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, issueId);
 
       case 'get_enterprise_issues':
         return await this.issuesService.getEnterpriseIssues(args.enterprise, args.page, args.perPage);
@@ -847,19 +852,19 @@ export class IssuesTools {
         return await this.issuesService.getOrganizationIssues(args.org, args.page, args.perPage);
 
       case 'get_enterprise_issue_comments':
-        return await this.issuesService.getEnterpriseIssueComments(args.enterprise, args.issueNumber, args.page, args.perPage);
+        return await this.issuesService.getEnterpriseIssueComments(args.enterprise, number, args.page, args.perPage);
 
       case 'get_enterprise_issue':
-        return await this.issuesService.getEnterpriseIssue(args.enterprise, args.issueNumber);
+        return await this.issuesService.getEnterpriseIssue(args.enterprise, number);
 
       case 'delete_repository_all_issue_labels':
-        return await this.issuesService.deleteRepositoryAllIssueLabels(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.deleteRepositoryAllIssueLabels(args.owner, args.repo, number);
 
       case 'get_all_repository_issue_comments':
         return await this.issuesService.getAllRepositoryIssueComments(args.owner, args.repo, args.page, args.perPage);
 
       case 'get_repository_issue_pull_requests':
-        return await this.issuesService.getRepositoryIssuePullRequests(args.owner, args.repo, args.issueNumber);
+        return await this.issuesService.getRepositoryIssuePullRequests(args.owner, args.repo, number);
 
       case 'get_enterprise_issue_statuses':
         return await this.issuesService.getEnterpriseIssueStatuses(args.enterprise);
@@ -868,7 +873,7 @@ export class IssuesTools {
         return await this.issuesService.getEnterpriseIssueStatuses(args.enterprise);
 
       case 'update_repository_issue_related_branches':
-        return await this.issuesService.updateRepositoryIssueRelatedBranches(args.owner, args.repo, args.issueNumber, args.branchName);
+        return await this.issuesService.updateRepositoryIssueRelatedBranches(args.owner, args.repo, number, args.branchName);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

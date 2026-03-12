@@ -78,8 +78,8 @@ const MANUAL_OVERRIDES: Record<string, string> = {
   'create_repository_issue': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-issues',
   'audio_transcription': 'https://docs.gitcode.com/docs/apis/post-api-v-1-audio-transcriptions',
   'get_repository_commit_diff': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff',
-  'get_repository_commit_patch': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff',
-  'get_repository_commit_statistics': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-repository-commit-statistics',
+  'get_repository_commit_patch': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-patch',
+  'get_repository_commit_statistics': 'https://docs.gitcode.com/docs/apis/get-api-v-5-owner-repo-repository-commit-statistics',
   'create_organization_kanban': 'https://docs.gitcode.com/docs/apis/post-api-v-5-org-owner-kanban-create',
   'delete_organization_kanban': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-org-owner-kanban-id',
   'update_organization_kanban': 'https://docs.gitcode.com/docs/apis/put-api-v-5-org-owner-kanban-id',
@@ -87,8 +87,11 @@ const MANUAL_OVERRIDES: Record<string, string> = {
 };
 
 const MANUAL_ENDPOINT_OVERRIDES: Record<string, string> = {
-    'getRepositoryCommitStatistics': 'GET /api/v5/repos/${owner}/${repo}/repository/commit_statistics',
-    'getRepositoryTree': 'GET /api/v5/repos/${owner}/${repo}/git/trees/${sha}'
+    'getRepositoryCommitStatistics': 'GET /api/v5/${owner}/${repo}/repository/commit_statistics',
+    'getRepositoryTree': 'GET /api/v5/repos/${owner}/${repo}/git/trees/${sha}',
+    'deleteEnterpriseMembers': 'DELETE /api/v8/enterprises/${enterprise}/members/${username}',
+    'getRepositoryPullFileContent': 'GET /${owner}/${repo}/raw/${head_sha}/${name}',
+    'downloadReleaseAsset': 'GET /api/v5/repos/${owner}/${repo}/releases/${tag}/attach_files/${file_name}/download'
 };
 
 interface ApiUrlMapValue {

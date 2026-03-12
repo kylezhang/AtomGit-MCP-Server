@@ -43,8 +43,8 @@ export class ReleaseService extends BaseService {
     return response.data;
   }
 
-  async downloadReleaseAsset(owner: string, repo: string, fileName: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/attach_files/${fileName}/download`);
+  async downloadReleaseAsset(owner: string, repo: string, tag: string, fileName: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/attach_files/${fileName}/download`);
     return response.data;
   }
 }

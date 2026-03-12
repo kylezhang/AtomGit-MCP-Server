@@ -21,9 +21,8 @@ import {
 
 export class RepositoriesService extends BaseService {
 
-  async getRepositoryTree(owner: string, repo: string, sha?: string, recursive?: string): Promise<AtomGitTree> {
-    const url = sha ? `/api/v5/repos/${owner}/${repo}/git/trees/${sha}` : `/api/v5/repos/${owner}/${repo}/git/trees/main`;
-    const response = await this.client.get(url, {
+  async getRepositoryTree(owner: string, repo: string, sha: string, recursive?: string): Promise<AtomGitTree> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/git/trees/${sha}`, {
       params: recursive ? { recursive } : {}
     });
     return response.data;
@@ -81,7 +80,7 @@ export class RepositoriesService extends BaseService {
   }
 
   async setRepositoryModuleSetting(owner: string, repo: string, moduleData: ModuleSettingRequest): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/module-setting`, moduleData);
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/module/setting`, moduleData);
     return response.data;
   }
 
@@ -121,12 +120,12 @@ export class RepositoriesService extends BaseService {
   }
 
   async setRepositoryPushConfig(owner: string, repo: string, config: PushConfigRequest): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/push-config`, config);
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/push_config`, config);
     return response.data;
   }
 
   async getRepositoryPushConfig(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/push-config`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/push_config`);
     return response.data;
   }
 
@@ -173,12 +172,12 @@ export class RepositoriesService extends BaseService {
   }
 
   async getRepositoryPullRequestSettings(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pull-request-settings`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pull_request_settings`);
     return response.data;
   }
 
   async updateRepositoryPullRequestSettings(owner: string, repo: string, settings: PullRequestSettingsRequest): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pull-request-settings`, settings);
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pull_request_settings`, settings);
     return response.data;
   }
 
@@ -193,12 +192,12 @@ export class RepositoriesService extends BaseService {
   }
 
   async getRepositoryCustomizedRoles(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/customized-roles`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/customized_roles`);
     return response.data;
   }
 
   async getRepositoryDownloadStatistics(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/download-statistics`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/download_statistics`);
     return response.data;
   }
 
@@ -208,12 +207,12 @@ export class RepositoriesService extends BaseService {
   }
 
   async getRepositoryContributorsStatistic(owner: string, repo: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors-statistic`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contributors/statistic`);
     return response.data;
   }
 
-  async getRepositoryEvents(owner: string, repo: string, accessToken: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/events/access-token/${accessToken}`);
+  async getRepositoryEvents(owner: string, repo: string, _accessToken?: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/events`);
     return response.data;
   }
 }

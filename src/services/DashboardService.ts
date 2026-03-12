@@ -55,7 +55,7 @@ export class DashboardService extends BaseService {
   }
 
   async getOrganizationKanbanContent(owner: string, id: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/content`);
+    const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/item_list`);
     return response.data;
   }
 

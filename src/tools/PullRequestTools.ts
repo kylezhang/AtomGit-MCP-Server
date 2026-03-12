@@ -54,12 +54,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -121,7 +121,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -141,7 +141,7 @@ export class PullRequestTools {
               default: 'merge'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -158,12 +158,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -180,12 +180,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -202,7 +202,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -223,7 +223,7 @@ export class PullRequestTools {
               description: 'The line index in the diff to comment on'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'body']
+          required: ['owner', 'repo', 'number', 'body']
         }
       },
       {
@@ -240,7 +240,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -255,7 +255,7 @@ export class PullRequestTools {
               default: 30
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -272,7 +272,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -287,7 +287,7 @@ export class PullRequestTools {
               default: 30
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -304,7 +304,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -330,7 +330,7 @@ export class PullRequestTools {
               description: 'Indicates whether maintainers can modify the pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -347,7 +347,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -362,7 +362,7 @@ export class PullRequestTools {
               default: 30
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -379,7 +379,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -391,7 +391,7 @@ export class PullRequestTools {
               description: 'Array of label names to add'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'labels']
+          required: ['owner', 'repo', 'number', 'labels']
         }
       },
       {
@@ -408,7 +408,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -423,7 +423,7 @@ export class PullRequestTools {
               default: 30
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -440,7 +440,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -452,7 +452,7 @@ export class PullRequestTools {
               description: 'Array of label names to set'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'labels']
+          required: ['owner', 'repo', 'number', 'labels']
         }
       },
       {
@@ -469,7 +469,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -478,7 +478,7 @@ export class PullRequestTools {
               description: 'The name of the label to delete'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'name']
+          required: ['owner', 'repo', 'number', 'name']
         }
       },
       {
@@ -495,7 +495,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -509,7 +509,7 @@ export class PullRequestTools {
               description: 'Optional comment for the test action'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'action']
+          required: ['owner', 'repo', 'number', 'action']
         }
       },
       {
@@ -526,7 +526,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -540,7 +540,7 @@ export class PullRequestTools {
               description: 'Optional comment for the review action'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'action']
+          required: ['owner', 'repo', 'number', 'action']
         }
       },
       {
@@ -557,7 +557,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -572,7 +572,7 @@ export class PullRequestTools {
               default: 30
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -589,12 +589,19 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
+            },
+            testers: {
+              type: 'array',
+              items: {
+                type: 'string'
+              },
+              description: 'Optional tester list to set; omit to clear all testers'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -611,7 +618,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -623,7 +630,7 @@ export class PullRequestTools {
               description: 'Array of usernames to assign as testers'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'testers']
+          required: ['owner', 'repo', 'number', 'testers']
         }
       },
       {
@@ -640,7 +647,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -652,7 +659,7 @@ export class PullRequestTools {
               description: 'Array of usernames to remove as testers'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'testers']
+          required: ['owner', 'repo', 'number', 'testers']
         }
       },
       {
@@ -668,13 +675,9 @@ export class PullRequestTools {
             repo: {
               type: 'string',
               description: 'The name of the repository'
-            },
-            pullNumber: {
-              type: 'number',
-              description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo']
         }
       },
       {
@@ -691,12 +694,19 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
+            },
+            assignees: {
+              type: 'array',
+              items: {
+                type: 'string'
+              },
+              description: 'Optional assignee list to set; omit to clear all assignees'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -713,7 +723,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -725,7 +735,7 @@ export class PullRequestTools {
               description: 'Array of usernames to assign as reviewers'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'assignees']
+          required: ['owner', 'repo', 'number', 'assignees']
         }
       },
       {
@@ -742,7 +752,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -754,7 +764,7 @@ export class PullRequestTools {
               description: 'Array of usernames to remove as assignees'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'assignees']
+          required: ['owner', 'repo', 'number', 'assignees']
         }
       },
       {
@@ -771,12 +781,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -793,20 +803,16 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            head: {
+            head_sha: {
               type: 'string',
-              description: 'The head branch SHA'
-            },
-            sha: {
-              type: 'string',
-              description: 'The commit SHA'
+              description: 'The head SHA from the documentation path'
             },
             name: {
               type: 'string',
               description: 'The file name'
             }
           },
-          required: ['owner', 'repo', 'head', 'sha', 'name']
+          required: ['owner', 'repo', 'head_sha', 'name']
         }
       },
       {
@@ -823,7 +829,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -835,7 +841,7 @@ export class PullRequestTools {
               description: 'Array of issue numbers to link'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'issues']
+          required: ['owner', 'repo', 'number', 'issues']
         }
       },
       {
@@ -852,7 +858,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -864,7 +870,7 @@ export class PullRequestTools {
               description: 'Array of issue numbers to unlink'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'issues']
+          required: ['owner', 'repo', 'number', 'issues']
         }
       },
       {
@@ -881,7 +887,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -893,7 +899,7 @@ export class PullRequestTools {
               description: 'Array of usernames to assign as approval reviewers'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'reviewers']
+          required: ['owner', 'repo', 'number', 'reviewers']
         }
       },
       {
@@ -910,7 +916,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
@@ -922,7 +928,7 @@ export class PullRequestTools {
               description: 'Array of usernames to remove as approval reviewers'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'reviewers']
+          required: ['owner', 'repo', 'number', 'reviewers']
         }
       },
       {
@@ -939,12 +945,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -961,12 +967,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'id']
         }
       },
       {
@@ -983,7 +989,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of comment to edit'
             },
@@ -992,7 +998,7 @@ export class PullRequestTools {
               description: 'The updated comment content'
             }
           },
-          required: ['owner', 'repo', 'commentId', 'body']
+          required: ['owner', 'repo', 'id', 'body']
         }
       },
       {
@@ -1009,12 +1015,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            id: {
               type: 'number',
               description: 'The ID of comment to delete'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'id']
         }
       },
       {
@@ -1031,11 +1037,11 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
-            discussionId: {
+            discussion_id: {
               type: 'number',
               description: 'The ID of discussion'
             },
@@ -1044,7 +1050,7 @@ export class PullRequestTools {
               description: 'The reply content'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'discussionId', 'body']
+          required: ['owner', 'repo', 'number', 'discussion_id', 'body']
         }
       },
       {
@@ -1061,11 +1067,11 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             },
-            discussionId: {
+            discussion_id: {
               type: 'number',
               description: 'The ID of discussion'
             },
@@ -1074,7 +1080,7 @@ export class PullRequestTools {
               description: 'Whether the comment is resolved'
             }
           },
-          required: ['owner', 'repo', 'pullNumber', 'discussionId', 'resolved']
+          required: ['owner', 'repo', 'number', 'discussion_id', 'resolved']
         }
       },
       {
@@ -1091,12 +1097,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -1113,12 +1119,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            comment_id: {
               type: 'number',
               description: 'The ID of comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'comment_id']
         }
       },
       {
@@ -1135,12 +1141,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            pullNumber: {
+            number: {
               type: 'number',
               description: 'The number of pull request'
             }
           },
-          required: ['owner', 'repo', 'pullNumber']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -1157,12 +1163,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            commentId: {
+            comment_id: {
               type: 'number',
               description: 'The ID of comment'
             }
           },
-          required: ['owner', 'repo', 'commentId']
+          required: ['owner', 'repo', 'comment_id']
         }
       },
       {
@@ -1223,12 +1229,12 @@ export class PullRequestTools {
               type: 'string',
               description: 'The enterprise name'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The issue number'
             }
           },
-          required: ['enterprise', 'issueNumber']
+          required: ['enterprise', 'number']
         }
       },
       {
@@ -1239,17 +1245,22 @@ export class PullRequestTools {
           properties: {
             owner: { type: 'string', description: '仓库所属空间地址' },
             repo: { type: 'string', description: '仓库路径' },
-            pullNumber: { type: 'number', description: 'Pull Request ID' },
-            discussionId: { type: 'number', description: '讨论ID' },
+            number: { type: 'number', description: 'Pull Request ID' },
+            discussion_id: { type: 'number', description: '讨论ID' },
             body: { type: 'string', description: '回复内容' }
           },
-          required: ['owner', 'repo', 'pullNumber', 'discussionId', 'body']
+          required: ['owner', 'repo', 'number', 'discussion_id', 'body']
         }
       }
     ];
   }
 
   async callTool(name: string, args: any): Promise<any> {
+    const number = args.number ?? args.pullNumber ?? args.issueNumber;
+    const id = args.id ?? args.commentId;
+    const commentId = args.comment_id ?? args.commentId;
+    const discussionId = args.discussion_id ?? args.discussionId;
+
     switch (name) {
       case 'get_repository_pulls':
         return await this.pullRequestService.getRepositoryPulls(
@@ -1261,7 +1272,7 @@ export class PullRequestTools {
         );
 
       case 'get_repository_pull':
-        return await this.pullRequestService.getRepositoryPull(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPull(args.owner, args.repo, number);
 
       case 'create_repository_pull':
         return await this.pullRequestService.createRepositoryPull(args.owner, args.repo, {
@@ -1274,20 +1285,20 @@ export class PullRequestTools {
         });
 
       case 'merge_repository_pull':
-        return await this.pullRequestService.mergeRepositoryPull(args.owner, args.repo, args.pullNumber, {
+        return await this.pullRequestService.mergeRepositoryPull(args.owner, args.repo, number, {
           commit_title: args.commit_title,
           commit_message: args.commit_message,
           merge_method: args.merge_method
         });
 
       case 'get_repository_pull_merge_status':
-        return await this.pullRequestService.getRepositoryPullMergeStatus(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullMergeStatus(args.owner, args.repo, number);
 
       case 'get_repository_pull_issues':
-        return await this.pullRequestService.getRepositoryPullIssues(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullIssues(args.owner, args.repo, number);
 
       case 'create_repository_pull_comment':
-        return await this.pullRequestService.createRepositoryPullComment(args.owner, args.repo, args.pullNumber, {
+        return await this.pullRequestService.createRepositoryPullComment(args.owner, args.repo, number, {
           body: args.body,
           commit_id: args.commit_id,
           path: args.path,
@@ -1298,7 +1309,7 @@ export class PullRequestTools {
         return await this.pullRequestService.getRepositoryPullComments(
           args.owner,
           args.repo,
-          args.pullNumber,
+          number,
           args.page,
           args.perPage
         );
@@ -1307,13 +1318,13 @@ export class PullRequestTools {
         return await this.pullRequestService.getRepositoryPullFiles(
           args.owner,
           args.repo,
-          args.pullNumber,
+          number,
           args.page,
           args.perPage
         );
 
       case 'update_repository_pull':
-        return await this.pullRequestService.updateRepositoryPull(args.owner, args.repo, args.pullNumber, {
+        return await this.pullRequestService.updateRepositoryPull(args.owner, args.repo, number, {
           title: args.title,
           body: args.body,
           state: args.state,
@@ -1325,111 +1336,126 @@ export class PullRequestTools {
         return await this.pullRequestService.getRepositoryPullCommits(
           args.owner,
           args.repo,
-          args.pullNumber,
+          number,
           args.page,
           args.perPage
         );
 
       case 'create_repository_pull_label':
-        return await this.pullRequestService.createRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.labels);
+        return await this.pullRequestService.createRepositoryPullLabel(args.owner, args.repo, number, args.labels);
 
       case 'get_repository_pull_labels':
         return await this.pullRequestService.getRepositoryPullLabels(
           args.owner,
           args.repo,
-          args.pullNumber
+          number
         );
 
       case 'replace_repository_pull_labels':
-        return await this.pullRequestService.replaceRepositoryPullLabels(args.owner, args.repo, args.pullNumber, args.labels);
+        return await this.pullRequestService.replaceRepositoryPullLabels(args.owner, args.repo, number, args.labels);
 
       case 'delete_repository_pull_label':
-        return await this.pullRequestService.deleteRepositoryPullLabel(args.owner, args.repo, args.pullNumber, args.name);
+        return await this.pullRequestService.deleteRepositoryPullLabel(args.owner, args.repo, number, args.name);
 
       case 'process_repository_pull_test':
-        return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, args.pullNumber, args.action, args.comment);
+        return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, number, args.action, args.comment);
 
       case 'process_repository_pull_review':
-        return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, args.pullNumber, args.action, args.comment);
+        return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, number, args.action, args.comment);
 
       case 'get_repository_pull_operate_logs':
         return await this.pullRequestService.getRepositoryPullOperateLogs(
           args.owner,
           args.repo,
-          args.pullNumber
+          number
         );
 
       case 'reset_repository_pull_testers':
-        return await this.pullRequestService.resetRepositoryPullTesters(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.resetRepositoryPullTesters(
+          args.owner,
+          args.repo,
+          number,
+          args.testers,
+        );
 
       case 'assign_repository_pull_testers':
-        return await this.pullRequestService.assignRepositoryPullTesters(args.owner, args.repo, args.pullNumber, args.testers);
+        return await this.pullRequestService.assignRepositoryPullTesters(args.owner, args.repo, number, args.testers);
 
       case 'remove_repository_pull_testers':
-        return await this.pullRequestService.removeRepositoryPullTesters(args.owner, args.repo, args.pullNumber, args.testers);
+        return await this.pullRequestService.removeRepositoryPullTesters(args.owner, args.repo, number, args.testers);
 
       case 'get_repository_pull_tester_options':
         return await this.pullRequestService.getRepositoryPullTesterOptions(args.owner, args.repo);
 
       case 'reset_repository_pull_assignees':
-        return await this.pullRequestService.resetRepositoryPullAssignees(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.resetRepositoryPullAssignees(
+          args.owner,
+          args.repo,
+          number,
+          args.assignees,
+        );
 
       case 'assign_repository_pull_assignees':
-        return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
+        return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, number, args.assignees);
 
       case 'remove_repository_pull_assignees':
-        return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, args.pullNumber, args.assignees);
+        return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, number, args.assignees);
 
       case 'get_repository_pull_files_json':
-        return await this.pullRequestService.getRepositoryPullFilesJson(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getRepositoryPullFilesJson(args.owner, args.repo, number);
 
       case 'get_repository_pull_file_content':
-        return await this.pullRequestService.getRepositoryPullFileContent(args.owner, args.repo, args.pullNumber, args.filePath);
+        return await this.pullRequestService.getRepositoryPullFileContent(
+          args.owner,
+          args.repo,
+          args.head_sha ?? args.head ?? args.sha,
+          args.name,
+        );
 
       case 'link_repository_pull_issues':
-        return await this.pullRequestService.linkRepositoryPullIssues(args.owner, args.repo, args.pullNumber, args.issues);
+        return await this.pullRequestService.linkRepositoryPullIssues(args.owner, args.repo, number, args.issues);
 
       case 'unlink_repository_pull_issues':
-        return await this.pullRequestService.unlinkRepositoryPullIssues(args.owner, args.repo, args.pullNumber, args.issues);
+        return await this.pullRequestService.unlinkRepositoryPullIssues(args.owner, args.repo, number, args.issues);
 
       case 'assign_repository_pull_approval_reviewers':
-        return await this.pullRequestService.assignRepositoryPullApprovalReviewers(args.owner, args.repo, args.pullNumber, args.reviewers);
+        return await this.pullRequestService.assignRepositoryPullApprovalReviewers(args.owner, args.repo, number, args.reviewers);
 
       case 'remove_repository_pull_approval_reviewers':
-        return await this.pullRequestService.removeRepositoryPullApprovalReviewers(args.owner, args.repo, args.pullNumber, args.reviewers);
+        return await this.pullRequestService.removeRepositoryPullApprovalReviewers(args.owner, args.repo, number, args.reviewers);
 
       case 'get_repository_pull_approval_reviewer_options':
-        return await this.pullRequestService.getRepositoryPullApprovalReviewerOptions(args.owner, args.repo);
+        return await this.pullRequestService.getRepositoryPullApprovalReviewerOptions(args.owner, args.repo, number);
 
       case 'get_pull_request_comment':
-        return await this.pullRequestService.getPullRequestComment(args.owner, args.repo, args.commentId);
+        return await this.pullRequestService.getPullRequestComment(args.owner, args.repo, id);
       
       case 'edit_pull_request_comment':
-        return await this.pullRequestService.editPullRequestComment(args.owner, args.repo, args.commentId, { body: args.body });
+        return await this.pullRequestService.editPullRequestComment(args.owner, args.repo, id, { body: args.body });
       
       case 'delete_pull_request_comment':
-        return await this.pullRequestService.deletePullRequestComment(args.owner, args.repo, args.commentId);
+        return await this.pullRequestService.deletePullRequestComment(args.owner, args.repo, id);
       
       case 'reply_pull_request_discussion':
-        return await this.pullRequestService.replyPullRequestDiscussion(args.owner, args.repo, args.pullNumber, args.discussionId, { body: args.body });
+        return await this.pullRequestService.replyPullRequestDiscussion(args.owner, args.repo, number, discussionId, { body: args.body });
       
       case 'reply_pull_request_discussion_comment':
-        return await this.pullRequestService.replyPullRequestDiscussionComment(args.owner, args.repo, args.pullNumber, args.discussionId, { body: args.body });
+        return await this.pullRequestService.replyPullRequestDiscussionComment(args.owner, args.repo, number, discussionId, { body: args.body });
 
       case 'update_pull_request_discussion_comment':
-        return await this.pullRequestService.updatePullRequestDiscussionComment(args.owner, args.repo, args.pullNumber, args.discussionId, { resolved: args.resolved });
+        return await this.pullRequestService.updatePullRequestDiscussionComment(args.owner, args.repo, number, discussionId, { resolved: args.resolved });
       
       case 'get_pull_request_reactions':
-        return await this.pullRequestService.getPullRequestReactions(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getPullRequestReactions(args.owner, args.repo, number);
       
       case 'get_pull_request_comment_reactions':
-        return await this.pullRequestService.getPullRequestCommentReactions(args.owner, args.repo, args.commentId);
+        return await this.pullRequestService.getPullRequestCommentReactions(args.owner, args.repo, commentId);
       
       case 'get_pull_request_modify_history':
-        return await this.pullRequestService.getPullRequestModifyHistory(args.owner, args.repo, args.pullNumber);
+        return await this.pullRequestService.getPullRequestModifyHistory(args.owner, args.repo, number);
       
       case 'get_pull_request_comment_modify_history':
-        return await this.pullRequestService.getPullRequestCommentModifyHistory(args.owner, args.repo, args.commentId);
+        return await this.pullRequestService.getPullRequestCommentModifyHistory(args.owner, args.repo, commentId);
       
       case 'get_enterprise_pull_requests':
         return await this.pullRequestService.getEnterprisePullRequests(args.enterprise, args.page, args.perPage);
@@ -1438,7 +1464,7 @@ export class PullRequestTools {
         return await this.pullRequestService.getOrganizationPullRequests(args.org, args.page, args.perPage);
       
       case 'get_enterprise_pull_request_issues':
-        return await this.pullRequestService.getEnterprisePullRequestIssues(args.enterprise, args.issueNumber);
+        return await this.pullRequestService.getEnterprisePullRequestIssues(args.enterprise, number);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

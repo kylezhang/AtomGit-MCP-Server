@@ -4,7 +4,7 @@ import { Issue, CreateIssueRequest, UpdateIssueRequest, CreateIssueCommentReques
 export class IssuesService extends BaseService {
   
   async createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues`, issueData);
+    const response = await this.client.post(`/api/v5/repos/${owner}/issues`, issueData);
     return response.data;
   }
 
@@ -69,7 +69,7 @@ export class IssuesService extends BaseService {
   }
 
   async getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/operate_logs`, {
+    const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
       params: { page, per_page: perPage }
     });
     return response.data;

@@ -336,12 +336,12 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {
-            keyId: {
+            id: {
               type: 'number',
               description: 'The ID of key to delete'
             }
           },
-          required: ['keyId']
+          required: ['id']
         }
       },
       {
@@ -358,12 +358,12 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {
-            keyId: {
+            id: {
               type: 'number',
               description: 'The ID of key'
             }
           },
-          required: ['keyId']
+          required: ['id']
         }
       },
 
@@ -457,10 +457,10 @@ export class UserTools {
         return await this.userService.getCurrentUserKeys(args.page, args.perPage);
       
       case 'delete_user_key':
-        return await this.userService.deleteUserKey(args.keyId);
+        return await this.userService.deleteUserKey(args.id ?? args.keyId);
       
       case 'get_user_key':
-        return await this.userService.getUserKey(args.keyId);
+        return await this.userService.getUserKey(args.id ?? args.keyId);
       
       case 'get_current_user_namespace':
         return await this.userService.getCurrentUserNamespace();

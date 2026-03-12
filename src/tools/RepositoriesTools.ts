@@ -18,9 +18,9 @@ export class RepositoriesTools {
           properties: {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
-            sha: { type: 'string', description: 'commit SHA值，可选' }
+            sha: { type: 'string', description: 'commit SHA值' }
           },
-          required: ['owner', 'repo']
+          required: ['owner', 'repo', 'sha']
         }
       },
       {
@@ -197,10 +197,10 @@ export class RepositoriesTools {
           type: 'object',
           properties: {
             org: { type: 'string', description: '组织名称' },
-            repository: { type: 'string', description: '仓库名称' },
+            repo: { type: 'string', description: '仓库名称' },
             archiveData: { type: 'object', description: '归档数据' }
           },
-          required: ['org', 'repository', 'archiveData']
+          required: ['org', 'repo', 'archiveData']
         }
       },
       {
@@ -210,10 +210,10 @@ export class RepositoriesTools {
           type: 'object',
           properties: {
             org: { type: 'string', description: '组织名称' },
-            repository: { type: 'string', description: '仓库名称' },
+            repo: { type: 'string', description: '仓库名称' },
             transferData: { type: 'object', description: '转移数据' }
           },
-          required: ['org', 'repository', 'transferData']
+          required: ['org', 'repo', 'transferData']
         }
       },
       {
@@ -478,10 +478,9 @@ export class RepositoriesTools {
           type: 'object',
           properties: {
             owner: { type: 'string', description: '仓库所有者' },
-            repo: { type: 'string', description: '仓库名称' },
-            accessToken: { type: 'string', description: '访问令牌' }
+            repo: { type: 'string', description: '仓库名称' }
           },
-          required: ['owner', 'repo', 'accessToken']
+          required: ['owner', 'repo']
         }
       }
     ];
@@ -545,10 +544,10 @@ export class RepositoriesTools {
         return await this.service.updateRepositoryReviewer(args.owner, args.repo, args.reviewerData);
       
       case 'archive_repository':
-        return await this.service.archiveRepository(args.org, args.repository, args.archiveData);
+        return await this.service.archiveRepository(args.org, args.repo ?? args.repository, args.archiveData);
       
       case 'transfer_repository_to_org':
-        return await this.service.transferRepositoryToOrg(args.org, args.repository, args.transferData);
+        return await this.service.transferRepositoryToOrg(args.org, args.repo ?? args.repository, args.transferData);
       
       case 'get_repository_transition':
         return await this.service.getRepositoryTransition(args.owner, args.repo);
@@ -617,7 +616,7 @@ export class RepositoriesTools {
         return await this.service.getRepositoryContributorsStatistic(args.owner, args.repo);
       
       case 'get_repository_events':
-        return await this.service.getRepositoryEvents(args.owner, args.repo, args.accessToken);
+        return await this.service.getRepositoryEvents(args.owner, args.repo);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -68,7 +68,7 @@ export class LabelsTools {
               type: 'string',
               description: '仓库名称'
             },
-            originalName: {
+            original_name: {
               type: 'string',
               description: '原标签名称'
             },
@@ -85,7 +85,7 @@ export class LabelsTools {
               description: '标签描述'
             }
           },
-          required: ['owner', 'repo', 'originalName', 'name']
+          required: ['owner', 'repo', 'original_name', 'name']
         }
       },
       {
@@ -186,7 +186,7 @@ export class LabelsTools {
               type: 'string',
               description: 'The name of repository'
             },
-            issueNumber: {
+            number: {
               type: 'number',
               description: 'The issue number'
             },
@@ -198,7 +198,7 @@ export class LabelsTools {
               description: 'Array of label names'
             }
           },
-          required: ['owner', 'repo', 'issueNumber', 'labels']
+          required: ['owner', 'repo', 'number', 'labels']
         }
       }
     ];
@@ -217,7 +217,7 @@ export class LabelsTools {
         });
       
       case 'update_repository_label':
-        return await this.labelsService.updateRepositoryLabel(args.owner, args.repo, args.originalName, {
+        return await this.labelsService.updateRepositoryLabel(args.owner, args.repo, args.original_name ?? args.originalName, {
           name: args.name,
           color: args.color,
           description: args.description
@@ -236,7 +236,7 @@ export class LabelsTools {
         return await this.labelsService.getEnterpriseLabelsV8(args.enterprise);
 
       case 'replace_repository_issue_all_labels':
-        return await this.labelsService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.issueNumber, args.labels);
+        return await this.labelsService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.number ?? args.issueNumber, args.labels);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -64,12 +64,12 @@ export class BranchTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            branch: {
+            name: {
               type: 'string',
               description: 'The name of the branch to delete'
             }
           },
-          required: ['owner', 'repo', 'branch']
+          required: ['owner', 'repo', 'name']
         }
       },
       {
@@ -313,7 +313,7 @@ export class BranchTools {
         return await this.branchService.createRepositoryBranch(args.owner, args.repo, args.branch, args.sha);
 
       case 'delete_repository_branch':
-        return await this.branchService.deleteRepositoryBranch(args.owner, args.repo, args.branch);
+        return await this.branchService.deleteRepositoryBranch(args.owner, args.repo, args.name ?? args.branch);
 
       case 'get_repository_branch':
         return await this.branchService.getRepositoryBranch(args.owner, args.repo, args.branch);

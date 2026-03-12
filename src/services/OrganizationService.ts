@@ -95,12 +95,12 @@ export class OrganizationService extends BaseService {
   }
 
   async getOrganizationIssueExtendSettings(org: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/issue_extend_settings`);
+    const response = await this.client.get(`/api/v5/orgs/${org}/issue/extend/settings`);
     return response.data;
   }
 
   async getOrganizationCustomizedRoles(org: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/org/${org}/customized_roles`);
+    const response = await this.client.get(`/api/v5/orgs/${org}/customized_roles`);
     return response.data;
   }
 }

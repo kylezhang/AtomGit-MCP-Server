@@ -117,20 +117,22 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryPullFileContent(owner: string, repo: string, pullNumber: number, filePath: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files/content`, {
-      params: { file_path: filePath }
+  async getRepositoryPullFileContent(owner: string, repo: string, headSha: string, name: string): Promise<any> {
+    const response = await this.client.get(`/${owner}/${repo}/raw/${headSha}/${name}`);
+    return response.data;
+  }
+
+  async resetRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[] = []): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, {
+      testers
     });
     return response.data;
   }
 
-  async resetRepositoryPullTesters(owner: string, repo: string, pullNumber: number): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test/reset`);
-    return response.data;
-  }
-
-  async resetRepositoryPullAssignees(owner: string, repo: string, pullNumber: number): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assign/reset`);
+  async resetRepositoryPullAssignees(owner: string, repo: string, pullNumber: number, assignees: string[] = []): Promise<any> {
+    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, {
+      assignees
+    });
     return response.data;
   }
 
@@ -151,42 +153,42 @@ export class PullRequestService extends BaseService {
   }
 
   async assignRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test/assign`, { testers });
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, { testers });
     return response.data;
   }
 
   async removeRepositoryPullTesters(owner: string, repo: string, pullNumber: number, testers: string[]): Promise<any> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test/remove`, { data: { testers } });
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`, { data: { testers } });
     return response.data;
   }
 
   async getRepositoryPullTesterOptions(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/tester_options`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/option_testers`);
     return response.data;
   }
 
   async assignRepositoryPullAssignees(owner: string, repo: string, pullNumber: number, assignees: string[]): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assign/assign`, { assignees });
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, { assignees });
     return response.data;
   }
 
   async removeRepositoryPullAssignees(owner: string, repo: string, pullNumber: number, assignees: string[]): Promise<any> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assign/remove`, { data: { assignees } });
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`, { data: { assignees } });
     return response.data;
   }
 
   async assignRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/approval_reviewers/assign`, { reviewers });
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/reviewers`, { reviewers });
     return response.data;
   }
 
   async removeRepositoryPullApprovalReviewers(owner: string, repo: string, pullNumber: number, reviewers: string[]): Promise<any> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/approval_reviewers/remove`, { data: { reviewers } });
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/reviewers`, { data: { reviewers } });
     return response.data;
   }
 
-  async getRepositoryPullApprovalReviewerOptions(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/approval_reviewer_options`);
+  async getRepositoryPullApprovalReviewerOptions(owner: string, repo: string, pullNumber: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_reviewers`);
     return response.data;
   }
 
@@ -250,7 +252,7 @@ export class PullRequestService extends BaseService {
   }
 
   async getOrganizationPullRequests(org: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/pull_requests`, {
+    const response = await this.client.get(`/api/v5/org/${org}/pull_requests`, {
       params: { page, per_page: perPage }
     });
     return response.data;
