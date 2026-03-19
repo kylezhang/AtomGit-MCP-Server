@@ -8,8 +8,10 @@ export class BranchService extends BaseService {
     return response.data;
   }
 
-  async createRepositoryBranch(owner: string, repo: string, branch: string, sha?: string): Promise<Branch> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, { branch, sha });
+  // fix: AtomGit API requires "refs" not "sha" for branch source
+  // ref: https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-branches/
+  async createRepositoryBranch(owner: string, repo: string, branch: string, refs?: string): Promise<Branch> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, { branch, refs });
     return response.data;
   }
 
