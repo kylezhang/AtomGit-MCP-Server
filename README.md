@@ -49,21 +49,17 @@
 4.  **建议权限**：为了获得完整体验，建议勾选所有权限（`repo`, `user`, `admin:org` 等）。
 5.  复制生成的 Token，妥善保存。
 
-### 2. 安装与构建
+### 2. 通过 npx 直接使用
+
+安装 Node.js 后，无需再手动克隆仓库或本地构建。客户端会在首次启动时自动通过 npm 拉取包：
 
 ```bash
-# 克隆项目
-git clone https://atomgit.com/zkxw2008/AtomGit-MCP-Server.git
-cd AtomGit-MCP-Server
-
-# 安装依赖
-npm install
-
-# 构建项目 (生成 dist 目录)
-npm run build
+npx -y @atomgit.com/atomgit-mcp-server
 ```
 
-### 3.以配置 AtomGit MCP Server 到 Claude Desktop 为例
+服务固定连接到 `https://api.atomgit.com`，你只需要提供 `ATOMGIT_TOKEN`。
+
+### 3. 以配置 AtomGit MCP Server 到 Claude Desktop 为例
 
 找到 Claude Desktop 的配置文件：
 *   **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
@@ -73,15 +69,16 @@ npm run build
 
 #### Windows 配置示例
 
-> ⚠️ **注意**：Windows 路径中的反斜杠 `\` 需要转义为 `\\`。请确保 `command` 指向正确的 `node.exe` 路径（如果未在 PATH 中）。
+> ⚠️ **注意**：Windows 下建议使用 `npx.cmd`，这样无需填写本地仓库路径。
 
 ```json
 {
   "mcpServers": {
     "atomgit": {
-      "command": "node",
+      "command": "npx.cmd",
       "args": [
-        "D:\\path\\to\\AtomGit-MCP-Server\\dist\\index.js"
+        "-y",
+        "@atomgit.com/atomgit-mcp-server"
       ],
       "env": {
         "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
@@ -97,9 +94,10 @@ npm run build
 {
   "mcpServers": {
     "atomgit": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/path/to/AtomGit-MCP-Server/dist/index.js"
+        "-y",
+        "@atomgit.com/atomgit-mcp-server"
       ],
       "env": {
         "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
@@ -110,6 +108,25 @@ npm run build
 ```
 
 配置完成后，**重启 Claude Desktop** 即可生效。
+
+### 4. 本地开发或备用运行方式
+
+如果你要参与开发、调试，或希望离线运行本项目，可以继续使用本地源码方式：
+
+```bash
+# 克隆项目
+git clone https://atomgit.com/zkxw2008/AtomGit-MCP-Server.git
+cd AtomGit-MCP-Server
+
+# 安装依赖
+npm install
+
+# 构建项目
+npm run build
+
+# 本地启动编译产物
+node dist/index.js
+```
 
 ## 开发指南
 
@@ -144,7 +161,7 @@ AtomGit-MCP-Server/
 ## 常见问题 (FAQ)
 
 **Q1: Claude 显示 "Tool not loaded" 或找不到工具？**
-*   **A**: 这通常是客户端缓存导致的。尝试重启 Claude Desktop。如果仍然存在，请检查 `claude_desktop_config.json` 中的路径是否正确，以及 `dist/index.js` 是否存在（是否执行了 `npm run build`）。
+*   **A**: 这通常是客户端缓存或 `npx` 配置导致的。尝试重启 Claude Desktop，并检查 `command`/`args` 是否分别配置为 `npx`（Windows 下为 `npx.cmd`）和 `["-y", "@atomgit.com/atomgit-mcp-server"]`。如果你使用的是本地源码方式，再检查 `dist/index.js` 是否存在。
 
 **Q2: 调用工具返回 "404 Not Found"？**
 *   **A**: 请检查你输入的 `owner`（用户名/组织名）和 `repo`（仓库名）是否正确。注意：AtomGit 的 URL 通常区分大小写。如果是新建仓库相关的操作，请确保上级命名空间存在。
@@ -153,7 +170,7 @@ AtomGit-MCP-Server/
 *   **A**: 请确保你使用的是最新版本的代码。我们在最新版本中修复了 MCP 协议响应格式的问题。
 
 **Q4: Windows 下无法启动？**
-*   **A**: Windows 下 `node` 命令可能不在环境变量中，或者路径解析有问题。尝试在 `command` 字段中使用 `node.exe` 的绝对路径（如 `C:\\Program Files\\nodejs\\node.exe`）。
+*   **A**: Windows 下优先使用 `npx.cmd` 作为 `command`。如果仍然无法启动，请确认 Node.js 已正确安装并且 `npx.cmd` 在环境变量中可用。
 
 ## 📄 许可证
 

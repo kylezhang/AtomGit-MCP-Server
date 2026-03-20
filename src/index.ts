@@ -53,7 +53,7 @@ import { ToolRegistry } from './core/ToolRegistry.js';
 // Load environment variables
 config();
 
-const ATOMGIT_API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || 'https://api.atomgit.com';
+const API_BASE_URL = 'https://api.atomgit.com';
 const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
 
 if (!ATOMGIT_TOKEN) {
@@ -81,7 +81,7 @@ class AtomGitMCPServer {
     this.registry = new ToolRegistry();
 
     const serviceConfig: any = {
-      apiBaseUrl: ATOMGIT_API_BASE_URL,
+      apiBaseUrl: API_BASE_URL,
       token: ATOMGIT_TOKEN,
     };
 
