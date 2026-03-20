@@ -35,7 +35,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://atomgit.com/zkxw2008/AtomGit-MCP-Server.git"
+    "url": "git+https://github.com/kylezhang/AtomGit-MCP-Server.git"
   },
   "homepage": "https://atomgit.com/zkxw2008/AtomGit-MCP-Server",
   "bugs": {

@@ -4,72 +4,65 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
 ![Tools](https://img.shields.io/badge/tools-248-orange.svg)
 
-**AtomGit MCP Server** 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，允许 AI 助手（如 Claude Desktop、Cursor 等）直接与 [AtomGit](https://atomgit.com/) 代码托管平台进行交互。
-
-它提供了 **248 个工具**，覆盖了 AtomGit 平台公开的 APIs，让 AI 能够协助你完成仓库管理、代码检索、Issue 追踪、PR 评审等全流程开发任务。
+`@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae 等。
 
 ## 主要特性
 
-*   🚀 **全面覆盖**：实现了 18 个分类共 248 个工具，涵盖仓库、用户、分支、标签、Issue、Pull Request、成员管理等。
-*   🔐 **安全认证**：基于 AtomGit Personal Access Token (PAT) 进行认证，支持权限细粒度控制。
-*   🛠️ **标准协议**：完全兼容 Model Context Protocol 规范，可无缝集成到支持 MCP 的客户端中。
-*   ⚡ **类型安全**：全项目采用 TypeScript 编写，提供完整的类型定义和参数校验。
+- 全量 MCP 工具接入：覆盖 18 个功能分类，共 248 个工具。
+- 基于 Access Token 认证：使用 AtomGit Personal Access Token 访问平台 API。
+- 标准 MCP 协议：兼容基于 stdio 的 MCP 客户端集成方式。
+- TypeScript 实现：包含类型定义、参数校验和构建产物。
 
-## 功能列表
+## 功能模块
 
-目前支持以下核心功能模块（共 18 个分类）：
-
-*   **仓库管理 (Repositories)**：创建/删除/查询仓库、Fork、Star、Watch、文件操作
-*   **分支与标签 (Branch & Tag)**：创建/删除分支、标签管理、受保护分支
-*   **提交与发布 (Commit & Release)**：获取提交历史、版本发布管理
-*   **合并请求 (Pull Request)**：创建/查询/合并 PR、代码评审、Diff 获取
-*   **工单管理 (Issues)**：Issue 增删改查、评论管理、指派与状态
-*   **项目规划 (Milestone & Labels)**：里程碑管理、标签管理
-*   **看板管理 (Dashboard)**：组织看板、工作项管理 (Kanban)
-*   **用户与组织 (User & Organization)**：个人信息、SSH 密钥、组织成员管理
-*   **企业管理 (Enterprise)**：企业级资源管理
-*   **成员管理 (Member)**：仓库/组织成员权限管理
-*   **搜索服务 (Search)**：代码、仓库、用户搜索
-*   **Webhooks**：仓库 Webhook 的增删改查
-*   **AI 模型 (AIHub)**：AIHub 模型列表与交互
-*   **认证 (OAuth)**：OAuth 授权流程支持
+- 仓库管理：仓库查询、创建、删除、Fork、Star、Watch、文件操作。
+- 分支与标签：分支管理、标签管理、受保护分支相关能力。
+- 提交与发布：提交历史查询、版本发布管理。
+- 合并请求：Pull Request 查询、创建、合并、Diff、评审相关能力。
+- 工单管理：Issue 查询、创建、更新、评论、指派和状态管理。
+- 项目规划：Milestone 与 Label 管理。
+- 看板管理：组织看板与工作项管理。
+- 用户与组织：用户信息、SSH 密钥、组织成员相关能力。
+- 企业与成员：企业级资源和成员权限管理。
+- 搜索与 Webhook：代码搜索、仓库搜索、用户搜索，以及 Webhook 管理。
+- AIHub 与 OAuth：AIHub 模型相关能力，以及 OAuth 相关接口封装。
 
 ## 快速开始
 
 ### 前置要求
 
-*   [Node.js](https://nodejs.org/) (版本 >= 18)
-*   [AtomGit 账号](https://atomgit.com/)
+- [Node.js](https://nodejs.org/) `>= 18`
+- [AtomGit](https://atomgit.com/) 账号
+- AtomGit Personal Access Token
 
 ### 1. 获取 Access Token
 
-1.  登录 AtomGit。
-2.  访问 [设置 -> 访问令牌](https://atomgit.com/setting/token-classic)。
-3.  点击"生成新令牌"。
-4.  **建议权限**：为了获得完整体验，建议勾选所有权限（`repo`, `user`, `admin:org` 等）。
-5.  复制生成的 Token，妥善保存。
+1. 登录 AtomGit。
+2. 打开 [设置 -> 访问令牌](https://atomgit.com/setting/token-classic)。
+3. 创建新的 Personal Access Token。
+4. 根据实际使用场景分配权限；如需完整体验，可授予常用仓库和组织相关权限。
+5. 保存生成的 Token。
 
-### 2. 通过 npx 直接使用
+### 2. 通过 `npx` 运行
 
-安装 Node.js 后，无需再手动克隆仓库或本地构建。客户端会在首次启动时自动通过 npm 拉取包：
+如采用 npm 包方式，可直接执行以下命令：
 
 ```bash
 npx -y @atomgit.com/atomgit-mcp-server
 ```
 
-服务固定连接到 `https://api.atomgit.com`，你只需要提供 `ATOMGIT_TOKEN`。
+运行前请先设置环境变量 `ATOMGIT_TOKEN`。
 
-### 3. 以配置 AtomGit MCP Server 到 Claude Desktop 为例
+### 3. 在 Claude Desktop 中配置
 
-找到 Claude Desktop 的配置文件：
-*   **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-*   **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+Claude Desktop 配置文件位置：
 
-根据你的操作系统添加以下配置：
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
-#### Windows 配置示例
+#### Windows 示例
 
-> ⚠️ **注意**：Windows 下建议使用 `npx.cmd`，这样无需填写本地仓库路径。
+Windows 环境建议将 `command` 设置为 `npx.cmd`：
 
 ```json
 {
@@ -88,7 +81,7 @@ npx -y @atomgit.com/atomgit-mcp-server
 }
 ```
 
-#### macOS / Linux 配置示例
+#### macOS / Linux 示例
 
 ```json
 {
@@ -107,71 +100,100 @@ npx -y @atomgit.com/atomgit-mcp-server
 }
 ```
 
-配置完成后，**重启 Claude Desktop** 即可生效。
+完成配置后，重启 Claude Desktop 使配置生效。
 
-### 4. 本地开发或备用运行方式
+## 开发测试
 
-如果你要参与开发、调试，或希望离线运行本项目，可以继续使用本地源码方式：
+如需参与开发、进行本地调试，或在 MCP 客户端中联调本地构建产物，可使用以下步骤：
 
 ```bash
-# 克隆项目
 git clone https://atomgit.com/zkxw2008/AtomGit-MCP-Server.git
 cd AtomGit-MCP-Server
-
-# 安装依赖
 npm install
-
-# 构建项目
 npm run build
-
-# 本地启动编译产物
 node dist/index.js
 ```
 
-## 开发指南
+如需在 Claude Desktop 等 MCP 客户端中直接联调本地构建产物，可根据操作系统使用如下配置。
 
-如果你想参与开发或调试本项目：
+Windows 示例：
+
+```json
+{
+  "mcpServers": {
+    "atomgit-dev": {
+      "command": "node.exe",
+      "args": [
+        "D:\\path\\to\\AtomGit-MCP-Server\\dist\\index.js"
+      ],
+      "env": {
+        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
+      }
+    }
+  }
+}
+```
+
+说明：
+
+- Windows 路径中的反斜杠 `\` 需要写成 `\\`
+- 如果 `node.exe` 不在 `PATH` 中，可改为 Node.js 的绝对路径
+
+macOS / Linux 示例：
+
+```json
+{
+  "mcpServers": {
+    "atomgit-dev": {
+      "command": "node",
+      "args": [
+        "/path/to/AtomGit-MCP-Server/dist/index.js"
+      ],
+      "env": {
+        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
+      }
+    }
+  }
+}
+```
+
+## 开发说明
 
 ### 常用命令
 
 | 命令 | 说明 |
 |------|------|
-| `npm run dev` | 开发模式运行（使用 `tsx` 直接运行源码） |
-| `npm run build` | 编译 TypeScript 代码到 `dist/` 目录 |
-| `npm run typecheck` | 运行 TypeScript 类型检查 |
-| `npm run test` | 运行基础工具验证脚本 |
-| `npm run api:check` | 检查 API 覆盖率 |
-| `npm run api:scaffold` | 生成新工具代码 (直接注入到文件中) |
-| `npm run api:map` | 更新 API 映射文档 |
+| `npm run dev` | 使用 `tsx` 直接运行源码 |
+| `npm run build` | 编译 TypeScript 代码到 `dist/` |
+| `npm run start` | 运行编译后的 `dist/index.js` |
+| `npm run typecheck` | 执行 TypeScript 类型检查 |
+| `npm run clean` | 清理 `dist/` 目录 |
+| `npm run api:sync` | 更新 API 定义来源数据 |
+| `npm run api:check` | 检查 API 覆盖情况 |
+| `npm run api:scaffold` | 为指定 API 生成工具和服务代码 |
+| `npm run api:map` | 生成 API 与工具映射文档 |
 
 ### 项目结构
 
-```
+```text
 AtomGit-MCP-Server/
 ├── src/
-│   ├── services/    # API 服务层 (封装 Axios 请求)
-│   ├── tools/       # MCP 工具层 (定义 Tool Schema 和处理逻辑)
-│   ├── types/       # TypeScript 类型定义
-│   └── index.ts     # 程序入口 (MCP Server 实例)
-├── dist/            # 编译后的产物
-├── scripts/         # 辅助脚本 (自动化代码生成与文档更新)
-└── docs/            # 文档 (包含详细的 API 映射表)
+│   ├── core/        # 核心基础设施
+│   ├── services/    # API 服务层
+│   ├── tools/       # MCP 工具层
+│   ├── types/       # 类型定义
+│   └── index.ts     # 服务入口
+├── scripts/         # 辅助脚本
+├── docs/            # 文档与 API 映射
+└── dist/            # 编译产物
 ```
 
-## 常见问题 (FAQ)
+## 相关链接
 
-**Q1: Claude 显示 "Tool not loaded" 或找不到工具？**
-*   **A**: 这通常是客户端缓存或 `npx` 配置导致的。尝试重启 Claude Desktop，并检查 `command`/`args` 是否分别配置为 `npx`（Windows 下为 `npx.cmd`）和 `["-y", "@atomgit.com/atomgit-mcp-server"]`。如果你使用的是本地源码方式，再检查 `dist/index.js` 是否存在。
+- npm: [@atomgit.com/atomgit-mcp-server](https://www.npmjs.com/package/@atomgit.com/atomgit-mcp-server)
+- AtomGit Repository: [zkxw2008/AtomGit-MCP-Server](https://atomgit.com/zkxw2008/AtomGit-MCP-Server)
+- GitHub Mirror: [kylezhang/AtomGit-MCP-Server](https://github.com/kylezhang/AtomGit-MCP-Server)
 
-**Q2: 调用工具返回 "404 Not Found"？**
-*   **A**: 请检查你输入的 `owner`（用户名/组织名）和 `repo`（仓库名）是否正确。注意：AtomGit 的 URL 通常区分大小写。如果是新建仓库相关的操作，请确保上级命名空间存在。
+## 许可证
 
-**Q3: 遇到 "invalid_union" 或 "Protocol Error"？**
-*   **A**: 请确保你使用的是最新版本的代码。我们在最新版本中修复了 MCP 协议响应格式的问题。
-
-**Q4: Windows 下无法启动？**
-*   **A**: Windows 下优先使用 `npx.cmd` 作为 `command`。如果仍然无法启动，请确认 Node.js 已正确安装并且 `npx.cmd` 在环境变量中可用。
-
-## 📄 许可证
-
-本项目采用 Apache  2.0 许可证。
+本项目采用 Apache 2.0 License。
