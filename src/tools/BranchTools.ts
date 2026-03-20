@@ -42,9 +42,9 @@ export class BranchTools {
               type: 'string',
               description: 'The name of the new branch'
             },
-            sha: {
+            refs: {
               type: 'string',
-              description: 'The SHA of the commit to create the branch from (optional, defaults to main branch)'
+              description: 'The branch name or commit SHA to create the new branch from (optional, defaults to main branch)'
             }
           },
           required: ['owner', 'repo', 'branch']
@@ -310,7 +310,7 @@ export class BranchTools {
         return await this.branchService.getRepositoryBranches(args.owner, args.repo);
 
       case 'create_repository_branch':
-        return await this.branchService.createRepositoryBranch(args.owner, args.repo, args.branch, args.sha);
+        return await this.branchService.createRepositoryBranch(args.owner, args.repo, args.branch, args.refs);
 
       case 'delete_repository_branch':
         return await this.branchService.deleteRepositoryBranch(args.owner, args.repo, args.name ?? args.branch);
