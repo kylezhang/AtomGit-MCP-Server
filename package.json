@@ -1,6 +1,6 @@
 {
   "name": "@atomgit.com/atomgit-mcp-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "AtomGit MCP Server - Model Context Protocol server for AtomGit code hosting platform",
   "main": "dist/index.js",
   "bin": {
