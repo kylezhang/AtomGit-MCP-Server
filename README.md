@@ -193,6 +193,7 @@ AtomGit-MCP-Server/
 - npm: [@atomgit.com/atomgit-mcp-server](https://www.npmjs.com/package/@atomgit.com/atomgit-mcp-server)
 - AtomGit Repository: [zkxw2008/AtomGit-MCP-Server](https://atomgit.com/zkxw2008/AtomGit-MCP-Server)
 - GitHub Mirror: [kylezhang/AtomGit-MCP-Server](https://github.com/kylezhang/AtomGit-MCP-Server)
+- Release Guide: [RELEASE.md](./RELEASE.md)
 
 ## 许可证
 
