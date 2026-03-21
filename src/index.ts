@@ -12,7 +12,6 @@ import { AxiosError } from 'axios';
 
 // Import all services
 import { SearchService } from './services/SearchService.js';
-import { OauthService } from './services/OauthService.js';
 import { MilestoneService } from './services/MilestoneService.js';
 import { MemberService } from './services/MemberService.js';
 import { WebhooksService } from './services/WebhooksService.js';
@@ -47,7 +46,6 @@ import { MemberTools } from './tools/MemberTools.js';
 import { ReleaseTools } from './tools/ReleaseTools.js';
 import { EnterpriseTools } from './tools/EnterpriseTools.js';
 import { DashboardTools } from './tools/DashboardTools.js';
-import { OauthTools } from './tools/OauthTools.js';
 import { AIHubTools } from './tools/AIHubTools.js';
 import { ToolRegistry } from './core/ToolRegistry.js';
 import { ToolSafetyPolicy } from './core/ToolSafetyPolicy.js';
@@ -128,7 +126,6 @@ class AtomGitMCPServer {
     this.registry.registerTools(new ReleaseTools(new ReleaseService(serviceConfig)));
     this.registry.registerTools(new EnterpriseTools(new EnterpriseService(serviceConfig)));
     this.registry.registerTools(new DashboardTools(new DashboardService(serviceConfig)));
-    this.registry.registerTools(new OauthTools(new OauthService(serviceConfig)));
     this.registry.registerTools(new AIHubTools(new AIHubService(serviceConfig)));
 
     console.error(

@@ -3,12 +3,12 @@ import { BaseService } from './BaseService.js';
 export class EnterpriseService extends BaseService {
   
   async getEnterpriseMemberV8(enterprise: string, username: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/members/${username}`);
+    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members/${username}`);
     return response.data;
   }
 
   async getEnterpriseMembersV8(enterprise: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/members`, {
+    const response = await this.client.get(`/api/v8/enterprises/${enterprise}/members`, {
       params: { page, per_page: perPage }
     });
     return response.data;
@@ -25,7 +25,12 @@ export class EnterpriseService extends BaseService {
   }
 
   async updateEnterpriseMemberV8(enterprise: string, username: string, memberData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/enterprises/${enterprise}/members/${username}`, memberData);
+    const response = await this.client.put(`/api/v8/enterprises/${enterprise}/members/${username}`, memberData);
+    return response.data;
+  }
+
+  async getEnterpriseIssuesV8(enterpriseId: string, queryData: any = {}): Promise<any> {
+    const response = await this.client.post(`/api/v8/enterprises/${enterpriseId}/issues`, queryData);
     return response.data;
   }
 

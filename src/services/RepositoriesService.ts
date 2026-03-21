@@ -20,6 +20,16 @@ import {
 } from '../types/index.js';
 
 export class RepositoriesService extends BaseService {
+  private encodeFileContent(content: string): string {
+    return Buffer.from(content, 'utf8').toString('base64');
+  }
+
+  private withEncodedContent<T extends CreateFileRequest | UpdateFileRequest>(fileData: T): T {
+    return {
+      ...fileData,
+      content: this.encodeFileContent(fileData.content)
+    };
+  }
 
   async getRepositoryTree(owner: string, repo: string, sha: string, recursive?: string): Promise<AtomGitTree> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/git/trees/${sha}`, {
@@ -36,12 +46,18 @@ export class RepositoriesService extends BaseService {
   }
 
   async createRepositoryFile(owner: string, repo: string, fileData: CreateFileRequest): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+    const response = await this.client.post(
+      `/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`,
+      this.withEncodedContent(fileData)
+    );
     return response.data;
   }
 
   async updateRepositoryFile(owner: string, repo: string, fileData: UpdateFileRequest): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, fileData);
+    const response = await this.client.put(
+      `/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`,
+      this.withEncodedContent(fileData)
+    );
     return response.data;
   }
 
@@ -201,8 +217,11 @@ export class RepositoriesService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryRawFile(owner: string, repo: string, path: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${path}`);
+  async getRepositoryRawFile(owner: string, repo: string, path: string, ref?: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${path}`, {
+      params: ref ? { ref } : {},
+      responseType: 'text'
+    });
     return response.data;
   }
 

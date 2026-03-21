@@ -25,66 +25,8 @@ export class DashboardTools {
         }
       },
       {
-        name: 'create_organization_kanban',
-        description: '创建组织看板',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: {
-              type: 'string',
-              description: '组织名'
-            },
-            kanbanData: {
-              type: 'object',
-              description: '看板数据（包含name、description等）'
-            }
-          },
-          required: ['owner', 'kanbanData']
-        }
-      },
-      {
         name: 'get_organization_kanban',
         description: '获取特定看板详情',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: {
-              type: 'string',
-              description: '组织名'
-            },
-            kanban_id: {
-              type: 'string',
-              description: '看板ID'
-            }
-          },
-          required: ['owner', 'kanban_id']
-        }
-      },
-      {
-        name: 'update_organization_kanban',
-        description: '更新组织看板',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: {
-              type: 'string',
-              description: '组织名'
-            },
-            id: {
-              type: 'string',
-              description: '看板ID'
-            },
-            kanbanData: {
-              type: 'object',
-              description: '更新的看板数据'
-            }
-          },
-          required: ['owner', 'id', 'kanbanData']
-        }
-      },
-      {
-        name: 'delete_organization_kanban',
-        description: '删除组织看板',
         inputSchema: {
           type: 'object',
           properties: {
@@ -116,28 +58,6 @@ export class DashboardTools {
             }
           },
           required: ['owner', 'kanban_id']
-        }
-      },
-      {
-        name: 'update_organization_kanban_content',
-        description: '更新看板内容',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: {
-              type: 'string',
-              description: '组织名'
-            },
-            id: {
-              type: 'string',
-              description: '看板ID'
-            },
-            contentData: {
-              type: 'object',
-              description: '看板内容数据'
-            }
-          },
-          required: ['owner', 'id', 'contentData']
         }
       },
       {
@@ -216,23 +136,11 @@ export class DashboardTools {
       case 'get_organization_kanbans':
         return await this.dashboardService.getOrganizationKanbanList(args.owner);
       
-      case 'create_organization_kanban':
-        return await this.dashboardService.createOrganizationKanban(args.owner, args.kanbanData);
-      
       case 'get_organization_kanban':
         return await this.dashboardService.getOrganizationKanban(args.owner, kanbanId);
       
-      case 'update_organization_kanban':
-        return await this.dashboardService.updateOrganizationKanban(args.owner, args.id, args.kanbanData);
-      
-      case 'delete_organization_kanban':
-        return await this.dashboardService.deleteOrganizationKanban(args.owner, args.id);
-      
       case 'get_organization_kanban_content':
         return await this.dashboardService.getOrganizationKanbanContent(args.owner, kanbanId);
-      
-      case 'update_organization_kanban_content':
-        return await this.dashboardService.updateOrganizationKanbanContent(args.owner, args.id, args.contentData);
 
       case 'add_org_kanban_item':
         return await this.dashboardService.addKanbanItem(args.owner, kanbanId, args.itemData);

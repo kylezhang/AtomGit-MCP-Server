@@ -9,7 +9,15 @@ export class BranchService extends BaseService {
   }
 
   async createRepositoryBranch(owner: string, repo: string, branch: string, refs?: string): Promise<Branch> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, { branch, refs });
+    const payload: Record<string, string> = {
+      branch_name: branch
+    };
+
+    if (refs) {
+      payload.refs = refs;
+    }
+
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/branches`, payload);
     return response.data;
   }
   async deleteRepositoryBranch(owner: string, repo: string, branch: string): Promise<void> {

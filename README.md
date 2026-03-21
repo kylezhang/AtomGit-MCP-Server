@@ -2,13 +2,13 @@
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
-![Tools](https://img.shields.io/badge/tools-200+-orange.svg)
+![Tools](https://img.shields.io/badge/tools-200%2B-orange.svg)
 
 `@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae 等。
 
 ## 主要特性
 
-- 全量 MCP 工具接入：覆盖 18 个功能分类，共 200+ 个工具。
+- 全量 MCP 工具接入：覆盖多个功能分类，提供 200+ 个工具。
 - 默认安全模式：危险工具默认隐藏，需要时可显式开启。
 - 基于 Access Token 认证：使用 AtomGit Personal Access Token 访问平台 API。
 - 标准 MCP 协议：兼容基于 stdio 的 MCP 客户端集成方式。
@@ -26,7 +26,7 @@
 - 用户与组织：用户信息、SSH 密钥、组织成员相关能力。
 - 企业与成员：企业级资源和成员权限管理。
 - 搜索与 Webhook：代码搜索、仓库搜索、用户搜索，以及 Webhook 管理。
-- AIHub 与 OAuth：AIHub 模型相关能力，以及 OAuth 相关接口封装。
+- AIHub：AIHub 模型相关能力。
 
 ## 快速开始
 
@@ -131,6 +131,13 @@ npm install
 npm run build
 node dist/index.js
 ```
+
+本地运行前至少需要提供：
+
+- `ATOMGIT_TOKEN`
+- `ATOMGIT_ENABLE_DANGEROUS_TOOLS=false`
+
+如需使用 `.env`，可先复制 `.env.example` 再填写；也可以直接通过 MCP 客户端或 shell 注入环境变量。
 
 如需在 Claude Desktop 等 MCP 客户端中直接联调本地构建产物，可根据操作系统使用如下配置。
 

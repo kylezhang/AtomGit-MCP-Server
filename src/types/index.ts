@@ -161,11 +161,21 @@ export interface PullRequest {
 }
 
 export interface CreateIssueRequest {
+  repo?: string;
   title: string;
   body?: string;
+  assignee?: string;
   assignees?: string[];
+  labels?: string | string[];
   milestone?: number;
-  labels?: string[];
+  security_hole?: string;
+  template_path?: string;
+  issue_type?: string;
+  issue_severity?: string;
+  custom_fields?: Array<{
+    field_name: string;
+    field_values: string[];
+  }>;
 }
 
 export interface CreatePullRequestRequest {
@@ -527,20 +537,39 @@ export interface UpdateMilestoneRequest {
 
 // Issues
 export interface CreateIssueRequest {
+  repo?: string;
   title: string;
   body?: string;
+  assignee?: string;
   assignees?: string[];
+  labels?: string | string[];
   milestone?: number;
-  labels?: string[];
+  security_hole?: string;
+  template_path?: string;
+  issue_type?: string;
+  issue_severity?: string;
+  custom_fields?: Array<{
+    field_name: string;
+    field_values: string[];
+  }>;
 }
 
 export interface UpdateIssueRequest {
   title?: string;
   body?: string;
-  state?: 'open' | 'closed';
+  state?: 'open' | 'closed' | 'reopen' | 'close';
+  assignee?: string;
   assignees?: string[];
+  labels?: string | string[];
   milestone?: number;
-  labels?: string[];
+  security_hole?: string;
+  template_path?: string;
+  issue_type?: string;
+  issue_severity?: string;
+  custom_fields?: Array<{
+    field_name: string;
+    field_values: string[];
+  }>;
 }
 
 export interface CreateIssueCommentRequest {

@@ -1,10 +1,20 @@
 # AtomGit MCP Server - Developer Guide
 
-**Generated:** 2026-03-12
-**Status:** Stable / Complete
+**Generated:** 2026-03-21
+**Status:** Stable / Maintained
 
 ## 1. Project Overview
-AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that provides AI assistants with access to the AtomGit code hosting platform. It exposes **248 tools** covering the full range of AtomGit API capabilities (excluding OAuth).
+AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that provides AI assistants with access to the AtomGit code hosting platform.
+
+Current public surface:
+- **244 public tools**
+- **17 tool categories**
+- **Default safe mode enabled**: dangerous tools are hidden unless `ATOMGIT_ENABLE_DANGEROUS_TOOLS=true`
+
+Important scope rules:
+- Public tools, `docs/apis_url.json`, and `docs/api_tool_map.md` must stay aligned.
+- OAuth documentation pages are intentionally filtered from `docs/apis_url.json` and must not be exposed as public MCP tools.
+- The raw file content documentation page `get-owner-repo-raw-head-sha-name` is **not** filtered; it must remain mapped to the pull request file-content tool.
 
 **Key Technologies:**
 - **Language:** TypeScript (ESM)
@@ -17,119 +27,134 @@ AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that 
 ```
 AtomGit-MCP-Server/
 ├── src/
-│   ├── core/           # Core infrastructure
-│   │   └── ToolRegistry.ts  # Central tool registration (handles 'atomgit_' prefix)
-│   ├── services/       # API Service Layer (HTTP Clients)
-│   ├── tools/          # MCP Tool Layer (Schema Definitions)
-│   ├── types/          # TypeScript Interfaces
-│   └── index.ts        # Application Entry Point
-├── scripts/            # Maintenance Scripts
-│   ├── generate_map.ts # Documentation generator (Bilingual support)
-│   ├── update_apis.ts  # API JSON updater
-│   ├── analyze_coverage.ts # API coverage analyzer
-│   └── scaffold_tool.ts    # Code generator (Direct file injection)
-├── docs/               # Documentation
-│   ├── api_tool_map.md # Detailed API vs Tool Mapping
-│   └── apis_url.json   # Source of Truth for API Definitions
-├── dist/               # Compiled Output
-└── package.json        # Project Configuration
+│   ├── core/
+│   │   ├── ToolRegistry.ts       # Central tool registration / atomgit_ prefix handling
+│   │   └── ToolSafetyPolicy.ts   # Safe mode filtering and blocked-tool messaging
+│   ├── services/                 # API Service Layer (HTTP clients)
+│   ├── tools/                    # MCP Tool Layer (schema definitions)
+│   ├── types/                    # TypeScript interfaces
+│   └── index.ts                  # Application entry point
+├── scripts/
+│   ├── generate_map.ts           # API -> tool documentation generator
+│   ├── update_apis.ts            # Official docs synchronizer
+│   ├── analyze_coverage.ts       # API coverage analyzer
+│   └── scaffold_tool.ts          # Code generator / file injector
+├── docs/
+│   ├── api_tool_map.md           # Detailed API vs Tool mapping
+│   └── apis_url.json             # Source of truth for synced official docs
+├── dist/
+└── package.json
 ```
 
 ### Data Flow
-1.  **MCP Client** (e.g., Claude Desktop) sends a tool call request (e.g., `atomgit_get_repository_tree`).
-2.  **ToolRegistry** routes the request to the appropriate `Tool` class.
-3.  **Tool Layer** (`src/tools/*.ts`) validates parameters and calls the Service layer.
-4.  **Service Layer** (`src/services/*.ts`) executes the HTTP request to AtomGit API (`/api/v5/...`).
-5.  **AtomGit API** processes the request and returns data.
+1. **MCP Client** sends a tool call such as `atomgit_get_repository_tree`.
+2. **ToolRegistry** resolves the public `atomgit_` name to an internal tool.
+3. **ToolSafetyPolicy** determines whether the tool is exposed or blocked by safe mode.
+4. **Tool Layer** (`src/tools/*.ts`) validates parameters and calls the service layer.
+5. **Service Layer** (`src/services/*.ts`) performs the AtomGit API request.
+6. **AtomGit API** returns the result to the MCP server.
 
 ## 3. Development Standards
 
 ### Naming Conventions
-- **Tools**: Must match the underlying API function.
-  - *Internal Name*: `get_repository_tree`
-  - *Public Name*: `atomgit_get_repository_tree` (Automatically prefixed by `ToolRegistry`)
-  - *Description*: **MUST** be in Chinese in the generated documentation (`docs/api_tool_map.md`). The generator script extracts these from `docs/apis_url.json` and combines them with English descriptions from the code.
-- **Services**: CamelCase method names (e.g., `getRepositoryTree`).
+- **Tools**
+  - Internal name: `get_repository_tree`
+  - Public name: `atomgit_get_repository_tree`
+  - Tool descriptions should stay compatible with bilingual map generation.
+- **Services**
+  - Use camelCase service method names such as `getRepositoryTree`.
 
-### Documentation Standards
-- **API Tool Map**: Keep `docs/api_tool_map.md` updated using `scripts/generate_map.ts`.
-  - **Tool Name**: Link to source file in `src/tools/`.
-  - **Description**: Bilingual (Chinese from official docs + English from code).
-  - **API Endpoint**: **MUST** be a Markdown link to the official AtomGit documentation URL.
-    - Source of URLs: `docs/apis_url.json`.
-    - Use `scripts/update_apis.ts` to automatically update `docs/apis_url.json` from the official website.
-    - Use `scripts/generate_map.ts` to automatically match endpoints and generate links.
+### Public Surface Rule
+Keep these four layers aligned:
+1. Official docs pages that are allowed into `docs/apis_url.json`
+2. Implemented services in `src/services/`
+3. Implemented public tools in `src/tools/`
+4. Generated mapping in `docs/api_tool_map.md`
 
-### Adding a New Feature
-1.  **Service Implementation**:
-    - Extend `BaseService` in `src/services/`.
-    - Implement the API call using `this.client.get/post`.
-    - Add proper error handling.
-2.  **Tool Implementation**:
-    - Create/Update corresponding file in `src/tools/`.
-    - Define `InputSchema` using JSON Schema.
-    - Map the tool name to the service method in `callTool()`.
+If an official page is intentionally filtered from `docs/apis_url.json`, the matching public tool/service should not remain exposed unless there is an explicit documented exception.
+
+### Documentation Sync Rules
+- `docs/apis_url.json` is the source of truth for official API doc coverage.
+- `scripts/update_apis.ts` reads from `https://docs.atomgit.com/sitemap.xml`.
+- The sitemap may still emit `docs.gitcode.com` URLs; the sync script must normalize them to `docs.atomgit.com` before fetching and storing.
+- The following pages are intentionally filtered and must stay out of `docs/apis_url.json`:
+  - `https://docs.atomgit.com/docs/apis/get-oauth-authorize-client-id-client-id-redirect-uri-redirect-uri-response-type-code-scope-scope-state-state`
+  - `https://docs.atomgit.com/docs/apis/post-oauth-token-grant-type-authorization-code-code-code-client-id-client-id-client-secret-client-secret`
+  - `https://docs.atomgit.com/docs/apis/oauth`
+  - `https://docs.atomgit.com/docs/apis/delete-api-v-5-org-owner-kanban-kanban-id-remove-item`
+  - `https://docs.atomgit.com/docs/apis/put-api-v-5-org-owner-kanban-repo-repo-type-iid`
+- The raw file content page below must **not** be filtered and must parse as a valid endpoint:
+  - `https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name`
+  - Expected endpoint path: `/:owner/:repo/raw/:head_sha/:name`
+
+### Adding or Updating a Feature
+1. **Service implementation**
+   - Extend `BaseService` in `src/services/`.
+   - Implement the AtomGit API call.
+   - Preserve request shape expected by the official docs.
+2. **Tool implementation**
+   - Add or update the corresponding tool in `src/tools/`.
+   - Define the input schema with JSON Schema.
+   - Map the tool name to the service method in `callTool()`.
+3. **Documentation sync**
+   - Run `npm run api:sync`
+   - Run `npm run api:map`
+   - Run `npm run api:check`
+4. **Validation**
+   - Run `npm run typecheck`
+   - Run `npm run build`
 
 ## 4. Workflow
 
 ### Setup
-1.  Copy `.env.example` to `.env`.
-2.  Configure your `ATOMGIT_TOKEN`.
+You can provide configuration in either of these ways:
+1. Copy `.env.example` to `.env` and set `ATOMGIT_TOKEN`
+2. Inject environment variables directly from the MCP client or shell
+
+Useful variables:
+- `ATOMGIT_TOKEN`
+- `ATOMGIT_ENABLE_DANGEROUS_TOOLS`
 
 ### Build & Run
 ```bash
-# Install dependencies
 npm install
-
-# Development mode (hot reload)
 npm run dev
-
-# Build for production
 npm run build
-
-# Clean build artifacts
 npm run clean
 ```
 
 ### Verification
-- **Unit Testing**: (Tests are currently being refactored)
-- **Manual Verification**: Use `npm run dev` and connect via an MCP inspector or client.
+Primary checks:
+- `npm run api:sync`
+- `npm run api:map`
+- `npm run api:check`
+- `npm run typecheck`
+- `npm run build`
+
+Notes:
+- `api:check` uses canonical endpoint normalization and deduplication, so its total may be lower than the raw `docs/apis_url.json` count.
+- Safe mode changes runtime exposure, so the number returned by `tools/list` can be lower than the public tool definition count.
 
 ## 5. Reference
-- [API to Tool Mapping](docs/api_tool_map.md): Detailed list of available tools and their corresponding API endpoints.
+- [API to Tool Mapping](docs/api_tool_map.md): generated source of truth for public tool-to-doc mapping
+- [Synced API Definitions](docs/apis_url.json): filtered official documentation inventory
 
 ## 6. Automation Workflow
-
-The project includes several scripts to streamline the development process.
 
 ### Commands
 
 | Command | Description |
 |---------|-------------|
-| `npm run api:sync` | Fetches the latest API definitions from the official documentation and updates `docs/apis_url.json`. |
-| `npm run api:map` | Generates the `docs/api_tool_map.md` documentation based on implemented tools, with bilingual descriptions and official API links. |
-| `npm run api:check` | Analyzes code coverage and lists APIs that have not yet been implemented (compares code against `docs/apis_url.json`). |
-| `npm run api:scaffold -- "query"` | Generates boilerplate code for a specific API and **injects it directly** into the corresponding Service and Tool files. |
+| `npm run api:sync` | Sync official AtomGit documentation into `docs/apis_url.json` using the project's filtering and normalization rules. |
+| `npm run api:map` | Generate `docs/api_tool_map.md` from implemented tools and synced docs. |
+| `npm run api:check` | Compare implemented public tools against canonical synced APIs and report coverage. |
+| `npm run api:scaffold -- "query"` | Generate boilerplate for a matched API and inject it into the relevant service and tool files. |
 
 ### Typical Workflow
-
-1.  **Sync Official APIs**:
-    ```bash
-    npm run api:sync
-    ```
-2.  **Check Missing APIs**:
-    ```bash
-    npm run api:check
-    ```
-3.  **Scaffold New Tool**:
-    This command will automatically find the matching API, generate the code, and write it to the correct `src/services/` and `src/tools/` files.
-    ```bash
-    npm run api:scaffold -- "branches/:name"
-    ```
-4.  **Verify & Refine**:
-    - Check the modified files using `git diff`.
-    - Ensure parameter types and logic are correct.
-5.  **Update Documentation**:
-    ```bash
-    npm run api:map
-    ```
+1. Run `npm run api:sync`
+2. Run `npm run api:check`
+3. Implement or remove public tools to match the synced official API set
+4. Run `npm run api:map`
+5. Run `npm run typecheck`
+6. Run `npm run build`
+7. Review the final `git diff`

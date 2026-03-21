@@ -9,8 +9,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const OUTPUT_FILE = path.join(__dirname, '../docs/apis_url.json');
 
-const SITEMAP_URL = 'https://docs.gitcode.com/sitemap.xml';
+const SITEMAP_URL = 'https://docs.atomgit.com/sitemap.xml';
 const CONCURRENCY = 10;
+const DOCS_HOST = 'docs.atomgit.com';
+const IGNORED_DOC_URLS = new Set([
+  // OAuth authorization flow docs are not modeled as MCP API tools.
+  'https://docs.atomgit.com/docs/apis/get-oauth-authorize-client-id-client-id-redirect-uri-redirect-uri-response-type-code-scope-scope-state-state',
+  'https://docs.atomgit.com/docs/apis/post-oauth-token-grant-type-authorization-code-code-code-client-id-client-id-client-secret-client-secret',
+  'https://docs.atomgit.com/docs/apis/oauth',
+  // Legacy duplicate pages kept by the docs site. The `-new` variants are the canonical ones.
+  'https://docs.atomgit.com/docs/apis/delete-api-v-5-org-owner-kanban-kanban-id-remove-item',
+  'https://docs.atomgit.com/docs/apis/put-api-v-5-org-owner-kanban-repo-repo-type-iid'
+]);
 
 interface ApiEndpoint {
   name: string;
@@ -26,20 +36,80 @@ interface Category {
 }
 
 async function fetchUrl(url: string, retries = 3): Promise<string | null> {
+  const normalizedUrl = normalizeDocumentationUrl(url);
   try {
-    const response = await axios.get(url, { timeout: 10000 });
+    const response = await axios.get(normalizedUrl, { timeout: 10000 });
     return response.data;
   } catch (error: any) {
     if (retries > 0) {
       await new Promise(r => setTimeout(r, 1000));
-      return fetchUrl(url, retries - 1);
+      return fetchUrl(normalizedUrl, retries - 1);
     }
-    console.error(`Failed to fetch ${url}:`, error.message);
+    console.error(`Failed to fetch ${normalizedUrl}:`, error.message);
     return null;
   }
 }
 
+function normalizeDocumentationUrl(url: string): string {
+  try {
+    const normalized = new URL(url);
+    normalized.hostname = DOCS_HOST;
+    return normalized.toString();
+  } catch {
+    return url;
+  }
+}
+
+function normalizeEndpointPath(pathValue: string): string {
+  let endpointPath = pathValue.trim();
+  if (!endpointPath) {
+    return 'Unknown';
+  }
+
+  if (endpointPath.startsWith('http://') || endpointPath.startsWith('https://')) {
+    try {
+      endpointPath = new URL(endpointPath).pathname;
+    } catch {
+      return 'Unknown';
+    }
+  }
+
+  if (!endpointPath.startsWith('/')) {
+    endpointPath = `/${endpointPath}`;
+  }
+
+  return endpointPath.replace(/\s+/g, '');
+}
+
+function scoreEndpoint(endpoint: ApiEndpoint): number {
+  let score = 0;
+  if (endpoint.endpointPath !== 'Unknown') score += 4;
+  if (!/%[0-9A-Fa-f]{2}/.test(endpoint.documentationUrl)) score += 2;
+  if (!endpoint.documentationUrl.includes('-new')) score += 1;
+  return score;
+}
+
+function dedupeEndpoints(endpoints: ApiEndpoint[]): ApiEndpoint[] {
+  const deduped = new Map<string, ApiEndpoint>();
+
+  for (const endpoint of endpoints) {
+    const key = `${endpoint.httpMethod}:${endpoint.name}`;
+    const existing = deduped.get(key);
+
+    if (!existing || scoreEndpoint(endpoint) > scoreEndpoint(existing)) {
+      deduped.set(key, endpoint);
+    }
+  }
+
+  return Array.from(deduped.values()).sort((a, b) => {
+    if (a.httpMethod !== b.httpMethod) return a.httpMethod.localeCompare(b.httpMethod);
+    return a.name.localeCompare(b.name, 'zh-CN');
+  });
+}
+
 async function parsePage(url: string, html: string): Promise<{ category: string, endpoint: ApiEndpoint } | null> {
+  if (IGNORED_DOC_URLS.has(url)) return null;
+
   const $ = cheerio.load(html);
   
   const title = $('h1').first().text().trim();
@@ -77,22 +147,18 @@ async function parsePage(url: string, html: string): Promise<{ category: string,
   if (!method) method = 'Unknown';
 
   // Path
-  const pathRegex = /(?:\/|https:\/\/api\.(?:atomgit|gitcode)\.com\/)api\/v5\/[a-zA-Z0-9\-\_\.\/\{\}\:]+/g;
-  const matches = html.match(pathRegex);
-  let endpointPath = 'Unknown';
-  
-  if (matches) {
+  let endpointPath = normalizeEndpointPath($('.openapi__method-endpoint-path').first().text());
+
+  if (endpointPath === 'Unknown') {
+    const pathRegex = /(?:\/|https:\/\/api\.[^\/]+\/)api\/v(?:1|5|8)\/[a-zA-Z0-9\-\_\.\/\{\}\:]+/g;
+    const matches = html.match(pathRegex);
+
+    if (matches) {
       const paths = matches.filter((m: string) => m.length > 10 && !m.endsWith('api/v5'));
       if (paths.length > 0) {
-          let bestPath = paths[0];
-          if (bestPath.startsWith('http')) {
-              try {
-                  const urlObj = new URL(bestPath);
-                  bestPath = urlObj.pathname;
-              } catch (e) {}
-          }
-          endpointPath = bestPath;
+        endpointPath = normalizeEndpointPath(paths[0]);
       }
+    }
   }
 
   return {
@@ -101,7 +167,7 @@ async function parsePage(url: string, html: string): Promise<{ category: string,
           name: title,
           httpMethod: method,
           endpointPath,
-          documentationUrl: url
+          documentationUrl: normalizeDocumentationUrl(url)
       }
   };
 }
@@ -112,12 +178,12 @@ async function main() {
   if (!sitemapXml) return;
 
   // Extract URLs
-  const urlRegex = /<loc>(https:\/\/docs\.gitcode\.com\/docs\/apis\/[^<]+)<\/loc>/g;
+  const urlRegex = /<loc>(https:\/\/docs\.[^\/]+\/docs\/apis\/[^<]+)<\/loc>/g;
   const urls: string[] = [];
   let match;
   while ((match = urlRegex.exec(sitemapXml)) !== null) {
-      const u = match[1];
-      if (u !== 'https://docs.gitcode.com/docs/apis/') {
+      const u = normalizeDocumentationUrl(match[1]);
+      if (u !== 'https://docs.atomgit.com/docs/apis/' && !IGNORED_DOC_URLS.has(u)) {
         urls.push(u);
       }
   }
@@ -156,7 +222,7 @@ async function main() {
   const sortedKeys = Array.from(categoriesMap.keys()).sort();
 
   for (const key of sortedKeys) {
-      const endpoints = categoriesMap.get(key)!;
+      const endpoints = dedupeEndpoints(categoriesMap.get(key)!);
       // Filter valid endpoints
       // We accept 'Unknown' path if the page clearly looks like an API doc (has a method)
       // Or if it's "Oauth" which might be special.

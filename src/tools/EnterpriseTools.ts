@@ -281,6 +281,24 @@ export class EnterpriseTools {
           },
           required: ['enterprise', 'enterprise_id']
         }
+      },
+      {
+        name: 'get_enterprise_issues_v8',
+        description: '获取企业Issue列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterprise_id: {
+              type: 'string',
+              description: '企业ID'
+            },
+            queryData: {
+              type: 'object',
+              description: '查询请求体，按官方接口透传筛选、分页和排序参数'
+            }
+          },
+          required: ['enterprise_id']
+        }
       }
     ];
   }
@@ -338,6 +356,12 @@ export class EnterpriseTools {
       
       case 'get_enterprise_issue_extend_fields_v8':
         return await this.enterpriseService.getEnterpriseIssueExtendFields(args.enterprise, args.enterprise_id ?? args.enterprisesId);
+
+      case 'get_enterprise_issues_v8':
+        return await this.enterpriseService.getEnterpriseIssuesV8(
+          args.enterprise_id ?? args.enterpriseId,
+          args.queryData ?? {},
+        );
       
       default:
         throw new Error(`Unknown tool: ${name}`);

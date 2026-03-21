@@ -62,9 +62,13 @@ export class IssuesTools {
               type: 'string',
               description: 'The body content of the issue'
             },
+            assignee: {
+              type: 'string',
+              description: 'Comma-separated usernames to assign'
+            },
             assignees: {
               type: 'array',
-              description: 'Array of usernames to assign',
+              description: 'Legacy compatibility alias for assignee',
               items: {
                 type: 'string'
               }
@@ -74,14 +78,56 @@ export class IssuesTools {
               description: 'Milestone number to associate with the issue'
             },
             labels: {
+              description: 'Comma-separated label names. Also accepts an array for legacy compatibility.',
+              oneOf: [
+                {
+                  type: 'string'
+                },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string'
+                  }
+                }
+              ]
+            },
+            security_hole: {
+              type: 'string',
+              description: 'Security issue marker'
+            },
+            template_path: {
+              type: 'string',
+              description: 'Issue template path'
+            },
+            issue_type: {
+              type: 'string',
+              description: 'Issue type'
+            },
+            issue_severity: {
+              type: 'string',
+              description: 'Issue severity'
+            },
+            custom_fields: {
               type: 'array',
-              description: 'Array of label names to add',
+              description: 'Custom enterprise issue fields',
               items: {
-                type: 'string'
+                type: 'object',
+                properties: {
+                  field_name: {
+                    type: 'string'
+                  },
+                  field_values: {
+                    type: 'array',
+                    items: {
+                      type: 'string'
+                    }
+                  }
+                },
+                required: ['field_name', 'field_values']
               }
             }
           },
-          required: ['owner', 'repo', 'title']
+          required: ['owner', 'repo', 'title', 'body']
         }
       },
       {
@@ -134,12 +180,16 @@ export class IssuesTools {
             },
             state: {
               type: 'string',
-              description: 'State of the issue (open, closed)',
-              enum: ['open', 'closed']
+              description: 'State of the issue (close/reopen, also accepts open/closed for compatibility)',
+              enum: ['open', 'closed', 'reopen', 'close']
+            },
+            assignee: {
+              type: 'string',
+              description: 'Comma-separated usernames to assign'
             },
             assignees: {
               type: 'array',
-              description: 'Array of usernames to assign',
+              description: 'Legacy compatibility alias for assignee',
               items: {
                 type: 'string'
               }
@@ -149,10 +199,52 @@ export class IssuesTools {
               description: 'Milestone number to associate with the issue'
             },
             labels: {
+              description: 'Comma-separated label names. Also accepts an array for legacy compatibility.',
+              oneOf: [
+                {
+                  type: 'string'
+                },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string'
+                  }
+                }
+              ]
+            },
+            security_hole: {
+              type: 'string',
+              description: 'Security issue marker'
+            },
+            template_path: {
+              type: 'string',
+              description: 'Issue template path'
+            },
+            issue_type: {
+              type: 'string',
+              description: 'Issue type'
+            },
+            issue_severity: {
+              type: 'string',
+              description: 'Issue severity'
+            },
+            custom_fields: {
               type: 'array',
-              description: 'Array of label names',
+              description: 'Custom enterprise issue fields',
               items: {
-                type: 'string'
+                type: 'object',
+                properties: {
+                  field_name: {
+                    type: 'string'
+                  },
+                  field_values: {
+                    type: 'array',
+                    items: {
+                      type: 'string'
+                    }
+                  }
+                },
+                required: ['field_name', 'field_values']
               }
             }
           },
@@ -765,9 +857,15 @@ export class IssuesTools {
         const issueData = {
           title: args.title,
           body: args.body,
+          assignee: args.assignee,
           assignees: args.assignees,
           milestone: args.milestone,
-          labels: args.labels
+          labels: args.labels,
+          security_hole: args.security_hole,
+          template_path: args.template_path,
+          issue_type: args.issue_type,
+          issue_severity: args.issue_severity,
+          custom_fields: args.custom_fields
         };
         return await this.issuesService.createRepositoryIssue(args.owner, args.repo, issueData);
 
@@ -779,9 +877,15 @@ export class IssuesTools {
           title: args.title,
           body: args.body,
           state: args.state,
+          assignee: args.assignee,
           assignees: args.assignees,
           milestone: args.milestone,
-          labels: args.labels
+          labels: args.labels,
+          security_hole: args.security_hole,
+          template_path: args.template_path,
+          issue_type: args.issue_type,
+          issue_severity: args.issue_severity,
+          custom_fields: args.custom_fields
         });
 
       case 'get_repository_issue_comments':

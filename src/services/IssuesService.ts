@@ -2,14 +2,110 @@ import { BaseService } from './BaseService.js';
 import { Issue, CreateIssueRequest, UpdateIssueRequest, CreateIssueCommentRequest, UpdateIssueCommentRequest } from '../types/index.js';
 
 export class IssuesService extends BaseService {
+  private normalizeIssueAssignee(assignee?: string, assignees?: string[]): string | undefined {
+    if (assignee) {
+      return assignee;
+    }
+    if (assignees && assignees.length > 0) {
+      return assignees.join(',');
+    }
+    return undefined;
+  }
+
+  private normalizeIssueLabels(labels?: string | string[]): string | undefined {
+    if (typeof labels === 'string') {
+      return labels;
+    }
+    if (labels && labels.length > 0) {
+      return labels.join(',');
+    }
+    return undefined;
+  }
+
+  private normalizeIssueState(state?: 'open' | 'closed' | 'reopen' | 'close'): 'reopen' | 'close' | undefined {
+    if (!state) {
+      return undefined;
+    }
+    if (state === 'open') {
+      return 'reopen';
+    }
+    if (state === 'closed') {
+      return 'close';
+    }
+    return state;
+  }
+
+  private buildIssuePayload(
+    repo: string | undefined,
+    issueData: CreateIssueRequest | UpdateIssueRequest,
+    includeRepo = false
+  ): Record<string, unknown> {
+    const payload: Record<string, unknown> = {};
+
+    if (includeRepo && repo) {
+      payload.repo = repo;
+    }
+
+    if (issueData.title !== undefined) {
+      payload.title = issueData.title;
+    }
+    if (issueData.body !== undefined) {
+      payload.body = issueData.body;
+    }
+
+    const assignee = this.normalizeIssueAssignee(issueData.assignee, issueData.assignees);
+    if (assignee) {
+      payload.assignee = assignee;
+    }
+
+    if (issueData.milestone !== undefined) {
+      payload.milestone = issueData.milestone;
+    }
+
+    const labels = this.normalizeIssueLabels(issueData.labels);
+    if (labels) {
+      payload.labels = labels;
+    }
+
+    if (issueData.security_hole !== undefined) {
+      payload.security_hole = issueData.security_hole;
+    }
+    if (issueData.template_path !== undefined) {
+      payload.template_path = issueData.template_path;
+    }
+    if (issueData.issue_type !== undefined) {
+      payload.issue_type = issueData.issue_type;
+    }
+    if (issueData.issue_severity !== undefined) {
+      payload.issue_severity = issueData.issue_severity;
+    }
+    if (issueData.custom_fields !== undefined) {
+      payload.custom_fields = issueData.custom_fields;
+    }
+
+    const normalizedState = this.normalizeIssueState(
+      'state' in issueData ? issueData.state : undefined
+    );
+    if (normalizedState) {
+      payload.state = normalizedState;
+    }
+
+    return payload;
+  }
   
   async createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/issues`, issueData);
+    const response = await this.client.post(
+      `/api/v5/repos/${owner}/issues`,
+      this.buildIssuePayload(repo, issueData, true)
+    );
     return response.data;
   }
 
   async updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: UpdateIssueRequest): Promise<Issue> {
-    const response = await this.client.patch(`/api/v5/repos/${owner}/issues/${issueNumber}`, updateData);
+    const response = await this.client.patch(
+      `/api/v5/repos/${owner}/issues/${issueNumber}`,
+      this.buildIssuePayload(repo, updateData)
+    );
     return response.data;
   }
 
@@ -59,7 +155,7 @@ export class IssuesService extends BaseService {
   }
 
   async createRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, labels);
     return response.data;
   }
 
@@ -70,7 +166,7 @@ export class IssuesService extends BaseService {
 
   async getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
-      params: { page, per_page: perPage }
+      params: { repo, page, per_page: perPage }
     });
     return response.data;
   }
@@ -159,7 +255,7 @@ export class IssuesService extends BaseService {
   }
 
   async replaceRepositoryIssueAllLabels(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, labels);
     return response.data;
   }
 

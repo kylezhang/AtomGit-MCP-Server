@@ -46,7 +46,7 @@ export class RepositoriesTools {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
             path: { type: 'string', description: '文件路径' },
-            content: { type: 'string', description: '文件内容' },
+            content: { type: 'string', description: '文件内容（明文传入，服务端会自动按 AtomGit API 要求编码为 base64）' },
             message: { type: 'string', description: '提交信息' },
             branch: { type: 'string', description: '分支名称' }
           },
@@ -62,7 +62,7 @@ export class RepositoriesTools {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
             path: { type: 'string', description: '文件路径' },
-            content: { type: 'string', description: '文件内容' },
+            content: { type: 'string', description: '文件内容（明文传入，服务端会自动按 AtomGit API 要求编码为 base64）' },
             message: { type: 'string', description: '提交信息' },
             sha: { type: 'string', description: '文件SHA值' },
             branch: { type: 'string', description: '分支名称' }
@@ -454,7 +454,8 @@ export class RepositoriesTools {
           properties: {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
-            path: { type: 'string', description: '文件路径' }
+            path: { type: 'string', description: '文件路径' },
+            ref: { type: 'string', description: '分支或 tag 名称，可选' }
           },
           required: ['owner', 'repo', 'path']
         }
@@ -610,7 +611,7 @@ export class RepositoriesTools {
         return await this.service.getRepositoryDownloadStatistics(args.owner, args.repo);
       
       case 'get_repository_raw_file':
-        return await this.service.getRepositoryRawFile(args.owner, args.repo, args.path);
+        return await this.service.getRepositoryRawFile(args.owner, args.repo, args.path, args.ref);
       
       case 'get_repository_contributors_statistic':
         return await this.service.getRepositoryContributorsStatistic(args.owner, args.repo);

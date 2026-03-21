@@ -53,37 +53,32 @@ const KNOWN_VARS = new Set([
 ]);
 
 const MANUAL_OVERRIDES: Record<string, string> = {
-  'get_repository_pull_approval_reviewer_options': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-reviewers',
-  'get_repository_pull_tester_options': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-testers',
-  'assign_repository_pull_approval_reviewers': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers',
-  'assign_repository_pull_assignees': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-assignees',
-  'assign_repository_pull_testers': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-testers',
-  'remove_repository_pull_approval_reviewers': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-approval-reviewers',
-  'remove_repository_pull_assignees': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-assignees',
-  'remove_repository_pull_testers': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-testers',
-  'link_repository_pull_issues': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-linked-issues',
-  'reply_pull_request_discussion': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-discussions-discussions-id-comments',
-  'reset_repository_pull_assignees': 'https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-assignees',
-  'reset_repository_pull_testers': 'https://docs.gitcode.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-testers',
-  'get_repository_pull_file_content': 'https://docs.gitcode.com/docs/apis/get-owner-repo-raw-head-sha-name',
-  'get_repository_tree': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-git-trees-sha',
-  'get_organization_pull_requests': 'https://docs.gitcode.com/docs/apis/get-api-v-5-org-org-pull-requests',
-  'get_repository_issue_operate_logs': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-issues-number-operate-logs',
-  'get_repository_issue_comment_modify_history': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-issues-comment-comment-id-modify-history',
-  'get_repository_issue_comment_reactions': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-issues-comment-comment-id-user-reactions',
-  'get_enterprise_issue_labels': 'https://docs.gitcode.com/docs/apis/get-api-v-5-enterprises-enterprise-issues-issue-id-labels',
-  'get_pull_request_comment_modify_history': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-comment-comment-id-modify-history',
-  'get_pull_request_comment_reactions': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-comment-comment-id-user-reactions',
-  'compare_repository_commits': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-compare-base-head',
-  'create_repository_issue': 'https://docs.gitcode.com/docs/apis/post-api-v-5-repos-owner-issues',
-  'audio_transcription': 'https://docs.gitcode.com/docs/apis/post-api-v-1-audio-transcriptions',
-  'get_repository_commit_diff': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff',
-  'get_repository_commit_patch': 'https://docs.gitcode.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-patch',
-  'get_repository_commit_statistics': 'https://docs.gitcode.com/docs/apis/get-api-v-5-owner-repo-repository-commit-statistics',
-  'create_organization_kanban': 'https://docs.gitcode.com/docs/apis/post-api-v-5-org-owner-kanban-create',
-  'delete_organization_kanban': 'https://docs.gitcode.com/docs/apis/delete-api-v-5-org-owner-kanban-id',
-  'update_organization_kanban': 'https://docs.gitcode.com/docs/apis/put-api-v-5-org-owner-kanban-id',
-  'update_organization_kanban_content': 'https://docs.gitcode.com/docs/apis/put-api-v-5-org-owner-kanban-id-content'
+  'get_repository_pull_approval_reviewer_options': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-reviewers',
+  'get_repository_pull_tester_options': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-testers',
+  'assign_repository_pull_approval_reviewers': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers',
+  'assign_repository_pull_assignees': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-assignees',
+  'assign_repository_pull_testers': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-testers',
+  'remove_repository_pull_approval_reviewers': 'https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-approval-reviewers',
+  'remove_repository_pull_assignees': 'https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-assignees',
+  'remove_repository_pull_testers': 'https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-testers',
+  'link_repository_pull_issues': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-linked-issues',
+  'reply_pull_request_discussion': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-discussions-discussions-id-comments',
+  'reset_repository_pull_assignees': 'https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-assignees',
+  'reset_repository_pull_testers': 'https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-testers',
+  'get_repository_tree': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-git-trees-sha',
+  'get_organization_pull_requests': 'https://docs.atomgit.com/docs/apis/get-api-v-5-org-org-pull-requests',
+  'get_repository_issue_operate_logs': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-issues-number-operate-logs',
+  'get_repository_issue_comment_modify_history': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-issues-comment-comment-id-modify-history',
+  'get_repository_issue_comment_reactions': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-issues-comment-comment-id-user-reactions',
+  'get_enterprise_issue_labels': 'https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-issues-issue-id-labels',
+  'get_pull_request_comment_modify_history': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-comment-comment-id-modify-history',
+  'get_pull_request_comment_reactions': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-comment-comment-id-user-reactions',
+  'compare_repository_commits': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-compare-base-head',
+  'create_repository_issue': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-issues',
+  'audio_transcription': 'https://docs.atomgit.com/docs/apis/post-api-v-1-audio-transcriptions',
+  'get_repository_commit_diff': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-diff',
+  'get_repository_commit_patch': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-commits-sha-patch',
+  'get_repository_commit_statistics': 'https://docs.atomgit.com/docs/apis/get-api-v-5-owner-repo-repository-commit-statistics'
 };
 
 const MANUAL_ENDPOINT_OVERRIDES: Record<string, string> = {
@@ -392,28 +387,28 @@ async function main() {
       if (endpoint === 'Unknown' && endpointInfo) {
         endpoint = endpointInfo.endpoint;
         method = endpointInfo.method;
+      }
 
+      if (!docUrl && endpoint !== 'Unknown') {
         // Strategy 1: Path Slug Match
-        if (!docUrl) {
-            const slug = normalizeCodePathToSlug(endpoint);
-            const slugKey = `SLUG:${method}:${slug}`;
-            
-            if (urlMap.has(slugKey)) {
-                const val = urlMap.get(slugKey)!;
-                docUrl = val.url;
-                apiName = val.name;
-            } else {
-                 // Strategy 3: Pattern Match
-                 const codePattern = generateUnifiedPattern(endpoint);
-                 const patternKey = `PATTERN:${method}:${codePattern}`;
-                 // console.log(`Code Pattern: ${patternKey}`); // Debug
+        const slug = normalizeCodePathToSlug(endpoint);
+        const slugKey = `SLUG:${method}:${slug}`;
+        
+        if (urlMap.has(slugKey)) {
+            const val = urlMap.get(slugKey)!;
+            docUrl = val.url;
+            apiName = val.name;
+        } else {
+             // Strategy 3: Pattern Match
+             const codePattern = generateUnifiedPattern(endpoint);
+             const patternKey = `PATTERN:${method}:${codePattern}`;
+             // console.log(`Code Pattern: ${patternKey}`); // Debug
 
-                 if (urlMap.has(patternKey)) {
-                     const val = urlMap.get(patternKey)!;
-                     docUrl = val.url;
-                     apiName = val.name;
-                 }
-            }
+             if (urlMap.has(patternKey)) {
+                 const val = urlMap.get(patternKey)!;
+                 docUrl = val.url;
+                 apiName = val.name;
+             }
         }
       }
 

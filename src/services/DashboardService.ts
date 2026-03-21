@@ -39,28 +39,8 @@ export class DashboardService extends BaseService {
     return response.data;
   }
 
-  async createOrganizationKanban(owner: string, kanbanData: any): Promise<any> {
-    const response = await this.client.post(`/api/v5/org/${owner}/kanban/create`, kanbanData);
-    return response.data;
-  }
-
-  async updateOrganizationKanban(owner: string, id: string, kanbanData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}`, kanbanData);
-    return response.data;
-  }
-
-  async deleteOrganizationKanban(owner: string, id: string): Promise<any> {
-    const response = await this.client.delete(`/api/v5/org/${owner}/kanban/${id}`);
-    return response.data;
-  }
-
   async getOrganizationKanbanContent(owner: string, id: string): Promise<any> {
     const response = await this.client.get(`/api/v5/org/${owner}/kanban/${id}/item_list`);
-    return response.data;
-  }
-
-  async updateOrganizationKanbanContent(owner: string, id: string, contentData: any): Promise<any> {
-    const response = await this.client.put(`/api/v5/org/${owner}/kanban/${id}/content`, contentData);
     return response.data;
   }
 
