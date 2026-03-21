@@ -1,4 +1,5 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { ToolSafetyPolicy } from './ToolSafetyPolicy.js';
 
 /**
  * Tool handler interface for registry lookup
@@ -15,7 +16,13 @@ export interface ToolHandler {
  * Each tool is registered by name for fast access.
  */
 export class ToolRegistry {
+  private readonly safetyPolicy: ToolSafetyPolicy;
   private handlers: Map<string, ToolHandler> = new Map();
+  private blockedTools: Set<string> = new Set();
+
+  constructor(safetyPolicy = new ToolSafetyPolicy()) {
+    this.safetyPolicy = safetyPolicy;
+  }
 
   /**
    * Register a tool with its execution handler
@@ -30,8 +37,13 @@ export class ToolRegistry {
   registerTools(toolsInstance: any): void {
     const tools = toolsInstance.getTools();
     for (const tool of tools) {
-      // Add 'atomgit_' prefix to all tool names
-      const prefixedName = `atomgit_${tool.name}`;
+      const prefixedName = this.safetyPolicy.toPublicToolName(tool.name);
+
+      if (!this.safetyPolicy.shouldRegisterInternalName(tool.name)) {
+        this.blockedTools.add(prefixedName);
+        continue;
+      }
+
       const prefixedTool = { ...tool, name: prefixedName };
       
       this.register(prefixedName, {
@@ -63,9 +75,37 @@ export class ToolRegistry {
   }
 
   /**
+   * Check if tool is blocked by safety policy
+   */
+  isBlocked(name: string): boolean {
+    return this.blockedTools.has(name);
+  }
+
+  /**
+   * Get all blocked tool names
+   */
+  getBlockedTools(): string[] {
+    return Array.from(this.blockedTools.values());
+  }
+
+  /**
    * Get total tool count
    */
   get size(): number {
     return this.handlers.size;
+  }
+
+  /**
+   * Get blocked tool count
+   */
+  get blockedSize(): number {
+    return this.blockedTools.size;
+  }
+
+  /**
+   * Get total tool count including blocked tools
+   */
+  get totalSize(): number {
+    return this.size + this.blockedSize;
   }
 }

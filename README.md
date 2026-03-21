@@ -9,6 +9,7 @@
 ## 主要特性
 
 - 全量 MCP 工具接入：覆盖 18 个功能分类，共 200+ 个工具。
+- 默认安全模式：危险工具默认隐藏，需要时可显式开启。
 - 基于 Access Token 认证：使用 AtomGit Personal Access Token 访问平台 API。
 - 标准 MCP 协议：兼容基于 stdio 的 MCP 客户端集成方式。
 - TypeScript 实现：包含类型定义、参数校验和构建产物。
@@ -51,9 +52,22 @@
 npx -y @atomgit.com/atomgit-mcp-server
 ```
 
-运行前请先设置环境变量 `ATOMGIT_TOKEN`。
+运行前请先设置环境变量 `ATOMGIT_TOKEN`。默认安全模式下，`delete_*`、`remove_*`、`leave_*`、`archive_*`、`transfer_*` 这类危险工具不会暴露给 MCP 客户端。
 
-### 3. 在 Claude Desktop 中配置
+### 3. 安全模式与危险工具开关
+
+- 默认值：`ATOMGIT_ENABLE_DANGEROUS_TOOLS=false`
+- 默认行为：危险工具不会出现在 `tools/list` 中，直接调用也会收到明确禁用提示
+- 开启方式：设置 `ATOMGIT_ENABLE_DANGEROUS_TOOLS=true` 后重启服务
+- 当前文档与 `docs/api_tool_map.md` 仍展示完整工具能力；运行时实际暴露的工具集合取决于该开关
+
+例如，在临时 shell 中显式开启危险工具：
+
+```bash
+ATOMGIT_ENABLE_DANGEROUS_TOOLS=true npx -y @atomgit.com/atomgit-mcp-server
+```
+
+### 4. 在 Claude Desktop 中配置
 
 Claude Desktop 配置文件位置：
 
@@ -74,7 +88,8 @@ Windows 环境建议将 `command` 设置为 `npx.cmd`：
         "@atomgit.com/atomgit-mcp-server"
       ],
       "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
+        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
       }
     }
   }
@@ -93,7 +108,8 @@ Windows 环境建议将 `command` 设置为 `npx.cmd`：
         "@atomgit.com/atomgit-mcp-server"
       ],
       "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
+        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
       }
     }
   }
@@ -101,6 +117,8 @@ Windows 环境建议将 `command` 设置为 `npx.cmd`：
 ```
 
 完成配置后，重启 Claude Desktop 使配置生效。
+
+如需恢复当前全量行为，可把 `ATOMGIT_ENABLE_DANGEROUS_TOOLS` 改为 `"true"` 并重启客户端。
 
 ## 开发测试
 
@@ -127,7 +145,8 @@ Windows 示例：
         "D:\\path\\to\\AtomGit-MCP-Server\\dist\\index.js"
       ],
       "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
+        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
       }
     }
   }
@@ -150,7 +169,8 @@ macOS / Linux 示例：
         "/path/to/AtomGit-MCP-Server/dist/index.js"
       ],
       "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN"
+        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
       }
     }
   }

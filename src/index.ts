@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { readFileSync } from 'node:fs';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
@@ -49,26 +50,48 @@ import { DashboardTools } from './tools/DashboardTools.js';
 import { OauthTools } from './tools/OauthTools.js';
 import { AIHubTools } from './tools/AIHubTools.js';
 import { ToolRegistry } from './core/ToolRegistry.js';
+import { ToolSafetyPolicy } from './core/ToolSafetyPolicy.js';
 
 // Load environment variables
 config();
 
 const API_BASE_URL = 'https://api.atomgit.com';
 const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
+const ATOMGIT_ENABLE_DANGEROUS_TOOLS = parseBooleanEnv(process.env.ATOMGIT_ENABLE_DANGEROUS_TOOLS);
+const SERVER_VERSION = getServerVersion();
 
 if (!ATOMGIT_TOKEN) {
   console.error('Warning: ATOMGIT_TOKEN environment variable is not set. Many API calls will fail.');
 }
 
+function parseBooleanEnv(value: string | undefined): boolean {
+  if (!value) {
+    return false;
+  }
+
+  return ['1', 'true', 'yes', 'on'].includes(value.toLowerCase());
+}
+
+function getServerVersion(): string {
+  try {
+    const packageJsonUrl = new URL('../package.json', import.meta.url);
+    const packageJson = JSON.parse(readFileSync(packageJsonUrl, 'utf8')) as { version?: string };
+    return packageJson.version ?? '1.0.0';
+  } catch {
+    return '1.0.0';
+  }
+}
+
 class AtomGitMCPServer {
   private server: Server;
   private registry: ToolRegistry;
+  private safetyPolicy: ToolSafetyPolicy;
 
   constructor() {
     this.server = new Server(
       {
         name: 'atomgit-mcp-server',
-        version: '1.0.0',
+        version: SERVER_VERSION,
       },
       {
         capabilities: {
@@ -78,7 +101,10 @@ class AtomGitMCPServer {
     );
 
     // Initialize registry
-    this.registry = new ToolRegistry();
+    this.safetyPolicy = new ToolSafetyPolicy({
+      allowDangerousTools: ATOMGIT_ENABLE_DANGEROUS_TOOLS,
+    });
+    this.registry = new ToolRegistry(this.safetyPolicy);
 
     const serviceConfig: any = {
       apiBaseUrl: API_BASE_URL,
@@ -105,7 +131,9 @@ class AtomGitMCPServer {
     this.registry.registerTools(new OauthTools(new OauthService(serviceConfig)));
     this.registry.registerTools(new AIHubTools(new AIHubService(serviceConfig)));
 
-    console.error(`✅ Registered ${this.registry.size} tools to registry`);
+    console.error(
+      `✅ Safe mode: ${ATOMGIT_ENABLE_DANGEROUS_TOOLS ? 'disabled' : 'enabled'}, ${this.registry.size} tools registered, ${this.registry.blockedSize} dangerous tools skipped`
+    );
 
     this.setupHandlers();
   }
@@ -121,6 +149,10 @@ class AtomGitMCPServer {
       const { name, arguments: args } = request.params;
 
       try {
+        if (this.registry.isBlocked(name)) {
+          throw new Error(this.safetyPolicy.getBlockedToolMessage(name));
+        }
+
         const handler = this.registry.get(name);
         if (!handler) {
           throw new Error(`Unknown tool: ${name}`);
