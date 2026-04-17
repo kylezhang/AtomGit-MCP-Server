@@ -1,5 +1,5 @@
 {
-  "totalEndpoints": 244,
+  "totalEndpoints": 245,
   "categories": [
     {
       "name": "AI hub",
@@ -633,7 +633,7 @@
     },
     {
       "name": "Organizations",
-      "endpointCount": 18,
+      "endpointCount": 19,
       "endpoints": [
         {
           "name": "退出一个组织",
@@ -724,6 +724,12 @@
           "httpMethod": "PATCH",
           "endpointPath": "/api/v5/orgs/:org",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/patch-api-v-5-orgs-org"
+        },
+        {
+          "name": "创建组织",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/orgs",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-org-org"
         },
         {
           "name": "创建组织仓库",

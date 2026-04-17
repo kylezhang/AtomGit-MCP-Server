@@ -1,6 +1,10 @@
 import { BaseService } from './BaseService.js';
 
 export class OrganizationService extends BaseService {
+  async createOrganization(orgData: any): Promise<any> {
+    const response = await this.client.post('/api/v5/orgs', orgData);
+    return response.data;
+  }
   
   async createOrganizationRepository(org: string, repoData: any): Promise<any> {
     const response = await this.client.post(`/api/v5/orgs/${org}/repos`, repoData);

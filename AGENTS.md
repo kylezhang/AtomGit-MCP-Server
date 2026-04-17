@@ -7,7 +7,7 @@
 AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that provides AI assistants with access to the AtomGit code hosting platform.
 
 Current public surface:
-- **244 public tools**
+- **245 public tools**
 - **17 tool categories**
 - **Default safe mode enabled**: dangerous tools are hidden unless `ATOMGIT_ENABLE_DANGEROUS_TOOLS=true`
 

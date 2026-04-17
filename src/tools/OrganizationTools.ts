@@ -12,6 +12,20 @@ export class OrganizationTools {
     return [
 
       {
+        name: 'create_organization',
+        description: '创建组织',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            orgData: {
+              type: 'object',
+              description: '组织创建数据'
+            }
+          },
+          required: ['orgData']
+        }
+      },
+      {
         name: 'get_organization',
         description: '获取一个组织信息',
         inputSchema: {
@@ -348,6 +362,9 @@ export class OrganizationTools {
 
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
+      case 'create_organization':
+        return await this.organizationService.createOrganization(args.orgData);
+
       case 'get_organization':
         return await this.organizationService.getOrganization(args.org);
  

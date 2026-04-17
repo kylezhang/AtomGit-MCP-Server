@@ -1,8 +1,8 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-03-21
+**生成时间:** 2026-04-17
 **分类总数:** 17
-**工具总数:** 244
+**工具总数:** 245
 
 ## 概览
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
@@ -137,9 +137,10 @@
 | [`get_repository_milestones`](../src/tools/MilestoneTools.ts) | 获取仓库所有里程碑 | [`getRepositoryMilestones`](../src/services/MilestoneService.ts) | [`GET /api/v5/repos/${owner}/${repo}/milestones`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-milestones) |
 | [`update_repository_milestone`](../src/tools/MilestoneTools.ts) | 更新仓库里程碑 | [`updateRepositoryMilestone`](../src/services/MilestoneService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/milestones/${number}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-milestones-number) |
 
-### Organization (18)
+### Organization (19)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
+| [`create_organization`](../src/tools/OrganizationTools.ts) | 创建组织 | [`createOrganization`](../src/services/OrganizationService.ts) | [`POST /api/v5/orgs`](https://docs.atomgit.com/docs/apis/post-api-v-5-org-org) |
 | [`create_organization_repository`](../src/tools/OrganizationTools.ts) | **创建组织仓库**<br>为组织创建仓库 | [`createOrganizationRepository`](../src/services/OrganizationService.ts) | [`POST /api/v5/orgs/${org}/repos`](https://docs.atomgit.com/docs/apis/post-api-v-5-orgs-org-repos) |
 | [`get_current_user_organization_membership`](../src/tools/OrganizationTools.ts) | 获取授权用户在一个组织的成员资料 | [`getCurrentUserOrganizationMembership`](../src/services/OrganizationService.ts) | [`GET /api/v5/user/memberships/orgs/${org}`](https://docs.atomgit.com/docs/apis/get-api-v-5-user-memberships-orgs-org) |
 | [`get_current_user_organizations`](../src/tools/OrganizationTools.ts) | 列出授权用户所属的组织 | [`getCurrentUserOrganizations`](../src/services/OrganizationService.ts) | [`GET /api/v5/users/orgs`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-orgs) |
