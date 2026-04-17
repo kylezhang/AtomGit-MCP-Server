@@ -19,6 +19,24 @@ export class BranchTools {
             repo: {
               type: 'string',
               description: 'The name of the repository'
+            },
+            sort: {
+              type: 'string',
+              description: 'Sort field',
+              enum: ['name', 'updated']
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction',
+              enum: ['asc', 'desc']
+            },
+            page: {
+              type: 'number',
+              description: 'Page number'
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page'
             }
           },
           required: ['owner', 'repo']
@@ -51,11 +69,7 @@ export class BranchTools {
               description: 'The branch name or commit SHA to create the new branch from'
             }
           },
-          required: ['owner', 'repo', 'refs'],
-          anyOf: [
-            { required: ['branch_name'] },
-            { required: ['branch'] }
-          ]
+          required: ['owner', 'repo', 'branch_name', 'refs']
         }
       },
       {
@@ -120,74 +134,16 @@ export class BranchTools {
               type: 'string',
               description: 'The branch name pattern (supports wildcards like "main", "feature/*")'
             },
-            allow_force_push: {
-              type: 'boolean',
-              description: 'Allow force push to matching branches',
-              default: false
+            pusher: {
+              type: 'string',
+              description: '允许推送代码的成员或角色'
             },
-            allow_deletion: {
-              type: 'boolean',
-              description: 'Allow deletion of matching branches',
-              default: false
-            },
-            required_status_checks: {
-              type: 'object',
-              description: 'Status check requirements',
-              properties: {
-                strict: {
-                  type: 'boolean',
-                  description: 'Require branches to be up to date before merging',
-                  default: false
-                },
-                contexts: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Required status check contexts',
-                  default: []
-                }
-              }
-            },
-            required_pull_request_reviews: {
-              type: 'object',
-              description: 'Pull request review requirements',
-              properties: {
-                required_approving_review_count: {
-                  type: 'number',
-                  description: 'Number of approvals required',
-                  default: 1
-                },
-                dismiss_stale_reviews: {
-                  type: 'boolean',
-                  description: 'Dismiss stale pull request approvals when new commits are pushed',
-                  default: false
-                },
-                require_code_owner_reviews: {
-                  type: 'boolean',
-                  description: 'Require review from code owners',
-                  default: false
-                }
-              }
-            },
-            restrictions: {
-              type: 'object',
-              description: 'Branch restrictions',
-              properties: {
-                users: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Users allowed to push to matching branches',
-                  default: []
-                },
-                teams: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Teams allowed to push to matching branches',
-                  default: []
-                }
-              }
+            merger: {
+              type: 'string',
+              description: '允许合并 Pull Request 的成员或角色'
             }
           },
-          required: ['owner', 'repo', 'wildcard']
+          required: ['owner', 'repo', 'wildcard', 'pusher', 'merger']
         }
       },
       {
@@ -248,65 +204,16 @@ export class BranchTools {
               type: 'string',
               description: 'The branch name pattern to update'
             },
-            allow_force_push: {
-              type: 'boolean',
-              description: 'Allow force push to matching branches'
+            pusher: {
+              type: 'string',
+              description: '允许推送代码的成员或角色'
             },
-            allow_deletion: {
-              type: 'boolean',
-              description: 'Allow deletion of matching branches'
-            },
-            required_status_checks: {
-              type: 'object',
-              description: 'Status check requirements',
-              properties: {
-                strict: {
-                  type: 'boolean',
-                  description: 'Require branches to be up to date before merging'
-                },
-                contexts: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Required status check contexts'
-                }
-              }
-            },
-            required_pull_request_reviews: {
-              type: 'object',
-              description: 'Pull request review requirements',
-              properties: {
-                required_approving_review_count: {
-                  type: 'number',
-                  description: 'Number of approvals required'
-                },
-                dismiss_stale_reviews: {
-                  type: 'boolean',
-                  description: 'Dismiss stale pull request approvals when new commits are pushed'
-                },
-                require_code_owner_reviews: {
-                  type: 'boolean',
-                  description: 'Require review from code owners'
-                }
-              }
-            },
-            restrictions: {
-              type: 'object',
-              description: 'Branch restrictions',
-              properties: {
-                users: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Users allowed to push to matching branches'
-                },
-                teams: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Teams allowed to push to matching branches'
-                }
-              }
+            merger: {
+              type: 'string',
+              description: '允许合并 Pull Request 的成员或角色'
             }
           },
-          required: ['owner', 'repo', 'wildcard']
+          required: ['owner', 'repo', 'wildcard', 'pusher', 'merger']
         }
       }
     ];
@@ -315,7 +222,14 @@ export class BranchTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_branches':
-        return await this.branchService.getRepositoryBranches(args.owner, args.repo);
+        return await this.branchService.getRepositoryBranches(
+          args.owner,
+          args.repo,
+          args.sort,
+          args.direction,
+          args.page,
+          args.perPage
+        );
 
       case 'create_repository_branch':
         const branchName = args.branch_name ?? args.branch;
@@ -333,11 +247,8 @@ export class BranchTools {
       case 'create_branch_protection_rule':
         return await this.branchService.createBranchProtectionRule(args.owner, args.repo, {
           wildcard: args.wildcard,
-          allow_force_push: args.allow_force_push,
-          allow_deletion: args.allow_deletion,
-          required_status_checks: args.required_status_checks,
-          required_pull_request_reviews: args.required_pull_request_reviews,
-          restrictions: args.restrictions
+          pusher: args.pusher,
+          merger: args.merger
         });
 
       case 'delete_branch_protection_rule':
@@ -348,11 +259,8 @@ export class BranchTools {
 
       case 'update_branch_protection_rule':
         return await this.branchService.updateBranchProtectionRule(args.owner, args.repo, args.wildcard, {
-          allow_force_push: args.allow_force_push,
-          allow_deletion: args.allow_deletion,
-          required_status_checks: args.required_status_checks,
-          required_pull_request_reviews: args.required_pull_request_reviews,
-          restrictions: args.restrictions
+          pusher: args.pusher,
+          merger: args.merger
         });
 
       default:

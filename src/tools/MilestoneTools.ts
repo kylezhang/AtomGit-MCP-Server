@@ -26,6 +26,14 @@ export class MilestoneTools {
               enum: ['open', 'closed', 'all'],
               default: 'open'
             },
+            sort: {
+              type: 'string',
+              description: '排序字段'
+            },
+            direction: {
+              type: 'string',
+              description: '排序方向'
+            },
             page: {
               type: 'number',
               description: '页码，默认为1',
@@ -73,7 +81,7 @@ export class MilestoneTools {
               description: '截止日期'
             }
           },
-          required: ['owner', 'repo', 'title']
+          required: ['owner', 'repo', 'title', 'due_on']
         }
       },
       {
@@ -156,7 +164,7 @@ export class MilestoneTools {
               description: '截止日期'
             }
           },
-          required: ['owner', 'repo', 'number']
+          required: ['owner', 'repo', 'number', 'title', 'due_on']
         }
       }
     ];
@@ -170,7 +178,9 @@ export class MilestoneTools {
           args.repo, 
           args.state,
           args.page,
-          args.perPage
+          args.perPage,
+          args.sort,
+          args.direction
         );
       
       case 'create_repository_milestone':

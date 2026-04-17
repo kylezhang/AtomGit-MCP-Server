@@ -1,6 +1,15 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { CommitService } from '../services/CommitService.js';
 
+const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description,
+  ...(defaultValue !== undefined ? { default: defaultValue } : {})
+});
+
 export class CommitTools {
   constructor(private commitService: CommitService) {}
 
@@ -24,15 +33,27 @@ export class CommitTools {
               type: 'string',
               description: 'SHA or branch to start listing commits from (optional)'
             },
+            path: {
+              type: 'string',
+              description: 'File path filter'
+            },
+            author: {
+              type: 'string',
+              description: 'Author filter'
+            },
+            since: {
+              type: 'string',
+              description: 'Only return commits after this time'
+            },
+            until: {
+              type: 'string',
+              description: 'Only return commits before this time'
+            },
             page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+              ...stringOrNumberSchema('Page number for pagination', 1)
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
             }
           },
           required: ['owner', 'repo']
@@ -55,6 +76,10 @@ export class CommitTools {
             sha: {
               type: 'string',
               description: 'The SHA of commit'
+            },
+            show_diff: {
+              type: 'boolean',
+              description: 'Whether to include diff content'
             }
           },
           required: ['owner', 'repo', 'sha']
@@ -81,6 +106,14 @@ export class CommitTools {
             head: {
               type: 'string',
               description: 'The head commit SHA or branch name'
+            },
+            straight: {
+              type: 'boolean',
+              description: 'Compare without merge base'
+            },
+            suffix: {
+              type: 'string',
+              description: 'Compare suffix'
             }
           },
           required: ['owner', 'repo', 'base', 'head']
@@ -126,10 +159,7 @@ export class CommitTools {
               type: 'string',
               description: 'The name of repository'
             },
-            id: {
-              type: 'number',
-              description: 'The ID of the comment to delete'
-            }
+            id: stringOrNumberSchema('The ID of the comment to delete')
           },
           required: ['owner', 'repo', 'id']
         }
@@ -148,10 +178,7 @@ export class CommitTools {
               type: 'string',
               description: 'The name of repository'
             },
-            id: {
-              type: 'number',
-              description: 'The ID of the comment'
-            }
+            id: stringOrNumberSchema('The ID of the comment')
           },
           required: ['owner', 'repo', 'id']
         }
@@ -170,10 +197,7 @@ export class CommitTools {
               type: 'string',
               description: 'The name of repository'
             },
-            id: {
-              type: 'number',
-              description: 'The ID of the comment to update'
-            },
+            id: stringOrNumberSchema('The ID of the comment to update'),
             body: {
               type: 'string',
               description: 'The updated comment content'
@@ -195,6 +219,10 @@ export class CommitTools {
             repo: {
               type: 'string',
               description: 'The name of repository'
+            },
+            order: {
+              type: 'string',
+              description: 'Sort order'
             },
             page: {
               type: 'number',
@@ -227,9 +255,29 @@ export class CommitTools {
             sha: {
               type: 'string',
               description: 'SHA or branch to get statistics for (optional)'
+            },
+            branch_name: {
+              type: 'string',
+              description: 'Branch name filter'
+            },
+            author: {
+              type: 'string',
+              description: 'Author filter'
+            },
+            only_self: {
+              type: 'boolean',
+              description: 'Only include current user commits'
+            },
+            since: {
+              type: 'string',
+              description: 'Start time filter'
+            },
+            until: {
+              type: 'string',
+              description: 'End time filter'
             }
           },
-          required: ['owner', 'repo']
+          required: ['owner', 'repo', 'branch_name']
         }
       },
       {
@@ -249,6 +297,16 @@ export class CommitTools {
             ref: {
               type: 'string',
               description: 'The commit reference (SHA or branch)'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
             }
           },
           required: ['owner', 'repo', 'ref']
@@ -309,16 +367,27 @@ export class CommitTools {
         return await this.commitService.getRepositoryCommits(
           args.owner, 
           args.repo, 
-          args.sha, 
-          args.page, 
-          args.perPage
+          {
+            sha: args.sha,
+            path: args.path,
+            author: args.author,
+            since: args.since,
+            until: args.until,
+            page: args.page,
+            perPage: args.perPage
+          }
         );
       
       case 'get_repository_commit':
-        return await this.commitService.getRepositoryCommit(args.owner, args.repo, args.sha);
+        return await this.commitService.getRepositoryCommit(args.owner, args.repo, args.sha, {
+          show_diff: args.show_diff ?? args.showDiff
+        });
       
       case 'compare_repository_commits':
-        return await this.commitService.compareRepositoryCommits(args.owner, args.repo, args.base, args.head);
+        return await this.commitService.compareRepositoryCommits(args.owner, args.repo, args.base, args.head, {
+          straight: args.straight,
+          suffix: args.suffix
+        });
       
       case 'create_repository_commit_comment':
         return await this.commitService.createRepositoryCommitComment(args.owner, args.repo, args.sha, { body: args.body });
@@ -333,13 +402,27 @@ export class CommitTools {
         return await this.commitService.updateRepositoryCommitComment(args.owner, args.repo, id, { body: args.body });
       
       case 'get_repository_commit_comments':
-        return await this.commitService.getRepositoryCommitComments(args.owner, args.repo, args.page, args.perPage);
+        return await this.commitService.getRepositoryCommitComments(args.owner, args.repo, {
+          order: args.order,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_repository_commit_statistics':
-        return await this.commitService.getRepositoryCommitStatistics(args.owner, args.repo, args.sha);
+        return await this.commitService.getRepositoryCommitStatistics(args.owner, args.repo, {
+          sha: args.sha,
+          branch_name: args.branch_name ?? args.branchName,
+          author: args.author,
+          only_self: args.only_self ?? args.onlySelf,
+          since: args.since,
+          until: args.until
+        });
       
       case 'get_repository_commit_ref_comments':
-        return await this.commitService.getRepositoryCommitRefComments(args.owner, args.repo, args.ref);
+        return await this.commitService.getRepositoryCommitRefComments(args.owner, args.repo, args.ref, {
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_repository_commit_diff':
         return await this.commitService.getRepositoryCommitDiff(args.owner, args.repo, args.sha);

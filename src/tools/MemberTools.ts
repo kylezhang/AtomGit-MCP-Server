@@ -29,7 +29,7 @@ export class MemberTools {
               description: '权限级别（read, write, admin）'
             }
           },
-          required: ['owner', 'repo', 'username', 'permission']
+          required: ['owner', 'repo', 'username']
         }
       },
       {
@@ -67,6 +67,14 @@ export class MemberTools {
             repo: {
               type: 'string',
               description: '仓库名称'
+            },
+            page: {
+              type: 'number',
+              description: '页码'
+            },
+            perPage: {
+              type: 'number',
+              description: '每页数量'
             }
           },
           required: ['owner', 'repo']
@@ -148,7 +156,7 @@ export class MemberTools {
         return await this.memberService.removeRepositoryCollaborator(args.owner, args.repo, args.username);
       
       case 'get_repository_collaborators':
-        return await this.memberService.getRepositoryCollaborators(args.owner, args.repo);
+        return await this.memberService.getRepositoryCollaborators(args.owner, args.repo, args.page, args.perPage);
       
       case 'check_repository_collaborator':
         return await this.memberService.isRepositoryCollaborator(args.owner, args.repo, args.username);

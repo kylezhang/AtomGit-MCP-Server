@@ -2,7 +2,7 @@
 
 **生成时间:** 2026-04-17
 **分类总数:** 17
-**工具总数:** 245
+**工具总数:** 242
 
 ## 概览
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
@@ -42,14 +42,13 @@
 | [`get_repository_commits`](../src/tools/CommitTools.ts) | **获取仓库所有提交**<br>Get all commits in a repository | [`getRepositoryCommits`](../src/services/CommitService.ts) | [`GET /api/v5/repos/${owner}/${repo}/commits`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-commits) |
 | [`update_repository_commit_comment`](../src/tools/CommitTools.ts) | **更新Commit评论**<br>Update a commit comment | [`updateRepositoryCommitComment`](../src/services/CommitService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/comments/${commentId}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-comments-id) |
 
-### Dashboard (8)
+### Dashboard (7)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`add_org_kanban_item`](../src/tools/DashboardTools.ts) | 添加Issue或者Pull Request到看板 | [`addKanbanItem`](../src/services/DashboardService.ts) | [`POST /api/v5/org/${owner}/kanban/${id}/add_item`](https://docs.atomgit.com/docs/apis/post-api-v-5-org-owner-kanban-id-add-item) |
 | [`delete_org_kanban_remove_item`](../src/tools/DashboardTools.ts) | 删除看板关联的Issue或者Pull Request | [`removeKanbanItem`](../src/services/DashboardService.ts) | [`DELETE /api/v5/org/${owner}/kanban/${kanbanId}/remove_item`](https://docs.atomgit.com/docs/apis/delete-api-v-5-org-owner-kanban-kanban-id-remove-item-new) |
 | [`get_org_kanban_item_list`](../src/tools/DashboardTools.ts) | **获取看板内容列表**<br>查询看板内容列表 | [`getKanbanItemList`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/${kanbanId}/item_list`](https://docs.atomgit.com/docs/apis/get-api-v-5-org-owner-kanban-kanban-id-item-list) |
 | [`get_organization_kanban`](../src/tools/DashboardTools.ts) | **获取单个看板详情**<br>获取特定看板详情 | [`getOrganizationKanban`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/${id}/detail`](https://docs.atomgit.com/docs/apis/get-api-v-5-org-owner-kanban-id-detail) |
-| [`get_organization_kanban_content`](../src/tools/DashboardTools.ts) | **获取看板内容列表**<br>获取看板内容 | [`getOrganizationKanbanContent`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/${id}/item_list`](https://docs.atomgit.com/docs/apis/get-api-v-5-org-owner-kanban-kanban-id-item-list) |
 | [`get_organization_kanbans`](../src/tools/DashboardTools.ts) | 获取组织看板列表 | [`getOrganizationKanbanList`](../src/services/DashboardService.ts) | [`GET /api/v5/org/${owner}/kanban/list`](https://docs.atomgit.com/docs/apis/get-api-v-5-org-owner-kanban-list) |
 | [`update_org_kanban_repo_item`](../src/tools/DashboardTools.ts) | 更新Issue或者Pull Request关联的看板 | [`updateKanbanItem`](../src/services/DashboardService.ts) | [`PUT /api/v5/org/${owner}/kanban/repo/${repo}/${type}/${iid}`](https://docs.atomgit.com/docs/apis/put-api-v-5-org-owner-kanban-repo-repo-type-iid-new) |
 | [`update_org_kanban_state`](../src/tools/DashboardTools.ts) | 修改看板状态 | [`updateKanbanState`](../src/services/DashboardService.ts) | [`PUT /api/v5/org/${owner}/kanban/${kanbanId}/state`](https://docs.atomgit.com/docs/apis/put-api-v-5-org-owner-kanban-kanban-id-state) |
@@ -73,7 +72,7 @@
 | [`update_enterprise_member_v8`](../src/tools/EnterpriseTools.ts) | 修改企业成员权限 | [`updateEnterpriseMemberV8`](../src/services/EnterpriseService.ts) | [`PUT /api/v8/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/put-api-v-8-enterprises-enterprise-members-username) |
 | [`update_enterprise_milestone_v8`](../src/tools/EnterpriseTools.ts) | 修改企业里程碑 | [`updateEnterpriseMilestone`](../src/services/EnterpriseService.ts) | [`PUT /api/v8/enterprises/${enterprise}/milestones/${milestoneId}`](https://docs.atomgit.com/docs/apis/put-api-v-8-enterprise-enterprise-id-milestones-milestone-id) |
 
-### Issues (29)
+### Issues (28)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`create_repository_issue`](../src/tools/IssuesTools.ts) | **创建Issue**<br>Create an issue in a repository | [`createRepositoryIssue`](../src/services/IssuesService.ts) | [`POST /api/v5/repos/${owner}/issues`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-issues) |
@@ -87,7 +86,6 @@
 | [`get_enterprise_issue_comments`](../src/tools/IssuesTools.ts) | **获取企业某个Issue所有评论**<br>Get comments for an enterprise issue | [`getEnterpriseIssueComments`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issues/${issueNumber}/comments`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-issues-number-comments) |
 | [`get_enterprise_issue_labels`](../src/tools/IssuesTools.ts) | **获取企业某个Issue所有标签**<br>Get labels for an enterprise issue | [`getEnterpriseIssueLabels`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issues/${issueId}/labels`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-issues-issue-id-labels) |
 | [`get_enterprise_issue_statuses`](../src/tools/IssuesTools.ts) | **获取企业issue状态**<br>Get enterprise issue statuses | [`getEnterpriseIssueStatuses`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issue/statuses`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-issue-statuses) |
-| [`get_enterprise_issue_statuses_v5`](../src/tools/IssuesTools.ts) | 获取企业issue状态 | [`getEnterpriseIssueStatuses`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issue/statuses`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-issue-statuses) |
 | [`get_enterprise_issues`](../src/tools/IssuesTools.ts) | **获取某个企业的所有Issues**<br>Get all issues for an enterprise | [`getEnterpriseIssues`](../src/services/IssuesService.ts) | [`GET /api/v5/enterprises/${enterprise}/issues`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-issues) |
 | [`get_organization_issues`](../src/tools/IssuesTools.ts) | **获取当前用户某个组织的Issues**<br>Get issues for an organization | [`getOrganizationIssues`](../src/services/IssuesService.ts) | [`GET /api/v5/orgs/${org}/issues`](https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-issues) |
 | [`get_repository_issue`](../src/tools/IssuesTools.ts) | **获取仓库的某个Issue**<br>Get a specific issue in a repository | [`getRepositoryIssue`](../src/services/IssuesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/issues/${issueNumber}`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-issues-number) |
@@ -278,7 +276,7 @@
 | [`video_generation_create`](../src/tools/AIHubTools.ts) | **图像生成视频（创建任务）**<br>AI图像生成视频 - 创建任务 (Image to Video Generation - Create Task) | [`videoGenerate`](../src/services/AIHubService.ts) | [`POST /api/v5/video/generate`](https://docs.atomgit.com/docs/apis/post-api-v-5-video-generate) |
 | [`video_generation_status`](../src/tools/AIHubTools.ts) | **图像生成视频（查询状态）**<br>AI图像生成视频 - 查询状态 (Image to Video Generation - Query Status) | [`videoStatus`](../src/services/AIHubService.ts) | [`POST /api/v5/video/status`](https://docs.atomgit.com/docs/apis/post-api-v-5-video-status) |
 
-### PullRequest (45)
+### PullRequest (44)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`assign_repository_pull_approval_reviewers`](../src/tools/PullRequestTools.ts) | **指派用户评审Pull Request**<br>Assign users to approve pull request | [`assignRepositoryPullApprovalReviewers`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/reviewers`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers) |
@@ -320,7 +318,6 @@
 | [`remove_repository_pull_testers`](../src/tools/PullRequestTools.ts) | **取消用户测试Pull Request**<br>Remove testers from pull request | [`removeRepositoryPullTesters`](../src/services/PullRequestService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-testers) |
 | [`replace_repository_pull_labels`](../src/tools/PullRequestTools.ts) | **替换 Pull Request所有标签**<br>Replace all labels for a pull request | [`replaceRepositoryPullLabels`](../src/services/PullRequestService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`](https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-labels) |
 | [`reply_pull_request_discussion`](../src/tools/PullRequestTools.ts) | **回复Pull Request评论**<br>Reply to a pull request discussion comment | [`replyPullRequestDiscussion`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-discussions-discussions-id-comments) |
-| [`reply_pull_request_discussion_comment`](../src/tools/PullRequestTools.ts) | **回复Pull Request评论**<br>回复pr评论 | [`replyPullRequestDiscussionComment`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/discussions/${discussionId}/comments`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-discussions-discussions-id-comments) |
 | [`reset_repository_pull_assignees`](../src/tools/PullRequestTools.ts) | **重置 Pull Request审查 的状态**<br>Reset pull request assignees status | [`resetRepositoryPullAssignees`](../src/services/PullRequestService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-assignees) |
 | [`reset_repository_pull_testers`](../src/tools/PullRequestTools.ts) | **重置 Pull Request测试 的状态**<br>Reset pull request testers status | [`resetRepositoryPullTesters`](../src/services/PullRequestService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-pulls-number-testers) |
 | [`unlink_repository_pull_issues`](../src/tools/PullRequestTools.ts) | **Pull Request删除关联的issue**<br>Unlink issues from pull request | [`unlinkRepositoryPullIssues`](../src/services/PullRequestService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-issues) |

@@ -1,6 +1,15 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { UserService } from '../services/UserService.js';
 
+const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description,
+  ...(defaultValue !== undefined ? { default: defaultValue } : {})
+});
+
 export class UserTools {
   constructor(private userService: UserService) {}
 
@@ -38,15 +47,23 @@ export class UserTools {
               type: 'string',
               description: 'The username of the user'
             },
+            type: {
+              type: 'string',
+              description: 'Repository type filter'
+            },
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
             page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+              ...stringOrNumberSchema('Page number for pagination', 1)
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
             }
           },
           required: ['username']
@@ -75,7 +92,42 @@ export class UserTools {
         description: 'Get all repositories for the current authenticated user',
         inputSchema: {
           type: 'object',
-          properties: {},
+          properties: {
+            visibility: {
+              type: 'string',
+              description: 'Visibility filter'
+            },
+            affiliation: {
+              type: 'string',
+              description: 'Affiliation filter'
+            },
+            type: {
+              type: 'string',
+              description: 'Repository type filter'
+            },
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
+            q: {
+              type: 'string',
+              description: 'Search keyword'
+            },
+            page: {
+              ...stringOrNumberSchema('Page number for pagination', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            repo_type: {
+              type: 'string',
+              description: 'Repository category filter'
+            }
+          },
         }
       },
       {
@@ -88,15 +140,19 @@ export class UserTools {
               type: 'string',
               description: 'The username of the user'
             },
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
             page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+              ...stringOrNumberSchema('Page number for pagination', 1)
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
             }
           },
           required: ['username']
@@ -107,7 +163,22 @@ export class UserTools {
         description: 'Get all starred repositories for the current authenticated user',
         inputSchema: {
           type: 'object',
-          properties: {},
+          properties: {
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
+            page: {
+              ...stringOrNumberSchema('Page number for pagination', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('Number of results per page', 30)
+            }
+          },
         }
       },
       {
@@ -120,15 +191,19 @@ export class UserTools {
               type: 'string',
               description: 'The username'
             },
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
             page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+              ...stringOrNumberSchema('Page number for pagination', 1)
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
             }
           },
           required: ['username']
@@ -140,15 +215,19 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
             page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+              ...stringOrNumberSchema('Page number for pagination', 1)
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
             }
           }
         }
@@ -159,6 +238,10 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {
+            mode: {
+              type: 'string',
+              description: 'Namespace mode'
+            },
             page: {
               type: 'number',
               description: 'Page number for pagination',
@@ -186,15 +269,25 @@ export class UserTools {
               type: 'string',
               description: 'The name of repository'
             },
-            page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+            unread: {
+              type: 'boolean',
+              description: 'Whether to return unread notifications only'
             },
-            perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+            type: {
+              type: 'string',
+              description: 'Notification type filter'
+            },
+            since: {
+              type: 'string',
+              description: 'Only return notifications updated after this time'
+            },
+            before: {
+              type: 'string',
+              description: 'Only return notifications updated before this time'
+            },
+            ids: {
+              type: 'string',
+              description: 'Comma-separated notification IDs'
             }
           },
           required: ['owner', 'repo']
@@ -213,6 +306,10 @@ export class UserTools {
             repo: {
               type: 'string',
               description: 'The name of repository'
+            },
+            ids: {
+              type: 'string',
+              description: 'Comma-separated notification IDs'
             }
           },
           required: ['owner', 'repo']
@@ -232,9 +329,53 @@ export class UserTools {
               type: 'string',
               description: 'Repository description'
             },
+            has_issues: {
+              type: 'boolean',
+              description: 'Whether issues are enabled'
+            },
+            has_wiki: {
+              type: 'boolean',
+              description: 'Whether wiki is enabled'
+            },
+            can_comment: {
+              type: 'boolean',
+              description: 'Whether comments are enabled'
+            },
+            auto_init: {
+              type: 'boolean',
+              description: 'Initialize with a README'
+            },
+            gitignore_template: {
+              type: 'string',
+              description: 'Gitignore template'
+            },
+            license_template: {
+              type: 'string',
+              description: 'License template'
+            },
+            path: {
+              type: 'string',
+              description: 'Repository path'
+            },
             private: {
               type: 'boolean',
               description: 'Whether repository is private'
+            },
+            default_branch: {
+              type: 'string',
+              description: 'Default branch name'
+            },
+            import_url: {
+              type: 'string',
+              description: 'Git URL to import'
+            },
+            project_template: {
+              type: 'string',
+              description: 'Project template path'
+            },
+            repository_type: {
+              type: 'string',
+              description: 'Repository type'
             }
           },
           required: ['name']
@@ -246,17 +387,37 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {
-            name: {
+            avatar: {
               type: 'string',
-              description: 'User name'
+              description: 'Avatar URL'
+            },
+            nickname: {
+              type: 'string',
+              description: 'User nickname'
+            },
+            company: {
+              type: 'string',
+              description: 'Company'
+            },
+            description: {
+              type: 'string',
+              description: 'Profile description'
             },
             email: {
               type: 'string',
               description: 'User email'
             },
-            bio: {
+            github_account: {
               type: 'string',
-              description: 'User bio'
+              description: 'GitHub account'
+            },
+            website: {
+              type: 'string',
+              description: 'Personal website'
+            },
+            location: {
+              type: 'string',
+              description: 'Location'
             }
           }
         }
@@ -279,15 +440,13 @@ export class UserTools {
               type: 'string',
               description: 'The username'
             },
-            page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+            year: {
+              type: 'string',
+              description: 'Year filter'
             },
-            perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+            next: {
+              type: 'string',
+              description: 'Next page token'
             }
           },
           required: ['username']
@@ -337,8 +496,7 @@ export class UserTools {
           type: 'object',
           properties: {
             id: {
-              type: 'number',
-              description: 'The ID of key to delete'
+              ...stringOrNumberSchema('The ID of key to delete')
             }
           },
           required: ['id']
@@ -349,7 +507,13 @@ export class UserTools {
         description: 'Get a namespace for current user',
         inputSchema: {
           type: 'object',
-          properties: {},
+          properties: {
+            path: {
+              type: 'string',
+              description: 'Namespace path'
+            }
+          },
+          required: ['path']
         }
       },
       {
@@ -359,8 +523,7 @@ export class UserTools {
           type: 'object',
           properties: {
             id: {
-              type: 'number',
-              description: 'The ID of key'
+              ...stringOrNumberSchema('The ID of key')
             }
           },
           required: ['id']
@@ -373,15 +536,55 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {
+            state: {
+              type: 'string',
+              description: 'Pull request state'
+            },
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
+            labels: {
+              type: 'string',
+              description: 'Comma-separated label names'
+            },
+            created_after: {
+              type: 'string',
+              description: 'Created after filter'
+            },
+            created_before: {
+              type: 'string',
+              description: 'Created before filter'
+            },
+            updated_after: {
+              type: 'string',
+              description: 'Updated after filter'
+            },
+            updated_before: {
+              type: 'string',
+              description: 'Updated before filter'
+            },
+            scope: {
+              type: 'string',
+              description: 'Scope filter'
+            },
+            source_branch: {
+              type: 'string',
+              description: 'Source branch filter'
+            },
+            target_branch: {
+              type: 'string',
+              description: 'Target branch filter'
+            },
             page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+              ...stringOrNumberSchema('Page number for pagination', 1)
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
             }
           }
         }
@@ -398,54 +601,119 @@ export class UserTools {
         return await this.userService.getUser(args.username);
       
       case 'get_user_repos':
-        return await this.userService.getUserRepos(args.username, args.page, args.perPage);
+        return await this.userService.getUserRepos(args.username, {
+          type: args.type,
+          sort: args.sort,
+          direction: args.direction,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_repository':
         return await this.userService.getUserRepository(args.owner, args.repo);
 
       case 'get_current_user_repos':
-        return await this.userService.getCurrentUserRepos(args.page, args.perPage);
+        return await this.userService.getCurrentUserRepos({
+          visibility: args.visibility,
+          affiliation: args.affiliation,
+          type: args.type,
+          sort: args.sort,
+          direction: args.direction,
+          q: args.q,
+          page: args.page,
+          perPage: args.perPage,
+          repo_type: args.repo_type ?? args.repoType
+        });
       
       case 'get_user_starred_repos':
-        return await this.userService.getUserStarredRepos(args.username, args.page, args.perPage);
+        return await this.userService.getUserStarredRepos(args.username, {
+          sort: args.sort,
+          direction: args.direction,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_current_user_starred_repos':
-        return await this.userService.getCurrentUserStarredRepos();
+        return await this.userService.getCurrentUserStarredRepos({
+          sort: args.sort,
+          direction: args.direction,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_user_subscriptions':
-        return await this.userService.getUserSubscriptions(args.username, args.page, args.perPage);
+        return await this.userService.getUserSubscriptions(args.username, {
+          sort: args.sort,
+          direction: args.direction,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_current_user_subscriptions':
-        return await this.userService.getCurrentUserSubscriptions(args.page, args.perPage);
+        return await this.userService.getCurrentUserSubscriptions({
+          sort: args.sort,
+          direction: args.direction,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_current_user_namespaces':
-        return await this.userService.getCurrentUserNamespaces(args.page, args.perPage);
+        return await this.userService.getCurrentUserNamespaces({
+          mode: args.mode,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_repository_notifications':
-        return await this.userService.getRepositoryNotifications(args.owner, args.repo, args.page, args.perPage);
+        return await this.userService.getRepositoryNotifications(args.owner, args.repo, {
+          unread: args.unread,
+          type: args.type,
+          since: args.since,
+          before: args.before,
+          ids: args.ids
+        });
       
       case 'mark_repository_notifications_read':
-        return await this.userService.markRepositoryNotificationsRead(args.owner, args.repo);
+        return await this.userService.markRepositoryNotificationsRead(args.owner, args.repo, args.ids);
       
       case 'create_user_repository':
         return await this.userService.createUserRepository({
           name: args.name,
           description: args.description,
-          private: args.private
+          has_issues: args.has_issues ?? args.hasIssues,
+          has_wiki: args.has_wiki ?? args.hasWiki,
+          can_comment: args.can_comment ?? args.canComment,
+          auto_init: args.auto_init ?? args.autoInit,
+          gitignore_template: args.gitignore_template ?? args.gitignoreTemplate,
+          license_template: args.license_template ?? args.licenseTemplate,
+          path: args.path,
+          private: args.private,
+          default_branch: args.default_branch ?? args.defaultBranch,
+          import_url: args.import_url ?? args.importUrl,
+          project_template: args.project_template ?? args.projectTemplate,
+          repository_type: args.repository_type ?? args.repositoryType
         });
       
       case 'update_current_user':
         return await this.userService.updateCurrentUser({
-          name: args.name,
+          avatar: args.avatar,
+          nickname: args.nickname,
+          company: args.company,
+          description: args.description ?? args.bio,
           email: args.email,
-          bio: args.bio
+          github_account: args.github_account ?? args.githubAccount,
+          website: args.website,
+          location: args.location
         });
       
       case 'get_current_user_emails':
         return await this.userService.getCurrentUserEmails();
       
       case 'get_user_events':
-        return await this.userService.getUserEvents(args.username, args.page, args.perPage);
+        return await this.userService.getUserEvents(args.username, {
+          year: args.year,
+          next: args.next
+        });
       
       case 'add_user_key':
         return await this.userService.addUserKey({
@@ -454,7 +722,10 @@ export class UserTools {
         });
       
       case 'get_current_user_keys':
-        return await this.userService.getCurrentUserKeys(args.page, args.perPage);
+        return await this.userService.getCurrentUserKeys({
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'delete_user_key':
         return await this.userService.deleteUserKey(args.id ?? args.keyId);
@@ -463,10 +734,24 @@ export class UserTools {
         return await this.userService.getUserKey(args.id ?? args.keyId);
       
       case 'get_current_user_namespace':
-        return await this.userService.getCurrentUserNamespace();
+        return await this.userService.getCurrentUserNamespace(args.path);
       
       case 'get_current_user_pull_requests':
-        return await this.userService.getCurrentUserPullRequests(args.page, args.perPage);
+        return await this.userService.getCurrentUserPullRequests({
+          state: args.state,
+          sort: args.sort,
+          direction: args.direction,
+          labels: args.labels,
+          created_after: args.created_after ?? args.createdAfter,
+          created_before: args.created_before ?? args.createdBefore,
+          updated_after: args.updated_after ?? args.updatedAfter,
+          updated_before: args.updated_before ?? args.updatedBefore,
+          scope: args.scope,
+          source_branch: args.source_branch ?? args.sourceBranch,
+          target_branch: args.target_branch ?? args.targetBranch,
+          page: args.page,
+          perPage: args.perPage
+        });
 
       default:
         throw new Error(`Unknown tool: ${name}`);

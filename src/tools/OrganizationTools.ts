@@ -1,6 +1,15 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { OrganizationService } from '../services/OrganizationService.js';
 
+const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description,
+  ...(defaultValue !== undefined ? { default: defaultValue } : {})
+});
+
 export class OrganizationTools {
   private organizationService: OrganizationService;
 
@@ -10,19 +19,22 @@ export class OrganizationTools {
 
   getTools(): Tool[] {
     return [
-
       {
         name: 'create_organization',
         description: '创建组织',
         inputSchema: {
           type: 'object',
           properties: {
-            orgData: {
-              type: 'object',
-              description: '组织创建数据'
-            }
+            name: { type: 'string', description: '组织名称，默认等于 path' },
+            path: { type: 'string', description: '组织路径' },
+            visibility: {
+              type: 'string',
+              description: '可见性',
+              enum: ['public', 'private']
+            },
+            description: { type: 'string', description: '组织描述' }
           },
-          required: ['orgData']
+          required: ['path']
         }
       },
       {
@@ -49,12 +61,28 @@ export class OrganizationTools {
               type: 'string',
               description: '组织名'
             },
-            repoData: {
-              type: 'object',
-              description: '仓库创建数据（包含name、description、private等）'
+            name: { type: 'string', description: '仓库名称' },
+            description: { type: 'string', description: '仓库描述' },
+            homepage: { type: 'string', description: '主页' },
+            has_issues: { type: 'boolean', description: '是否启用 Issue' },
+            has_wiki: { type: 'boolean', description: '是否启用 Wiki' },
+            can_comment: { type: 'boolean', description: '是否允许评论' },
+            public: { type: 'number', description: '开源类型。0 私有，1 外部开源，2 内部开源' },
+            private: { type: 'boolean', description: '是否私有仓库' },
+            auto_init: { type: 'boolean', description: '是否初始化 README' },
+            gitignore_template: { type: 'string', description: 'Git Ignore 模板' },
+            license_template: { type: 'string', description: 'License 模板' },
+            path: { type: 'string', description: '仓库路径' },
+            default_branch: { type: 'string', description: '默认分支名称' },
+            import_url: { type: 'string', description: '导入仓库的 Git 地址' },
+            project_template: { type: 'string', description: '模板项目 path' },
+            repository_type: {
+              type: 'string',
+              description: '仓库类型',
+              enum: ['code', 'model', 'dataset', 'space']
             }
           },
-          required: ['org', 'repoData']
+          required: ['org', 'name']
         }
       },
       {
@@ -66,6 +94,14 @@ export class OrganizationTools {
             org: {
               type: 'string',
               description: '组织名'
+            },
+            type: {
+              type: 'string',
+              description: '仓库类型过滤'
+            },
+            repo_type: {
+              type: 'string',
+              description: '仓库分类过滤'
             },
             page: {
               type: 'number',
@@ -90,12 +126,10 @@ export class OrganizationTools {
               description: '用户名'
             },
             page: {
-              type: 'number',
-              description: '页码 (可选)'
+              ...stringOrNumberSchema('页码 (可选)')
             },
             perPage: {
-              type: 'number',
-              description: '每页数量 (可选)'
+              ...stringOrNumberSchema('每页数量 (可选)')
             }
           },
           required: ['username']
@@ -108,12 +142,14 @@ export class OrganizationTools {
           type: 'object',
           properties: {
             page: {
-              type: 'number',
-              description: '页码 (可选)'
+              ...stringOrNumberSchema('页码 (可选)')
             },
             perPage: {
-              type: 'number',
-              description: '每页数量 (可选)'
+              ...stringOrNumberSchema('每页数量 (可选)')
+            },
+            admin: {
+              type: 'boolean',
+              description: '仅返回管理员组织'
             }
           },
           required: []
@@ -147,12 +183,13 @@ export class OrganizationTools {
               type: 'string',
               description: '组织名'
             },
-            updateData: {
-              type: 'object',
-              description: '组织更新数据'
-            }
+            name: { type: 'string', description: '组织名称' },
+            email: { type: 'string', description: '组织公开邮箱' },
+            location: { type: 'string', description: '组织所在地' },
+            description: { type: 'string', description: '组织简介' },
+            html_url: { type: 'string', description: '组织站点' }
           },
-          required: ['org', 'updateData']
+          required: ['org']
         }
       },
       {
@@ -187,12 +224,10 @@ export class OrganizationTools {
               type: 'string',
               description: '用户名'
             },
-            memberData: {
-              type: 'object',
-              description: '成员更新数据'
-            }
+            role: { type: 'string', description: '成员角色' },
+            role_id: { type: 'string', description: '自定义角色 ID' }
           },
-          required: ['enterprise', 'username', 'memberData']
+          required: ['enterprise', 'username', 'role']
         }
       },
       {
@@ -240,6 +275,10 @@ export class OrganizationTools {
             perPage: {
               type: 'number',
               description: '每页数量 (可选)'
+            },
+            role: {
+              type: 'string',
+              description: '成员角色过滤'
             }
           },
           required: ['org']
@@ -255,6 +294,10 @@ export class OrganizationTools {
               type: 'string',
               description: '企业名'
             },
+            org: {
+              type: 'string',
+              description: '组织名过滤'
+            },
             page: {
               type: 'number',
               description: '页码 (可选)'
@@ -262,9 +305,13 @@ export class OrganizationTools {
             perPage: {
               type: 'number',
               description: '每页数量 (可选)'
+            },
+            role: {
+              type: 'string',
+              description: '成员角色过滤'
             }
           },
-          required: ['enterprise']
+          required: ['enterprise', 'org']
         }
       },
       {
@@ -299,12 +346,16 @@ export class OrganizationTools {
               type: 'string',
               description: '要邀请的用户名'
             },
-            memberData: {
-              type: 'object',
-              description: '成员数据和权限'
+            permission: {
+              type: 'string',
+              description: '成员权限'
+            },
+            role_id: {
+              type: 'string',
+              description: '自定义角色 ID'
             }
           },
-          required: ['org', 'username', 'memberData']
+          required: ['org', 'username']
         }
       },
       {
@@ -363,34 +414,65 @@ export class OrganizationTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'create_organization':
-        return await this.organizationService.createOrganization(args.orgData);
+        return await this.organizationService.createOrganization({
+          name: args.name,
+          path: args.path,
+          visibility: args.visibility,
+          description: args.description
+        });
 
       case 'get_organization':
         return await this.organizationService.getOrganization(args.org);
  
       case 'create_organization_repository':
-        return await this.organizationService.createOrganizationRepository(args.org, args.repoData);
+        return await this.organizationService.createOrganizationRepository(args.org, {
+          name: args.name,
+          description: args.description,
+          homepage: args.homepage,
+          has_issues: args.has_issues,
+          has_wiki: args.has_wiki,
+          can_comment: args.can_comment,
+          public: args.public,
+          private: args.private,
+          auto_init: args.auto_init,
+          gitignore_template: args.gitignore_template,
+          license_template: args.license_template,
+          path: args.path,
+          default_branch: args.default_branch,
+          import_url: args.import_url,
+          project_template: args.project_template,
+          repository_type: args.repository_type
+        });
        
       case 'get_organization_repositories':
-        return await this.organizationService.getOrganizationRepositories(args.org, args.page, args.perPage);
-       
+        return await this.organizationService.getOrganizationRepositories(args.org, args.page, args.perPage, args.type, args.repo_type ?? args.repoType);
+      
       case 'get_user_organizations':
         return await this.organizationService.getUserOrganizations(args.username, args.page, args.perPage);
-       
+      
       case 'get_current_user_organizations':
-        return await this.organizationService.getCurrentUserOrganizations(args.page, args.perPage);
+        return await this.organizationService.getCurrentUserOrganizations(args.page, args.perPage, args.admin);
        
       case 'update_organization':
-        return await this.organizationService.updateOrganization(args.org, args.updateData);
+        return await this.organizationService.updateOrganization(args.org, {
+          name: args.name,
+          email: args.email,
+          location: args.location,
+          description: args.description,
+          html_url: args.html_url
+        });
 
       case 'get_organization_member':
         return await this.organizationService.getOrganizationMember(args.org, args.username);
         
       case 'get_organization_members':
-        return await this.organizationService.getOrganizationMembers(args.org, args.page, args.perPage);
-        
+        return await this.organizationService.getOrganizationMembers(args.org, args.page, args.perPage, args.role);
+      
       case 'invite_organization_member':
-        return await this.organizationService.inviteOrganizationMember(args.org, args.username, args.memberData);
+        return await this.organizationService.inviteOrganizationMember(args.org, args.username, {
+          permission: args.permission ?? args.memberData?.permission,
+          role_id: args.role_id ?? args.roleId ?? args.memberData?.role_id
+        });
         
       case 'remove_organization_member':
         return await this.organizationService.removeOrganizationMember(args.org, args.username);
@@ -399,7 +481,10 @@ export class OrganizationTools {
         return await this.organizationService.getEnterpriseMember(args.enterprise, args.username);
         
       case 'update_enterprise_member':
-        return await this.organizationService.updateEnterpriseMember(args.enterprise, args.username, args.memberData);
+        return await this.organizationService.updateEnterpriseMember(args.enterprise, args.username, {
+          role: args.role,
+          role_id: args.role_id
+        });
         
       case 'get_current_user_organization_membership':
         return await this.organizationService.getCurrentUserOrganizationMembership(args.org);
@@ -408,7 +493,7 @@ export class OrganizationTools {
         return await this.organizationService.leaveOrganization(args.org);
         
       case 'get_enterprise_members':
-        return await this.organizationService.getEnterpriseMembers(args.enterprise, args.page, args.perPage);
+        return await this.organizationService.getEnterpriseMembers(args.enterprise, args.page, args.perPage, args.org, args.role);
         
       case 'get_organization_followers':
         return await this.organizationService.getOrganizationFollowers(args.owner, args.page, args.perPage);

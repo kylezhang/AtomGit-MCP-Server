@@ -1,5 +1,89 @@
 import { BaseService } from './BaseService.js';
-import { Issue, CreateIssueRequest, UpdateIssueRequest, CreateIssueCommentRequest, UpdateIssueCommentRequest } from '../types/index.js';
+import {
+  CreateIssueCommentRequest,
+  CreateIssueRequest,
+  Issue,
+  UpdateIssueCommentRequest,
+  UpdateIssueRequest
+} from '../types/index.js';
+
+interface PaginationOptions {
+  page?: string | number;
+  perPage?: string | number;
+  per_page?: string | number;
+}
+
+interface RepositoryIssueListOptions extends PaginationOptions {
+  state?: string;
+  labels?: string;
+  sort?: string;
+  direction?: string;
+  since?: string;
+  created_at?: string;
+  milestone?: string | number;
+  assignee?: string;
+  creator?: string;
+  created_after?: string;
+  created_before?: string;
+  updated_after?: string;
+  updated_before?: string;
+  search?: string;
+}
+
+interface IssueCommentListOptions extends PaginationOptions {
+  order?: string;
+  since?: string;
+}
+
+interface EnterpriseIssueListOptions extends PaginationOptions {
+  state?: string;
+  labels?: string;
+  sort?: string;
+  direction?: string;
+  since?: string;
+  milestone?: string | number;
+  assignee?: string;
+  creator?: string;
+  program?: string;
+  created_at?: string;
+  created_before?: string;
+  search?: string;
+}
+
+interface UserIssueListOptions extends PaginationOptions {
+  filter?: string;
+  state?: string;
+  labels?: string;
+  sort?: string;
+  direction?: string;
+  since?: string;
+  schedule?: string;
+  deadline?: string;
+  created_at?: string;
+  finished_at?: string;
+}
+
+interface OrganizationIssueListOptions extends PaginationOptions {
+  filter?: string;
+  state?: string;
+  labels?: string;
+  sort?: string;
+  direction?: string;
+  created_at?: string;
+  search?: string;
+}
+
+interface ReactionListOptions extends PaginationOptions {
+  emoji_name?: string;
+}
+
+interface RepositoryIssuePullRequestOptions {
+  mode?: string;
+}
+
+interface UpdateIssueRelatedBranchesRequest {
+  branch_names: string[];
+}
 
 export class IssuesService extends BaseService {
   private normalizeIssueAssignee(assignee?: string, assignees?: string[]): string | undefined {
@@ -33,6 +117,20 @@ export class IssuesService extends BaseService {
       return 'close';
     }
     return state;
+  }
+
+  private buildParams(options?: object): Record<string, unknown> {
+    const params: Record<string, unknown> = { ...((options ?? {}) as Record<string, unknown>) };
+
+    if (params.per_page === undefined && params.perPage !== undefined) {
+      params.per_page = params.perPage;
+    }
+
+    delete params.perPage;
+
+    return Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== undefined)
+    );
   }
 
   private buildIssuePayload(
@@ -76,6 +174,9 @@ export class IssuesService extends BaseService {
     if (issueData.issue_type !== undefined) {
       payload.issue_type = issueData.issue_type;
     }
+    if ('status' in issueData && issueData.status !== undefined) {
+      payload.status = issueData.status;
+    }
     if (issueData.issue_severity !== undefined) {
       payload.issue_severity = issueData.issue_severity;
     }
@@ -92,7 +193,7 @@ export class IssuesService extends BaseService {
 
     return payload;
   }
-  
+
   async createRepositoryIssue(owner: string, repo: string, issueData: CreateIssueRequest): Promise<Issue> {
     const response = await this.client.post(
       `/api/v5/repos/${owner}/issues`,
@@ -101,120 +202,171 @@ export class IssuesService extends BaseService {
     return response.data;
   }
 
-  async updateRepositoryIssue(owner: string, repo: string, issueNumber: number, updateData: UpdateIssueRequest): Promise<Issue> {
+  async updateRepositoryIssue(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    updateData: UpdateIssueRequest
+  ): Promise<Issue> {
     const response = await this.client.patch(
       `/api/v5/repos/${owner}/issues/${issueNumber}`,
-      this.buildIssuePayload(repo, updateData)
+      this.buildIssuePayload(repo, updateData, true)
     );
     return response.data;
   }
 
-  async getRepositoryIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
+  async getRepositoryIssue(owner: string, repo: string, issueNumber: string | number): Promise<Issue> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}`);
     return response.data;
   }
 
-  async getRepositoryIssues(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open', page = 1, perPage = 30): Promise<Issue[]> {
+  async getRepositoryIssues(
+    owner: string,
+    repo: string,
+    options: RepositoryIssueListOptions = {}
+  ): Promise<Issue[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues`, {
-      params: {
-        state,
-        page,
-        per_page: perPage
-      }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async getRepositoryIssueComments(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+  async getRepositoryIssueComments(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    options: IssueCommentListOptions = {}
+  ): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/comments`, {
-      params: { page, per_page: perPage }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async createRepositoryIssueComment(owner: string, repo: string, issueNumber: number, commentData: CreateIssueCommentRequest): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/comments`, commentData);
+  async createRepositoryIssueComment(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    commentData: CreateIssueCommentRequest
+  ): Promise<any> {
+    const response = await this.client.post(
+      `/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/comments`,
+      commentData
+    );
     return response.data;
   }
 
-  async getRepositoryAllIssueComments(owner: string, repo: string, page = 1, perPage = 30): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comments`, {
-      params: { page, per_page: perPage }
+  async getRepositoryIssuePullRequests(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    options: RepositoryIssuePullRequestOptions = {}
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/pull_requests`, {
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async getRepositoryIssuePullRequests(owner: string, repo: string, issueNumber: number): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/pull_requests`);
+  async getEnterpriseIssueLabels(
+    enterprise: string,
+    issueId: string,
+    options: PaginationOptions = {}
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueId}/labels`, {
+      params: this.buildParams(options)
+    });
     return response.data;
   }
 
-  async getEnterpriseIssueLabels(enterprise: string, issueId: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueId}/labels`);
-    return response.data;
-  }
-
-  async createRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any[]> {
+  async createRepositoryIssueLabel(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    labels: string[]
+  ): Promise<any[]> {
     const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, labels);
     return response.data;
   }
 
-  async deleteRepositoryIssueLabel(owner: string, repo: string, issueNumber: number, name: string): Promise<void> {
+  async deleteRepositoryIssueLabel(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    name: string
+  ): Promise<void> {
     const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels/${name}`);
     return response.data;
   }
 
-  async getRepositoryIssueOperateLogs(owner: string, repo: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+  async getRepositoryIssueOperateLogs(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    options: PaginationOptions = {}
+  ): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/issues/${issueNumber}/operate_logs`, {
-      params: { repo, page, per_page: perPage }
+      params: this.buildParams({ repo, ...options })
     });
     return response.data;
   }
 
-  async getEnterpriseIssues(enterprise: string, page = 1, perPage = 30): Promise<any[]> {
+  async getEnterpriseIssues(enterprise: string, options: EnterpriseIssueListOptions = {}): Promise<any[]> {
     const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues`, {
-      params: { page, per_page: perPage }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async getUserIssues(page = 1, perPage = 30): Promise<any[]> {
+  async getUserIssues(options: UserIssueListOptions = {}): Promise<any[]> {
     const response = await this.client.get('/api/v5/user/issues', {
-      params: { page, per_page: perPage }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async updateRepositoryIssueComment(owner: string, repo: string, commentId: number, updateData: UpdateIssueCommentRequest): Promise<any> {
-    const response = await this.client.patch(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`, updateData);
+  async updateRepositoryIssueComment(
+    owner: string,
+    repo: string,
+    commentId: string | number,
+    updateData: UpdateIssueCommentRequest
+  ): Promise<any> {
+    const response = await this.client.patch(
+      `/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`,
+      updateData
+    );
     return response.data;
   }
 
-  async deleteRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<void> {
+  async deleteRepositoryIssueComment(owner: string, repo: string, commentId: string | number): Promise<void> {
     const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`);
     return response.data;
   }
 
-  async getRepositoryIssueComment(owner: string, repo: string, commentId: number): Promise<any> {
+  async getRepositoryIssueComment(owner: string, repo: string, commentId: string | number): Promise<any> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`);
     return response.data;
   }
 
-  async getOrganizationIssues(org: string, page = 1, perPage = 30): Promise<any[]> {
+  async getOrganizationIssues(org: string, options: OrganizationIssueListOptions = {}): Promise<any[]> {
     const response = await this.client.get(`/api/v5/orgs/${org}/issues`, {
-      params: { page, per_page: perPage }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async getEnterpriseIssueComments(enterprise: string, issueNumber: number, page = 1, perPage = 30): Promise<any[]> {
+  async getEnterpriseIssueComments(
+    enterprise: string,
+    issueNumber: string | number,
+    options: PaginationOptions = {}
+  ): Promise<any[]> {
     const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueNumber}/comments`, {
-      params: { page, per_page: perPage }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async getEnterpriseIssue(enterprise: string, issueNumber: number): Promise<any> {
+  async getEnterpriseIssue(enterprise: string, issueNumber: string | number): Promise<any> {
     const response = await this.client.get(`/api/v5/enterprises/${enterprise}/issues/${issueNumber}`);
     return response.data;
   }
@@ -224,50 +376,93 @@ export class IssuesService extends BaseService {
     return response.data;
   }
 
-  async updateRepositoryIssueRelatedBranches(owner: string, repo: string, issueNumber: number, branchName: string): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/related_branches`, { branch_name: branchName });
+  async updateRepositoryIssueRelatedBranches(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    request: UpdateIssueRelatedBranchesRequest
+  ): Promise<any> {
+    const response = await this.client.put(
+      `/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/related_branches`,
+      request
+    );
     return response.data;
   }
 
-  async getRepositoryIssueRelatedBranches(owner: string, repo: string, issueNumber: number): Promise<any[]> {
+  async getRepositoryIssueRelatedBranches(owner: string, repo: string, issueNumber: string | number): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/related_branches`);
     return response.data;
   }
 
-  async getRepositoryIssueReactions(owner: string, repo: string, issueNumber: number): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/user_reactions`);
+  async getRepositoryIssueReactions(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    options: ReactionListOptions = {}
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/user_reactions`, {
+      params: this.buildParams(options)
+    });
     return response.data;
   }
 
-  async getRepositoryIssueCommentReactions(owner: string, repo: string, commentId: number): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/user_reactions`);
+  async getRepositoryIssueCommentReactions(
+    owner: string,
+    repo: string,
+    commentId: string | number,
+    options: ReactionListOptions = {}
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/user_reactions`, {
+      params: this.buildParams(options)
+    });
     return response.data;
   }
 
-  async getRepositoryIssueModifyHistory(owner: string, repo: string, issueNumber: number): Promise<any[]> {
+  async getRepositoryIssueModifyHistory(owner: string, repo: string, issueNumber: string | number): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/modify_history`);
     return response.data;
   }
 
-  async getRepositoryIssueCommentModifyHistory(owner: string, repo: string, commentId: number): Promise<any[]> {
+  async getRepositoryIssueCommentModifyHistory(
+    owner: string,
+    repo: string,
+    commentId: string | number
+  ): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comment/${commentId}/modify_history`);
     return response.data;
   }
 
-  async replaceRepositoryIssueAllLabels(owner: string, repo: string, issueNumber: number, labels: string[]): Promise<any> {
+  async replaceRepositoryIssueAllLabels(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    labels: string[]
+  ): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, labels);
     return response.data;
   }
 
-  async deleteRepositoryAllIssueLabels(owner: string, repo: string, issueNumber: number): Promise<any> {
+  async deleteRepositoryAllIssueLabels(owner: string, repo: string, issueNumber: string | number): Promise<any> {
     const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`);
     return response.data;
   }
 
-  async getAllRepositoryIssueComments(owner: string, repo: string, page = 1, perPage = 30): Promise<any[]> {
+  async getAllRepositoryIssueComments(
+    owner: string,
+    repo: string,
+    options: (PaginationOptions & { sort?: string; direction?: string; since?: string }) = {}
+  ): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/issues/comments`, {
-      params: { page, per_page: perPage }
+      params: this.buildParams(options)
     });
     return response.data;
+  }
+
+  async getRepositoryAllIssueComments(
+    owner: string,
+    repo: string,
+    options: (PaginationOptions & { sort?: string; direction?: string; since?: string }) = {}
+  ): Promise<any[]> {
+    return this.getAllRepositoryIssueComments(owner, repo, options);
   }
 }

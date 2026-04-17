@@ -13,13 +13,17 @@ export class ReleaseService extends BaseService {
     return response.data;
   }
 
-  async getReleaseUploadUrl(owner: string, repo: string, tag: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/upload_url`);
+  async getReleaseUploadUrl(owner: string, repo: string, tag: string, fileName?: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/upload_url`, {
+      params: { file_name: fileName }
+    });
     return response.data;
   }
 
-  async getRelease(owner: string, repo: string, tag: string): Promise<Release> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}`);
+  async getRelease(owner: string, repo: string, tag: string, tempDownloadUrl?: string | boolean): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}`, {
+      params: { temp_download_url: tempDownloadUrl }
+    });
     return response.data;
   }
 
@@ -33,11 +37,12 @@ export class ReleaseService extends BaseService {
     return response.data;
   }
 
-  async getReleases(owner: string, repo: string, page = 1, perPage = 30): Promise<Release[]> {
+  async getReleases(owner: string, repo: string, page = 1, perPage = 30, direction?: string): Promise<Release[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases`, {
       params: {
         page,
-        per_page: perPage
+        per_page: perPage,
+        direction
       }
     });
     return response.data;

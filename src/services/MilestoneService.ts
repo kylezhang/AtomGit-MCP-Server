@@ -3,12 +3,22 @@ import { CreateMilestoneRequest, UpdateMilestoneRequest } from '../types/index.j
 
 export class MilestoneService extends BaseService {
   
-  async getRepositoryMilestones(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open', page = 1, perPage = 30): Promise<any[]> {
+  async getRepositoryMilestones(
+    owner: string,
+    repo: string,
+    state: 'open' | 'closed' | 'all' = 'open',
+    page = 1,
+    perPage = 30,
+    sort?: string,
+    direction?: string
+  ): Promise<any[]> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/milestones`, {
       params: {
         state,
         page,
-        per_page: perPage
+        per_page: perPage,
+        sort,
+        direction
       }
     });
     return response.data;

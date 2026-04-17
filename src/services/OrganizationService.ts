@@ -1,19 +1,63 @@
 import { BaseService } from './BaseService.js';
 
+interface CreateOrganizationPayload {
+  name?: string;
+  path: string;
+  visibility?: 'public' | 'private';
+  description?: string;
+}
+
+interface CreateOrganizationRepositoryPayload {
+  name: string;
+  description?: string;
+  homepage?: string;
+  has_issues?: boolean;
+  has_wiki?: boolean;
+  can_comment?: boolean;
+  public?: number;
+  private?: boolean;
+  auto_init?: boolean;
+  gitignore_template?: string;
+  license_template?: string;
+  path?: string;
+  default_branch?: string;
+  import_url?: string;
+  project_template?: string;
+  repository_type?: 'code' | 'model' | 'dataset' | 'space';
+}
+
+interface UpdateOrganizationPayload {
+  name?: string;
+  email?: string;
+  location?: string;
+  description?: string;
+  html_url?: string;
+}
+
+interface UpdateEnterpriseMemberPayload {
+  role: string;
+  role_id?: string;
+}
+
+interface InviteOrganizationMemberPayload {
+  permission?: string;
+  role_id?: string;
+}
+
 export class OrganizationService extends BaseService {
-  async createOrganization(orgData: any): Promise<any> {
+  async createOrganization(orgData: CreateOrganizationPayload): Promise<any> {
     const response = await this.client.post('/api/v5/orgs', orgData);
     return response.data;
   }
   
-  async createOrganizationRepository(org: string, repoData: any): Promise<any> {
+  async createOrganizationRepository(org: string, repoData: CreateOrganizationRepositoryPayload): Promise<any> {
     const response = await this.client.post(`/api/v5/orgs/${org}/repos`, repoData);
     return response.data;
   }
 
-  async getOrganizationRepositories(org: string, page = 1, perPage = 30): Promise<any[]> {
+  async getOrganizationRepositories(org: string, page = 1, perPage = 30, type?: string, repoType?: string): Promise<any[]> {
     const response = await this.client.get(`/api/v5/orgs/${org}/repos`, {
-      params: { page, per_page: perPage }
+      params: { page, per_page: perPage, type, repo_type: repoType }
     });
     return response.data;
   }
@@ -25,9 +69,9 @@ export class OrganizationService extends BaseService {
     return response.data;
   }
 
-  async getCurrentUserOrganizations(page = 1, perPage = 30): Promise<any[]> {
+  async getCurrentUserOrganizations(page = 1, perPage = 30, admin?: boolean): Promise<any[]> {
     const response = await this.client.get('/api/v5/users/orgs', {
-      params: { page, per_page: perPage }
+      params: { page, per_page: perPage, admin }
     });
     return response.data;
   }
@@ -42,7 +86,7 @@ export class OrganizationService extends BaseService {
     return response.data;
   }
 
-  async updateOrganization(org: string, updateData: any): Promise<any> {
+  async updateOrganization(org: string, updateData: UpdateOrganizationPayload): Promise<any> {
     const response = await this.client.patch(`/api/v5/orgs/${org}`, updateData);
     return response.data;
   }
@@ -52,7 +96,11 @@ export class OrganizationService extends BaseService {
     return response.data;
   }
 
-  async updateEnterpriseMember(enterprise: string, username: string, memberData: any): Promise<any> {
+  async updateEnterpriseMember(
+    enterprise: string,
+    username: string,
+    memberData: UpdateEnterpriseMemberPayload
+  ): Promise<any> {
     const response = await this.client.put(`/api/v5/enterprises/${enterprise}/members/${username}`, memberData);
     return response.data;
   }
@@ -67,16 +115,16 @@ export class OrganizationService extends BaseService {
     return response.data;
   }
 
-  async getOrganizationMembers(org: string, page = 1, perPage = 30): Promise<any[]> {
+  async getOrganizationMembers(org: string, page = 1, perPage = 30, role?: string): Promise<any[]> {
     const response = await this.client.get(`/api/v5/orgs/${org}/members`, {
-      params: { page, per_page: perPage }
+      params: { page, per_page: perPage, role }
     });
     return response.data;
   }
 
-  async getEnterpriseMembers(enterprise: string, page = 1, perPage = 30): Promise<any[]> {
+  async getEnterpriseMembers(enterprise: string, page = 1, perPage = 30, org?: string, role?: string): Promise<any[]> {
     const response = await this.client.get(`/api/v5/enterprises/${enterprise}/members`, {
-      params: { page, per_page: perPage }
+      params: { page, per_page: perPage, org, role }
     });
     return response.data;
   }
@@ -86,7 +134,7 @@ export class OrganizationService extends BaseService {
     return response.data;
   }
 
-  async inviteOrganizationMember(org: string, username: string, memberData: any): Promise<any> {
+  async inviteOrganizationMember(org: string, username: string, memberData: InviteOrganizationMemberPayload): Promise<any> {
     const response = await this.client.post(`/api/v5/orgs/${org}/memberships/${username}`, memberData);
     return response.data;
   }

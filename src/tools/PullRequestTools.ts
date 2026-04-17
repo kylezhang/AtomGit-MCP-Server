@@ -1,6 +1,30 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { PullRequestService } from '../services/PullRequestService.js';
 
+const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description,
+  ...(defaultValue !== undefined ? { default: defaultValue } : {})
+});
+
+const stringArraySchema = {
+  type: 'array',
+  items: {
+    type: 'string'
+  }
+};
+
+const stringOrArraySchema = (description: string) => ({
+  oneOf: [
+    { type: 'string' },
+    stringArraySchema
+  ],
+  description
+});
+
 export class PullRequestTools {
   constructor(private pullRequestService: PullRequestService) {}
 
@@ -25,6 +49,67 @@ export class PullRequestTools {
               description: 'State of pull requests to return (open, closed, all)',
               enum: ['open', 'closed', 'all'],
               default: 'open'
+            },
+            base: {
+              type: 'string',
+              description: 'Base branch filter'
+            },
+            since: {
+              type: 'string',
+              description: 'Only return pull requests updated after this time'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            milestone_number: stringOrNumberSchema('Milestone number filter'),
+            labels: {
+              type: 'string',
+              description: 'Comma-separated label names'
+            },
+            author: {
+              type: 'string',
+              description: 'Author username'
+            },
+            assignee: {
+              type: 'string',
+              description: 'Assignee username'
+            },
+            reviewer: {
+              type: 'string',
+              description: 'Reviewer username'
+            },
+            merged_after: {
+              type: 'string',
+              description: 'Merged after filter'
+            },
+            merged_before: {
+              type: 'string',
+              description: 'Merged before filter'
+            },
+            only_count: {
+              type: 'boolean',
+              description: 'Whether to return only the total count'
+            },
+            created_after: {
+              type: 'string',
+              description: 'Created after filter'
+            },
+            created_before: {
+              type: 'string',
+              description: 'Created before filter'
+            },
+            updated_before: {
+              type: 'string',
+              description: 'Updated before filter'
+            },
+            updated_after: {
+              type: 'string',
+              description: 'Updated after filter'
             },
             page: {
               type: 'number',
@@ -93,10 +178,41 @@ export class PullRequestTools {
               description: 'The contents of the pull request',
               default: ''
             },
+            milestone_number: stringOrNumberSchema('Milestone number'),
+            labels: {
+              type: 'string',
+              description: 'Comma-separated label names'
+            },
+            issue: {
+              type: 'string',
+              description: 'Issue number to auto-fill from'
+            },
+            assignees: stringOrArraySchema('Assignee usernames'),
+            testers: stringOrArraySchema('Tester usernames'),
+            prune_source_branch: {
+              type: 'boolean',
+              description: 'Delete the source branch after merge'
+            },
             draft: {
               type: 'boolean',
               description: 'Indicates whether the pull request is a draft',
               default: false
+            },
+            squash: {
+              type: 'boolean',
+              description: 'Use squash merge when merging'
+            },
+            squash_commit_message: {
+              type: 'string',
+              description: 'Squash merge commit message'
+            },
+            fork_path: {
+              type: 'string',
+              description: 'Fork repository path for cross-repo pull requests'
+            },
+            close_related_issue: {
+              type: 'boolean',
+              description: 'Close related issues when merged'
             },
             maintainer_can_modify: {
               type: 'boolean',
@@ -124,6 +240,14 @@ export class PullRequestTools {
             number: {
               type: 'number',
               description: 'The number of pull request'
+            },
+            title: {
+              type: 'string',
+              description: 'Merge title'
+            },
+            description: {
+              type: 'string',
+              description: 'Merge description'
             },
             commit_title: {
               type: 'string',
@@ -158,10 +282,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            }
+            number: stringOrNumberSchema('The number of pull request')
           },
           required: ['owner', 'repo', 'number']
         }
@@ -180,9 +301,16 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
+            number: stringOrNumberSchema('The number of pull request'),
+            page: {
               type: 'number',
-              description: 'The number of pull request'
+              description: 'Page number for pagination',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page',
+              default: 30
             }
           },
           required: ['owner', 'repo', 'number']
@@ -253,6 +381,14 @@ export class PullRequestTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
+            comment_type: {
+              type: 'string',
+              description: 'Comment type filter'
             }
           },
           required: ['owner', 'repo', 'number']
@@ -321,6 +457,19 @@ export class PullRequestTools {
               description: 'State of the pull request (open, closed)',
               enum: ['open', 'closed']
             },
+            milestone_number: stringOrNumberSchema('Milestone number'),
+            labels: {
+              type: 'string',
+              description: 'Comma-separated label names'
+            },
+            draft: {
+              type: 'boolean',
+              description: 'Whether the pull request is a draft'
+            },
+            close_related_issue: {
+              type: 'boolean',
+              description: 'Close related issues when merged'
+            },
             base: {
               type: 'string',
               description: 'The name of the branch you want the changes pulled into'
@@ -352,14 +501,10 @@ export class PullRequestTools {
               description: 'The number of pull request'
             },
             page: {
-              type: 'number',
-              description: 'Page number for pagination',
-              default: 1
+              ...stringOrNumberSchema('Page number for pagination', 1)
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -391,7 +536,7 @@ export class PullRequestTools {
               description: 'Array of label names to add'
             }
           },
-          required: ['owner', 'repo', 'number', 'labels']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -452,7 +597,7 @@ export class PullRequestTools {
               description: 'Array of label names to set'
             }
           },
-          required: ['owner', 'repo', 'number', 'labels']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -504,12 +649,16 @@ export class PullRequestTools {
               description: 'Test action (approve, reject, reset)',
               enum: ['approve', 'reject', 'reset']
             },
+            force: {
+              type: 'boolean',
+              description: 'Force the action as an administrator'
+            },
             comment: {
               type: 'string',
               description: 'Optional comment for the test action'
             }
           },
-          required: ['owner', 'repo', 'number', 'action']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -535,12 +684,16 @@ export class PullRequestTools {
               description: 'Review action (approve, reject, reset)',
               enum: ['approve', 'reject', 'reset']
             },
+            force: {
+              type: 'boolean',
+              description: 'Force the action as an administrator'
+            },
             comment: {
               type: 'string',
               description: 'Optional comment for the review action'
             }
           },
-          required: ['owner', 'repo', 'number', 'action']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -557,9 +710,10 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
+            number: stringOrNumberSchema('The number of pull request'),
+            sort: {
+              type: 'string',
+              description: 'Sort field'
             },
             page: {
               type: 'number',
@@ -593,6 +747,10 @@ export class PullRequestTools {
               type: 'number',
               description: 'The number of pull request'
             },
+            reset_all: {
+              type: 'boolean',
+              description: 'Reset all testers'
+            },
             testers: {
               type: 'array',
               items: {
@@ -622,12 +780,10 @@ export class PullRequestTools {
               type: 'number',
               description: 'The number of pull request'
             },
-            testers: {
-              type: 'array',
-              items: {
-                type: 'string'
-              },
-              description: 'Array of usernames to assign as testers'
+            testers: stringOrArraySchema('Usernames to assign as testers'),
+            add: {
+              type: 'boolean',
+              description: 'Append testers instead of replacing them'
             }
           },
           required: ['owner', 'repo', 'number', 'testers']
@@ -647,17 +803,8 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            },
-            testers: {
-              type: 'array',
-              items: {
-                type: 'string'
-              },
-              description: 'Array of usernames to remove as testers'
-            }
+            number: stringOrNumberSchema('The number of pull request'),
+            testers: stringOrArraySchema('Usernames to remove as testers')
           },
           required: ['owner', 'repo', 'number', 'testers']
         }
@@ -698,6 +845,10 @@ export class PullRequestTools {
               type: 'number',
               description: 'The number of pull request'
             },
+            reset_all: {
+              type: 'boolean',
+              description: 'Reset all assignees'
+            },
             assignees: {
               type: 'array',
               items: {
@@ -727,13 +878,7 @@ export class PullRequestTools {
               type: 'number',
               description: 'The number of pull request'
             },
-            assignees: {
-              type: 'array',
-              items: {
-                type: 'string'
-              },
-              description: 'Array of usernames to assign as reviewers'
-            }
+            assignees: stringOrArraySchema('Usernames to assign as reviewers')
           },
           required: ['owner', 'repo', 'number', 'assignees']
         }
@@ -756,15 +901,9 @@ export class PullRequestTools {
               type: 'number',
               description: 'The number of pull request'
             },
-            assignees: {
-              type: 'array',
-              items: {
-                type: 'string'
-              },
-              description: 'Array of usernames to remove as assignees'
-            }
+            assignees: stringOrArraySchema('Usernames to remove as assignees')
           },
-          required: ['owner', 'repo', 'number', 'assignees']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -781,10 +920,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            }
+            number: stringOrNumberSchema('The number of pull request')
           },
           required: ['owner', 'repo', 'number']
         }
@@ -829,10 +965,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            },
+            number: stringOrNumberSchema('The number of pull request'),
             issues: {
               type: 'array',
               items: {
@@ -841,7 +974,7 @@ export class PullRequestTools {
               description: 'Array of issue numbers to link'
             }
           },
-          required: ['owner', 'repo', 'number', 'issues']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -858,10 +991,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            },
+            number: stringOrNumberSchema('The number of pull request'),
             issues: {
               type: 'array',
               items: {
@@ -870,7 +1000,7 @@ export class PullRequestTools {
               description: 'Array of issue numbers to unlink'
             }
           },
-          required: ['owner', 'repo', 'number', 'issues']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
@@ -887,16 +1017,13 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            },
+            number: stringOrNumberSchema('The number of pull request'),
             reviewers: {
-              type: 'array',
-              items: {
-                type: 'string'
-              },
-              description: 'Array of usernames to assign as approval reviewers'
+              ...stringOrArraySchema('Usernames to assign as approval reviewers')
+            },
+            add: {
+              type: 'boolean',
+              description: 'Append reviewers instead of replacing them'
             }
           },
           required: ['owner', 'repo', 'number', 'reviewers']
@@ -916,17 +1043,8 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            },
-            reviewers: {
-              type: 'array',
-              items: {
-                type: 'string'
-              },
-              description: 'Array of usernames to remove as approval reviewers'
-            }
+            number: stringOrNumberSchema('The number of pull request'),
+            reviewers: stringOrArraySchema('Usernames to remove as approval reviewers')
           },
           required: ['owner', 'repo', 'number', 'reviewers']
         }
@@ -945,10 +1063,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of the repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            }
+            number: stringOrNumberSchema('The number of pull request')
           },
           required: ['owner', 'repo', 'number']
         }
@@ -967,10 +1082,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            id: {
-              type: 'number',
-              description: 'The ID of comment'
-            }
+            id: stringOrNumberSchema('The ID of comment')
           },
           required: ['owner', 'repo', 'id']
         }
@@ -989,10 +1101,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            id: {
-              type: 'number',
-              description: 'The ID of comment to edit'
-            },
+            id: stringOrNumberSchema('The ID of comment to edit'),
             body: {
               type: 'string',
               description: 'The updated comment content'
@@ -1015,10 +1124,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            id: {
-              type: 'number',
-              description: 'The ID of comment to delete'
-            }
+            id: stringOrNumberSchema('The ID of comment to delete')
           },
           required: ['owner', 'repo', 'id']
         }
@@ -1041,10 +1147,7 @@ export class PullRequestTools {
               type: 'number',
               description: 'The number of pull request'
             },
-            discussion_id: {
-              type: 'number',
-              description: 'The ID of discussion'
-            },
+            discussion_id: stringOrNumberSchema('The ID of discussion'),
             body: {
               type: 'string',
               description: 'The reply content'
@@ -1067,14 +1170,8 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            },
-            discussion_id: {
-              type: 'number',
-              description: 'The ID of discussion'
-            },
+            number: stringOrNumberSchema('The number of pull request'),
+            discussion_id: stringOrNumberSchema('The ID of discussion'),
             resolved: {
               type: 'boolean',
               description: 'Whether the comment is resolved'
@@ -1097,9 +1194,16 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
+            number: stringOrNumberSchema('The number of pull request'),
+            page: {
+              ...stringOrNumberSchema('Page number for pagination', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            emoji_name: {
+              type: 'string',
+              description: 'Emoji filter'
             }
           },
           required: ['owner', 'repo', 'number']
@@ -1119,9 +1223,16 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            comment_id: {
-              type: 'number',
-              description: 'The ID of comment'
+            comment_id: stringOrNumberSchema('The ID of comment'),
+            page: {
+              ...stringOrNumberSchema('Page number for pagination', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            emoji_name: {
+              type: 'string',
+              description: 'Emoji filter'
             }
           },
           required: ['owner', 'repo', 'comment_id']
@@ -1141,10 +1252,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            number: {
-              type: 'number',
-              description: 'The number of pull request'
-            }
+            number: stringOrNumberSchema('The number of pull request')
           },
           required: ['owner', 'repo', 'number']
         }
@@ -1163,10 +1271,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'The name of repository'
             },
-            comment_id: {
-              type: 'number',
-              description: 'The ID of comment'
-            }
+            comment_id: stringOrNumberSchema('The ID of comment')
           },
           required: ['owner', 'repo', 'comment_id']
         }
@@ -1180,6 +1285,51 @@ export class PullRequestTools {
             enterprise: {
               type: 'string',
               description: 'The enterprise name'
+            },
+            state: {
+              type: 'string',
+              description: 'Pull request state'
+            },
+            issue_number: stringOrNumberSchema('Issue number filter'),
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
+            base: {
+              type: 'string',
+              description: 'Base branch filter'
+            },
+            author: {
+              type: 'string',
+              description: 'Author username'
+            },
+            search: {
+              type: 'string',
+              description: 'Search keyword'
+            },
+            created_after: {
+              type: 'string',
+              description: 'Created after filter'
+            },
+            created_before: {
+              type: 'string',
+              description: 'Created before filter'
+            },
+            updated_before: {
+              type: 'string',
+              description: 'Updated before filter'
+            },
+            updated_after: {
+              type: 'string',
+              description: 'Updated after filter'
+            },
+            labels: {
+              type: 'string',
+              description: 'Comma-separated label names'
             },
             page: {
               type: 'number',
@@ -1205,15 +1355,53 @@ export class PullRequestTools {
               type: 'string',
               description: 'The organization name'
             },
+            state: {
+              type: 'string',
+              description: 'Pull request state'
+            },
+            sort: {
+              type: 'string',
+              description: 'Sort field'
+            },
+            direction: {
+              type: 'string',
+              description: 'Sort direction'
+            },
             page: {
               type: 'number',
               description: 'Page number for pagination',
               default: 1
             },
             perPage: {
-              type: 'number',
-              description: 'Number of results per page',
-              default: 30
+              ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            base: {
+              type: 'string',
+              description: 'Base branch filter'
+            },
+            author: {
+              type: 'string',
+              description: 'Author username'
+            },
+            search: {
+              type: 'string',
+              description: 'Search keyword'
+            },
+            created_after: {
+              type: 'string',
+              description: 'Created after filter'
+            },
+            created_before: {
+              type: 'string',
+              description: 'Created before filter'
+            },
+            updated_before: {
+              type: 'string',
+              description: 'Updated before filter'
+            },
+            updated_after: {
+              type: 'string',
+              description: 'Updated after filter'
             }
           },
           required: ['org']
@@ -1236,21 +1424,6 @@ export class PullRequestTools {
           },
           required: ['enterprise', 'number']
         }
-      },
-      {
-        name: 'reply_pull_request_discussion_comment',
-        description: '回复pr评论',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: { type: 'string', description: '仓库所属空间地址' },
-            repo: { type: 'string', description: '仓库路径' },
-            number: { type: 'number', description: 'Pull Request ID' },
-            discussion_id: { type: 'number', description: '讨论ID' },
-            body: { type: 'string', description: '回复内容' }
-          },
-          required: ['owner', 'repo', 'number', 'discussion_id', 'body']
-        }
       }
     ];
   }
@@ -1266,9 +1439,27 @@ export class PullRequestTools {
         return await this.pullRequestService.getRepositoryPulls(
           args.owner,
           args.repo,
-          args.state,
-          args.page,
-          args.perPage
+          {
+            state: args.state,
+            base: args.base,
+            since: args.since,
+            direction: args.direction,
+            sort: args.sort,
+            milestone_number: args.milestone_number ?? args.milestoneNumber,
+            labels: args.labels,
+            author: args.author,
+            assignee: args.assignee,
+            reviewer: args.reviewer,
+            merged_after: args.merged_after ?? args.mergedAfter,
+            merged_before: args.merged_before ?? args.mergedBefore,
+            only_count: args.only_count ?? args.onlyCount,
+            created_after: args.created_after ?? args.createdAfter,
+            created_before: args.created_before ?? args.createdBefore,
+            updated_before: args.updated_before ?? args.updatedBefore,
+            updated_after: args.updated_after ?? args.updatedAfter,
+            page: args.page,
+            perPage: args.perPage
+          }
         );
 
       case 'get_repository_pull':
@@ -1280,12 +1471,24 @@ export class PullRequestTools {
           head: args.head,
           base: args.base,
           body: args.body,
+          milestone_number: args.milestone_number ?? args.milestoneNumber,
+          labels: args.labels,
+          issue: args.issue,
+          assignees: args.assignees,
+          testers: args.testers,
+          prune_source_branch: args.prune_source_branch ?? args.pruneSourceBranch,
           draft: args.draft,
+          squash: args.squash,
+          squash_commit_message: args.squash_commit_message ?? args.squashCommitMessage,
+          fork_path: args.fork_path ?? args.forkPath,
+          close_related_issue: args.close_related_issue ?? args.closeRelatedIssue,
           maintainer_can_modify: args.maintainer_can_modify
         });
 
       case 'merge_repository_pull':
         return await this.pullRequestService.mergeRepositoryPull(args.owner, args.repo, number, {
+          title: args.title,
+          description: args.description,
           commit_title: args.commit_title,
           commit_message: args.commit_message,
           merge_method: args.merge_method
@@ -1295,7 +1498,10 @@ export class PullRequestTools {
         return await this.pullRequestService.getRepositoryPullMergeStatus(args.owner, args.repo, number);
 
       case 'get_repository_pull_issues':
-        return await this.pullRequestService.getRepositoryPullIssues(args.owner, args.repo, number);
+        return await this.pullRequestService.getRepositoryPullIssues(args.owner, args.repo, number, {
+          page: args.page,
+          perPage: args.perPage
+        });
 
       case 'create_repository_pull_comment':
         return await this.pullRequestService.createRepositoryPullComment(args.owner, args.repo, number, {
@@ -1310,8 +1516,12 @@ export class PullRequestTools {
           args.owner,
           args.repo,
           number,
-          args.page,
-          args.perPage
+          {
+            page: args.page,
+            perPage: args.perPage,
+            direction: args.direction,
+            comment_type: args.comment_type ?? args.commentType
+          }
         );
 
       case 'get_repository_pull_files':
@@ -1328,6 +1538,10 @@ export class PullRequestTools {
           title: args.title,
           body: args.body,
           state: args.state,
+          milestone_number: args.milestone_number ?? args.milestoneNumber,
+          labels: args.labels,
+          draft: args.draft,
+          close_related_issue: args.close_related_issue ?? args.closeRelatedIssue,
           base: args.base,
           maintainer_can_modify: args.maintainer_can_modify
         });
@@ -1337,8 +1551,10 @@ export class PullRequestTools {
           args.owner,
           args.repo,
           number,
-          args.page,
-          args.perPage
+          {
+            page: args.page,
+            perPage: args.perPage
+          }
         );
 
       case 'create_repository_pull_label':
@@ -1358,16 +1574,29 @@ export class PullRequestTools {
         return await this.pullRequestService.deleteRepositoryPullLabel(args.owner, args.repo, number, args.name);
 
       case 'process_repository_pull_test':
-        return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, number, args.action, args.comment);
+        return await this.pullRequestService.processRepositoryPullTest(args.owner, args.repo, number, {
+          action: args.action,
+          comment: args.comment,
+          force: args.force
+        });
 
       case 'process_repository_pull_review':
-        return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, number, args.action, args.comment);
+        return await this.pullRequestService.processRepositoryPullReview(args.owner, args.repo, number, {
+          action: args.action,
+          comment: args.comment,
+          force: args.force
+        });
 
       case 'get_repository_pull_operate_logs':
         return await this.pullRequestService.getRepositoryPullOperateLogs(
           args.owner,
           args.repo,
-          number
+          number,
+          {
+            sort: args.sort,
+            page: args.page,
+            perPage: args.perPage
+          }
         );
 
       case 'reset_repository_pull_testers':
@@ -1375,11 +1604,17 @@ export class PullRequestTools {
           args.owner,
           args.repo,
           number,
-          args.testers,
+          {
+            reset_all: args.reset_all ?? args.resetAll,
+            testers: args.testers
+          },
         );
 
       case 'assign_repository_pull_testers':
-        return await this.pullRequestService.assignRepositoryPullTesters(args.owner, args.repo, number, args.testers);
+        return await this.pullRequestService.assignRepositoryPullTesters(args.owner, args.repo, number, {
+          testers: args.testers,
+          add: args.add
+        });
 
       case 'remove_repository_pull_testers':
         return await this.pullRequestService.removeRepositoryPullTesters(args.owner, args.repo, number, args.testers);
@@ -1392,11 +1627,16 @@ export class PullRequestTools {
           args.owner,
           args.repo,
           number,
-          args.assignees,
+          {
+            reset_all: args.reset_all ?? args.resetAll,
+            assignees: args.assignees
+          },
         );
 
       case 'assign_repository_pull_assignees':
-        return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, number, args.assignees);
+        return await this.pullRequestService.assignRepositoryPullAssignees(args.owner, args.repo, number, {
+          assignees: args.assignees
+        });
 
       case 'remove_repository_pull_assignees':
         return await this.pullRequestService.removeRepositoryPullAssignees(args.owner, args.repo, number, args.assignees);
@@ -1419,7 +1659,10 @@ export class PullRequestTools {
         return await this.pullRequestService.unlinkRepositoryPullIssues(args.owner, args.repo, number, args.issues);
 
       case 'assign_repository_pull_approval_reviewers':
-        return await this.pullRequestService.assignRepositoryPullApprovalReviewers(args.owner, args.repo, number, args.reviewers);
+        return await this.pullRequestService.assignRepositoryPullApprovalReviewers(args.owner, args.repo, number, {
+          reviewers: args.reviewers,
+          add: args.add
+        });
 
       case 'remove_repository_pull_approval_reviewers':
         return await this.pullRequestService.removeRepositoryPullApprovalReviewers(args.owner, args.repo, number, args.reviewers);
@@ -1438,18 +1681,23 @@ export class PullRequestTools {
       
       case 'reply_pull_request_discussion':
         return await this.pullRequestService.replyPullRequestDiscussion(args.owner, args.repo, number, discussionId, { body: args.body });
-      
-      case 'reply_pull_request_discussion_comment':
-        return await this.pullRequestService.replyPullRequestDiscussionComment(args.owner, args.repo, number, discussionId, { body: args.body });
 
       case 'update_pull_request_discussion_comment':
         return await this.pullRequestService.updatePullRequestDiscussionComment(args.owner, args.repo, number, discussionId, { resolved: args.resolved });
       
       case 'get_pull_request_reactions':
-        return await this.pullRequestService.getPullRequestReactions(args.owner, args.repo, number);
+        return await this.pullRequestService.getPullRequestReactions(args.owner, args.repo, number, {
+          page: args.page,
+          perPage: args.perPage,
+          emoji_name: args.emoji_name ?? args.emojiName
+        });
       
       case 'get_pull_request_comment_reactions':
-        return await this.pullRequestService.getPullRequestCommentReactions(args.owner, args.repo, commentId);
+        return await this.pullRequestService.getPullRequestCommentReactions(args.owner, args.repo, commentId, {
+          page: args.page,
+          perPage: args.perPage,
+          emoji_name: args.emoji_name ?? args.emojiName
+        });
       
       case 'get_pull_request_modify_history':
         return await this.pullRequestService.getPullRequestModifyHistory(args.owner, args.repo, number);
@@ -1458,10 +1706,38 @@ export class PullRequestTools {
         return await this.pullRequestService.getPullRequestCommentModifyHistory(args.owner, args.repo, commentId);
       
       case 'get_enterprise_pull_requests':
-        return await this.pullRequestService.getEnterprisePullRequests(args.enterprise, args.page, args.perPage);
+        return await this.pullRequestService.getEnterprisePullRequests(args.enterprise, {
+          state: args.state,
+          issue_number: args.issue_number ?? args.issueNumber,
+          sort: args.sort,
+          direction: args.direction,
+          base: args.base,
+          author: args.author,
+          search: args.search,
+          created_after: args.created_after ?? args.createdAfter,
+          created_before: args.created_before ?? args.createdBefore,
+          updated_before: args.updated_before ?? args.updatedBefore,
+          updated_after: args.updated_after ?? args.updatedAfter,
+          labels: args.labels,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_organization_pull_requests':
-        return await this.pullRequestService.getOrganizationPullRequests(args.org, args.page, args.perPage);
+        return await this.pullRequestService.getOrganizationPullRequests(args.org, {
+          state: args.state,
+          sort: args.sort,
+          direction: args.direction,
+          base: args.base,
+          author: args.author,
+          search: args.search,
+          created_after: args.created_after ?? args.createdAfter,
+          created_before: args.created_before ?? args.createdBefore,
+          updated_before: args.updated_before ?? args.updatedBefore,
+          updated_after: args.updated_after ?? args.updatedAfter,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_enterprise_pull_request_issues':
         return await this.pullRequestService.getEnterprisePullRequestIssues(args.enterprise, number);

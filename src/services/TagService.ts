@@ -23,8 +23,13 @@ export class TagService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryProtectedTags(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protected_tags`);
+  async getRepositoryProtectedTags(owner: string, repo: string, page?: number, perPage?: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protected_tags`, {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
     return response.data;
   }
 

@@ -2,13 +2,13 @@
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
-![Tools](https://img.shields.io/badge/tools-200%2B-orange.svg)
+![Tools](https://img.shields.io/badge/tools-240%2B-orange.svg)
 
 `@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae 等。
 
 ## 主要特性
 
-- 全量 MCP 工具接入：覆盖多个功能分类，提供 200+ 个工具。
+- 全量 MCP 工具接入：覆盖 17 个功能分类，提供 240+ 个工具。
 - 默认安全模式：危险工具默认隐藏，需要时可显式开启。
 - 基于 Access Token 认证：使用 AtomGit Personal Access Token 访问平台 API。
 - 标准 MCP 协议：兼容基于 stdio 的 MCP 客户端集成方式。
@@ -186,6 +186,8 @@ macOS / Linux 示例：
 
 ## 开发说明
 
+维护规则、过滤例外和覆盖口径以 [AGENTS.md](./AGENTS.md) 为准；本节提供推荐的日常开发与同步顺序。
+
 ### 常用命令
 
 | 命令 | 说明 |
@@ -196,9 +198,41 @@ macOS / Linux 示例：
 | `npm run typecheck` | 执行 TypeScript 类型检查 |
 | `npm run clean` | 清理 `dist/` 目录 |
 | `npm run api:sync` | 更新 API 定义来源数据 |
-| `npm run api:check` | 检查 API 覆盖情况 |
-| `npm run api:scaffold` | 为指定 API 生成工具和服务代码 |
 | `npm run api:map` | 生成 API 与工具映射文档 |
+| `npm run api:check` | 检查 API 覆盖情况 |
+| `npm run api:audit` | 审计 tools / services 的参数与类型是否和官网文档一致 |
+| `npm run api:scaffold` | 为指定 API 生成工具和服务代码 |
+
+### 维护流程
+
+当需要同步 AtomGit 官网 API、补齐缺口或校准参数类型时，推荐按下面顺序执行：
+
+```mermaid
+flowchart TD
+    A["同步官方文档<br/>npm run api:sync"] --> B["检查当前覆盖缺口<br/>npm run api:check"]
+    B --> C["实现或移除 tools / services"]
+    C --> D["重建映射文档<br/>npm run api:map"]
+    D --> E["校验 schema 与 service 参数<br/>npm run api:audit"]
+    E --> F["再次复核覆盖结果<br/>npm run api:check"]
+    F --> G["类型检查<br/>npm run typecheck"]
+    G --> H["构建验证<br/>npm run build"]
+    H --> I["Review git diff"]
+```
+
+简要说明：
+
+1. `api:sync` 用来同步并过滤 AtomGit 官网文档，得到当前允许纳入项目的 API 基线。
+2. `api:check` 应先跑一次，目的是先确认“项目缺了什么”或“项目多了什么”。
+3. 实现阶段只改 `src/services/`、`src/tools/`、必要的 `src/types/`，保持请求形状与官网文档一致。
+4. `api:map` 在实现后再跑，用于重建 [docs/api_tool_map.md](./docs/api_tool_map.md)。
+5. `api:audit` 用于检查参数名、必填项、字段类型和 service 签名是否与官网文档一致。
+6. 最后再跑 `api:check`、`typecheck`、`build`，并检查最终 `git diff`。
+
+补充说明：
+
+- `api:check` 是 canonical 覆盖统计，关注的是“去重后的官方 API 是否全部覆盖”。
+- `docs/apis_url.json`、`docs/api_tool_map.md`、公开 tools 数量需要保持一致。
+- `api:scaffold` 适合生成基础骨架，但分类命名与现有模块不完全一致时，仍应以手工实现和 review 为准。
 
 ### 项目结构
 

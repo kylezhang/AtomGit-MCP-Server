@@ -1,6 +1,15 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { DashboardService } from '../services/DashboardService.js';
 
+const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description,
+  ...(defaultValue !== undefined ? { default: defaultValue } : {})
+});
+
 export class DashboardTools {
   private dashboardService: DashboardService;
 
@@ -19,6 +28,28 @@ export class DashboardTools {
             owner: {
               type: 'string',
               description: '组织名'
+            },
+            status: {
+              type: 'number',
+              description: '看板状态'
+            },
+            sort: {
+              type: 'string',
+              description: '排序字段'
+            },
+            visibility: {
+              type: 'number',
+              description: '可见性'
+            },
+            search: {
+              type: 'string',
+              description: '搜索关键字'
+            },
+            page: {
+              ...stringOrNumberSchema('页码')
+            },
+            perPage: {
+              ...stringOrNumberSchema('每页数量')
             }
           },
           required: ['owner']
@@ -43,24 +74,6 @@ export class DashboardTools {
         }
       },
       {
-        name: 'get_organization_kanban_content',
-        description: '获取看板内容',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: {
-              type: 'string',
-              description: '组织名'
-            },
-            kanban_id: {
-              type: 'string',
-              description: '看板ID'
-            }
-          },
-          required: ['owner', 'kanban_id']
-        }
-      },
-      {
         name: 'add_org_kanban_item',
         description: '添加Issue或者Pull Request到看板',
         inputSchema: {
@@ -68,9 +81,19 @@ export class DashboardTools {
           properties: {
             owner: { type: 'string', description: '组织名' },
             kanban_id: { type: 'string', description: '看板ID' },
-            itemData: { type: 'object', description: 'Item data' }
+            repo: { type: 'string', description: '仓库名' },
+            issue_iids: {
+              type: 'array',
+              description: '要添加到看板的 Issue IID 列表',
+              items: { type: 'number' }
+            },
+            pr_iids: {
+              type: 'array',
+              description: '要添加到看板的 Pull Request IID 列表',
+              items: { type: 'number' }
+            }
           },
-          required: ['owner', 'kanban_id', 'itemData']
+          required: ['owner', 'kanban_id', 'repo', 'issue_iids', 'pr_iids']
         }
       },
       {
@@ -83,7 +106,7 @@ export class DashboardTools {
             kanban_id: { type: 'string', description: '看板ID' },
             itemData: { type: 'object', description: 'Item data to remove' }
           },
-          required: ['owner', 'kanban_id', 'itemData']
+          required: ['owner', 'kanban_id']
         }
       },
       {
@@ -94,9 +117,13 @@ export class DashboardTools {
           properties: {
             owner: { type: 'string', description: '组织名' },
             kanban_id: { type: 'string', description: '看板ID' },
-            stateData: { type: 'object', description: 'State data' }
+            state: {
+              type: 'string',
+              description: '看板状态',
+              enum: ['archived', 'active']
+            }
           },
-          required: ['owner', 'kanban_id', 'stateData']
+          required: ['owner', 'kanban_id', 'state']
         }
       },
       {
@@ -108,10 +135,10 @@ export class DashboardTools {
             owner: { type: 'string', description: '组织名' },
             repo: { type: 'string', description: '仓库名' },
             type: { type: 'string', description: '类型 (issue/pull)' },
-            iid: { type: 'number', description: 'Issue/PR ID' },
-            newData: { type: 'object', description: 'Update data' }
+            iid: { ...stringOrNumberSchema('Issue/PR ID') },
+            kanban_id: { type: 'string', description: '新的看板ID' }
           },
-          required: ['owner', 'repo', 'type', 'iid', 'newData']
+          required: ['owner', 'repo', 'type', 'iid', 'kanban_id']
         }
       },
       {
@@ -121,7 +148,14 @@ export class DashboardTools {
           type: 'object',
           properties: {
             owner: { type: 'string', description: '组织名' },
-            kanban_id: { type: 'string', description: '看板ID' }
+            kanban_id: { type: 'string', description: '看板ID' },
+            repo: { type: 'string', description: '仓库路径' },
+            source_type: { type: 'string', description: '来源类型' },
+            source_status: { type: 'string', description: '来源状态' },
+            title: { type: 'string', description: '标题关键字' },
+            source_iids: { type: 'string', description: '来源 IID，多个用逗号分隔' },
+            page: { ...stringOrNumberSchema('页码') },
+            perPage: { ...stringOrNumberSchema('每页数量') }
           },
           required: ['owner', 'kanban_id']
         }
@@ -134,28 +168,49 @@ export class DashboardTools {
 
     switch (name) {
       case 'get_organization_kanbans':
-        return await this.dashboardService.getOrganizationKanbanList(args.owner);
+        return await this.dashboardService.getOrganizationKanbanList(
+          args.owner,
+          args.status,
+          args.sort,
+          args.visibility,
+          args.search,
+          args.page,
+          args.perPage
+        );
       
       case 'get_organization_kanban':
         return await this.dashboardService.getOrganizationKanban(args.owner, kanbanId);
-      
-      case 'get_organization_kanban_content':
-        return await this.dashboardService.getOrganizationKanbanContent(args.owner, kanbanId);
 
       case 'add_org_kanban_item':
-        return await this.dashboardService.addKanbanItem(args.owner, kanbanId, args.itemData);
+        return await this.dashboardService.addKanbanItem(args.owner, kanbanId, {
+          repo: args.repo,
+          issue_iids: args.issue_iids,
+          pr_iids: args.pr_iids
+        });
 
       case 'delete_org_kanban_remove_item':
         return await this.dashboardService.removeKanbanItem(args.owner, kanbanId, args.itemData);
 
       case 'update_org_kanban_state':
-        return await this.dashboardService.updateKanbanState(args.owner, kanbanId, args.stateData);
+        return await this.dashboardService.updateKanbanState(args.owner, kanbanId, { state: args.state });
 
       case 'update_org_kanban_repo_item':
-        return await this.dashboardService.updateKanbanItem(args.owner, args.repo, args.type, args.iid, args.newData);
+        return await this.dashboardService.updateKanbanItem(args.owner, args.repo, args.type, args.iid, {
+          kanban_id: kanbanId
+        });
 
       case 'get_org_kanban_item_list':
-        return await this.dashboardService.getKanbanItemList(args.owner, kanbanId);
+        return await this.dashboardService.getKanbanItemList(
+          args.owner,
+          kanbanId,
+          args.repo,
+          args.source_type,
+          args.source_status,
+          args.title,
+          args.source_iids,
+          args.page,
+          args.perPage
+        );
       
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -3,8 +3,22 @@ import { Branch, BranchProtectionRuleCreate, BranchProtectionRuleUpdate } from '
 
 export class BranchService extends BaseService {
 
-  async getRepositoryBranches(owner: string, repo: string): Promise<Branch[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches`);
+  async getRepositoryBranches(
+    owner: string,
+    repo: string,
+    sort?: string,
+    direction?: string,
+    page?: number,
+    perPage?: number
+  ): Promise<Branch[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches`, {
+      params: {
+        sort,
+        direction,
+        page,
+        per_page: perPage
+      }
+    });
     return response.data;
   }
 

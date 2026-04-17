@@ -1,8 +1,12 @@
 import { BaseService } from './BaseService.js';
 
+interface CollaboratorPayload {
+  permission?: string;
+}
+
 export class MemberService extends BaseService {
   
-  async addRepositoryCollaborator(owner: string, repo: string, username: string, collaboratorData: any): Promise<any> {
+  async addRepositoryCollaborator(owner: string, repo: string, username: string, collaboratorData: CollaboratorPayload): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/collaborators/${username}`, collaboratorData);
     return response.data;
   }
@@ -17,8 +21,13 @@ export class MemberService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryCollaborators(owner: string, repo: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators`);
+  async getRepositoryCollaborators(owner: string, repo: string, page?: number, perPage?: number): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/collaborators`, {
+      params: {
+        page,
+        per_page: perPage
+      }
+    });
     return response.data;
   }
 

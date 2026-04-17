@@ -35,6 +35,11 @@ interface Category {
   endpoints: ApiEndpoint[];
 }
 
+interface CategorizedEndpoint {
+  category: string;
+  endpoint: ApiEndpoint;
+}
+
 async function fetchUrl(url: string, retries = 3): Promise<string | null> {
   const normalizedUrl = normalizeDocumentationUrl(url);
   try {
@@ -89,21 +94,37 @@ function scoreEndpoint(endpoint: ApiEndpoint): number {
   return score;
 }
 
-function dedupeEndpoints(endpoints: ApiEndpoint[]): ApiEndpoint[] {
-  const deduped = new Map<string, ApiEndpoint>();
+function getCanonicalEndpointKey(endpoint: ApiEndpoint): string {
+  if (endpoint.endpointPath !== 'Unknown') {
+    return `${endpoint.httpMethod}:${normalizeEndpointPath(endpoint.endpointPath).replace(/:[a-zA-Z0-9_]+/g, ':var')}`;
+  }
+  return `${endpoint.httpMethod}:NAME:${endpoint.name}`;
+}
 
-  for (const endpoint of endpoints) {
-    const key = `${endpoint.httpMethod}:${endpoint.name}`;
+function scoreCategorizedEndpoint(entry: CategorizedEndpoint): number {
+  let score = scoreEndpoint(entry.endpoint);
+  if (entry.category !== 'Uncategorized') {
+    score += 3;
+  }
+  return score;
+}
+
+function dedupeCategorizedEndpoints(entries: CategorizedEndpoint[]): CategorizedEndpoint[] {
+  const deduped = new Map<string, CategorizedEndpoint>();
+
+  for (const entry of entries) {
+    const key = getCanonicalEndpointKey(entry.endpoint);
     const existing = deduped.get(key);
 
-    if (!existing || scoreEndpoint(endpoint) > scoreEndpoint(existing)) {
-      deduped.set(key, endpoint);
+    if (!existing || scoreCategorizedEndpoint(entry) > scoreCategorizedEndpoint(existing)) {
+      deduped.set(key, entry);
     }
   }
 
   return Array.from(deduped.values()).sort((a, b) => {
-    if (a.httpMethod !== b.httpMethod) return a.httpMethod.localeCompare(b.httpMethod);
-    return a.name.localeCompare(b.name, 'zh-CN');
+    if (a.category !== b.category) return a.category.localeCompare(b.category, 'zh-CN');
+    if (a.endpoint.httpMethod !== b.endpoint.httpMethod) return a.endpoint.httpMethod.localeCompare(b.endpoint.httpMethod);
+    return a.endpoint.name.localeCompare(b.endpoint.name, 'zh-CN');
   });
 }
 
@@ -190,7 +211,7 @@ async function main() {
 
   console.log(`Found ${urls.length} API pages.`);
 
-  const categoriesMap = new Map<string, ApiEndpoint[]>();
+  const categorizedEndpoints: CategorizedEndpoint[] = [];
   let processed = 0;
 
   // Process in chunks
@@ -204,10 +225,10 @@ async function main() {
 
       for (const res of results) {
           if (res) {
-              if (!categoriesMap.has(res.category)) {
-                  categoriesMap.set(res.category, []);
-              }
-              categoriesMap.get(res.category)!.push(res.endpoint);
+              categorizedEndpoints.push({
+                  category: res.category,
+                  endpoint: res.endpoint
+              });
           }
       }
       processed += chunk.length;
@@ -219,27 +240,29 @@ async function main() {
   const categories: Category[] = [];
   let totalEndpoints = 0;
 
+  const dedupedEntries = dedupeCategorizedEndpoints(categorizedEndpoints);
+  const categoriesMap = new Map<string, ApiEndpoint[]>();
+
+  for (const entry of dedupedEntries) {
+      if (entry.endpoint.httpMethod === 'Unknown' && entry.endpoint.endpointPath === 'Unknown') {
+          continue;
+      }
+      if (!categoriesMap.has(entry.category)) {
+          categoriesMap.set(entry.category, []);
+      }
+      categoriesMap.get(entry.category)!.push(entry.endpoint);
+  }
+
   const sortedKeys = Array.from(categoriesMap.keys()).sort();
 
   for (const key of sortedKeys) {
-      const endpoints = dedupeEndpoints(categoriesMap.get(key)!);
-      // Filter valid endpoints
-      // We accept 'Unknown' path if the page clearly looks like an API doc (has a method)
-      // Or if it's "Oauth" which might be special.
-      const validEndpoints = endpoints.filter(e => {
-          // Exclude "Intro" pages which might have title but no method/path
-          if (e.httpMethod === 'Unknown' && e.endpointPath === 'Unknown') return false;
-          return true;
+      const endpoints = categoriesMap.get(key)!;
+      categories.push({
+          name: key,
+          endpointCount: endpoints.length,
+          endpoints
       });
-      
-      if (validEndpoints.length > 0) {
-          categories.push({
-              name: key,
-              endpointCount: validEndpoints.length,
-              endpoints: validEndpoints
-          });
-          totalEndpoints += validEndpoints.length;
-      }
+      totalEndpoints += endpoints.length;
   }
 
   const output = {

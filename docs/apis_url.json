@@ -1,5 +1,5 @@
 {
-  "totalEndpoints": 245,
+  "totalEndpoints": 242,
   "categories": [
     {
       "name": "AI hub",
@@ -1372,30 +1372,6 @@
           "httpMethod": "PUT",
           "endpointPath": "/api/v5/repos/:owner/:repo/protected_tags",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-protected-tags"
-        }
-      ]
-    },
-    {
-      "name": "Uncategorized",
-      "endpointCount": 3,
-      "endpoints": [
-        {
-          "name": "查询看板内容列表",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/org/:owner/kanban/:kanban_id/item_list",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-5-org-owner-kanban-kanban-id-item-list"
-        },
-        {
-          "name": "获取企业issue状态",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/enterprises/:enterprise/issue/statuses",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/%E8%8E%B7%E5%8F%96%E4%BC%81%E4%B8%9Aissue%E7%8A%B6%E6%80%81"
-        },
-        {
-          "name": "回复pr评论",
-          "httpMethod": "POST",
-          "endpointPath": "/api/v5/repos/:owner/:repo/pulls/:number/discussions/:discussion_id/comments",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/%E5%9B%9E%E5%A4%8Dpr%E8%AF%84%E8%AE%BA"
         }
       ]
     },

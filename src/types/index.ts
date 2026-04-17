@@ -330,6 +330,10 @@ export interface CreateFileRequest {
   message: string;
   branch?: string;
   sha?: string;
+  author?: {
+    name?: string;
+    email?: string;
+  };
 }
 
 export interface UpdateFileRequest {
@@ -338,6 +342,10 @@ export interface UpdateFileRequest {
   message: string;
   sha: string;
   branch?: string;
+  author?: {
+    name?: string;
+    email?: string;
+  };
 }
 
 export interface DeleteFileRequest {
@@ -349,39 +357,13 @@ export interface DeleteFileRequest {
 
 export interface BranchProtectionRuleCreate {
   wildcard: string;
-  allow_force_push?: boolean;
-  allow_deletion?: boolean;
-  required_status_checks?: {
-    strict?: boolean;
-    contexts: string[];
-  };
-  required_pull_request_reviews?: {
-    required_approving_review_count?: number;
-    dismiss_stale_reviews?: boolean;
-    require_code_owner_reviews?: boolean;
-  };
-  restrictions?: {
-    users: any[];
-    teams: any[];
-  };
+  pusher: string;
+  merger: string;
 }
 
 export interface BranchProtectionRuleUpdate {
-  allow_force_push?: boolean;
-  allow_deletion?: boolean;
-  required_status_checks?: {
-    strict?: boolean;
-    contexts: string[];
-  };
-  required_pull_request_reviews?: {
-    required_approving_review_count?: number;
-    dismiss_stale_reviews?: boolean;
-    require_code_owner_reviews?: boolean;
-  };
-  restrictions?: {
-    users: any[];
-    teams: any[];
-  };
+  pusher: string;
+  merger: string;
 }
 
 export interface CreateMilestoneRequest {
@@ -413,19 +395,8 @@ export interface CreateTagRequest {
 }
 
 export interface CreateProtectedTagRequest {
-  tag_name: string;
-  target_commitish?: string;
-  message?: string;
-  allow_force_push?: boolean;
-  allow_deletion?: boolean;
-  required_status_checks?: {
-    enforcement_level: string;
-    contexts: string[];
-  };
-  restrictions?: {
-    users: any[];
-    teams: any[];
-  };
+  name: string;
+  create_access_level?: number;
 }
 
 // Repositories - Module Setting
@@ -434,6 +405,13 @@ export interface ModuleSettingRequest {
   wiki?: boolean;
   pr?: boolean;
   commits?: boolean;
+  has_wiki?: boolean;
+  has_issue?: boolean;
+  has_security?: boolean;
+  has_merge_request?: boolean;
+  has_fork?: boolean;
+  has_analysis?: boolean;
+  has_discussion?: boolean;
 }
 
 // Repositories - Update Settings
@@ -468,11 +446,12 @@ export interface ArchiveRepositoryRequest {
 export interface TransferRepositoryRequest {
   to?: string;
   team_id?: number;
+  new_owner: string;
 }
 
 // Repositories - Transition
 export interface TransitionModeRequest {
-  transition_mode: 'private' | 'public';
+  mode: number;
 }
 
 // Repositories - Push Config
@@ -480,11 +459,19 @@ export interface PushConfigRequest {
   allow_force_pushes?: boolean;
   require_signed_commits?: boolean;
   require_linear_history?: boolean;
+  reject_not_signed_by_gpg?: boolean;
+  commit_message_regex?: string;
+  max_file_size?: number;
+  skip_rule_for_owner?: boolean;
+  deny_force_push?: boolean;
 }
 
 // Repositories - Fork
 export interface ForkRepositoryRequest {
   namespace?: string;
+  organization?: string;
+  name?: string;
+  path?: string;
 }
 
 // Repositories - Repo Settings
@@ -509,9 +496,13 @@ export interface UpdateMemberRoleRequest {
 }
 
 // Repositories - Upload Image/File
-export interface UploadFileRequest {
+export interface UploadRepositoryImageRequest {
+  body: string;
+  file_name: string;
+}
+
+export interface UploadRepositoryFileRequest {
   file: string;
-  filename: string;
 }
 
 // Labels
@@ -565,6 +556,7 @@ export interface UpdateIssueRequest {
   security_hole?: string;
   template_path?: string;
   issue_type?: string;
+  status?: string;
   issue_severity?: string;
   custom_fields?: Array<{
     field_name: string;

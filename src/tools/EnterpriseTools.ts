@@ -1,6 +1,15 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { EnterpriseService } from '../services/EnterpriseService.js';
 
+const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description,
+  ...(defaultValue !== undefined ? { default: defaultValue } : {})
+});
+
 export class EnterpriseTools {
   private enterpriseService: EnterpriseService;
 
@@ -16,10 +25,7 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
+            enterprise: stringOrNumberSchema('企业名'),
             username: {
               type: 'string',
               description: '用户名'
@@ -34,10 +40,7 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
+            enterprise: stringOrNumberSchema('企业名'),
             page: {
               type: 'number',
               description: '页码 (可选)'
@@ -45,6 +48,10 @@ export class EnterpriseTools {
             perPage: {
               type: 'number',
               description: '每页数量 (可选)'
+            },
+            role: {
+              type: 'string',
+              description: '成员角色过滤'
             }
           },
           required: ['enterprise']
@@ -56,20 +63,15 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
+            enterprise: stringOrNumberSchema('企业名'),
             username: {
               type: 'string',
               description: '用户名'
             },
-            memberData: {
-              type: 'object',
-              description: '邀请数据'
-            }
+            permission: { type: 'string', description: '成员权限' },
+            role_id: { type: 'string', description: '自定义角色 ID' }
           },
-          required: ['enterprise', 'username', 'memberData']
+          required: ['enterprise', 'username']
         }
       },
       {
@@ -78,10 +80,7 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
+            enterprise: stringOrNumberSchema('企业名'),
             username: {
               type: 'string',
               description: '用户名'
@@ -96,20 +95,15 @@ export class EnterpriseTools {
         inputSchema: {
           type: 'object',
           properties: {
-            enterprise: {
-              type: 'string',
-              description: '企业名'
-            },
+            enterprise: stringOrNumberSchema('企业名'),
             username: {
               type: 'string',
               description: '用户名'
             },
-            memberData: {
-              type: 'object',
-              description: '成员更新数据'
-            }
+            role: { type: 'string', description: '企业角色' },
+            role_id: { type: 'string', description: '自定义角色 ID' }
           },
-          required: ['enterprise', 'username', 'memberData']
+          required: ['enterprise', 'username', 'role']
         }
       },
       {
@@ -139,9 +133,17 @@ export class EnterpriseTools {
             enterprise_id: {
               type: 'string',
               description: '企业ID'
+            },
+            page: {
+              type: 'number',
+              description: '页码'
+            },
+            perPage: {
+              type: 'number',
+              description: '每页数量'
             }
           },
-          required: ['enterprise', 'enterprise_id']
+          required: ['enterprise_id']
         }
       },
       {
@@ -154,12 +156,17 @@ export class EnterpriseTools {
               type: 'string',
               description: '企业名'
             },
-            milestoneData: {
-              type: 'object',
-              description: '里程碑数据'
+            title: { type: 'string', description: '名称' },
+            description: { type: 'string', description: '描述' },
+            start_date: { type: 'string', description: '开始时间，格式 YYYY-MM-DD' },
+            due_date: { type: 'string', description: '截止时间，格式 YYYY-MM-DD' },
+            projects: {
+              type: 'array',
+              description: '关联项目 ID 列表',
+              items: { type: 'number' }
             }
           },
-          required: ['enterprise', 'milestoneData']
+          required: ['enterprise', 'title']
         }
       },
       {
@@ -176,12 +183,18 @@ export class EnterpriseTools {
               type: 'string',
               description: '里程碑ID'
             },
-            milestoneData: {
-              type: 'object',
-              description: '里程碑更新数据'
+            title: { type: 'string', description: '名称' },
+            description: { type: 'string', description: '描述' },
+            start_date: { type: 'string', description: '开始时间，格式 YYYY-MM-DD' },
+            due_date: { type: 'string', description: '截止时间，格式 YYYY-MM-DD' },
+            state_event: { type: 'string', description: '状态变更' },
+            projects: {
+              type: 'array',
+              description: '关联项目 ID 列表',
+              items: { type: 'number' }
             }
           },
-          required: ['enterprise', 'milestone_id', 'milestoneData']
+          required: ['enterprise', 'milestone_id', 'title']
         }
       },
       {
@@ -231,12 +244,26 @@ export class EnterpriseTools {
               description: '企业名'
             },
             page: {
-              type: 'number',
-              description: '页码 (可选)'
+              ...stringOrNumberSchema('页码 (可选)')
             },
             perPage: {
-              type: 'number',
-              description: '每页数量 (可选)'
+              ...stringOrNumberSchema('每页数量 (可选)')
+            },
+            name: {
+              type: 'string',
+              description: '里程碑名称'
+            },
+            state: {
+              type: 'string',
+              description: '里程碑状态'
+            },
+            order_by: {
+              type: 'string',
+              description: '排序字段'
+            },
+            sort: {
+              type: 'string',
+              description: '排序方向'
             }
           },
           required: ['enterprise']
@@ -259,6 +286,10 @@ export class EnterpriseTools {
             perPage: {
               type: 'number',
               description: '每页数量 (可选)'
+            },
+            group_name: {
+              type: 'string',
+              description: '项目组名称'
             }
           },
           required: ['enterprise']
@@ -277,9 +308,15 @@ export class EnterpriseTools {
             enterprise_id: {
               type: 'string',
               description: '企业ID'
+            },
+            page: {
+              ...stringOrNumberSchema('页码')
+            },
+            perPage: {
+              ...stringOrNumberSchema('每页数量')
             }
           },
-          required: ['enterprise', 'enterprise_id']
+          required: ['enterprise_id']
         }
       },
       {
@@ -292,9 +329,55 @@ export class EnterpriseTools {
               type: 'string',
               description: '企业ID'
             },
-            queryData: {
-              type: 'object',
-              description: '查询请求体，按官方接口透传筛选、分页和排序参数'
+            page: { type: 'number', description: '页码' },
+            perPage: { type: 'number', description: '每页数量' },
+            labels: { type: 'string', description: '标签，多个按英文逗号隔开' },
+            sort: { type: 'string', description: '排序字段' },
+            direction: { type: 'string', description: '排序方向' },
+            since: { type: 'string', description: '起始更新时间' },
+            assignees: {
+              type: 'array',
+              description: '负责人用户名',
+              items: { type: 'string' }
+            },
+            milestone_ids: {
+              type: 'array',
+              description: '企业里程碑 ID 列表',
+              items: { type: 'number' }
+            },
+            project_ids: {
+              type: 'array',
+              description: '项目 ID 列表',
+              items: { type: 'number' }
+            },
+            create_at: { type: 'string', description: '任务创建日期' },
+            created_before: { type: 'string', description: '任务创建截止时间' },
+            search: { type: 'string', description: '标题搜索关键字' },
+            issue_types: {
+              type: 'array',
+              description: 'Issue 自定义类型',
+              items: { type: 'string' }
+            },
+            issue_states: {
+              type: 'array',
+              description: 'Issue 自定义状态',
+              items: { type: 'string' }
+            },
+            custom_fields: {
+              type: 'array',
+              description: '自定义字段筛选',
+              items: {
+                type: 'object',
+                properties: {
+                  field_name: { type: 'string' },
+                  values: {
+                    type: 'array',
+                    items: { type: 'string' }
+                  },
+                  operation: { type: 'string' }
+                },
+                required: ['operation']
+              }
             }
           },
           required: ['enterprise_id']
@@ -309,31 +392,50 @@ export class EnterpriseTools {
         return await this.enterpriseService.getEnterpriseMemberV8(args.enterprise, args.username);
       
       case 'get_enterprise_members_v8':
-        return await this.enterpriseService.getEnterpriseMembersV8(args.enterprise, args.page, args.perPage);
+        return await this.enterpriseService.getEnterpriseMembersV8(args.enterprise, args.page, args.perPage, args.role);
       
       case 'invite_enterprise_member_v8':
-        return await this.enterpriseService.inviteEnterpriseMember(args.enterprise, args.username, args.memberData);
+        return await this.enterpriseService.inviteEnterpriseMember(args.enterprise, args.username, {
+          permission: args.permission,
+          role_id: args.role_id
+        });
       
       case 'delete_enterprise_members_v8':
         return await this.enterpriseService.deleteEnterpriseMembers(args.enterprise, args.usernames ?? [args.username]);
       
       case 'update_enterprise_member_v8':
-        return await this.enterpriseService.updateEnterpriseMemberV8(args.enterprise, args.username, args.memberData);
+        return await this.enterpriseService.updateEnterpriseMemberV8(args.enterprise, args.username, {
+          role: args.role,
+          role_id: args.role_id
+        });
       
       case 'get_organization_enterprise_v8':
         return await this.enterpriseService.getOrganizationEnterprise(args.org);
       
       case 'get_enterprise_customized_roles_v8':
-        return await this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise, args.enterprise_id ?? args.enterpriseId);
+        return await this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise_id ?? args.enterpriseId);
       
       case 'create_enterprise_milestone_v8':
-        return await this.enterpriseService.createEnterpriseMilestone(args.enterprise, args.milestoneData);
+        return await this.enterpriseService.createEnterpriseMilestone(args.enterprise, {
+          title: args.title,
+          description: args.description,
+          start_date: args.start_date,
+          due_date: args.due_date,
+          projects: args.projects
+        });
       
       case 'update_enterprise_milestone_v8':
         return await this.enterpriseService.updateEnterpriseMilestone(
           args.enterprise,
           args.milestone_id ?? args.milestoneId,
-          args.milestoneData,
+          {
+            title: args.title,
+            description: args.description,
+            start_date: args.start_date,
+            due_date: args.due_date,
+            state_event: args.state_event,
+            projects: args.projects
+          },
         );
       
       case 'get_enterprise_milestone_v8':
@@ -349,18 +451,46 @@ export class EnterpriseTools {
         );
       
       case 'get_enterprise_milestones_v8':
-        return await this.enterpriseService.getEnterpriseMilestones(args.enterprise, args.page, args.perPage);
+        return await this.enterpriseService.getEnterpriseMilestones(
+          args.enterprise,
+          args.page,
+          args.perPage,
+          args.name,
+          args.state,
+          args.order_by,
+          args.sort
+        );
       
       case 'get_enterprise_projects_v8':
-        return await this.enterpriseService.getEnterpriseProjects(args.enterprise, args.page, args.perPage);
+        return await this.enterpriseService.getEnterpriseProjects(args.enterprise, args.page, args.perPage, args.group_name);
       
       case 'get_enterprise_issue_extend_fields_v8':
-        return await this.enterpriseService.getEnterpriseIssueExtendFields(args.enterprise, args.enterprise_id ?? args.enterprisesId);
+        return await this.enterpriseService.getEnterpriseIssueExtendFields(
+          args.enterprise_id ?? args.enterprisesId,
+          args.page,
+          args.perPage
+        );
 
       case 'get_enterprise_issues_v8':
         return await this.enterpriseService.getEnterpriseIssuesV8(
           args.enterprise_id ?? args.enterpriseId,
-          args.queryData ?? {},
+          {
+            page: args.page,
+            per_page: args.perPage,
+            labels: args.labels,
+            sort: args.sort,
+            direction: args.direction,
+            since: args.since,
+            assignees: args.assignees,
+            milestone_ids: args.milestone_ids,
+            project_ids: args.project_ids,
+            create_at: args.create_at,
+            created_before: args.created_before,
+            search: args.search,
+            issue_types: args.issue_types,
+            issue_states: args.issue_states,
+            custom_fields: args.custom_fields
+          },
         );
       
       default:

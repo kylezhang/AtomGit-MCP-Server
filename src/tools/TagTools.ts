@@ -48,20 +48,20 @@ export class TagTools {
               type: 'string',
               description: 'The name of repository'
             },
-            tagName: {
+            tag_name: {
               type: 'string',
               description: 'The name of the tag'
             },
-            target: {
+            refs: {
               type: 'string',
-              description: 'The SHA of the commit this tag points to'
+              description: 'The commit SHA or ref this tag points to'
             },
-            message: {
+            tag_message: {
               type: 'string',
               description: 'Tag message'
             }
           },
-          required: ['owner', 'repo', 'tagName', 'target']
+          required: ['owner', 'repo', 'tag_name', 'refs']
         }
       },
       {
@@ -99,6 +99,14 @@ export class TagTools {
             repo: {
               type: 'string',
               description: 'The name of repository'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number'
+            },
+            perPage: {
+              type: 'number',
+              description: 'Number of results per page'
             }
           },
           required: ['owner', 'repo']
@@ -118,12 +126,16 @@ export class TagTools {
               type: 'string',
               description: 'The name of repository'
             },
-            tagName: {
+            name: {
               type: 'string',
               description: 'The name of the protected tag'
+            },
+            create_access_level: {
+              type: 'number',
+              description: 'Allowed access level for creating the tag'
             }
           },
-          required: ['owner', 'repo', 'tagName']
+          required: ['owner', 'repo', 'name']
         }
       },
       {
@@ -140,28 +152,16 @@ export class TagTools {
               type: 'string',
               description: 'The name of repository'
             },
-            tagName: {
+            name: {
               type: 'string',
               description: 'The name of protected tag'
             },
-            allowForcePush: {
-              type: 'boolean',
-              description: 'Allow force pushes for this protected tag'
-            },
-            allowDeletion: {
-              type: 'boolean',
-              description: 'Allow deletion of this protected tag'
-            },
-            requiredStatusChecks: {
-              type: 'object',
-              description: 'Required status checks configuration for this protected tag'
-            },
-            restrictions: {
-              type: 'object',
-              description: 'Restrictions on who can push to this protected tag'
+            create_access_level: {
+              type: 'number',
+              description: 'Allowed access level for creating the tag'
             }
           },
-          required: ['owner', 'repo', 'tagName']
+          required: ['owner', 'repo', 'name', 'create_access_level']
         }
       },
       {
@@ -223,34 +223,28 @@ export class TagTools {
 
       case 'create_repository_tag':
         return await this.tagService.createRepositoryTag(args.owner, args.repo, {
-          tag_name: args.tagName,
-          target: args.target,
-          message: args.message,
-          ref: args.target
+          tag_name: args.tag_name ?? args.tagName,
+          ref: args.refs ?? args.target,
+          message: args.tag_message ?? args.message,
+          target: args.refs ?? args.target
         });
 
       case 'delete_repository_tag':
         return await this.tagService.deleteRepositoryTag(args.owner, args.repo, args.tag_name ?? args.tagName);
 
       case 'get_repository_protected_tags':
-        return await this.tagService.getRepositoryProtectedTags(args.owner, args.repo);
+        return await this.tagService.getRepositoryProtectedTags(args.owner, args.repo, args.page, args.perPage);
 
       case 'create_repository_protected_tag':
         return await this.tagService.createRepositoryProtectedTag(args.owner, args.repo, {
-          tag_name: args.tagName,
-          allow_force_push: args.allowForcePush,
-          allow_deletion: args.allowDeletion,
-          required_status_checks: args.requiredStatusChecks,
-          restrictions: args.restrictions
+          name: args.name ?? args.tagName,
+          create_access_level: args.create_access_level
         });
 
       case 'update_repository_protected_tag':
         return await this.tagService.updateRepositoryProtectedTag(args.owner, args.repo, {
-          tag_name: args.tagName,
-          allow_force_push: args.allowForcePush,
-          allow_deletion: args.allowDeletion,
-          required_status_checks: args.requiredStatusChecks,
-          restrictions: args.restrictions
+          name: args.name ?? args.tagName,
+          create_access_level: args.create_access_level
         });
 
       case 'delete_repository_protected_tag':

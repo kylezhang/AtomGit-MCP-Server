@@ -1,6 +1,15 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { LabelsService } from '../services/LabelsService.js';
 
+const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description,
+  ...(defaultValue !== undefined ? { default: defaultValue } : {})
+});
+
 export class LabelsTools {
   constructor(private labelsService: LabelsService) {}
 
@@ -19,6 +28,12 @@ export class LabelsTools {
             repo: {
               type: 'string',
               description: '仓库名称'
+            },
+            page: {
+              ...stringOrNumberSchema('页码', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('每页数量', 30)
             }
           },
           required: ['owner', 'repo']
@@ -51,7 +66,7 @@ export class LabelsTools {
               description: '标签描述'
             }
           },
-          required: ['owner', 'repo', 'name']
+          required: ['owner', 'repo']
         }
       },
       {
@@ -85,7 +100,7 @@ export class LabelsTools {
               description: '标签描述'
             }
           },
-          required: ['owner', 'repo', 'original_name', 'name']
+          required: ['owner', 'repo', 'original_name']
         }
       },
       {
@@ -141,7 +156,7 @@ export class LabelsTools {
               }
             }
           },
-          required: ['owner', 'repo', 'labels']
+          required: ['owner', 'repo']
         }
       },
       {
@@ -153,6 +168,12 @@ export class LabelsTools {
             enterprise: {
               type: 'string',
               description: '企业名称'
+            },
+            page: {
+              ...stringOrNumberSchema('页码', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('每页数量', 30)
             }
           },
           required: ['enterprise']
@@ -167,6 +188,20 @@ export class LabelsTools {
             enterprise: {
               type: 'string',
               description: '企业ID'
+            },
+            search: {
+              type: 'string',
+              description: '搜索关键字'
+            },
+            direction: {
+              type: 'string',
+              description: '排序方向'
+            },
+            page: {
+              ...stringOrNumberSchema('页码', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('每页数量', 30)
             }
           },
           required: ['enterprise']
@@ -186,10 +221,7 @@ export class LabelsTools {
               type: 'string',
               description: 'The name of repository'
             },
-            number: {
-              type: 'number',
-              description: 'The issue number'
-            },
+            number: stringOrNumberSchema('The issue number'),
             labels: {
               type: 'array',
               items: {
@@ -198,7 +230,7 @@ export class LabelsTools {
               description: 'Array of label names'
             }
           },
-          required: ['owner', 'repo', 'number', 'labels']
+          required: ['owner', 'repo', 'number']
         }
       }
     ];
@@ -207,7 +239,10 @@ export class LabelsTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_labels':
-        return await this.labelsService.getRepositoryLabels(args.owner, args.repo);
+        return await this.labelsService.getRepositoryLabels(args.owner, args.repo, {
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'create_repository_label':
         return await this.labelsService.createRepositoryLabel(args.owner, args.repo, {
@@ -230,10 +265,18 @@ export class LabelsTools {
         return await this.labelsService.replaceRepositoryProjectLabels(args.owner, args.repo, args.labels);
       
       case 'get_enterprise_labels':
-        return await this.labelsService.getEnterpriseLabels(args.enterprise);
+        return await this.labelsService.getEnterpriseLabels(args.enterprise, {
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_labels_list':
-        return await this.labelsService.getEnterpriseLabelsV8(args.enterprise);
+        return await this.labelsService.getEnterpriseLabelsV8(args.enterprise, {
+          search: args.search,
+          direction: args.direction,
+          page: args.page,
+          perPage: args.perPage
+        });
 
       case 'replace_repository_issue_all_labels':
         return await this.labelsService.replaceRepositoryIssueAllLabels(args.owner, args.repo, args.number ?? args.issueNumber, args.labels);

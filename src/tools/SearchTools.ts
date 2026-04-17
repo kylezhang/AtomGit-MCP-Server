@@ -16,6 +16,18 @@ export class SearchTools {
               type: 'string',
               description: '搜索查询字符串'
             },
+            q: {
+              type: 'string',
+              description: '搜索查询字符串'
+            },
+            sort: {
+              type: 'string',
+              description: '排序字段'
+            },
+            order: {
+              type: 'string',
+              description: '排序方向'
+            },
             page: {
               type: 'number',
               description: '页码，默认为1',
@@ -27,7 +39,7 @@ export class SearchTools {
               default: 30
             }
           },
-          required: ['query']
+          required: ['q']
         }
       },
       {
@@ -40,6 +52,26 @@ export class SearchTools {
               type: 'string',
               description: '搜索查询字符串'
             },
+            q: {
+              type: 'string',
+              description: '搜索查询字符串'
+            },
+            sort: {
+              type: 'string',
+              description: '排序字段'
+            },
+            order: {
+              type: 'string',
+              description: '排序方向'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库范围'
+            },
+            state: {
+              type: 'string',
+              description: 'Issue 状态'
+            },
             page: {
               type: 'number',
               description: '页码，默认为1',
@@ -51,7 +83,7 @@ export class SearchTools {
               default: 30
             }
           },
-          required: ['query']
+          required: ['q']
         }
       },
       {
@@ -64,6 +96,30 @@ export class SearchTools {
               type: 'string',
               description: '搜索查询字符串'
             },
+            q: {
+              type: 'string',
+              description: '搜索查询字符串'
+            },
+            sort: {
+              type: 'string',
+              description: '排序字段'
+            },
+            order: {
+              type: 'string',
+              description: '排序方向'
+            },
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            fork: {
+              type: 'string',
+              description: 'Fork 过滤'
+            },
+            language: {
+              type: 'string',
+              description: '语言过滤'
+            },
             page: {
               type: 'number',
               description: '页码，默认为1',
@@ -75,7 +131,7 @@ export class SearchTools {
               default: 30
             }
           },
-          required: ['query']
+          required: ['q']
         }
       }
     ];
@@ -84,25 +140,36 @@ export class SearchTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'search_users':
-        return await this.searchService.searchUsers(
-          args.query,
-          args.page,
-          args.perPage
-        );
+        return await this.searchService.searchUsers({
+          q: args.q ?? args.query,
+          sort: args.sort,
+          order: args.order,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'search_issues':
-        return await this.searchService.searchIssues(
-          args.query,
-          args.page,
-          args.perPage
-        );
+        return await this.searchService.searchIssues({
+          q: args.q ?? args.query,
+          sort: args.sort,
+          order: args.order,
+          repo: args.repo,
+          state: args.state,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'search_repositories':
-        return await this.searchService.searchRepositories(
-          args.query,
-          args.page,
-          args.perPage
-        );
+        return await this.searchService.searchRepositories({
+          q: args.q ?? args.query,
+          sort: args.sort,
+          order: args.order,
+          owner: args.owner,
+          fork: args.fork,
+          language: args.language,
+          page: args.page,
+          perPage: args.perPage
+        });
       
       default:
         throw new Error(`Unknown tool: ${name}`);

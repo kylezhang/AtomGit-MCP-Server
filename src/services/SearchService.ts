@@ -1,36 +1,45 @@
 import { BaseService } from './BaseService.js';
 
+interface SearchOptions {
+  q: string;
+  page?: number;
+  perPage?: number;
+  sort?: string;
+  order?: string;
+  repo?: string;
+  state?: string;
+  owner?: string;
+  fork?: string;
+  language?: string;
+}
+
 export class SearchService extends BaseService {
-  
-  async searchUsers(query: string, page = 1, perPage = 30): Promise<any[]> {
+  private buildParams(options: SearchOptions): Record<string, unknown> {
+    return Object.fromEntries(
+      Object.entries({
+        ...options,
+        per_page: options.perPage
+      }).filter(([key, value]) => key !== 'perPage' && value !== undefined)
+    );
+  }
+
+  async searchUsers(options: SearchOptions): Promise<any[]> {
     const response = await this.client.get('/api/v5/search/users', {
-      params: {
-        q: query,
-        page,
-        per_page: perPage
-      }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async searchIssues(query: string, page = 1, perPage = 30): Promise<any[]> {
+  async searchIssues(options: SearchOptions): Promise<any[]> {
     const response = await this.client.get('/api/v5/search/issues', {
-      params: {
-        q: query,
-        page,
-        per_page: perPage
-      }
+      params: this.buildParams(options)
     });
     return response.data;
   }
 
-  async searchRepositories(query: string, page = 1, perPage = 30): Promise<any[]> {
+  async searchRepositories(options: SearchOptions): Promise<any[]> {
     const response = await this.client.get('/api/v5/search/repositories', {
-      params: {
-        q: query,
-        page,
-        per_page: perPage
-      }
+      params: this.buildParams(options)
     });
     return response.data;
   }

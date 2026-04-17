@@ -23,6 +23,14 @@ export class WebhooksTools {
             repo: {
               type: 'string',
               description: '仓库名称'
+            },
+            page: {
+              type: 'number',
+              description: '页码'
+            },
+            perPage: {
+              type: 'number',
+              description: '每页数量'
             }
           },
           required: ['owner', 'repo']
@@ -42,12 +50,16 @@ export class WebhooksTools {
               type: 'string',
               description: '仓库名称'
             },
-            webhookData: {
-              type: 'object',
-              description: 'Webhook配置数据（包含name、url、events、active等）'
-            }
+            url: { type: 'string', description: '远程 HTTP URL' },
+            encryption_type: { type: 'number', description: '加密类型。0 密码，1 签名密钥' },
+            password: { type: 'string', description: '请求密码' },
+            push_events: { type: 'boolean', description: '是否触发 Push 事件' },
+            tag_push_events: { type: 'boolean', description: '是否触发 Tag Push 事件' },
+            issues_events: { type: 'boolean', description: '是否触发 Issue 事件' },
+            note_events: { type: 'boolean', description: '是否触发评论事件' },
+            merge_requests_events: { type: 'boolean', description: '是否触发 Merge Request 事件' }
           },
-          required: ['owner', 'repo', 'webhookData']
+          required: ['owner', 'repo', 'url']
         }
       },
       {
@@ -65,7 +77,7 @@ export class WebhooksTools {
               description: '仓库名称'
             },
             id: {
-              type: 'number',
+              type: 'string',
               description: 'Webhook ID'
             }
           },
@@ -87,15 +99,19 @@ export class WebhooksTools {
               description: '仓库名称'
             },
             id: {
-              type: 'number',
+              type: 'string',
               description: 'Webhook ID'
             },
-            webhookData: {
-              type: 'object',
-              description: '更新的Webhook配置数据'
-            }
+            url: { type: 'string', description: '远程 HTTP URL' },
+            encryption_type: { type: 'number', description: '加密类型。0 密码，1 签名密钥' },
+            password: { type: 'string', description: '请求密码' },
+            push_events: { type: 'boolean', description: '是否触发 Push 事件' },
+            tag_push_events: { type: 'boolean', description: '是否触发 Tag Push 事件' },
+            issues_events: { type: 'boolean', description: '是否触发 Issue 事件' },
+            note_events: { type: 'boolean', description: '是否触发评论事件' },
+            merge_requests_events: { type: 'boolean', description: '是否触发 Merge Request 事件' }
           },
-          required: ['owner', 'repo', 'id', 'webhookData']
+          required: ['owner', 'repo', 'id', 'url']
         }
       },
       {
@@ -113,7 +129,7 @@ export class WebhooksTools {
               description: '仓库名称'
             },
             id: {
-              type: 'number',
+              type: 'string',
               description: 'Webhook ID'
             }
           },
@@ -135,7 +151,7 @@ export class WebhooksTools {
               description: '仓库名称'
             },
             id: {
-              type: 'number',
+              type: 'string',
               description: 'Webhook ID'
             }
           },
@@ -148,16 +164,34 @@ export class WebhooksTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_webhooks':
-        return await this.webhooksService.getRepositoryWebhooks(args.owner, args.repo);
+        return await this.webhooksService.getRepositoryWebhooks(args.owner, args.repo, args.page, args.perPage);
       
       case 'create_repository_webhook':
-        return await this.webhooksService.createRepositoryWebhook(args.owner, args.repo, args.webhookData);
+        return await this.webhooksService.createRepositoryWebhook(args.owner, args.repo, {
+          url: args.url,
+          encryption_type: args.encryption_type,
+          password: args.password,
+          push_events: args.push_events,
+          tag_push_events: args.tag_push_events,
+          issues_events: args.issues_events,
+          note_events: args.note_events,
+          merge_requests_events: args.merge_requests_events
+        });
       
       case 'get_repository_webhook':
         return await this.webhooksService.getRepositoryWebhook(args.owner, args.repo, args.id);
       
       case 'update_repository_webhook':
-        return await this.webhooksService.updateRepositoryWebhook(args.owner, args.repo, args.id, args.webhookData);
+        return await this.webhooksService.updateRepositoryWebhook(args.owner, args.repo, args.id, {
+          url: args.url,
+          encryption_type: args.encryption_type,
+          password: args.password,
+          push_events: args.push_events,
+          tag_push_events: args.tag_push_events,
+          issues_events: args.issues_events,
+          note_events: args.note_events,
+          merge_requests_events: args.merge_requests_events
+        });
       
       case 'delete_repository_webhook':
         return await this.webhooksService.deleteRepositoryWebhook(args.owner, args.repo, args.id);

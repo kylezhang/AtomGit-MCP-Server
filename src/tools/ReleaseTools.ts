@@ -24,6 +24,10 @@ export class ReleaseTools {
               type: 'string',
               description: '标签名称'
             },
+            tag_name: {
+              type: 'string',
+              description: '标签名称'
+            },
             name: {
               type: 'string',
               description: '发布名称'
@@ -39,9 +43,13 @@ export class ReleaseTools {
             prerelease: {
               type: 'boolean',
               description: '是否为预发布'
+            },
+            target_commitish: {
+              type: 'string',
+              description: '目标提交 SHA 或分支'
             }
           },
-          required: ['owner', 'repo', 'tag']
+          required: ['owner', 'repo', 'tag_name', 'name', 'body']
         }
       },
       {
@@ -79,7 +87,7 @@ export class ReleaseTools {
               description: '是否为预发布'
             }
           },
-          required: ['owner', 'repo', 'tag']
+          required: ['owner', 'repo', 'tag', 'name', 'body']
         }
       },
       {
@@ -105,6 +113,10 @@ export class ReleaseTools {
               type: 'number',
               description: '每页结果数，默认为30',
               default: 30
+            },
+            direction: {
+              type: 'string',
+              description: '排序方向'
             }
           },
           required: ['owner', 'repo']
@@ -127,6 +139,10 @@ export class ReleaseTools {
             tag: {
               type: 'string',
               description: '标签名称'
+            },
+            temp_download_url: {
+              type: 'string',
+              description: '是否返回临时下载地址'
             }
           },
           required: ['owner', 'repo', 'tag']
@@ -215,9 +231,13 @@ export class ReleaseTools {
             tag: {
               type: 'string',
               description: 'The tag name'
+            },
+            file_name: {
+              type: 'string',
+              description: 'The file name'
             }
           },
-          required: ['owner', 'repo', 'tag']
+          required: ['owner', 'repo', 'tag', 'file_name']
         }
       }
     ];
@@ -227,7 +247,8 @@ export class ReleaseTools {
     switch (name) {
       case 'create_repository_release':
         return await this.releaseService.createRelease(args.owner, args.repo, {
-          tag_name: args.tagName,
+          tag_name: args.tag_name ?? args.tag ?? args.tagName,
+          target_commitish: args.target_commitish ?? args.targetCommitish,
           name: args.name,
           body: args.body,
           draft: args.draft,
@@ -243,10 +264,10 @@ export class ReleaseTools {
         });
       
       case 'get_repository_releases':
-        return await this.releaseService.getReleases(args.owner, args.repo, args.page, args.perPage);
+        return await this.releaseService.getReleases(args.owner, args.repo, args.page, args.perPage, args.direction);
       
       case 'get_repository_release':
-        return await this.releaseService.getRelease(args.owner, args.repo, args.tag);
+        return await this.releaseService.getRelease(args.owner, args.repo, args.tag, args.temp_download_url ?? args.tempDownloadUrl);
       
       case 'get_latest_release':
         return await this.releaseService.getLatestRelease(args.owner, args.repo);
@@ -263,7 +284,7 @@ export class ReleaseTools {
         );
 
       case 'get_release_upload_url':
-        return await this.releaseService.getReleaseUploadUrl(args.owner, args.repo, args.tag);
+        return await this.releaseService.getReleaseUploadUrl(args.owner, args.repo, args.tag, args.file_name ?? args.fileName);
 
       default:
         throw new Error(`Unknown tool: ${name}`);
