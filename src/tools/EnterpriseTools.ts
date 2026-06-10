@@ -382,6 +382,80 @@ export class EnterpriseTools {
           },
           required: ['enterprise_id']
         }
+      },
+      {
+        name: 'create_enterprise_label_v8',
+        description: '创建企业标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterpriseId: {
+              type: 'number',
+              description: '企业id'
+            },
+            name: {
+              type: 'string',
+              description: '标签名称'
+            },
+            color: {
+              type: 'string',
+              description: "标签的颜色，以6位16进制表示，前面带有'#'号"
+            },
+            description: {
+              type: 'string',
+              description: '标签描述'
+            }
+          },
+          required: ['enterpriseId', 'name', 'description']
+        }
+      },
+      {
+        name: 'update_enterprise_label_v8',
+        description: '更新企业标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterpriseId: {
+              type: 'number',
+              description: '企业id'
+            },
+            labelId: {
+              type: 'string',
+              description: '标签id'
+            },
+            name: {
+              type: 'string',
+              description: '标签名称'
+            },
+            color: {
+              type: 'string',
+              description: "标签的颜色，以6位16进制表示，前面带有'#'号"
+            },
+            description: {
+              type: 'string',
+              description: '标签描述'
+            }
+          },
+          required: ['enterpriseId', 'labelId', 'name', 'description']
+        }
+      },
+      {
+        name: 'delete_enterprise_label_v8',
+        description: '删除企业标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterpriseId: {
+              type: 'number',
+              description: '企业id'
+            },
+            labelId: {
+              type: 'string',
+              description: '标签id'
+            }
+          },
+          required: ['enterpriseId', 'labelId']
+        }
       }
     ];
   }
@@ -491,6 +565,30 @@ export class EnterpriseTools {
             issue_states: args.issue_states,
             custom_fields: args.custom_fields
           },
+        );
+
+      case 'create_enterprise_label_v8':
+        return await this.enterpriseService.createEnterpriseLabel(args.enterprise_id ?? args.enterpriseId, {
+          name: args.name,
+          color: args.color,
+          description: args.description
+        });
+
+      case 'update_enterprise_label_v8':
+        return await this.enterpriseService.updateEnterpriseLabel(
+          args.enterprise_id ?? args.enterpriseId,
+          args.label_id ?? args.labelId,
+          {
+            name: args.name,
+            color: args.color,
+            description: args.description
+          }
+        );
+
+      case 'delete_enterprise_label_v8':
+        return await this.enterpriseService.deleteEnterpriseLabel(
+          args.enterprise_id ?? args.enterpriseId,
+          args.label_id ?? args.labelId
         );
       
       default:

@@ -28,8 +28,9 @@ import { UserService } from './services/UserService.js';
 import { IssuesService } from './services/IssuesService.js';
 import { PullRequestService } from './services/PullRequestService.js';
 import { RepositoriesService } from './services/RepositoriesService.js';
+import { ActionsService } from './services/ActionsService.js';
 
-// Import 18 required category tools
+// Import all category tools
 import { RepositoriesTools } from './tools/RepositoriesTools.js';
 import { BranchTools } from './tools/BranchTools.js';
 import { IssuesTools } from './tools/IssuesTools.js';
@@ -47,6 +48,7 @@ import { ReleaseTools } from './tools/ReleaseTools.js';
 import { EnterpriseTools } from './tools/EnterpriseTools.js';
 import { DashboardTools } from './tools/DashboardTools.js';
 import { AIHubTools } from './tools/AIHubTools.js';
+import { ActionsTools } from './tools/ActionsTools.js';
 import { ToolRegistry } from './core/ToolRegistry.js';
 import { ToolSafetyPolicy } from './core/ToolSafetyPolicy.js';
 
@@ -127,6 +129,7 @@ class AtomGitMCPServer {
     this.registry.registerTools(new EnterpriseTools(new EnterpriseService(serviceConfig)));
     this.registry.registerTools(new DashboardTools(new DashboardService(serviceConfig)));
     this.registry.registerTools(new AIHubTools(new AIHubService(serviceConfig)));
+    this.registry.registerTools(new ActionsTools(new ActionsService(serviceConfig)));
 
     console.error(
       `✅ Safe mode: ${ATOMGIT_ENABLE_DANGEROUS_TOOLS ? 'disabled' : 'enabled'}, ${this.registry.size} tools registered, ${this.registry.blockedSize} dangerous tools skipped`

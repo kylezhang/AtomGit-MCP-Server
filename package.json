@@ -1,6 +1,6 @@
 {
   "name": "@atomgit.com/atomgit-mcp-server",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "AtomGit MCP Server - Model Context Protocol server for AtomGit code hosting platform",
   "main": "dist/index.js",
   "bin": {
@@ -46,8 +46,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.5.0",
-    "axios": "^1.6.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "axios": "^1.17.0",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {

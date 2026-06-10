@@ -44,7 +44,23 @@ interface InviteOrganizationMemberPayload {
   role_id?: string;
 }
 
+interface DiscussionListOptions {
+  page?: string | number;
+  per_page?: string | number;
+  sort?: string;
+  direction?: string;
+  search?: string;
+}
+
 export class OrganizationService extends BaseService {
+  private buildParams(options?: object): Record<string, unknown> {
+    const params: Record<string, unknown> = { ...((options ?? {}) as Record<string, unknown>) };
+
+    return Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== '')
+    );
+  }
+
   async createOrganization(orgData: CreateOrganizationPayload): Promise<any> {
     const response = await this.client.post('/api/v5/orgs', orgData);
     return response.data;
@@ -153,6 +169,28 @@ export class OrganizationService extends BaseService {
 
   async getOrganizationCustomizedRoles(org: string): Promise<any[]> {
     const response = await this.client.get(`/api/v5/orgs/${org}/customized_roles`);
+    return response.data;
+  }
+
+  async getOrganizationDiscussions(org: string, options: DiscussionListOptions = {}): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/discuss`, {
+      params: this.buildParams(options)
+    });
+    return response.data;
+  }
+
+  async getOrganizationDiscussion(org: string, number: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}`);
+    return response.data;
+  }
+
+  async getOrganizationDiscussionComments(org: string, number: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}/comment`);
+    return response.data;
+  }
+
+  async getOrganizationDiscussionCommentReplies(org: string, number: string, commentId: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}/comment/${commentId}/reply`);
     return response.data;
   }
 }

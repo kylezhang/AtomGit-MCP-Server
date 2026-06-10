@@ -1,6 +1,14 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { RepositoriesService } from '../services/RepositoriesService.js';
 
+const stringOrNumberSchema = (description: string) => ({
+  oneOf: [
+    { type: 'string' },
+    { type: 'number' }
+  ],
+  description
+});
+
 export class RepositoriesTools {
   private service: RepositoriesService;
 
@@ -602,6 +610,89 @@ export class RepositoriesTools {
           },
           required: ['owner', 'repo']
         }
+      },
+      {
+        name: 'get_repository_discussions',
+        description: '获取项目讨论列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            page: stringOrNumberSchema('当前的页码'),
+            perPage: stringOrNumberSchema('每页的数量，最大为 100，默认 20'),
+            sort: { type: 'string', description: '排序字段 created 或 comment_size' },
+            direction: { type: 'string', description: '排序方向 asc 或 desc' },
+            search: { type: 'string', description: '根据标题和描述搜索' }
+          },
+          required: ['owner', 'repo']
+        }
+      },
+      {
+        name: 'get_repository_discussion',
+        description: '获取项目讨论详情',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: { type: 'string', description: '讨论的编号' }
+          },
+          required: ['owner', 'repo', 'number']
+        }
+      },
+      {
+        name: 'get_repository_discussion_comments',
+        description: '获取项目讨论评论列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: { type: 'string', description: '讨论的编号' }
+          },
+          required: ['owner', 'repo', 'number']
+        }
+      },
+      {
+        name: 'get_repository_discussion_comment_replies',
+        description: '获取项目讨论评论回复列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: { type: 'string', description: '讨论的编号' },
+            commentId: { type: 'string', description: '评论id' }
+          },
+          required: ['owner', 'repo', 'number', 'commentId']
+        }
+      },
+      {
+        name: 'get_repository_sync_status',
+        description: '查询Fork仓同步状态',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            branch: { type: 'string', description: '分支名称' }
+          },
+          required: ['owner', 'repo']
+        }
+      },
+      {
+        name: 'sync_repository_from_source',
+        description: 'Fork仓同步源仓库',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            branch: { type: 'string', description: '拉取更新的分支名称，不传更新所有分支' }
+          },
+          required: ['owner', 'repo']
+        }
       }
     ];
   }
@@ -885,6 +976,39 @@ export class RepositoriesTools {
           after: args.after,
           page: args.page,
           perPage: args.perPage
+        });
+
+      case 'get_repository_discussions':
+        return await this.service.getRepositoryDiscussions(args.owner, args.repo, {
+          page: args.page,
+          perPage: args.perPage,
+          sort: args.sort,
+          direction: args.direction,
+          search: args.search
+        });
+
+      case 'get_repository_discussion':
+        return await this.service.getRepositoryDiscussion(args.owner, args.repo, args.number);
+
+      case 'get_repository_discussion_comments':
+        return await this.service.getRepositoryDiscussionComments(args.owner, args.repo, args.number);
+
+      case 'get_repository_discussion_comment_replies':
+        return await this.service.getRepositoryDiscussionCommentReplies(
+          args.owner,
+          args.repo,
+          args.number,
+          args.comment_id ?? args.commentId
+        );
+
+      case 'get_repository_sync_status':
+        return await this.service.getRepositorySyncStatus(args.owner, args.repo, {
+          branch: args.branch
+        });
+
+      case 'sync_repository_from_source':
+        return await this.service.syncRepositoryFromSource(args.owner, args.repo, {
+          branch: args.branch
         });
       
       default:

@@ -1,5 +1,5 @@
 {
-  "totalEndpoints": 242,
+  "totalEndpoints": 274,
   "categories": [
     {
       "name": "AI hub",
@@ -46,6 +46,126 @@
           "httpMethod": "POST",
           "endpointPath": "/api/v5/audio/transcriptions",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-1-audio-transcriptions"
+        }
+      ]
+    },
+    {
+      "name": "Actions",
+      "endpointCount": 19,
+      "endpoints": [
+        {
+          "name": "删除指定 Artifact",
+          "httpMethod": "DELETE",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/artifacts/:artifact_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-8-repos-owner-repo-actions-artifacts-artifact-id"
+        },
+        {
+          "name": "查询分享给仓库的所有 K8S Runner",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/shared-runner-sets",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-shared-runner-sets"
+        },
+        {
+          "name": "查询分享给仓库的所有主机 Runner",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runners/shared-runners",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runners-shared-runners"
+        },
+        {
+          "name": "查询有权访问指定 Runner Group 的仓库列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/orgs/:org/actions/runner-groups/:runner_group_id/shared-namespaces",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-groups-runner-group-id-shared-namespaces"
+        },
+        {
+          "name": "查询指定 Runner Group 下的所有 K8S Runner",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/orgs/:org/actions/runner-groups/:runner_group_id/runner-sets",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-groups-runner-group-id-runners-sets"
+        },
+        {
+          "name": "查询指定 Runner Group 下的所有主机 Runner",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/orgs/:org/actions/runner-groups/:runner_group_id/runners",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-groups-runner-group-id-runners"
+        },
+        {
+          "name": "查询指定仓库下的所有 K8S Runner",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runner-sets",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runner-sets"
+        },
+        {
+          "name": "查询指定仓库下的所有主机 Runner",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runners",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runners"
+        },
+        {
+          "name": "查询指定组织下的所有 Runner Group",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/orgs/:org/actions/runner-groups",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-groups"
+        },
+        {
+          "name": "获取 Artifact 详情",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/artifacts/:artifact_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-artifacts-artifact-id"
+        },
+        {
+          "name": "获取仓库所有的流水线的运行记录",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs"
+        },
+        {
+          "name": "获取工作流运行的job详情",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/jobs/:job_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs-run-id-jobs-job-id"
+        },
+        {
+          "name": "获取工作流运行的jobs列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/jobs",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs-run-id-jobs"
+        },
+        {
+          "name": "获取流水线的运行详情",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs-run-id"
+        },
+        {
+          "name": "获取指定 Runner Group 的详细信息",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/orgs/:org/actions/runner-groups/:runner_group_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-groups-runner-group-id"
+        },
+        {
+          "name": "列出仓库的 Artifacts",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/artifacts",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-artifacts"
+        },
+        {
+          "name": "列出特定 Run 的 Artifacts",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/artifacts",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs-run-id-artifacts"
+        },
+        {
+          "name": "下载工作流运行的job日志",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/jobs/:job_id/download_log",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs-run-id-jobs-job-id-download-log"
+        },
+        {
+          "name": "下载指定 Artifact",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/artifacts/:artifact_id/:archive_format",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-artifacts-artifact-id-archive-format"
         }
       ]
     },
@@ -231,8 +351,14 @@
     },
     {
       "name": "Enterprise",
-      "endpointCount": 15,
+      "endpointCount": 18,
       "endpoints": [
+        {
+          "name": "删除企业标签",
+          "httpMethod": "DELETE",
+          "endpointPath": "/api/v8/enterprises/:enterprise_id/label/:label_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-8-enterprises-enterprises-id-label-label-id"
+        },
         {
           "name": "删除企业成员",
           "httpMethod": "DELETE",
@@ -294,6 +420,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-enterprises-enterprise-members"
         },
         {
+          "name": "创建企业标签",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v8/enterprises/:enterprise_id/label",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-enterprises-enterprises-id-label"
+        },
+        {
           "name": "创建企业里程碑",
           "httpMethod": "POST",
           "endpointPath": "/api/v8/enterprises/:enterprise/milestones",
@@ -310,6 +442,12 @@
           "httpMethod": "POST",
           "endpointPath": "/api/v8/enterprises/:enterprise/memberships/:username",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-enterprises-enterprise-memberships-username"
+        },
+        {
+          "name": "更新企业标签",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v8/enterprises/:enterprise_id/label/:label_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-8-enterprises-enterprises-id-label-label-id"
         },
         {
           "name": "修改企业成员权限",
@@ -633,7 +771,7 @@
     },
     {
       "name": "Organizations",
-      "endpointCount": 19,
+      "endpointCount": 23,
       "endpoints": [
         {
           "name": "退出一个组织",
@@ -676,6 +814,30 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/orgs/:org/members/:username",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-members-username"
+        },
+        {
+          "name": "获取组织讨论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss"
+        },
+        {
+          "name": "获取组织讨论评论回复列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment/:comment_id/reply",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number-comment-comment-id-reply"
+        },
+        {
+          "name": "获取组织讨论评论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number-comment"
+        },
+        {
+          "name": "获取组织讨论详情",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number"
         },
         {
           "name": "获取组织项目列表",
@@ -1044,7 +1206,7 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-releases"
         },
         {
-          "name": "获取仓库的最后更新的Release",
+          "name": "获取仓库的最新的Release",
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/releases/latest",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-releases-latest"
@@ -1077,7 +1239,7 @@
     },
     {
       "name": "Repositories",
-      "endpointCount": 36,
+      "endpointCount": 42,
       "endpoints": [
         {
           "name": "删除文件",
@@ -1096,6 +1258,12 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/forks",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-forks"
+        },
+        {
+          "name": "查询Fork仓同步状态",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/sync_repo",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-sync-repo"
         },
         {
           "name": "获取 Pull Request设置",
@@ -1168,6 +1336,30 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/transition",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-transition"
+        },
+        {
+          "name": "获取项目讨论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss"
+        },
+        {
+          "name": "获取项目讨论评论回复列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment/:comment_id/reply",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number-comment-comment-id-reply"
+        },
+        {
+          "name": "获取项目讨论评论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number-comment"
+        },
+        {
+          "name": "获取项目讨论详情",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number"
         },
         {
           "name": "获取项目推送规则",
@@ -1294,6 +1486,12 @@
           "httpMethod": "PUT",
           "endpointPath": "/api/v5/repos/:owner/:repo/reviewer",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-reviewer"
+        },
+        {
+          "name": "Fork仓同步源仓库",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/repos/:owner/:repo/sync_repo",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-sync-repo"
         }
       ]
     },

@@ -101,6 +101,7 @@ interface MergePullRequestPayload {
   description?: string;
   commit_title?: string;
   commit_message?: string;
+  force_merge?: boolean;
 }
 
 interface UpdatePullRequestPayload {
@@ -248,6 +249,9 @@ export class PullRequestService extends BaseService {
     }
     if (mergeData.description !== undefined || mergeData.commit_message !== undefined) {
       payload.description = mergeData.description ?? mergeData.commit_message;
+    }
+    if (mergeData.force_merge !== undefined) {
+      payload.force_merge = mergeData.force_merge;
     }
 
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`, payload);

@@ -722,6 +722,10 @@ export class IssuesTools {
               type: 'string',
               description: 'Search keyword'
             },
+            approximate: {
+              type: 'boolean',
+              description: '是否精确查询数量，默认 false'
+            },
             page: {
               ...stringOrNumberSchema('Page number for pagination', 1)
             },
@@ -1131,6 +1135,7 @@ export class IssuesTools {
           created_at: args.created_at ?? args.createdAt,
           created_before: args.created_before ?? args.createdBefore,
           search: args.search,
+          approximate: args.approximate,
           page: args.page,
           perPage: args.perPage
         });

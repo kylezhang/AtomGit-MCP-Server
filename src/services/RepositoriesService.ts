@@ -88,6 +88,22 @@ interface UpdateRepositoryMemberPermissionRequest {
   role_id?: string;
 }
 
+interface RepositoryDiscussionListOptions {
+  page?: string | number;
+  perPage?: string | number;
+  sort?: string;
+  direction?: string;
+  search?: string;
+}
+
+interface RepositorySyncStatusOptions {
+  branch?: string;
+}
+
+interface RepositorySyncPayload {
+  branch?: string;
+}
+
 export class RepositoriesService extends BaseService {
   private encodeFileContent(content: string): string {
     return Buffer.from(content, 'utf8').toString('base64');
@@ -428,6 +444,55 @@ export class RepositoriesService extends BaseService {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/events`, {
       params: this.buildParams(options)
     });
+    return response.data;
+  }
+
+  async getRepositoryDiscussions(
+    owner: string,
+    repo: string,
+    options: RepositoryDiscussionListOptions = {}
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/discuss`, {
+      params: this.buildParams(options)
+    });
+    return response.data;
+  }
+
+  async getRepositoryDiscussion(owner: string, repo: string, number: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/discuss/${number}`);
+    return response.data;
+  }
+
+  async getRepositoryDiscussionComments(owner: string, repo: string, number: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/discuss/${number}/comment`);
+    return response.data;
+  }
+
+  async getRepositoryDiscussionCommentReplies(
+    owner: string,
+    repo: string,
+    number: string,
+    commentId: string
+  ): Promise<any[]> {
+    const response = await this.client.get(
+      `/api/v5/repos/${owner}/${repo}/discuss/${number}/comment/${commentId}/reply`
+    );
+    return response.data;
+  }
+
+  async getRepositorySyncStatus(
+    owner: string,
+    repo: string,
+    options: RepositorySyncStatusOptions = {}
+  ): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/sync_repo`, {
+      params: this.buildParams(options)
+    });
+    return response.data;
+  }
+
+  async syncRepositoryFromSource(owner: string, repo: string, syncData: RepositorySyncPayload = {}): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/sync_repo`, syncData);
     return response.data;
   }
 }

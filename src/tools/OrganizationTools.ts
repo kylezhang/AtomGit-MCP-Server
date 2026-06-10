@@ -407,6 +407,92 @@ export class OrganizationTools {
           },
           required: ['org']
         }
+      },
+      {
+        name: 'get_organization_discussions',
+        description: '获取组织讨论列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: '组织path'
+            },
+            page: stringOrNumberSchema('当前的页码'),
+            perPage: stringOrNumberSchema('每页的数量，最大为 100，默认 20'),
+            sort: {
+              type: 'string',
+              description: '排序字段 created 或 comment_size'
+            },
+            direction: {
+              type: 'string',
+              description: '排序方向 asc 或 desc'
+            },
+            search: {
+              type: 'string',
+              description: '根据标题和描述搜索'
+            }
+          },
+          required: ['org']
+        }
+      },
+      {
+        name: 'get_organization_discussion',
+        description: '获取组织讨论详情',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: '组织path'
+            },
+            number: {
+              type: 'string',
+              description: '讨论的编号'
+            }
+          },
+          required: ['org', 'number']
+        }
+      },
+      {
+        name: 'get_organization_discussion_comments',
+        description: '获取组织讨论评论列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: '组织path'
+            },
+            number: {
+              type: 'string',
+              description: '讨论的编号'
+            }
+          },
+          required: ['org', 'number']
+        }
+      },
+      {
+        name: 'get_organization_discussion_comment_replies',
+        description: '获取组织讨论评论回复列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: '组织path'
+            },
+            number: {
+              type: 'string',
+              description: '讨论的编号'
+            },
+            commentId: {
+              type: 'string',
+              description: '评论id'
+            }
+          },
+          required: ['org', 'number', 'commentId']
+        }
       }
     ];
   }
@@ -503,6 +589,28 @@ export class OrganizationTools {
         
       case 'get_organization_customized_roles':
         return await this.organizationService.getOrganizationCustomizedRoles(args.org);
+
+      case 'get_organization_discussions':
+        return await this.organizationService.getOrganizationDiscussions(args.org, {
+          page: args.page,
+          per_page: args.perPage,
+          sort: args.sort,
+          direction: args.direction,
+          search: args.search
+        });
+
+      case 'get_organization_discussion':
+        return await this.organizationService.getOrganizationDiscussion(args.org, args.number);
+
+      case 'get_organization_discussion_comments':
+        return await this.organizationService.getOrganizationDiscussionComments(args.org, args.number);
+
+      case 'get_organization_discussion_comment_replies':
+        return await this.organizationService.getOrganizationDiscussionCommentReplies(
+          args.org,
+          args.number,
+          args.comment_id ?? args.commentId
+        );
        
       default:
         throw new Error(`Unknown tool: ${name}`);

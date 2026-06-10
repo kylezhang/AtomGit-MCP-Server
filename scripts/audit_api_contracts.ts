@@ -10,8 +10,7 @@ const __dirname = path.dirname(__filename);
 const TOOLS_DIR = path.join(__dirname, '../src/tools');
 const MAP_FILE = path.join(__dirname, '../docs/api_tool_map.md');
 const DOCS_HOST = 'https://docs.atomgit.com';
-const MAIN_JS_URL = `${DOCS_HOST}/assets/js/main.36a09be1.js`;
-const RUNTIME_JS_URL = `${DOCS_HOST}/assets/js/runtime~main.4ffd5245.js`;
+const DOCS_APIS_URL = `${DOCS_HOST}/docs/apis/`;
 
 type JsonSchema = Record<string, any>;
 
@@ -302,9 +301,10 @@ function parseChunkMaps(runtimeJs: string): { contentToNumeric: Record<string, s
 }
 
 async function createChunkResolver() {
+  const { mainJsUrl, runtimeJsUrl } = await discoverDocsAssetUrls();
   const [mainJs, runtimeJs] = await Promise.all([
-    axios.get(MAIN_JS_URL).then((response) => response.data as string),
-    axios.get(RUNTIME_JS_URL).then((response) => response.data as string)
+    axios.get(mainJsUrl).then((response) => response.data as string),
+    axios.get(runtimeJsUrl).then((response) => response.data as string)
   ]);
 
   const routeMap = new Map<string, string>();
@@ -333,6 +333,23 @@ async function createChunkResolver() {
     }
 
     return `${DOCS_HOST}/assets/js/${routeKey}.${hash}.js`;
+  };
+}
+
+async function discoverDocsAssetUrls(): Promise<{ mainJsUrl: string; runtimeJsUrl: string }> {
+  const html = await axios.get(DOCS_APIS_URL).then((response) => response.data as string);
+  const scriptSources = Array.from(html.matchAll(/<script[^>]+src="([^"]+)"/g)).map((match) => match[1]);
+
+  const mainSource = scriptSources.find((source) => /\/assets\/js\/main\.[a-f0-9]+\.js$/.test(source));
+  const runtimeSource = scriptSources.find((source) => /\/assets\/js\/runtime~main\.[a-f0-9]+\.js$/.test(source));
+
+  if (!mainSource || !runtimeSource) {
+    throw new Error('Unable to discover current docs JavaScript assets');
+  }
+
+  return {
+    mainJsUrl: new URL(mainSource, DOCS_HOST).toString(),
+    runtimeJsUrl: new URL(runtimeSource, DOCS_HOST).toString()
   };
 }
 

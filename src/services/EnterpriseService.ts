@@ -41,6 +41,12 @@ interface EnterpriseIssuesQueryPayload {
   }>;
 }
 
+interface EnterpriseLabelPayload {
+  name: string;
+  color?: string;
+  description: string;
+}
+
 export class EnterpriseService extends BaseService {
   
   async getEnterpriseMemberV8(enterprise: string, username: string): Promise<any> {
@@ -143,6 +149,21 @@ export class EnterpriseService extends BaseService {
     const response = await this.client.get(`/api/v8/enterprises/${enterprisesId}/issue_extend_field`, {
       params: { page, per_page: perPage }
     });
+    return response.data;
+  }
+
+  async createEnterpriseLabel(enterpriseId: number, labelData: EnterpriseLabelPayload): Promise<any> {
+    const response = await this.client.post(`/api/v8/enterprises/${enterpriseId}/label`, labelData);
+    return response.data;
+  }
+
+  async updateEnterpriseLabel(enterpriseId: number, labelId: string, labelData: EnterpriseLabelPayload): Promise<any> {
+    const response = await this.client.put(`/api/v8/enterprises/${enterpriseId}/label/${labelId}`, labelData);
+    return response.data;
+  }
+
+  async deleteEnterpriseLabel(enterpriseId: number, labelId: string): Promise<void> {
+    const response = await this.client.delete(`/api/v8/enterprises/${enterpriseId}/label/${labelId}`);
     return response.data;
   }
 }

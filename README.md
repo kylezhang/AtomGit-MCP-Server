@@ -2,13 +2,13 @@
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
-![Tools](https://img.shields.io/badge/tools-240%2B-orange.svg)
+![Tools](https://img.shields.io/badge/tools-274-orange.svg)
 
 `@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae 等。
 
 ## 主要特性
 
-- 全量 MCP 工具接入：覆盖 17 个功能分类，提供 240+ 个工具。
+- 全量 MCP 工具接入：覆盖 18 个功能分类，提供 274 个工具。
 - 默认安全模式：危险工具默认隐藏，需要时可显式开启。
 - 基于 Access Token 认证：使用 AtomGit Personal Access Token 访问平台 API。
 - 标准 MCP 协议：兼容基于 stdio 的 MCP 客户端集成方式。
@@ -27,6 +27,7 @@
 - 企业与成员：企业级资源和成员权限管理。
 - 搜索与 Webhook：代码搜索、仓库搜索、用户搜索，以及 Webhook 管理。
 - AIHub：AIHub 模型相关能力。
+- Actions：工作流运行、Job、Artifact、Runner 和 Runner Group 查询相关能力。
 
 ## 快速开始
 

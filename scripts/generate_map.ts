@@ -49,7 +49,10 @@ const KNOWN_VARS = new Set([
   'pull_number', 'issue_number', 'branch', 'enterpriseId', 'milestone_id', 'usernames', 
   'originalName', 'fileName', 'check_run_id', 'target_id', 'commit_id', 'blob_id', 
   'client_id', 'client_secret', 'code', 'refresh_token', 'fingerprint', 'repo_type', 'iid',
-  'pullNumber', 'issueNumber', 'commentId', 'checkRunId', 'targetId', 'commitId', 'blobId'
+  'pullNumber', 'issueNumber', 'commentId', 'checkRunId', 'targetId', 'commitId', 'blobId',
+  'artifact_id', 'artifactId', 'archive_format', 'archiveFormat', 'run_id', 'runId',
+  'job_id', 'jobId', 'runner_group_id', 'runnerGroupId', 'pull_request_id', 'workflow_id',
+  'workflow_name'
 ]);
 
 const MANUAL_OVERRIDES: Record<string, string> = {

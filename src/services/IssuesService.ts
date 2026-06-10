@@ -48,6 +48,7 @@ interface EnterpriseIssueListOptions extends PaginationOptions {
   created_at?: string;
   created_before?: string;
   search?: string;
+  approximate?: boolean;
 }
 
 interface UserIssueListOptions extends PaginationOptions {

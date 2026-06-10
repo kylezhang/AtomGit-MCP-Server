@@ -47,6 +47,10 @@ export class ReleaseTools {
             target_commitish: {
               type: 'string',
               description: '目标提交 SHA 或分支'
+            },
+            release_status: {
+              type: 'string',
+              description: 'Release状态。pre（预发布版本），latest（最新版本）'
             }
           },
           required: ['owner', 'repo', 'tag_name', 'name', 'body']
@@ -85,6 +89,10 @@ export class ReleaseTools {
             prerelease: {
               type: 'boolean',
               description: '是否为预发布'
+            },
+            release_status: {
+              type: 'string',
+              description: 'Release状态。pre（预发布版本），latest（最新版本）'
             }
           },
           required: ['owner', 'repo', 'tag', 'name', 'body']
@@ -161,6 +169,10 @@ export class ReleaseTools {
             repo: {
               type: 'string',
               description: '仓库名称'
+            },
+            type: {
+              type: 'string',
+              description: '类型。updated（最后更新的），latest（最新的）'
             }
           },
           required: ['owner', 'repo']
@@ -252,7 +264,8 @@ export class ReleaseTools {
           name: args.name,
           body: args.body,
           draft: args.draft,
-          prerelease: args.prerelease
+          prerelease: args.prerelease,
+          release_status: args.release_status ?? args.releaseStatus
         });
       
       case 'update_repository_release':
@@ -260,7 +273,8 @@ export class ReleaseTools {
           name: args.name,
           body: args.body,
           draft: args.draft,
-          prerelease: args.prerelease
+          prerelease: args.prerelease,
+          release_status: args.release_status ?? args.releaseStatus
         });
       
       case 'get_repository_releases':
@@ -270,7 +284,7 @@ export class ReleaseTools {
         return await this.releaseService.getRelease(args.owner, args.repo, args.tag, args.temp_download_url ?? args.tempDownloadUrl);
       
       case 'get_latest_release':
-        return await this.releaseService.getLatestRelease(args.owner, args.repo);
+        return await this.releaseService.getLatestRelease(args.owner, args.repo, args.type);
       
       case 'get_release_by_tag':
         return await this.releaseService.getReleaseByTag(args.owner, args.repo, args.tag);

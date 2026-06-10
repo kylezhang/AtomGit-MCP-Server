@@ -263,6 +263,10 @@ export class PullRequestTools {
               description: 'Merge method to use (merge, squash, rebase)',
               enum: ['merge', 'squash', 'rebase'],
               default: 'merge'
+            },
+            force_merge: {
+              type: 'boolean',
+              description: 'Whether to force merge when repository settings and permissions allow it'
             }
           },
           required: ['owner', 'repo', 'number']
@@ -349,6 +353,10 @@ export class PullRequestTools {
             position: {
               type: 'number',
               description: 'The line index in the diff to comment on'
+            },
+            position_type: {
+              type: 'string',
+              description: 'Comment position type: text for line comment or binary for file-level comment'
             }
           },
           required: ['owner', 'repo', 'number', 'body']
@@ -1491,7 +1499,8 @@ export class PullRequestTools {
           description: args.description,
           commit_title: args.commit_title,
           commit_message: args.commit_message,
-          merge_method: args.merge_method
+          merge_method: args.merge_method,
+          force_merge: args.force_merge ?? args.forceMerge
         });
 
       case 'get_repository_pull_merge_status':
@@ -1508,7 +1517,8 @@ export class PullRequestTools {
           body: args.body,
           commit_id: args.commit_id,
           path: args.path,
-          position: args.position
+          position: args.position,
+          position_type: args.position_type ?? args.positionType
         });
 
       case 'get_repository_pull_comments':

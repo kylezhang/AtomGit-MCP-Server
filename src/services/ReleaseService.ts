@@ -27,8 +27,10 @@ export class ReleaseService extends BaseService {
     return response.data;
   }
 
-  async getLatestRelease(owner: string, repo: string): Promise<Release> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`);
+  async getLatestRelease(owner: string, repo: string, type?: string): Promise<Release> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/latest`, {
+      params: { type }
+    });
     return response.data;
   }
 

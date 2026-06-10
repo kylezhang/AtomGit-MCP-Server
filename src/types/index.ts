@@ -206,6 +206,7 @@ export interface CreatePullRequestCommentRequest {
   commit_id?: string;
   path?: string;
   position?: number;
+  position_type?: string;
 }
 
 export interface UpdatePullRequestCommentRequest {
@@ -282,6 +283,7 @@ export interface CreateReleaseRequest {
   body?: string;
   draft?: boolean;
   prerelease?: boolean;
+  release_status?: string;
 }
 
 export interface UpdateReleaseRequest {
@@ -291,6 +293,7 @@ export interface UpdateReleaseRequest {
   body?: string;
   draft?: boolean;
   prerelease?: boolean;
+  release_status?: string;
 }
 
 export interface Release {
