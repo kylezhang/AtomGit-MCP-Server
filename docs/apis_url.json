@@ -1,5 +1,5 @@
 {
-  "totalEndpoints": 274,
+  "totalEndpoints": 279,
   "categories": [
     {
       "name": "AI hub",
@@ -465,7 +465,7 @@
     },
     {
       "name": "Issues",
-      "endpointCount": 27,
+      "endpointCount": 28,
       "endpoints": [
         {
           "name": "删除Issue标签",
@@ -622,6 +622,12 @@
           "httpMethod": "POST",
           "endpointPath": "/api/v5/repos/:owner/:repo/issues/:number/comments",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-issues-number-comments"
+        },
+        {
+          "name": "更新issue关联的看板字段",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/repos/:owner/:repo/issues/:number/kanban_values",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-issues-number-kanban-values"
         },
         {
           "name": "设置Issue关联的分支",
@@ -1185,8 +1191,14 @@
     },
     {
       "name": "Release",
-      "endpointCount": 8,
+      "endpointCount": 9,
       "endpoints": [
+        {
+          "name": "删除Release附件",
+          "httpMethod": "DELETE",
+          "endpointPath": "/api/v5/repos/:owner/:repo/releases/:tag/attach_files/:attach_file_id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-releases-tag-attach-files-attach-file-id"
+        },
         {
           "name": "根据Tag名称获取仓库的Release",
           "httpMethod": "GET",
@@ -1239,7 +1251,7 @@
     },
     {
       "name": "Repositories",
-      "endpointCount": 42,
+      "endpointCount": 45,
       "endpoints": [
         {
           "name": "删除文件",
@@ -1258,6 +1270,12 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/forks",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-forks"
+        },
+        {
+          "name": "查询仓库推送远程镜像列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/push_remote_mirrors",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-push-remote-mirrors"
         },
         {
           "name": "查询Fork仓同步状态",
@@ -1282,6 +1300,12 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/languages",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-languages"
+        },
+        {
+          "name": "获取仓库的远程镜像配置信息",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/repo_remote_mirror",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-repo-remote-mirror"
         },
         {
           "name": "获取仓库动态",
@@ -1318,6 +1342,12 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/repo_settings",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-repo-settings"
+        },
+        {
+          "name": "获取仓库许可协议",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/license",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-license"
         },
         {
           "name": "获取文件列表",

@@ -466,4 +466,14 @@ export class IssuesService extends BaseService {
   ): Promise<any[]> {
     return this.getAllRepositoryIssueComments(owner, repo, options);
   }
+
+  async updateIssueKanbanValues(
+    owner: string,
+    repo: string,
+    issueNumber: string | number,
+    kanbanValues: Record<string, string>
+  ): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/kanban_values`, kanbanValues);
+    return response.data;
+  }
 }

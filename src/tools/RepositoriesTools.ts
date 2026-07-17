@@ -693,6 +693,42 @@ export class RepositoriesTools {
           },
           required: ['owner', 'repo']
         }
+      },
+      {
+        name: 'get_push_remote_mirrors',
+        description: '查询仓库推送远程镜像列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' }
+          },
+          required: ['owner', 'repo']
+        }
+      },
+      {
+        name: 'get_repository_remote_mirror',
+        description: '获取仓库的远程镜像配置信息',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' }
+          },
+          required: ['owner', 'repo']
+        }
+      },
+      {
+        name: 'get_repository_license',
+        description: '获取仓库许可协议',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' }
+          },
+          required: ['owner', 'repo']
+        }
       }
     ];
   }
@@ -1010,6 +1046,15 @@ export class RepositoriesTools {
         return await this.service.syncRepositoryFromSource(args.owner, args.repo, {
           branch: args.branch
         });
+
+      case 'get_push_remote_mirrors':
+        return await this.service.getPushRemoteMirrors(args.owner, args.repo);
+
+      case 'get_repository_remote_mirror':
+        return await this.service.getRepositoryRemoteMirror(args.owner, args.repo);
+
+      case 'get_repository_license':
+        return await this.service.getRepositoryLicense(args.owner, args.repo);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

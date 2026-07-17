@@ -495,4 +495,19 @@ export class RepositoriesService extends BaseService {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/sync_repo`, syncData);
     return response.data;
   }
+
+  async getPushRemoteMirrors(owner: string, repo: string): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/push_remote_mirrors`);
+    return response.data;
+  }
+
+  async getRepositoryRemoteMirror(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/repo_remote_mirror`);
+    return response.data;
+  }
+
+  async getRepositoryLicense(owner: string, repo: string): Promise<any> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/license`);
+    return response.data;
+  }
 }

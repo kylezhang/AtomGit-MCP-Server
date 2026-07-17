@@ -644,6 +644,33 @@ export class IssuesTools {
         }
       },
       {
+        name: 'update_issue_kanban_values',
+        description: '更新issue关联的看板字段',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库名称'
+            },
+            number: stringOrNumberSchema('Issue 编号'),
+            kanban_id: {
+              type: 'string',
+              description: '看板ID'
+            },
+            values: {
+              type: 'object',
+              description: '看板字段值'
+            }
+          },
+          required: ['owner', 'repo', 'number']
+        }
+      },
+      {
         name: 'get_enterprise_issue_labels',
         description: 'Get labels for an enterprise issue',
         inputSchema: {
@@ -1114,6 +1141,12 @@ export class IssuesTools {
 
       case 'get_repository_issue_comment_modify_history':
         return await this.issuesService.getRepositoryIssueCommentModifyHistory(args.owner, args.repo, commentId);
+
+      case 'update_issue_kanban_values':
+        return await this.issuesService.updateIssueKanbanValues(args.owner, args.repo, number, {
+          kanban_id: args.kanban_id ?? args.kanbanId,
+          ...(args.values ? { values: args.values } : {})
+        });
 
       case 'get_enterprise_issue_labels':
         return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, issueId, {
