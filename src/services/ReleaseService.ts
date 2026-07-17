@@ -54,4 +54,8 @@ export class ReleaseService extends BaseService {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/releases/${tag}/attach_files/${fileName}/download`);
     return response.data;
   }
+
+  async deleteReleaseAttachment(owner: string, repo: string, tag: string, attachFileId: string | number): Promise<void> {
+    await this.client.delete(`/api/v5/repos/${owner}/${repo}/releases/${tag}/attach_files/${attachFileId}`);
+  }
 }

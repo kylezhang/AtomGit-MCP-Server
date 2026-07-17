@@ -1,8 +1,8 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-06-10
+**生成时间:** 2026-07-17
 **分类总数:** 18
-**工具总数:** 274
+**工具总数:** 279
 
 ## 概览
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
@@ -98,7 +98,7 @@
 | [`update_enterprise_member_v8`](../src/tools/EnterpriseTools.ts) | 修改企业成员权限 | [`updateEnterpriseMemberV8`](../src/services/EnterpriseService.ts) | [`PUT /api/v8/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/put-api-v-8-enterprises-enterprise-members-username) |
 | [`update_enterprise_milestone_v8`](../src/tools/EnterpriseTools.ts) | 修改企业里程碑 | [`updateEnterpriseMilestone`](../src/services/EnterpriseService.ts) | [`PUT /api/v8/enterprises/${enterprise}/milestones/${milestoneId}`](https://docs.atomgit.com/docs/apis/put-api-v-8-enterprise-enterprise-id-milestones-milestone-id) |
 
-### Issues (28)
+### Issues (29)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`create_repository_issue`](../src/tools/IssuesTools.ts) | **创建Issue**<br>Create an issue in a repository | [`createRepositoryIssue`](../src/services/IssuesService.ts) | [`POST /api/v5/repos/${owner}/issues`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-issues) |
@@ -126,6 +126,7 @@
 | [`get_repository_issue_related_branches`](../src/tools/IssuesTools.ts) | **获取issue关联的分支列表**<br>Get branches related to an issue | [`getRepositoryIssueRelatedBranches`](../src/services/IssuesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/issues/${issueNumber}/related_branches`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-issues-number-related-branches) |
 | [`get_repository_issues`](../src/tools/IssuesTools.ts) | **获取仓库所有 issues**<br>Get all issues in a repository | [`getRepositoryIssues`](../src/services/IssuesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/issues`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-issues) |
 | [`get_user_issues`](../src/tools/IssuesTools.ts) | **获取授权用户的所有Issues**<br>Get all issues for the authenticated user | [`getUserIssues`](../src/services/IssuesService.ts) | [`GET /api/v5/user/issues`](https://docs.atomgit.com/docs/apis/get-api-v-5-user-issues) |
+| [`update_issue_kanban_values`](../src/tools/IssuesTools.ts) | 更新issue关联的看板字段 | [`updateIssueKanbanValues`](../src/services/IssuesService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/issues/${issueNumber}/kanban_values`](https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-issues-number-kanban-values) |
 | [`update_repository_issue`](../src/tools/IssuesTools.ts) | **更新Issue**<br>Update an issue in a repository | [`updateRepositoryIssue`](../src/services/IssuesService.ts) | [`PATCH /api/v5/repos/${owner}/issues/${issueNumber}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-issues-number) |
 | [`update_repository_issue_comment`](../src/tools/IssuesTools.ts) | **更新Issue某条评论**<br>Update a comment on an issue | [`updateRepositoryIssueComment`](../src/services/IssuesService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/issues/comments/${commentId}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-issues-comments-id) |
 | [`update_repository_issue_related_branches`](../src/tools/IssuesTools.ts) | **设置Issue关联的分支**<br>Update branches related to an issue | [`updateRepositoryIssueRelatedBranches`](../src/services/IssuesService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/issues/${issueNumber}/related_branches`](https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-issues-number-related-branches) |
@@ -188,10 +189,11 @@
 | [`update_enterprise_member`](../src/tools/OrganizationTools.ts) | 修改企业成员权限 | [`updateEnterpriseMember`](../src/services/OrganizationService.ts) | [`PUT /api/v5/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/put-api-v-5-enterprises-enterprise-members-username) |
 | [`update_organization`](../src/tools/OrganizationTools.ts) | 更新授权用户所管理的组织资料 | [`updateOrganization`](../src/services/OrganizationService.ts) | [`PATCH /api/v5/orgs/${org}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-orgs-org) |
 
-### Release (8)
+### Release (9)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`create_repository_release`](../src/tools/ReleaseTools.ts) | 创建仓库Release | [`createRelease`](../src/services/ReleaseService.ts) | [`POST /api/v5/repos/${owner}/${repo}/releases`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-releases) |
+| [`delete_release_attachment`](../src/tools/ReleaseTools.ts) | 删除Release附件 | [`deleteReleaseAttachment`](../src/services/ReleaseService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/releases/${tag}/attach_files/${attachFileId}`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-releases-tag-attach-files-attach-file-id) |
 | [`download_release_asset`](../src/tools/ReleaseTools.ts) | 下载仓库release附件 | [`downloadReleaseAsset`](../src/services/ReleaseService.ts) | [`GET /api/v5/repos/${owner}/${repo}/releases/${tag}/attach_files/${file_name}/download`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-releases-attach-files-file-name-download) |
 | [`get_latest_release`](../src/tools/ReleaseTools.ts) | **获取仓库的最新的Release**<br>获取仓库的最后更新的Release | [`getLatestRelease`](../src/services/ReleaseService.ts) | [`GET /api/v5/repos/${owner}/${repo}/releases/latest`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-releases-latest) |
 | [`get_release_by_tag`](../src/tools/ReleaseTools.ts) | 根据Tag名称获取仓库的Release | [`getReleaseByTag`](../src/services/ReleaseService.ts) | [`GET /api/v5/repos/${owner}/${repo}/releases/tags/${tag}`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-releases-tags-tag) |
@@ -200,7 +202,7 @@
 | [`get_repository_releases`](../src/tools/ReleaseTools.ts) | 获取仓库的所有Releases | [`getReleases`](../src/services/ReleaseService.ts) | [`GET /api/v5/repos/${owner}/${repo}/releases`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-releases) |
 | [`update_repository_release`](../src/tools/ReleaseTools.ts) | 更新仓库Release | [`updateRelease`](../src/services/ReleaseService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/releases/${tag}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-releases-tag) |
 
-### Repositories (42)
+### Repositories (45)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`archive_repository`](../src/tools/RepositoriesTools.ts) | 仓库归档 | [`archiveRepository`](../src/services/RepositoriesService.ts) | [`PUT /api/v5/org/${org}/repo/${repository}/status`](https://docs.atomgit.com/docs/apis/put-api-v-5-org-org-repo-repo-status) |
@@ -208,6 +210,7 @@
 | [`delete_repository`](../src/tools/RepositoriesTools.ts) | 删除一个仓库 | [`deleteRepository`](../src/services/RepositoriesService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo) |
 | [`delete_repository_file`](../src/tools/RepositoriesTools.ts) | 删除文件 | [`deleteRepositoryFile`](../src/services/RepositoriesService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/contents/${fileData.path}`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-contents-path) |
 | [`fork_repository`](../src/tools/RepositoriesTools.ts) | Fork一个仓库 | [`forkRepository`](../src/services/RepositoriesService.ts) | [`POST /api/v5/repos/${owner}/${repo}/forks`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-forks) |
+| [`get_push_remote_mirrors`](../src/tools/RepositoriesTools.ts) | 查询仓库推送远程镜像列表 | [`getPushRemoteMirrors`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/push_remote_mirrors`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-push-remote-mirrors) |
 | [`get_repository_blob`](../src/tools/RepositoriesTools.ts) | 获取文件Blob | [`getRepositoryFileBlob`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/git/blobs/${sha}`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-git-blobs-sha) |
 | [`get_repository_content`](../src/tools/RepositoriesTools.ts) | 获取仓库具体路径下的内容 | [`getRepositoryContent`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/contents/${path}`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-contents-path) |
 | [`get_repository_contributors`](../src/tools/RepositoriesTools.ts) | 获取仓库贡献者 | [`getRepositoryContributors`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/contributors`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-contributors) |
@@ -222,9 +225,11 @@
 | [`get_repository_file_list`](../src/tools/RepositoriesTools.ts) | 获取文件列表 | [`getRepositoryFileList`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/file_list`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-file-list) |
 | [`get_repository_forks`](../src/tools/RepositoriesTools.ts) | 查看仓库的Forks | [`getRepositoryForks`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/forks`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-forks) |
 | [`get_repository_languages`](../src/tools/RepositoriesTools.ts) | 获取仓库的语言 | [`getRepositoryLanguages`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/languages`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-languages) |
+| [`get_repository_license`](../src/tools/RepositoriesTools.ts) | 获取仓库许可协议 | [`getRepositoryLicense`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/license`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-license) |
 | [`get_repository_pull_request_settings`](../src/tools/RepositoriesTools.ts) | 获取 Pull Request设置 | [`getRepositoryPullRequestSettings`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/pull_request_settings`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pull-request-settings) |
 | [`get_repository_push_config`](../src/tools/RepositoriesTools.ts) | 获取项目推送规则 | [`getRepositoryPushConfig`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/push_config`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-push-config) |
 | [`get_repository_raw_file`](../src/tools/RepositoriesTools.ts) | 获取 raw 文件 | [`getRepositoryRawFile`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/raw/${path}`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-raw-path) |
+| [`get_repository_remote_mirror`](../src/tools/RepositoriesTools.ts) | 获取仓库的远程镜像配置信息 | [`getRepositoryRemoteMirror`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/repo_remote_mirror`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-repo-remote-mirror) |
 | [`get_repository_settings`](../src/tools/RepositoriesTools.ts) | 获取仓库设置 | [`getRepositoryRepoSettings`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/repo_settings`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-repo-settings) |
 | [`get_repository_stargazers`](../src/tools/RepositoriesTools.ts) | 列出 star 了仓库的用户 | [`getRepositoryStargazers`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/stargazers`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-stargazers) |
 | [`get_repository_subscribers`](../src/tools/RepositoriesTools.ts) | 列出 watch 了仓库的用户 | [`getRepositorySubscribers`](../src/services/RepositoriesService.ts) | [`GET /api/v5/repos/${owner}/${repo}/subscribers`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-subscribers) |

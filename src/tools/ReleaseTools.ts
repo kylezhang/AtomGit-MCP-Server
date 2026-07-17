@@ -251,6 +251,32 @@ export class ReleaseTools {
           },
           required: ['owner', 'repo', 'tag', 'file_name']
         }
+      },
+      {
+        name: 'delete_release_attachment',
+        description: '删除Release附件',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: '仓库所有者'
+            },
+            repo: {
+              type: 'string',
+              description: '仓库名称'
+            },
+            tag: {
+              type: 'string',
+              description: 'Release 标签名'
+            },
+            attach_file_id: {
+              type: 'string',
+              description: '附件ID'
+            }
+          },
+          required: ['owner', 'repo', 'tag', 'attach_file_id']
+        }
       }
     ];
   }
@@ -299,6 +325,14 @@ export class ReleaseTools {
 
       case 'get_release_upload_url':
         return await this.releaseService.getReleaseUploadUrl(args.owner, args.repo, args.tag, args.file_name ?? args.fileName);
+
+      case 'delete_release_attachment':
+        return await this.releaseService.deleteReleaseAttachment(
+          args.owner,
+          args.repo,
+          args.tag,
+          args.attach_file_id ?? args.attachFileId
+        );
 
       default:
         throw new Error(`Unknown tool: ${name}`);
