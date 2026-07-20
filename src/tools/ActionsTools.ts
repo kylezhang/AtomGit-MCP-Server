@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { ActionsService } from '../services/ActionsService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string) => ({
   oneOf: [
@@ -32,6 +33,16 @@ const paginationProperties = {
   perPage: {
     type: 'number',
     description: '每页的项目数'
+  },
+  autoPaginate: {
+    type: 'boolean',
+    description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+    default: false
+  },
+  maxPages: {
+    oneOf: [{ type: 'string' }, { type: 'number' }],
+    description: '自动分页时的最大页数限制（默认 100）',
+    default: 100
   }
 };
 
@@ -55,6 +66,16 @@ const artifactListProperties = {
   perPage: {
     type: 'number',
     description: '每页的项目数'
+  },
+  autoPaginate: {
+    type: 'boolean',
+    description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+    default: false
+  },
+  maxPages: {
+    oneOf: [{ type: 'string' }, { type: 'number' }],
+    description: '自动分页时的最大页数限制（默认 100）',
+    default: 100
   }
 };
 
@@ -397,6 +418,12 @@ export class ActionsTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_actions_artifacts':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.actionsService.getRepositoryActionsArtifacts(args.owner, args.repo, { name: args.name, sort: args.sort, direction: args.direction, page, per_page: perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.actionsService.getRepositoryActionsArtifacts(args.owner, args.repo, {
           name: args.name,
           sort: args.sort,
@@ -420,6 +447,12 @@ export class ActionsTools {
         return await this.actionsService.deleteRepositoryActionsArtifact(args.owner, args.repo, args.artifactId);
 
       case 'get_repository_actions_runs':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.actionsService.getRepositoryActionsRuns(args.owner, args.repo, { event: args.event, status: args.status, branch: args.branch, executor: args.executor, pull_request_id: args.pull_request_id, workflow_id: args.workflow_id, workflow_name: args.workflow_name, page: page.toString(), per_page: perPage.toString() }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.actionsService.getRepositoryActionsRuns(args.owner, args.repo, {
           event: args.event,
           status: args.status,
@@ -436,6 +469,12 @@ export class ActionsTools {
         return await this.actionsService.getRepositoryActionsRun(args.owner, args.repo, args.runId);
 
       case 'get_repository_actions_run_artifacts':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.actionsService.getRepositoryActionsRunArtifacts(args.owner, args.repo, args.runId, { name: args.name, sort: args.sort, direction: args.direction, page, per_page: perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.actionsService.getRepositoryActionsRunArtifacts(args.owner, args.repo, args.runId, {
           name: args.name,
           sort: args.sort,

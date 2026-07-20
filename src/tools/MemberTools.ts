@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { MemberService } from '../services/MemberService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 export class MemberTools {
   constructor(private memberService: MemberService) {}
@@ -75,6 +76,16 @@ export class MemberTools {
             perPage: {
               type: 'number',
               description: '每页数量'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo']
@@ -156,6 +167,12 @@ export class MemberTools {
         return await this.memberService.removeRepositoryCollaborator(args.owner, args.repo, args.username);
       
       case 'get_repository_collaborators':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.memberService.getRepositoryCollaborators(args.owner, args.repo, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.memberService.getRepositoryCollaborators(args.owner, args.repo, args.page, args.perPage);
       
       case 'check_repository_collaborator':

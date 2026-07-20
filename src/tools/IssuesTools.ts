@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { IssuesService } from '../services/IssuesService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -104,6 +105,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo']
@@ -346,6 +355,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -523,6 +540,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -571,6 +596,14 @@ export class IssuesTools {
             emoji_name: {
               type: 'string',
               description: 'Emoji filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -600,6 +633,14 @@ export class IssuesTools {
             emoji_name: {
               type: 'string',
               description: 'Emoji filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'comment_id']
@@ -689,6 +730,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['enterprise', 'issue_id']

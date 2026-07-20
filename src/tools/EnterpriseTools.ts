@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { EnterpriseService } from '../services/EnterpriseService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -52,6 +53,16 @@ export class EnterpriseTools {
             role: {
               type: 'string',
               description: '成员角色过滤'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['enterprise']
@@ -141,6 +152,16 @@ export class EnterpriseTools {
             perPage: {
               type: 'number',
               description: '每页数量'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['enterprise_id']
@@ -264,6 +285,14 @@ export class EnterpriseTools {
             sort: {
               type: 'string',
               description: '排序方向'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['enterprise']
@@ -290,6 +319,16 @@ export class EnterpriseTools {
             group_name: {
               type: 'string',
               description: '项目组名称'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['enterprise']
@@ -314,6 +353,14 @@ export class EnterpriseTools {
             },
             perPage: {
               ...stringOrNumberSchema('每页数量')
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['enterprise_id']
@@ -332,6 +379,16 @@ export class EnterpriseTools {
             page: { type: 'number', description: '页码' },
             perPage: { type: 'number', description: '每页数量' },
             labels: { type: 'string', description: '标签，多个按英文逗号隔开' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
+            },
             sort: { type: 'string', description: '排序字段' },
             direction: { type: 'string', description: '排序方向' },
             since: { type: 'string', description: '起始更新时间' },
@@ -466,6 +523,12 @@ export class EnterpriseTools {
         return await this.enterpriseService.getEnterpriseMemberV8(args.enterprise, args.username);
       
       case 'get_enterprise_members_v8':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.enterpriseService.getEnterpriseMembersV8(args.enterprise, page, perPage, args.role),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.enterpriseService.getEnterpriseMembersV8(args.enterprise, args.page, args.perPage, args.role);
       
       case 'invite_enterprise_member_v8':
@@ -487,6 +550,12 @@ export class EnterpriseTools {
         return await this.enterpriseService.getOrganizationEnterprise(args.org);
       
       case 'get_enterprise_customized_roles_v8':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise_id ?? args.enterpriseId),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise_id ?? args.enterpriseId);
       
       case 'create_enterprise_milestone_v8':
@@ -525,6 +594,12 @@ export class EnterpriseTools {
         );
       
       case 'get_enterprise_milestones_v8':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.enterpriseService.getEnterpriseMilestones(args.enterprise, page, perPage, args.name, args.state, args.order_by, args.sort),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.enterpriseService.getEnterpriseMilestones(
           args.enterprise,
           args.page,
@@ -536,9 +611,21 @@ export class EnterpriseTools {
         );
       
       case 'get_enterprise_projects_v8':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.enterpriseService.getEnterpriseProjects(args.enterprise, page, perPage, args.group_name),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.enterpriseService.getEnterpriseProjects(args.enterprise, args.page, args.perPage, args.group_name);
       
       case 'get_enterprise_issue_extend_fields_v8':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.enterpriseService.getEnterpriseIssueExtendFields(args.enterprise_id ?? args.enterprisesId, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.enterpriseService.getEnterpriseIssueExtendFields(
           args.enterprise_id ?? args.enterprisesId,
           args.page,
@@ -546,6 +633,12 @@ export class EnterpriseTools {
         );
 
       case 'get_enterprise_issues_v8':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.enterpriseService.getEnterpriseIssuesV8(args.enterprise_id ?? args.enterpriseId, { page, per_page: perPage, labels: args.labels, sort: args.sort, direction: args.direction, since: args.since, assignees: args.assignees, milestone_ids: args.milestone_ids, project_ids: args.project_ids, create_at: args.create_at, created_before: args.created_before, search: args.search, issue_types: args.issue_types, issue_states: args.issue_states, custom_fields: args.custom_fields }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.enterpriseService.getEnterpriseIssuesV8(
           args.enterprise_id ?? args.enterpriseId,
           {

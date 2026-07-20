@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { RepositoriesService } from '../services/RepositoriesService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string) => ({
   oneOf: [
