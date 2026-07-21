@@ -1,6 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { PullRequestService } from '../services/PullRequestService.js';
-import { autoPaginate } from '../core/PaginationHelper.js';
+import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -122,16 +122,7 @@ export class PullRequestTools {
               description: 'Number of results per page',
               default: 30
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
@@ -327,16 +318,7 @@ export class PullRequestTools {
               description: 'Number of results per page',
               default: 30
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'number']
         }
@@ -419,16 +401,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'Comment type filter'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'number']
         }
@@ -461,16 +434,7 @@ export class PullRequestTools {
               description: 'Number of results per page',
               default: 30
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'number']
         }
@@ -555,14 +519,7 @@ export class PullRequestTools {
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'number']
         }
@@ -624,16 +581,7 @@ export class PullRequestTools {
               description: 'Number of results per page',
               default: 30
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'number']
         }
@@ -792,16 +740,7 @@ export class PullRequestTools {
               description: 'Number of results per page',
               default: 30
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'number']
         }
@@ -1282,14 +1221,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'Emoji filter'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'number']
         }
@@ -1319,14 +1251,7 @@ export class PullRequestTools {
               type: 'string',
               description: 'Emoji filter'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'comment_id']
         }
@@ -1434,16 +1359,7 @@ export class PullRequestTools {
               description: 'Number of results per page',
               default: 30
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise']
         }

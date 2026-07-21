@@ -1,6 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { UserService } from '../services/UserService.js';
-import { autoPaginate } from '../core/PaginationHelper.js';
+import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -66,14 +66,7 @@ export class UserTools {
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['username']
         }
@@ -136,14 +129,7 @@ export class UserTools {
               type: 'string',
               description: 'Repository category filter'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
         }
       },
@@ -171,14 +157,7 @@ export class UserTools {
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['username']
         }

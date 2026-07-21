@@ -1,6 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { RepositoriesService } from '../services/RepositoriesService.js';
-import { autoPaginate } from '../core/PaginationHelper.js';
+import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string) => ({
   oneOf: [
@@ -32,16 +32,7 @@ export class RepositoriesTools {
             perPage: { type: 'number', description: '每页数量' },
             recursive: { type: 'number', description: '是否递归获取子目录，1 表示递归' },
             file_path: { type: 'string', description: '文件路径过滤' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'sha']
         }
@@ -127,16 +118,7 @@ export class RepositoriesTools {
             file_name: { type: 'string', description: '文件名过滤' },
             page: { type: 'number', description: '页码，默认1' },
             perPage: { type: 'number', description: '每页数量，默认30' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
@@ -365,16 +347,7 @@ export class RepositoriesTools {
             sort: { type: 'string', description: '排序字段' },
             created_after: { type: 'string', description: '创建时间起始' },
             created_before: { type: 'string', description: '创建时间截止' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
@@ -422,16 +395,7 @@ export class RepositoriesTools {
             perPage: { type: 'number', description: '每页数量' },
             watched_after: { type: 'string', description: '关注开始时间' },
             watched_before: { type: 'string', description: '关注截止时间' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
@@ -448,16 +412,7 @@ export class RepositoriesTools {
             perPage: { type: 'number', description: '每页数量' },
             starred_after: { type: 'string', description: 'Star 开始时间' },
             starred_before: { type: 'string', description: 'Star 截止时间' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
@@ -658,16 +613,7 @@ export class RepositoriesTools {
             after: { type: 'string', description: '开始时间' },
             page: { type: 'number', description: '页码' },
             perPage: { type: 'number', description: '每页数量' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
@@ -685,14 +631,7 @@ export class RepositoriesTools {
             sort: { type: 'string', description: '排序字段 created 或 comment_size' },
             direction: { type: 'string', description: '排序方向 asc 或 desc' },
             search: { type: 'string', description: '根据标题和描述搜索' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制')
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
