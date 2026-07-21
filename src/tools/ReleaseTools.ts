@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { ReleaseService } from '../services/ReleaseService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 export class ReleaseTools {
   constructor(private releaseService: ReleaseService) {}
@@ -125,6 +126,16 @@ export class ReleaseTools {
             direction: {
               type: 'string',
               description: '排序方向'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo']
@@ -304,6 +315,12 @@ export class ReleaseTools {
         });
       
       case 'get_repository_releases':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.releaseService.getReleases(args.owner, args.repo, page, perPage, args.direction),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.releaseService.getReleases(args.owner, args.repo, args.page, args.perPage, args.direction);
       
       case 'get_repository_release':

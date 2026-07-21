@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { SearchService } from '../services/SearchService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 export class SearchTools {
   constructor(private searchService: SearchService) {}
@@ -37,6 +38,16 @@ export class SearchTools {
               type: 'number',
               description: '每页结果数，默认为30',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['q']
@@ -81,6 +92,16 @@ export class SearchTools {
               type: 'number',
               description: '每页结果数，默认为30',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['q']
@@ -129,6 +150,16 @@ export class SearchTools {
               type: 'number',
               description: '每页结果数，默认为30',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['q']
@@ -140,6 +171,12 @@ export class SearchTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'search_users':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.searchService.searchUsers({ q: args.q ?? args.query, sort: args.sort, order: args.order, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.searchService.searchUsers({
           q: args.q ?? args.query,
           sort: args.sort,
@@ -149,6 +186,12 @@ export class SearchTools {
         });
       
       case 'search_issues':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.searchService.searchIssues({ q: args.q ?? args.query, sort: args.sort, order: args.order, repo: args.repo, state: args.state, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.searchService.searchIssues({
           q: args.q ?? args.query,
           sort: args.sort,
@@ -160,6 +203,12 @@ export class SearchTools {
         });
       
       case 'search_repositories':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.searchService.searchRepositories({ q: args.q ?? args.query, sort: args.sort, order: args.order, owner: args.owner, fork: args.fork, language: args.language, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.searchService.searchRepositories({
           q: args.q ?? args.query,
           sort: args.sort,

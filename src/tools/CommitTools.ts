@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { CommitService } from '../services/CommitService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -54,6 +55,14 @@ export class CommitTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo']
@@ -233,6 +242,16 @@ export class CommitTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo']
@@ -307,6 +326,16 @@ export class CommitTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo', 'ref']
@@ -364,6 +393,12 @@ export class CommitTools {
 
     switch (name) {
       case 'get_repository_commits':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.commitService.getRepositoryCommits(args.owner, args.repo, { sha: args.sha, path: args.path, author: args.author, since: args.since, until: args.until, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.commitService.getRepositoryCommits(
           args.owner, 
           args.repo, 
@@ -402,6 +437,12 @@ export class CommitTools {
         return await this.commitService.updateRepositoryCommitComment(args.owner, args.repo, id, { body: args.body });
       
       case 'get_repository_commit_comments':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.commitService.getRepositoryCommitComments(args.owner, args.repo, { order: args.order, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.commitService.getRepositoryCommitComments(args.owner, args.repo, {
           order: args.order,
           page: args.page,
@@ -419,6 +460,12 @@ export class CommitTools {
         });
       
       case 'get_repository_commit_ref_comments':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.commitService.getRepositoryCommitRefComments(args.owner, args.repo, args.ref, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.commitService.getRepositoryCommitRefComments(args.owner, args.repo, args.ref, {
           page: args.page,
           perPage: args.perPage

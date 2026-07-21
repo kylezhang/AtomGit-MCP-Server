@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { DashboardService } from '../services/DashboardService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -50,6 +51,14 @@ export class DashboardTools {
             },
             perPage: {
               ...stringOrNumberSchema('每页数量')
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner']
@@ -155,7 +164,15 @@ export class DashboardTools {
             title: { type: 'string', description: '标题关键字' },
             source_iids: { type: 'string', description: '来源 IID，多个用逗号分隔' },
             page: { ...stringOrNumberSchema('页码') },
-            perPage: { ...stringOrNumberSchema('每页数量') }
+            perPage: { ...stringOrNumberSchema('每页数量') },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
+            }
           },
           required: ['owner', 'kanban_id']
         }
@@ -168,6 +185,12 @@ export class DashboardTools {
 
     switch (name) {
       case 'get_organization_kanbans':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.dashboardService.getOrganizationKanbanList(args.owner, args.status, args.sort, args.visibility, args.search, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.dashboardService.getOrganizationKanbanList(
           args.owner,
           args.status,
@@ -200,6 +223,12 @@ export class DashboardTools {
         });
 
       case 'get_org_kanban_item_list':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.dashboardService.getKanbanItemList(args.owner, kanbanId, args.repo, args.source_type, args.source_status, args.title, args.source_iids, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.dashboardService.getKanbanItemList(
           args.owner,
           kanbanId,

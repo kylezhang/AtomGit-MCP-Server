@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { IssuesService } from '../services/IssuesService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -104,6 +105,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo']
@@ -346,6 +355,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -523,6 +540,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -571,6 +596,14 @@ export class IssuesTools {
             emoji_name: {
               type: 'string',
               description: 'Emoji filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -600,6 +633,14 @@ export class IssuesTools {
             emoji_name: {
               type: 'string',
               description: 'Emoji filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'comment_id']
@@ -689,6 +730,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['enterprise', 'issue_id']
@@ -758,6 +807,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['enterprise']
@@ -814,6 +871,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: []
@@ -862,6 +927,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['org']
@@ -890,6 +963,16 @@ export class IssuesTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['enterprise', 'number']
@@ -958,6 +1041,14 @@ export class IssuesTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo']
@@ -1014,6 +1105,21 @@ export class IssuesTools {
 
     switch (name) {
       case 'get_repository_issues':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getRepositoryIssues(args.owner, args.repo, {
+              state: args.state, labels: args.labels, sort: args.sort, direction: args.direction,
+              since: args.since, created_at: args.created_at ?? args.createdAt,
+              milestone: args.milestone, assignee: args.assignee, creator: args.creator,
+              created_after: args.created_after ?? args.createdAfter,
+              created_before: args.created_before ?? args.createdBefore,
+              updated_after: args.updated_after ?? args.updatedAfter,
+              updated_before: args.updated_before ?? args.updatedBefore,
+              search: args.search, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getRepositoryIssues(
           args.owner,
           args.repo,
@@ -1074,6 +1180,14 @@ export class IssuesTools {
         });
 
       case 'get_repository_issue_comments':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getRepositoryIssueComments(args.owner, args.repo, number, {
+              order: args.order, since: args.since, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getRepositoryIssueComments(
           args.owner,
           args.repo,
@@ -1109,6 +1223,12 @@ export class IssuesTools {
         return await this.issuesService.deleteRepositoryIssueLabel(args.owner, args.repo, number, args.name);
 
       case 'get_repository_issue_operate_logs':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getRepositoryIssueOperateLogs(args.owner, args.repo, number, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getRepositoryIssueOperateLogs(
           args.owner,
           args.repo,
@@ -1123,6 +1243,14 @@ export class IssuesTools {
         return await this.issuesService.getRepositoryIssueRelatedBranches(args.owner, args.repo, number);
 
       case 'get_repository_issue_reactions':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getRepositoryIssueReactions(args.owner, args.repo, number, {
+              page, perPage, emoji_name: args.emoji_name ?? args.emojiName
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getRepositoryIssueReactions(args.owner, args.repo, number, {
           page: args.page,
           perPage: args.perPage,
@@ -1130,6 +1258,14 @@ export class IssuesTools {
         });
 
       case 'get_repository_issue_comment_reactions':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getRepositoryIssueCommentReactions(args.owner, args.repo, commentId, {
+              page, perPage, emoji_name: args.emoji_name ?? args.emojiName
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getRepositoryIssueCommentReactions(args.owner, args.repo, commentId, {
           page: args.page,
           perPage: args.perPage,
@@ -1149,12 +1285,31 @@ export class IssuesTools {
         });
 
       case 'get_enterprise_issue_labels':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getEnterpriseIssueLabels(args.enterprise, issueId, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, issueId, {
           page: args.page,
           perPage: args.perPage
         });
 
       case 'get_enterprise_issues':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getEnterpriseIssues(args.enterprise, {
+              state: args.state, labels: args.labels, sort: args.sort, direction: args.direction,
+              since: args.since, milestone: args.milestone, assignee: args.assignee,
+              creator: args.creator, program: args.program,
+              created_at: args.created_at ?? args.createdAt,
+              created_before: args.created_before ?? args.createdBefore,
+              search: args.search, approximate: args.approximate, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getEnterpriseIssues(args.enterprise, {
           state: args.state,
           labels: args.labels,
@@ -1174,6 +1329,17 @@ export class IssuesTools {
         });
 
       case 'get_user_issues':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getUserIssues({
+              filter: args.filter, state: args.state, labels: args.labels, sort: args.sort,
+              direction: args.direction, since: args.since, schedule: args.schedule,
+              deadline: args.deadline, created_at: args.created_at ?? args.createdAt,
+              finished_at: args.finished_at ?? args.finishedAt, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getUserIssues({
           filter: args.filter,
           state: args.state,
@@ -1190,6 +1356,16 @@ export class IssuesTools {
         });
 
       case 'get_organization_issues':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getOrganizationIssues(args.org, {
+              filter: args.filter, state: args.state, labels: args.labels, sort: args.sort,
+              direction: args.direction, created_at: args.created_at ?? args.createdAt,
+              search: args.search, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getOrganizationIssues(args.org, {
           filter: args.filter,
           state: args.state,
@@ -1203,6 +1379,12 @@ export class IssuesTools {
         });
 
       case 'get_enterprise_issue_comments':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getEnterpriseIssueComments(args.enterprise, number, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getEnterpriseIssueComments(args.enterprise, number, {
           page: args.page,
           perPage: args.perPage
@@ -1215,6 +1397,14 @@ export class IssuesTools {
         return await this.issuesService.deleteRepositoryAllIssueLabels(args.owner, args.repo, number);
 
       case 'get_all_repository_issue_comments':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.issuesService.getAllRepositoryIssueComments(args.owner, args.repo, {
+              sort: args.sort, direction: args.direction, since: args.since, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.issuesService.getAllRepositoryIssueComments(args.owner, args.repo, {
           sort: args.sort,
           direction: args.direction,

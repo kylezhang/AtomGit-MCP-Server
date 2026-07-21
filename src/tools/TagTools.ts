@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { TagService } from '../services/TagService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 export class TagTools {
   constructor(private tagService: TagService) { }
@@ -29,6 +30,16 @@ export class TagTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo']
@@ -107,6 +118,16 @@ export class TagTools {
             perPage: {
               type: 'number',
               description: 'Number of results per page'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo']
@@ -214,6 +235,12 @@ export class TagTools {
   async callTool(name: string, args: any): Promise<any> {
     switch(name) {
       case 'get_repository_tags':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.tagService.getRepositoryTags(args.owner, args.repo, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.tagService.getRepositoryTags(
           args.owner,
           args.repo,
@@ -233,6 +260,12 @@ export class TagTools {
         return await this.tagService.deleteRepositoryTag(args.owner, args.repo, args.tag_name ?? args.tagName);
 
       case 'get_repository_protected_tags':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.tagService.getRepositoryProtectedTags(args.owner, args.repo, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.tagService.getRepositoryProtectedTags(args.owner, args.repo, args.page, args.perPage);
 
       case 'create_repository_protected_tag':

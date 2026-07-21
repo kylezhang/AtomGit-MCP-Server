@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { UserService } from '../services/UserService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -64,6 +65,14 @@ export class UserTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['username']
@@ -126,6 +135,14 @@ export class UserTools {
             repo_type: {
               type: 'string',
               description: 'Repository category filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
         }
@@ -153,6 +170,14 @@ export class UserTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['username']
@@ -601,6 +626,12 @@ export class UserTools {
         return await this.userService.getUser(args.username);
       
       case 'get_user_repos':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getUserRepos(args.username, { type: args.type, sort: args.sort, direction: args.direction, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getUserRepos(args.username, {
           type: args.type,
           sort: args.sort,
@@ -613,6 +644,12 @@ export class UserTools {
         return await this.userService.getUserRepository(args.owner, args.repo);
 
       case 'get_current_user_repos':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getCurrentUserRepos({ visibility: args.visibility, affiliation: args.affiliation, type: args.type, sort: args.sort, direction: args.direction, q: args.q, page, perPage, repo_type: args.repo_type ?? args.repoType }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getCurrentUserRepos({
           visibility: args.visibility,
           affiliation: args.affiliation,
@@ -626,6 +663,12 @@ export class UserTools {
         });
       
       case 'get_user_starred_repos':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getUserStarredRepos(args.username, { sort: args.sort, direction: args.direction, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getUserStarredRepos(args.username, {
           sort: args.sort,
           direction: args.direction,
@@ -634,6 +677,12 @@ export class UserTools {
         });
       
       case 'get_current_user_starred_repos':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getCurrentUserStarredRepos({ sort: args.sort, direction: args.direction, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getCurrentUserStarredRepos({
           sort: args.sort,
           direction: args.direction,
@@ -642,6 +691,12 @@ export class UserTools {
         });
       
       case 'get_user_subscriptions':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getUserSubscriptions(args.username, { sort: args.sort, direction: args.direction, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getUserSubscriptions(args.username, {
           sort: args.sort,
           direction: args.direction,
@@ -650,6 +705,12 @@ export class UserTools {
         });
       
       case 'get_current_user_subscriptions':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getCurrentUserSubscriptions({ sort: args.sort, direction: args.direction, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getCurrentUserSubscriptions({
           sort: args.sort,
           direction: args.direction,

@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { WebhooksService } from '../services/WebhooksService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 export class WebhooksTools {
   private webhooksService: WebhooksService;
@@ -31,6 +32,16 @@ export class WebhooksTools {
             perPage: {
               type: 'number',
               description: '每页数量'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo']
@@ -164,6 +175,12 @@ export class WebhooksTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_webhooks':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.webhooksService.getRepositoryWebhooks(args.owner, args.repo, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.webhooksService.getRepositoryWebhooks(args.owner, args.repo, args.page, args.perPage);
       
       case 'create_repository_webhook':

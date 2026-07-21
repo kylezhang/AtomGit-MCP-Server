@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { OrganizationService } from '../services/OrganizationService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -110,6 +111,16 @@ export class OrganizationTools {
             perPage: {
               type: 'number',
               description: '每页数量 (可选)'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['org']
@@ -130,6 +141,14 @@ export class OrganizationTools {
             },
             perPage: {
               ...stringOrNumberSchema('每页数量 (可选)')
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['username']
@@ -150,6 +169,14 @@ export class OrganizationTools {
             admin: {
               type: 'boolean',
               description: '仅返回管理员组织'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: []
@@ -279,6 +306,16 @@ export class OrganizationTools {
             role: {
               type: 'string',
               description: '成员角色过滤'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['org']
@@ -309,6 +346,16 @@ export class OrganizationTools {
             role: {
               type: 'string',
               description: '成员角色过滤'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['enterprise', 'org']
@@ -375,6 +422,16 @@ export class OrganizationTools {
             perPage: {
               type: 'number',
               description: '每页数量 (可选)'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner']
@@ -531,12 +588,30 @@ export class OrganizationTools {
         });
        
       case 'get_organization_repositories':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.organizationService.getOrganizationRepositories(args.org, page, perPage, args.type, args.repo_type ?? args.repoType),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.organizationService.getOrganizationRepositories(args.org, args.page, args.perPage, args.type, args.repo_type ?? args.repoType);
       
       case 'get_user_organizations':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.organizationService.getUserOrganizations(args.username, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.organizationService.getUserOrganizations(args.username, args.page, args.perPage);
       
       case 'get_current_user_organizations':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.organizationService.getCurrentUserOrganizations(page, perPage, args.admin),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.organizationService.getCurrentUserOrganizations(args.page, args.perPage, args.admin);
        
       case 'update_organization':
@@ -552,6 +627,12 @@ export class OrganizationTools {
         return await this.organizationService.getOrganizationMember(args.org, args.username);
         
       case 'get_organization_members':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.organizationService.getOrganizationMembers(args.org, page, perPage, args.role),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.organizationService.getOrganizationMembers(args.org, args.page, args.perPage, args.role);
       
       case 'invite_organization_member':
@@ -579,9 +660,21 @@ export class OrganizationTools {
         return await this.organizationService.leaveOrganization(args.org);
         
       case 'get_enterprise_members':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.organizationService.getEnterpriseMembers(args.enterprise, page, perPage, args.org, args.role),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.organizationService.getEnterpriseMembers(args.enterprise, args.page, args.perPage, args.org, args.role);
         
       case 'get_organization_followers':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.organizationService.getOrganizationFollowers(args.owner, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.organizationService.getOrganizationFollowers(args.owner, args.page, args.perPage);
         
       case 'get_organization_issue_extend_settings':

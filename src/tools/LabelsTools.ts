@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { LabelsService } from '../services/LabelsService.js';
+import { autoPaginate } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -34,6 +35,14 @@ export class LabelsTools {
             },
             perPage: {
               ...stringOrNumberSchema('每页数量', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo']
@@ -174,6 +183,14 @@ export class LabelsTools {
             },
             perPage: {
               ...stringOrNumberSchema('每页数量', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['enterprise']
@@ -202,6 +219,14 @@ export class LabelsTools {
             },
             perPage: {
               ...stringOrNumberSchema('每页数量', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['enterprise']
@@ -239,6 +264,12 @@ export class LabelsTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_labels':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.labelsService.getRepositoryLabels(args.owner, args.repo, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.labelsService.getRepositoryLabels(args.owner, args.repo, {
           page: args.page,
           perPage: args.perPage
@@ -265,12 +296,24 @@ export class LabelsTools {
         return await this.labelsService.replaceRepositoryProjectLabels(args.owner, args.repo, args.labels);
       
       case 'get_enterprise_labels':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.labelsService.getEnterpriseLabels(args.enterprise, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.labelsService.getEnterpriseLabels(args.enterprise, {
           page: args.page,
           perPage: args.perPage
         });
       
       case 'get_labels_list':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.labelsService.getEnterpriseLabelsV8(args.enterprise, { page, perPage, search: args.search, direction: args.direction }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.labelsService.getEnterpriseLabelsV8(args.enterprise, {
           search: args.search,
           direction: args.direction,
