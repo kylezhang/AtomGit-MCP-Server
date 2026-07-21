@@ -31,7 +31,17 @@ export class RepositoriesTools {
             page: { type: 'number', description: '页码' },
             perPage: { type: 'number', description: '每页数量' },
             recursive: { type: 'number', description: '是否递归获取子目录，1 表示递归' },
-            file_path: { type: 'string', description: '文件路径过滤' }
+            file_path: { type: 'string', description: '文件路径过滤' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
+            }
           },
           required: ['owner', 'repo', 'sha']
         }
@@ -116,7 +126,17 @@ export class RepositoriesTools {
             ref_name: { type: 'string', description: '分支或标签名称' },
             file_name: { type: 'string', description: '文件名过滤' },
             page: { type: 'number', description: '页码，默认1' },
-            perPage: { type: 'number', description: '每页数量，默认30' }
+            perPage: { type: 'number', description: '每页数量，默认30' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
+            }
           },
           required: ['owner', 'repo']
         }
@@ -344,7 +364,17 @@ export class RepositoriesTools {
             perPage: { type: 'number', description: '每页数量，默认30' },
             sort: { type: 'string', description: '排序字段' },
             created_after: { type: 'string', description: '创建时间起始' },
-            created_before: { type: 'string', description: '创建时间截止' }
+            created_before: { type: 'string', description: '创建时间截止' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
+            }
           },
           required: ['owner', 'repo']
         }
@@ -391,7 +421,17 @@ export class RepositoriesTools {
             page: { type: 'number', description: '页码' },
             perPage: { type: 'number', description: '每页数量' },
             watched_after: { type: 'string', description: '关注开始时间' },
-            watched_before: { type: 'string', description: '关注截止时间' }
+            watched_before: { type: 'string', description: '关注截止时间' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
+            }
           },
           required: ['owner', 'repo']
         }
@@ -407,7 +447,17 @@ export class RepositoriesTools {
             page: { type: 'number', description: '页码' },
             perPage: { type: 'number', description: '每页数量' },
             starred_after: { type: 'string', description: 'Star 开始时间' },
-            starred_before: { type: 'string', description: 'Star 截止时间' }
+            starred_before: { type: 'string', description: 'Star 截止时间' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
+            }
           },
           required: ['owner', 'repo']
         }
@@ -607,7 +657,17 @@ export class RepositoriesTools {
             before: { type: 'string', description: '结束时间' },
             after: { type: 'string', description: '开始时间' },
             page: { type: 'number', description: '页码' },
-            perPage: { type: 'number', description: '每页数量' }
+            perPage: { type: 'number', description: '每页数量' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
+            }
           },
           required: ['owner', 'repo']
         }
@@ -624,7 +684,15 @@ export class RepositoriesTools {
             perPage: stringOrNumberSchema('每页的数量，最大为 100，默认 20'),
             sort: { type: 'string', description: '排序字段 created 或 comment_size' },
             direction: { type: 'string', description: '排序方向 asc 或 desc' },
-            search: { type: 'string', description: '根据标题和描述搜索' }
+            search: { type: 'string', description: '根据标题和描述搜索' },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制')
+            }
           },
           required: ['owner', 'repo']
         }
@@ -781,6 +849,12 @@ export class RepositoriesTools {
         });
       
       case 'get_repository_file_list':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.service.getRepositoryFileList(args.owner, args.repo, args.path, args.ref, page, perPage, args.ref_name ?? args.refName, args.file_name ?? args.fileName),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.service.getRepositoryFileList(
           args.owner,
           args.repo,
@@ -879,6 +953,12 @@ export class RepositoriesTools {
         });
       
       case 'get_repository_forks':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.service.getRepositoryForks(args.owner, args.repo, page, perPage, args.sort, args.created_after ?? args.createdAfter, args.created_before ?? args.createdBefore),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.service.getRepositoryForks(
           args.owner,
           args.repo,
@@ -901,6 +981,12 @@ export class RepositoriesTools {
         });
       
       case 'get_repository_subscribers':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.service.getRepositorySubscribers(args.owner, args.repo, page, perPage, args.watched_after ?? args.watchedAfter, args.watched_before ?? args.watchedBefore),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.service.getRepositorySubscribers(
           args.owner,
           args.repo,
@@ -911,6 +997,12 @@ export class RepositoriesTools {
         );
       
       case 'get_repository_stargazers':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.service.getRepositoryStargazers(args.owner, args.repo, page, perPage, args.starred_after ?? args.starredAfter, args.starred_before ?? args.starredBefore),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.service.getRepositoryStargazers(
           args.owner,
           args.repo,
@@ -1006,6 +1098,14 @@ export class RepositoriesTools {
         });
       
       case 'get_repository_events':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.service.getRepositoryEvents(args.owner, args.repo, {
+              filter: args.filter, author: args.author, before: args.before, after: args.after, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.service.getRepositoryEvents(args.owner, args.repo, {
           filter: args.filter,
           author: args.author,
@@ -1016,6 +1116,14 @@ export class RepositoriesTools {
         });
 
       case 'get_repository_discussions':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.service.getRepositoryDiscussions(args.owner, args.repo, {
+              page, perPage, sort: args.sort, direction: args.direction, search: args.search
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.service.getRepositoryDiscussions(args.owner, args.repo, {
           page: args.page,
           perPage: args.perPage,
