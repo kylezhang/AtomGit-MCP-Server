@@ -550,12 +550,6 @@ export class EnterpriseTools {
         return await this.enterpriseService.getOrganizationEnterprise(args.org);
       
       case 'get_enterprise_customized_roles_v8':
-        if (args.autoPaginate) {
-          return autoPaginate(
-            (page, perPage) => this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise_id ?? args.enterpriseId),
-            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
-          );
-        }
         return await this.enterpriseService.getEnterpriseCustomizedRoles(args.enterprise_id ?? args.enterpriseId);
       
       case 'create_enterprise_milestone_v8':

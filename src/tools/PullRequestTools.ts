@@ -121,6 +121,16 @@ export class PullRequestTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo']
@@ -316,6 +326,16 @@ export class PullRequestTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo', 'number']
@@ -398,6 +418,16 @@ export class PullRequestTools {
             comment_type: {
               type: 'string',
               description: 'Comment type filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo', 'number']
@@ -430,6 +460,16 @@ export class PullRequestTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo', 'number']
@@ -514,6 +554,14 @@ export class PullRequestTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -575,6 +623,16 @@ export class PullRequestTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo', 'number']
@@ -733,6 +791,16 @@ export class PullRequestTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['owner', 'repo', 'number']
@@ -1213,6 +1281,14 @@ export class PullRequestTools {
             emoji_name: {
               type: 'string',
               description: 'Emoji filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'number']
@@ -1242,6 +1318,14 @@ export class PullRequestTools {
             emoji_name: {
               type: 'string',
               description: 'Emoji filter'
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
             }
           },
           required: ['owner', 'repo', 'comment_id']
@@ -1349,6 +1433,16 @@ export class PullRequestTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
+            },
+            autoPaginate: {
+              type: 'boolean',
+              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
+              default: false
+            },
+            maxPages: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+              description: '自动分页时的最大页数限制（默认 100）',
+              default: 100
             }
           },
           required: ['enterprise']
@@ -1445,6 +1539,24 @@ export class PullRequestTools {
 
     switch (name) {
       case 'get_repository_pulls':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getRepositoryPulls(args.owner, args.repo, {
+              state: args.state, base: args.base, since: args.since, direction: args.direction,
+              sort: args.sort, milestone_number: args.milestone_number ?? args.milestoneNumber,
+              labels: args.labels, author: args.author, assignee: args.assignee,
+              reviewer: args.reviewer, merged_after: args.merged_after ?? args.mergedAfter,
+              merged_before: args.merged_before ?? args.mergedBefore,
+              only_count: args.only_count ?? args.onlyCount,
+              created_after: args.created_after ?? args.createdAfter,
+              created_before: args.created_before ?? args.createdBefore,
+              updated_before: args.updated_before ?? args.updatedBefore,
+              updated_after: args.updated_after ?? args.updatedAfter,
+              page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getRepositoryPulls(
           args.owner,
           args.repo,
@@ -1508,6 +1620,12 @@ export class PullRequestTools {
         return await this.pullRequestService.getRepositoryPullMergeStatus(args.owner, args.repo, number);
 
       case 'get_repository_pull_issues':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getRepositoryPullIssues(args.owner, args.repo, number, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getRepositoryPullIssues(args.owner, args.repo, number, {
           page: args.page,
           perPage: args.perPage
@@ -1523,6 +1641,12 @@ export class PullRequestTools {
         });
 
       case 'get_repository_pull_comments':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getRepositoryPullComments(args.owner, args.repo, number, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getRepositoryPullComments(
           args.owner,
           args.repo,
@@ -1536,6 +1660,12 @@ export class PullRequestTools {
         );
 
       case 'get_repository_pull_files':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getRepositoryPullFiles(args.owner, args.repo, number, page, perPage),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getRepositoryPullFiles(
           args.owner,
           args.repo,
@@ -1558,6 +1688,12 @@ export class PullRequestTools {
         });
 
       case 'get_repository_pull_commits':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getRepositoryPullCommits(args.owner, args.repo, number, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getRepositoryPullCommits(
           args.owner,
           args.repo,
@@ -1599,6 +1735,12 @@ export class PullRequestTools {
         });
 
       case 'get_repository_pull_operate_logs':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getRepositoryPullOperateLogs(args.owner, args.repo, number, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getRepositoryPullOperateLogs(
           args.owner,
           args.repo,
@@ -1697,6 +1839,12 @@ export class PullRequestTools {
         return await this.pullRequestService.updatePullRequestDiscussionComment(args.owner, args.repo, number, discussionId, { resolved: args.resolved });
       
       case 'get_pull_request_reactions':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getPullRequestReactions(args.owner, args.repo, number, { page, perPage, emoji_name: args.emoji_name ?? args.emojiName }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getPullRequestReactions(args.owner, args.repo, number, {
           page: args.page,
           perPage: args.perPage,
@@ -1704,6 +1852,12 @@ export class PullRequestTools {
         });
       
       case 'get_pull_request_comment_reactions':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getPullRequestCommentReactions(args.owner, args.repo, commentId, { page, perPage, emoji_name: args.emoji_name ?? args.emojiName }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getPullRequestCommentReactions(args.owner, args.repo, commentId, {
           page: args.page,
           perPage: args.perPage,
@@ -1717,6 +1871,21 @@ export class PullRequestTools {
         return await this.pullRequestService.getPullRequestCommentModifyHistory(args.owner, args.repo, commentId);
       
       case 'get_enterprise_pull_requests':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getEnterprisePullRequests(args.enterprise, {
+              state: args.state, issue_number: args.issue_number ?? args.issueNumber,
+              sort: args.sort, direction: args.direction, base: args.base,
+              author: args.author, search: args.search,
+              created_after: args.created_after ?? args.createdAfter,
+              created_before: args.created_before ?? args.createdBefore,
+              updated_before: args.updated_before ?? args.updatedBefore,
+              updated_after: args.updated_after ?? args.updatedAfter,
+              labels: args.labels, page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getEnterprisePullRequests(args.enterprise, {
           state: args.state,
           issue_number: args.issue_number ?? args.issueNumber,
@@ -1735,6 +1904,20 @@ export class PullRequestTools {
         });
       
       case 'get_organization_pull_requests':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getOrganizationPullRequests(args.org, {
+              state: args.state, sort: args.sort, direction: args.direction,
+              base: args.base, author: args.author, search: args.search,
+              created_after: args.created_after ?? args.createdAfter,
+              created_before: args.created_before ?? args.createdBefore,
+              updated_before: args.updated_before ?? args.updatedBefore,
+              updated_after: args.updated_after ?? args.updatedAfter,
+              page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getOrganizationPullRequests(args.org, {
           state: args.state,
           sort: args.sort,
