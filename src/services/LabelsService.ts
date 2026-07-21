@@ -55,7 +55,14 @@ export class LabelsService extends BaseService {
   }
 
   async createRepositoryLabel(owner: string, repo: string, labelData: LabelPayload): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/labels`, labelData);
+    const color = labelData.color?.startsWith('#') ? labelData.color : `#${labelData.color || 'ededed'}`;
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/labels`, null, {
+      params: {
+        name: labelData.name,
+        color,
+        description: labelData.description
+      }
+    });
     return response.data;
   }
 
