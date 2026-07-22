@@ -28,7 +28,7 @@ export class LabelsService extends BaseService {
   }
   
   async replaceRepositoryProjectLabels(owner: string, repo: string, labels: string[]): Promise<any[]> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/project_labels`, { labels });
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/project_labels`, labels);
     return response.data;
   }
 
@@ -38,7 +38,7 @@ export class LabelsService extends BaseService {
   }
 
   async replaceRepositoryIssueAllLabels(owner: string, repo: string, issueNumber: string | number, labels: string[]): Promise<any[]> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, { labels });
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/labels`, labels);
     return response.data;
   }
 
