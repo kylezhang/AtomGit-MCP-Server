@@ -6,6 +6,11 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ListResourceTemplatesRequestSchema,
+  ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { config } from 'dotenv';
 import { AxiosError } from 'axios';
@@ -51,6 +56,8 @@ import { AIHubTools } from './tools/AIHubTools.js';
 import { ActionsTools } from './tools/ActionsTools.js';
 import { ToolRegistry } from './core/ToolRegistry.js';
 import { ToolSafetyPolicy } from './core/ToolSafetyPolicy.js';
+import { ResourceProvider } from './core/ResourceProvider.js';
+import { PromptProvider } from './core/PromptProvider.js';
 
 // Load environment variables
 config();
@@ -86,6 +93,8 @@ class AtomGitMCPServer {
   private server: Server;
   private registry: ToolRegistry;
   private safetyPolicy: ToolSafetyPolicy;
+  private resourceProvider: ResourceProvider;
+  private promptProvider: PromptProvider;
 
   constructor() {
     this.server = new Server(
@@ -96,6 +105,8 @@ class AtomGitMCPServer {
       {
         capabilities: {
           tools: {},
+          resources: {},
+          prompts: {},
         },
       }
     );
@@ -111,25 +122,55 @@ class AtomGitMCPServer {
       token: ATOMGIT_TOKEN,
     };
 
+    // Create service instances once for reuse
+    const reposService = new RepositoriesService(serviceConfig);
+    const branchService = new BranchService(serviceConfig);
+    const issuesService = new IssuesService(serviceConfig);
+    const searchService = new SearchService(serviceConfig);
+    const pullRequestService = new PullRequestService(serviceConfig);
+    const commitService = new CommitService(serviceConfig);
+    const tagService = new TagService(serviceConfig);
+    const labelsService = new LabelsService(serviceConfig);
+    const milestoneService = new MilestoneService(serviceConfig);
+    const userService = new UserService(serviceConfig);
+    const organizationService = new OrganizationService(serviceConfig);
+    const webhooksService = new WebhooksService(serviceConfig);
+    const memberService = new MemberService(serviceConfig);
+    const releaseService = new ReleaseService(serviceConfig);
+    const enterpriseService = new EnterpriseService(serviceConfig);
+    const dashboardService = new DashboardService(serviceConfig);
+    const aiHubService = new AIHubService(serviceConfig);
+    const actionsService = new ActionsService(serviceConfig);
+
     // Register all tool classes to registry
-    this.registry.registerTools(new RepositoriesTools(new RepositoriesService(serviceConfig)));
-    this.registry.registerTools(new BranchTools(new BranchService(serviceConfig)));
-    this.registry.registerTools(new IssuesTools(new IssuesService(serviceConfig)));
-    this.registry.registerTools(new SearchTools(new SearchService(serviceConfig)));
-    this.registry.registerTools(new PullRequestTools(new PullRequestService(serviceConfig)));
-    this.registry.registerTools(new CommitTools(new CommitService(serviceConfig)));
-    this.registry.registerTools(new TagTools(new TagService(serviceConfig)));
-    this.registry.registerTools(new LabelsTools(new LabelsService(serviceConfig)));
-    this.registry.registerTools(new MilestoneTools(new MilestoneService(serviceConfig)));
-    this.registry.registerTools(new UserTools(new UserService(serviceConfig)));
-    this.registry.registerTools(new OrganizationTools(new OrganizationService(serviceConfig)));
-    this.registry.registerTools(new WebhooksTools(new WebhooksService(serviceConfig)));
-    this.registry.registerTools(new MemberTools(new MemberService(serviceConfig)));
-    this.registry.registerTools(new ReleaseTools(new ReleaseService(serviceConfig)));
-    this.registry.registerTools(new EnterpriseTools(new EnterpriseService(serviceConfig)));
-    this.registry.registerTools(new DashboardTools(new DashboardService(serviceConfig)));
-    this.registry.registerTools(new AIHubTools(new AIHubService(serviceConfig)));
-    this.registry.registerTools(new ActionsTools(new ActionsService(serviceConfig)));
+    this.registry.registerTools(new RepositoriesTools(reposService));
+    this.registry.registerTools(new BranchTools(branchService));
+    this.registry.registerTools(new IssuesTools(issuesService));
+    this.registry.registerTools(new SearchTools(searchService));
+    this.registry.registerTools(new PullRequestTools(pullRequestService));
+    this.registry.registerTools(new CommitTools(commitService));
+    this.registry.registerTools(new TagTools(tagService));
+    this.registry.registerTools(new LabelsTools(labelsService));
+    this.registry.registerTools(new MilestoneTools(milestoneService));
+    this.registry.registerTools(new UserTools(userService));
+    this.registry.registerTools(new OrganizationTools(organizationService));
+    this.registry.registerTools(new WebhooksTools(webhooksService));
+    this.registry.registerTools(new MemberTools(memberService));
+    this.registry.registerTools(new ReleaseTools(releaseService));
+    this.registry.registerTools(new EnterpriseTools(enterpriseService));
+    this.registry.registerTools(new DashboardTools(dashboardService));
+    this.registry.registerTools(new AIHubTools(aiHubService));
+    this.registry.registerTools(new ActionsTools(actionsService));
+
+    // Initialize resource and prompt providers (reuse existing service instances)
+    this.resourceProvider = new ResourceProvider(
+      reposService,
+      issuesService,
+      pullRequestService,
+      commitService,
+      userService
+    );
+    this.promptProvider = new PromptProvider();
 
     console.error(
       `✅ Safe mode: ${ATOMGIT_ENABLE_DANGEROUS_TOOLS ? 'disabled' : 'enabled'}, ${this.registry.size} tools registered, ${this.registry.blockedSize} dangerous tools skipped`
@@ -190,6 +231,51 @@ class AtomGitMCPServer {
             }
           ]
         };
+      }
+    });
+
+    // Resource handlers
+    this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
+      return {
+        resources: this.resourceProvider.listResources(),
+      };
+    });
+
+    this.server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
+      return {
+        resourceTemplates: this.resourceProvider.listResourceTemplates(),
+      };
+    });
+
+    this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+      try {
+        const content = await this.resourceProvider.readResource(request.params.uri);
+        return {
+          contents: [content],
+        };
+      } catch (error) {
+        console.error('Error reading resource:', error);
+        throw new Error(`Resource read error: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    });
+
+    // Prompt handlers
+    this.server.setRequestHandler(ListPromptsRequestSchema, async () => {
+      return {
+        prompts: this.promptProvider.listPrompts(),
+      };
+    });
+
+    this.server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+      try {
+        const result = this.promptProvider.getPrompt(request.params.name, request.params.arguments ?? {});
+        return {
+          description: result.description,
+          messages: result.messages,
+        };
+      } catch (error) {
+        console.error('Error getting prompt:', error);
+        throw new Error(`Prompt error: ${error instanceof Error ? error.message : String(error)}`);
       }
     });
   }

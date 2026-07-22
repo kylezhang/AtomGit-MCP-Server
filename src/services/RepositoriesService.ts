@@ -222,6 +222,11 @@ export class RepositoriesService extends BaseService {
     return response.data;
   }
 
+  async getRepository(owner: string, repo: string): Promise<AtomGitRepository> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}`);
+    return response.data;
+  }
+
   async updateRepositorySettings(
     owner: string,
     repo: string,
