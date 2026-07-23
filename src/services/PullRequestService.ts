@@ -332,7 +332,7 @@ export class PullRequestService extends BaseService {
   }
 
   async createRepositoryPullLabel(owner: string, repo: string, pullNumber: string | number, labels: string[]): Promise<any> {
-    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, labels);
     return response.data;
   }
 
@@ -342,7 +342,7 @@ export class PullRequestService extends BaseService {
   }
 
   async replaceRepositoryPullLabels(owner: string, repo: string, pullNumber: string | number, labels: string[]): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, { labels });
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, labels);
     return response.data;
   }
 
