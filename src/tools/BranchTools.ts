@@ -1,6 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { BranchService } from '../services/BranchService.js';
-import { autoPaginate } from '../core/PaginationHelper.js';
+import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
 export class BranchTools {
   constructor(private branchService: BranchService) { }
@@ -39,16 +39,7 @@ export class BranchTools {
               type: 'number',
               description: 'Number of results per page'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }

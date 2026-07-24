@@ -1,6 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { EnterpriseService } from '../services/EnterpriseService.js';
-import { autoPaginate } from '../core/PaginationHelper.js';
+import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -54,16 +54,7 @@ export class EnterpriseTools {
               type: 'string',
               description: '成员角色过滤'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise']
         }
@@ -153,16 +144,7 @@ export class EnterpriseTools {
               type: 'number',
               description: '每页数量'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise_id']
         }
@@ -286,14 +268,7 @@ export class EnterpriseTools {
               type: 'string',
               description: '排序方向'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise']
         }
@@ -320,16 +295,7 @@ export class EnterpriseTools {
               type: 'string',
               description: '项目组名称'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise']
         }
@@ -354,14 +320,7 @@ export class EnterpriseTools {
             perPage: {
               ...stringOrNumberSchema('每页数量')
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise_id']
         }
@@ -379,16 +338,7 @@ export class EnterpriseTools {
             page: { type: 'number', description: '页码' },
             perPage: { type: 'number', description: '每页数量' },
             labels: { type: 'string', description: '标签，多个按英文逗号隔开' },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            },
+            ...autoPaginateSchemaProperties,
             sort: { type: 'string', description: '排序字段' },
             direction: { type: 'string', description: '排序方向' },
             since: { type: 'string', description: '起始更新时间' },

@@ -29,7 +29,7 @@ export async function autoPaginate<T>(
   options: PaginationOptions = {}
 ): Promise<T[]> {
   const page = Number(options.page ?? 1);
-  const perPage = Number(options.perPage ?? options.per_page ?? 20);
+  const perPage = Number(options.perPage ?? options.per_page ?? 30);
   const maxPages = options.maxPages ?? 100;
 
   // If auto-pagination is not enabled, just fetch the requested page

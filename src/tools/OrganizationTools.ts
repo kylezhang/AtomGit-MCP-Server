@@ -1,6 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { OrganizationService } from '../services/OrganizationService.js';
-import { autoPaginate } from '../core/PaginationHelper.js';
+import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -112,16 +112,7 @@ export class OrganizationTools {
               type: 'number',
               description: '每页数量 (可选)'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['org']
         }
@@ -142,14 +133,7 @@ export class OrganizationTools {
             perPage: {
               ...stringOrNumberSchema('每页数量 (可选)')
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['username']
         }
@@ -170,14 +154,7 @@ export class OrganizationTools {
               type: 'boolean',
               description: '仅返回管理员组织'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: []
         }
@@ -307,16 +284,7 @@ export class OrganizationTools {
               type: 'string',
               description: '成员角色过滤'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['org']
         }
@@ -347,16 +315,7 @@ export class OrganizationTools {
               type: 'string',
               description: '成员角色过滤'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise', 'org']
         }
@@ -423,16 +382,7 @@ export class OrganizationTools {
               type: 'number',
               description: '每页数量 (可选)'
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              oneOf: [{ type: 'string' }, { type: 'number' }],
-              description: '自动分页时的最大页数限制（默认 100）',
-              default: 100
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner']
         }

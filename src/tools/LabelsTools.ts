@@ -1,6 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { LabelsService } from '../services/LabelsService.js';
-import { autoPaginate } from '../core/PaginationHelper.js';
+import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -36,14 +36,7 @@ export class LabelsTools {
             perPage: {
               ...stringOrNumberSchema('每页数量', 30)
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
         }
@@ -184,14 +177,7 @@ export class LabelsTools {
             perPage: {
               ...stringOrNumberSchema('每页数量', 30)
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise']
         }
@@ -220,14 +206,7 @@ export class LabelsTools {
             perPage: {
               ...stringOrNumberSchema('每页数量', 30)
             },
-            autoPaginate: {
-              type: 'boolean',
-              description: '是否自动获取所有页（默认 false，设为 true 时自动获取全部数据）',
-              default: false
-            },
-            maxPages: {
-              ...stringOrNumberSchema('自动分页时的最大页数限制', 100)
-            }
+            ...autoPaginateSchemaProperties,
           },
           required: ['enterprise']
         }
