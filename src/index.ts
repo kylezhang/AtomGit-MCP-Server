@@ -34,6 +34,7 @@ import { IssuesService } from './services/IssuesService.js';
 import { PullRequestService } from './services/PullRequestService.js';
 import { RepositoriesService } from './services/RepositoriesService.js';
 import { ActionsService } from './services/ActionsService.js';
+import { ClaService } from './services/ClaService.js';
 
 // Import all category tools
 import { RepositoriesTools } from './tools/RepositoriesTools.js';
@@ -54,6 +55,7 @@ import { EnterpriseTools } from './tools/EnterpriseTools.js';
 import { DashboardTools } from './tools/DashboardTools.js';
 import { AIHubTools } from './tools/AIHubTools.js';
 import { ActionsTools } from './tools/ActionsTools.js';
+import { ClaTools } from './tools/ClaTools.js';
 import { ToolRegistry } from './core/ToolRegistry.js';
 import { ToolSafetyPolicy } from './core/ToolSafetyPolicy.js';
 import { ResourceProvider } from './core/ResourceProvider.js';
@@ -141,6 +143,7 @@ class AtomGitMCPServer {
     const dashboardService = new DashboardService(serviceConfig);
     const aiHubService = new AIHubService(serviceConfig);
     const actionsService = new ActionsService(serviceConfig);
+    const claService = new ClaService(serviceConfig);
 
     // Register all tool classes to registry
     this.registry.registerTools(new RepositoriesTools(reposService));
@@ -161,6 +164,7 @@ class AtomGitMCPServer {
     this.registry.registerTools(new DashboardTools(dashboardService));
     this.registry.registerTools(new AIHubTools(aiHubService));
     this.registry.registerTools(new ActionsTools(actionsService));
+    this.registry.registerTools(new ClaTools(claService));
 
     // Initialize resource and prompt providers (reuse existing service instances)
     this.resourceProvider = new ResourceProvider(
