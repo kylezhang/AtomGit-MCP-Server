@@ -1,5 +1,5 @@
 {
-  "totalEndpoints": 279,
+  "totalEndpoints": 286,
   "categories": [
     {
       "name": "AI hub",
@@ -51,7 +51,7 @@
     },
     {
       "name": "Actions",
-      "endpointCount": 19,
+      "endpointCount": 23,
       "endpoints": [
         {
           "name": "删除指定 Artifact",
@@ -114,6 +114,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-artifacts-artifact-id"
         },
         {
+          "name": "获取仓库的流水线列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/workflows",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-workflows"
+        },
+        {
           "name": "获取仓库所有的流水线的运行记录",
           "httpMethod": "GET",
           "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs",
@@ -166,6 +172,24 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v8/repos/:owner/:repo/actions/artifacts/:artifact_id/:archive_format",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-artifacts-artifact-id-archive-format"
+        },
+        {
+          "name": "查询工作流Job的Step级日志",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/jobs/:job_id/logs",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-runs-run-id-jobs-job-id-logs"
+        },
+        {
+          "name": "手动运行流水线",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/workflows/:workflow_id/dispatches",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-workflows-workflow-id-dispatches"
+        },
+        {
+          "name": "校验 Workflow YAML",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/workflows/validate",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-workflows-validate"
         }
       ]
     },
@@ -777,7 +801,7 @@
     },
     {
       "name": "Organizations",
-      "endpointCount": 23,
+      "endpointCount": 22,
       "endpoints": [
         {
           "name": "退出一个组织",
@@ -900,12 +924,6 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-org-org"
         },
         {
-          "name": "创建组织仓库",
-          "httpMethod": "POST",
-          "endpointPath": "/api/v5/orgs/:org/repos",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-orgs-org-repos"
-        },
-        {
           "name": "邀请组织成员",
           "httpMethod": "POST",
           "endpointPath": "/api/v5/orgs/:org/memberships/:username",
@@ -921,7 +939,7 @@
     },
     {
       "name": "Pull Requests",
-      "endpointCount": 44,
+      "endpointCount": 45,
       "endpoints": [
         {
           "name": "取消用户测试Pull Request",
@@ -1140,6 +1158,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-discussions-discussions-id-comments"
         },
         {
+          "name": "刷新Pull Request评论位置/过期状态",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/repos/:owner/:repo/pulls/:number/refresh_position",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-refresh-position"
+        },
+        {
           "name": "提交pull request 评论",
           "httpMethod": "POST",
           "endpointPath": "/api/v5/repos/:owner/:repo/pulls/:number/comments",
@@ -1251,7 +1275,7 @@
     },
     {
       "name": "Repositories",
-      "endpointCount": 45,
+      "endpointCount": 48,
       "endpoints": [
         {
           "name": "删除文件",
@@ -1350,6 +1374,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-license"
         },
         {
+          "name": "获取仓库CLA列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/clas",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-clas"
+        },
+        {
           "name": "获取文件列表",
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/file_list",
@@ -1434,6 +1464,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-transfer"
         },
         {
+          "name": "创建仓库",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/orgs/:org/repos",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-orgs-org-repos"
+        },
+        {
           "name": "上传图片",
           "httpMethod": "POST",
           "endpointPath": "/api/v5/repos/:owner/:repo/img/upload",
@@ -1498,6 +1534,12 @@
           "httpMethod": "PUT",
           "endpointPath": "/api/v5/repos/:owner/:repo/members/:username",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-members-username"
+        },
+        {
+          "name": "配置项目 CLA",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/repos/:owner/:repo/cla",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-clas"
         },
         {
           "name": "设置项目模块",

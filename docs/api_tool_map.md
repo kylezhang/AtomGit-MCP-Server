@@ -1,8 +1,8 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-07-17
-**分类总数:** 18
-**工具总数:** 279
+**生成时间:** 2026-08-10
+**分类总数:** 19
+**工具总数:** 286
 
 ## 概览
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
@@ -14,10 +14,11 @@
 
 ## 映射表
 
-### Actions (19)
+### Actions (23)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`delete_repository_actions_artifact`](../src/tools/ActionsTools.ts) | 删除指定 Artifact | [`deleteRepositoryActionsArtifact`](../src/services/ActionsService.ts) | [`DELETE /api/v8/repos/${owner}/${repo}/actions/artifacts/${artifactId}`](https://docs.atomgit.com/docs/apis/delete-api-v-8-repos-owner-repo-actions-artifacts-artifact-id) |
+| [`dispatch_repository_actions_workflow`](../src/tools/ActionsTools.ts) | **手动运行流水线**<br>手动运行流水线。仅当 workflow 的 on 中声明了 workflow_dispatch 触发器时才可手动触发 | [`dispatchRepositoryActionsWorkflow`](../src/services/ActionsService.ts) | [`POST /api/v8/repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches`](https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-workflows-workflow-id-dispatches) |
 | [`download_repository_actions_artifact`](../src/tools/ActionsTools.ts) | 下载指定 Artifact | [`downloadRepositoryActionsArtifact`](../src/services/ActionsService.ts) | [`GET /api/v8/repos/${owner}/${repo}/actions/artifacts/${artifactId}/${archiveFormat}`](https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-artifacts-artifact-id-archive-format) |
 | [`download_repository_actions_run_job_log`](../src/tools/ActionsTools.ts) | 下载工作流运行的job日志 | [`downloadRepositoryActionsRunJobLog`](../src/services/ActionsService.ts) | [`GET /api/v8/repos/${owner}/${repo}/actions/runs/${runId}/jobs/${jobId}/download_log`](https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs-run-id-jobs-job-id-download-log) |
 | [`get_organization_actions_runner_group`](../src/tools/ActionsTools.ts) | 获取指定 Runner Group 的详细信息 | [`getOrganizationActionsRunnerGroup`](../src/services/ActionsService.ts) | [`GET /api/v8/orgs/${org}/actions/runner-groups/${runnerGroupId}`](https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-groups-runner-group-id) |
@@ -36,6 +37,9 @@
 | [`get_repository_actions_runs`](../src/tools/ActionsTools.ts) | 获取仓库所有的流水线的运行记录 | [`getRepositoryActionsRuns`](../src/services/ActionsService.ts) | [`GET /api/v8/repos/${owner}/${repo}/actions/runs`](https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runs) |
 | [`get_repository_actions_shared_runner_sets`](../src/tools/ActionsTools.ts) | 查询分享给仓库的所有 K8S Runner | [`getRepositoryActionsSharedRunnerSets`](../src/services/ActionsService.ts) | [`GET /api/v8/repos/${owner}/${repo}/actions/shared-runner-sets`](https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-shared-runner-sets) |
 | [`get_repository_actions_shared_runners`](../src/tools/ActionsTools.ts) | 查询分享给仓库的所有主机 Runner | [`getRepositoryActionsSharedRunners`](../src/services/ActionsService.ts) | [`GET /api/v8/repos/${owner}/${repo}/actions/runners/shared-runners`](https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-runners-shared-runners) |
+| [`get_repository_actions_workflows`](../src/tools/ActionsTools.ts) | 获取仓库的流水线列表 | [`getRepositoryActionsWorkflows`](../src/services/ActionsService.ts) | [`GET /api/v8/repos/${owner}/${repo}/actions/workflows`](https://docs.atomgit.com/docs/apis/get-api-v-8-repos-owner-repo-actions-workflows) |
+| [`query_repository_actions_job_step_logs`](../src/tools/ActionsTools.ts) | **查询工作流Job的Step级日志**<br>查询工作流 Job 的 Step 级日志。不传 stepId 返回整个 Job 的日志，传 stepId 返回指定 Step 的日志（step id 可通过 get_repository_actions_run_job 的 steps 数组获取） | [`queryRepositoryActionsJobStepLogs`](../src/services/ActionsService.ts) | [`POST /api/v8/repos/${owner}/${repo}/actions/runs/${runId}/jobs/${jobId}/logs`](https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-runs-run-id-jobs-job-id-logs) |
+| [`validate_repository_actions_workflow`](../src/tools/ActionsTools.ts) | **校验 Workflow YAML**<br>校验 Workflow YAML 语法。注意 AtomGit Actions 方言要求：每个 step 必须有 name 字段；on 需写结构化形式（如 on.push.branches），裸写 on: push 会报错 | [`validateRepositoryActionsWorkflow`](../src/services/ActionsService.ts) | [`POST /api/v8/repos/${owner}/${repo}/actions/workflows/validate`](https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-workflows-validate) |
 
 ### Branch (8)
 | Tool Name | Description | Service Method | API Endpoint |
@@ -166,7 +170,7 @@
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`create_organization`](../src/tools/OrganizationTools.ts) | 创建组织 | [`createOrganization`](../src/services/OrganizationService.ts) | [`POST /api/v5/orgs`](https://docs.atomgit.com/docs/apis/post-api-v-5-org-org) |
-| [`create_organization_repository`](../src/tools/OrganizationTools.ts) | **创建组织仓库**<br>为组织创建仓库 | [`createOrganizationRepository`](../src/services/OrganizationService.ts) | [`POST /api/v5/orgs/${org}/repos`](https://docs.atomgit.com/docs/apis/post-api-v-5-orgs-org-repos) |
+| [`create_organization_repository`](../src/tools/OrganizationTools.ts) | **创建仓库**<br>为组织创建仓库 | [`createOrganizationRepository`](../src/services/OrganizationService.ts) | [`POST /api/v5/orgs/${org}/repos`](https://docs.atomgit.com/docs/apis/post-api-v-5-orgs-org-repos) |
 | [`get_current_user_organization_membership`](../src/tools/OrganizationTools.ts) | 获取授权用户在一个组织的成员资料 | [`getCurrentUserOrganizationMembership`](../src/services/OrganizationService.ts) | [`GET /api/v5/user/memberships/orgs/${org}`](https://docs.atomgit.com/docs/apis/get-api-v-5-user-memberships-orgs-org) |
 | [`get_current_user_organizations`](../src/tools/OrganizationTools.ts) | 列出授权用户所属的组织 | [`getCurrentUserOrganizations`](../src/services/OrganizationService.ts) | [`GET /api/v5/users/orgs`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-orgs) |
 | [`get_enterprise_member`](../src/tools/OrganizationTools.ts) | 获取企业的一个成员 | [`getEnterpriseMember`](../src/services/OrganizationService.ts) | [`GET /api/v5/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members-username) |
@@ -317,7 +321,13 @@
 | [`video_generation_create`](../src/tools/AIHubTools.ts) | **图像生成视频（创建任务）**<br>AI图像生成视频 - 创建任务 (Image to Video Generation - Create Task) | [`videoGenerate`](../src/services/AIHubService.ts) | [`POST /api/v5/video/generate`](https://docs.atomgit.com/docs/apis/post-api-v-5-video-generate) |
 | [`video_generation_status`](../src/tools/AIHubTools.ts) | **图像生成视频（查询状态）**<br>AI图像生成视频 - 查询状态 (Image to Video Generation - Query Status) | [`videoStatus`](../src/services/AIHubService.ts) | [`POST /api/v5/video/status`](https://docs.atomgit.com/docs/apis/post-api-v-5-video-status) |
 
-### PullRequest (44)
+### Cla (2)
+| Tool Name | Description | Service Method | API Endpoint |
+|-----------|-------------|----------------|--------------|
+| [`configure_repository_cla`](../src/tools/ClaTools.ts) | **配置项目 CLA**<br>为仓库配置 CLA 协议。传入 cla_id 设置指定协议；不传或传空则清空仓库的 CLA 配置。cla_id 需由用户提供（来自 AtomGit CLA 协议目录，当前目录接口未开放）。 | [`configureRepositoryCla`](../src/services/ClaService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/cla`](https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-clas) |
+| [`get_repository_clas`](../src/tools/ClaTools.ts) | **获取仓库CLA列表**<br>获取仓库已配置的 CLA（贡献者许可协议）列表 | [`getRepositoryClas`](../src/services/ClaService.ts) | [`GET /api/v5/repos/${owner}/${repo}/clas`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-clas) |
+
+### PullRequest (45)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`assign_repository_pull_approval_reviewers`](../src/tools/PullRequestTools.ts) | **指派用户评审Pull Request**<br>Assign users to approve pull request | [`assignRepositoryPullApprovalReviewers`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/reviewers`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers) |
@@ -354,6 +364,7 @@
 | [`merge_repository_pull`](../src/tools/PullRequestTools.ts) | **合并Pull Request**<br>Merge a pull request | [`mergeRepositoryPull`](../src/services/PullRequestService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/merge`](https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-merge) |
 | [`process_repository_pull_review`](../src/tools/PullRequestTools.ts) | **处理 Pull Request审查**<br>Process pull request review | [`processRepositoryPullReview`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/review`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-review) |
 | [`process_repository_pull_test`](../src/tools/PullRequestTools.ts) | **处理 Pull Request测试**<br>Process pull request test | [`processRepositoryPullTest`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/test`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-test) |
+| [`refresh_repository_pull_position`](../src/tools/PullRequestTools.ts) | **刷新Pull Request评论位置/过期状态**<br>Refresh the position and expired state of comments on a pull request, returns the refreshed note ids | [`refreshRepositoryPullPosition`](../src/services/PullRequestService.ts) | [`POST /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/refresh_position`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-refresh-position) |
 | [`remove_repository_pull_approval_reviewers`](../src/tools/PullRequestTools.ts) | **取消用户评审Pull Request**<br>Remove approval reviewers from pull request | [`removeRepositoryPullApprovalReviewers`](../src/services/PullRequestService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/reviewers`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-approval-reviewers) |
 | [`remove_repository_pull_assignees`](../src/tools/PullRequestTools.ts) | **取消用户审查 Pull Request**<br>Remove assignees from pull request | [`removeRepositoryPullAssignees`](../src/services/PullRequestService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/assignees`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-assignees) |
 | [`remove_repository_pull_testers`](../src/tools/PullRequestTools.ts) | **取消用户测试Pull Request**<br>Remove testers from pull request | [`removeRepositoryPullTesters`](../src/services/PullRequestService.ts) | [`DELETE /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/testers`](https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-pulls-number-testers) |
