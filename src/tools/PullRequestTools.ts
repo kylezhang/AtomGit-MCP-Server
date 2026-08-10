@@ -294,6 +294,25 @@ export class PullRequestTools {
         }
       },
       {
+        name: 'refresh_repository_pull_position',
+        description: 'Refresh the position and expired state of comments on a pull request, returns the refreshed note ids',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of the repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of the repository'
+            },
+            number: stringOrNumberSchema('The number of pull request')
+          },
+          required: ['owner', 'repo', 'number']
+        }
+      },
+      {
         name: 'get_repository_pull_issues',
         description: 'Get issues associated with a pull request',
         inputSchema: {
@@ -1534,6 +1553,9 @@ export class PullRequestTools {
 
       case 'get_repository_pull_merge_status':
         return await this.pullRequestService.getRepositoryPullMergeStatus(args.owner, args.repo, number);
+
+      case 'refresh_repository_pull_position':
+        return await this.pullRequestService.refreshRepositoryPullPosition(args.owner, args.repo, number);
 
       case 'get_repository_pull_issues':
         if (args.autoPaginate) {
