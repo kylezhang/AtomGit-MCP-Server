@@ -368,6 +368,12 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
+  async refreshRepositoryPullPosition(owner: string, repo: string, pullNumber: string | number): Promise<any> {
+    // AtomGit 该端点拒绝空 body 的 POST，必须携带 JSON 对象（可为空）
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/refresh_position`, {});
+    return response.data;
+  }
+
   async unlinkRepositoryPullIssues(owner: string, repo: string, pullNumber: string | number, issues: number[]): Promise<any> {
     const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`, { data: { issues } });
     return response.data;
