@@ -55,8 +55,10 @@ export class ClaTools {
 
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
-      case 'get_repository_clas':
-        return await this.claService.getRepositoryClas(args.owner, args.repo);
+      case 'get_repository_clas': {
+        const result = await this.claService.getRepositoryClas(args.owner, args.repo);
+        return result?.data ?? [];
+      }
       case 'configure_repository_cla':
         return await this.claService.configureRepositoryCla(args.owner, args.repo, args.claId);
       default:
