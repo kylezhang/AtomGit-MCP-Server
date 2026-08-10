@@ -132,6 +132,58 @@ export class ActionsTools {
         }
       },
       {
+        name: 'get_repository_actions_workflows',
+        description: '获取仓库的流水线列表',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ...repoPathProperties,
+            ...paginationProperties
+          },
+          required: ['owner', 'repo']
+        }
+      },
+      {
+        name: 'validate_repository_actions_workflow',
+        description:
+          '校验 Workflow YAML 语法。注意 AtomGit Actions 方言要求：每个 step 必须有 name 字段；on 需写结构化形式（如 on.push.branches），裸写 on: push 会报错',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ...repoPathProperties,
+            yamlContent: {
+              type: 'string',
+              description: 'Workflow YAML 明文内容（服务端会自动做 base64 编码）'
+            }
+          },
+          required: ['owner', 'repo', 'yamlContent']
+        }
+      },
+      {
+        name: 'dispatch_repository_actions_workflow',
+        description:
+          '手动运行流水线。仅当 workflow 的 on 中声明了 workflow_dispatch 触发器时才可手动触发',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ...repoPathProperties,
+            workflowId: {
+              type: 'string',
+              description: '流水线 id（可通过 get_repository_actions_workflows 获取）'
+            },
+            ref: {
+              type: 'string',
+              description: '触发运行的分支或 tag'
+            },
+            inputs: {
+              type: 'object',
+              description: 'workflow_dispatch 定义的输入参数（键值均为字符串）'
+            }
+          },
+          required: ['owner', 'repo', 'workflowId', 'ref']
+        }
+      },
+      {
         name: 'get_repository_actions_runs',
         description: '获取仓库所有的流水线的运行记录',
         inputSchema: {
@@ -251,6 +303,30 @@ export class ActionsTools {
             jobId: {
               type: 'string',
               description: '任务id'
+            }
+          },
+          required: ['owner', 'repo', 'runId', 'jobId']
+        }
+      },
+      {
+        name: 'query_repository_actions_job_step_logs',
+        description:
+          '查询工作流 Job 的 Step 级日志。不传 stepId 返回整个 Job 的日志，传 stepId 返回指定 Step 的日志（step id 可通过 get_repository_actions_run_job 的 steps 数组获取）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ...repoPathProperties,
+            runId: {
+              type: 'string',
+              description: '流水线运行id'
+            },
+            jobId: {
+              type: 'string',
+              description: '任务id'
+            },
+            stepId: {
+              type: 'string',
+              description: '步骤id（可选，不传则返回整个 Job 的日志）'
             }
           },
           required: ['owner', 'repo', 'runId', 'jobId']
@@ -428,6 +504,38 @@ export class ActionsTools {
       case 'delete_repository_actions_artifact':
         return await this.actionsService.deleteRepositoryActionsArtifact(args.owner, args.repo, args.artifactId);
 
+      case 'get_repository_actions_workflows':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            async (page, perPage) => {
+              const data = await this.actionsService.getRepositoryActionsWorkflows(args.owner, args.repo, {
+                keyword: args.keyword,
+                page,
+                per_page: perPage
+              });
+              return data?.workflows ?? [];
+            },
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
+        return await this.actionsService.getRepositoryActionsWorkflows(args.owner, args.repo, {
+          keyword: args.keyword,
+          page: args.page,
+          per_page: args.perPage
+        });
+
+      case 'validate_repository_actions_workflow':
+        return await this.actionsService.validateRepositoryActionsWorkflow(args.owner, args.repo, args.yamlContent);
+
+      case 'dispatch_repository_actions_workflow':
+        return await this.actionsService.dispatchRepositoryActionsWorkflow(
+          args.owner,
+          args.repo,
+          args.workflowId,
+          args.ref,
+          args.inputs
+        );
+
       case 'get_repository_actions_runs':
         if (args.autoPaginate) {
           return autoPaginate(
@@ -473,6 +581,15 @@ export class ActionsTools {
 
       case 'download_repository_actions_run_job_log':
         return await this.actionsService.downloadRepositoryActionsRunJobLog(args.owner, args.repo, args.runId, args.jobId);
+
+      case 'query_repository_actions_job_step_logs':
+        return await this.actionsService.queryRepositoryActionsJobStepLogs(
+          args.owner,
+          args.repo,
+          args.runId,
+          args.jobId,
+          args.stepId
+        );
 
       case 'get_repository_actions_runners':
         return await this.actionsService.getRepositoryActionsRunners(args.owner, args.repo, {

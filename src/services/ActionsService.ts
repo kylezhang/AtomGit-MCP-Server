@@ -204,4 +204,60 @@ export class ActionsService extends BaseService {
     );
     return response.data;
   }
+
+  async getRepositoryActionsWorkflows(
+    owner: string,
+    repo: string,
+    options: ActionsPaginationOptions = {}
+  ): Promise<any> {
+    const response = await this.client.get(`/api/v8/repos/${owner}/${repo}/actions/workflows`, {
+      params: this.buildParams(options)
+    });
+    return response.data;
+  }
+
+  async validateRepositoryActionsWorkflow(owner: string, repo: string, yamlContent: string): Promise<any> {
+    // AtomGit 要求字段名为 base64_content（snake_case），官方报错文案中的 base64content 是误导
+    const base64Content = Buffer.from(yamlContent, 'utf-8').toString('base64');
+    const response = await this.client.post(`/api/v8/repos/${owner}/${repo}/actions/workflows/validate`, {
+      base64_content: base64Content
+    });
+    return response.data;
+  }
+
+  async dispatchRepositoryActionsWorkflow(
+    owner: string,
+    repo: string,
+    workflowId: string,
+    ref: string,
+    inputs?: Record<string, string>
+  ): Promise<any> {
+    const body: Record<string, unknown> = { ref };
+    if (inputs && Object.keys(inputs).length > 0) {
+      body.inputs = inputs;
+    }
+    const response = await this.client.post(
+      `/api/v8/repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches`,
+      body
+    );
+    return response.data;
+  }
+
+  async queryRepositoryActionsJobStepLogs(
+    owner: string,
+    repo: string,
+    runId: string,
+    jobId: string,
+    stepId?: string
+  ): Promise<any> {
+    const body: Record<string, unknown> = {};
+    if (stepId) {
+      body.step_id = stepId;
+    }
+    const response = await this.client.post(
+      `/api/v8/repos/${owner}/${repo}/actions/runs/${runId}/jobs/${jobId}/logs`,
+      body
+    );
+    return response.data;
+  }
 }
