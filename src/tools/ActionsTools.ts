@@ -402,7 +402,10 @@ export class ActionsTools {
       case 'get_repository_actions_artifacts':
         if (args.autoPaginate) {
           return autoPaginate(
-            (page, perPage) => this.actionsService.getRepositoryActionsArtifacts(args.owner, args.repo, { name: args.name, sort: args.sort, direction: args.direction, page, per_page: perPage }),
+            async (page, perPage) => {
+              const data = await this.actionsService.getRepositoryActionsArtifacts(args.owner, args.repo, { name: args.name, sort: args.sort, direction: args.direction, page, per_page: perPage });
+              return data?.artifacts ?? [];
+            },
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
           );
         }
@@ -431,7 +434,10 @@ export class ActionsTools {
       case 'get_repository_actions_runs':
         if (args.autoPaginate) {
           return autoPaginate(
-            (page, perPage) => this.actionsService.getRepositoryActionsRuns(args.owner, args.repo, { event: args.event, status: args.status, branch: args.branch, executor: args.executor, pull_request_id: args.pull_request_id, workflow_id: args.workflow_id, workflow_name: args.workflow_name, page: page.toString(), per_page: perPage.toString() }),
+            async (page, perPage) => {
+              const data = await this.actionsService.getRepositoryActionsRuns(args.owner, args.repo, { event: args.event, status: args.status, branch: args.branch, executor: args.executor, pull_request_id: args.pull_request_id, workflow_id: args.workflow_id, workflow_name: args.workflow_name, page: page.toString(), per_page: perPage.toString() });
+              return data?.workflow_runs ?? [];
+            },
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
           );
         }
@@ -453,7 +459,10 @@ export class ActionsTools {
       case 'get_repository_actions_run_artifacts':
         if (args.autoPaginate) {
           return autoPaginate(
-            (page, perPage) => this.actionsService.getRepositoryActionsRunArtifacts(args.owner, args.repo, args.runId, { name: args.name, sort: args.sort, direction: args.direction, page, per_page: perPage }),
+            async (page, perPage) => {
+              const data = await this.actionsService.getRepositoryActionsRunArtifacts(args.owner, args.repo, args.runId, { name: args.name, sort: args.sort, direction: args.direction, page, per_page: perPage });
+              return data?.artifacts ?? [];
+            },
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
           );
         }
