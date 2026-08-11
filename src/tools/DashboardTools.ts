@@ -173,7 +173,11 @@ export class DashboardTools {
       case 'get_organization_kanbans':
         if (args.autoPaginate) {
           return autoPaginate(
-            (page, perPage) => this.dashboardService.getOrganizationKanbanList(args.owner, args.status, args.sort, args.visibility, args.search, page, perPage),
+            async (page, perPage) => {
+              const data = await this.dashboardService.getOrganizationKanbanList(args.owner, args.status, args.sort, args.visibility, args.search, page, perPage);
+              // API 返回信封 {close_count, open_count, all_count, content}，autoPaginate 需要纯数组
+              return Array.isArray(data) ? data : (data?.content ?? []);
+            },
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
           );
         }

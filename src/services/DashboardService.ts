@@ -9,7 +9,7 @@ export class DashboardService extends BaseService {
     search?: string,
     page?: string | number,
     perPage?: string | number
-  ): Promise<any[]> {
+  ): Promise<any> {
     const response = await this.client.get(`/api/v5/org/${owner}/kanban/list`, {
       params: {
         status,
