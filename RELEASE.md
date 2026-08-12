@@ -2,21 +2,12 @@
 
 本文档用于说明 `@atomgit.com/atomgit-mcp-server` 的日常发版流程。
 
-当前发布链路：
-
-- 源码仓库：AtomGit
-- GitHub Mirror：`kylezhang/AtomGit-MCP-Server`
-- npm 包：`@atomgit.com/atomgit-mcp-server`
-- 自动发布方式：GitHub Actions + npm Trusted Publishing
-
 ## 发布前提
 
 发布前请确认以下条件已经满足：
 
 - 需要发布的代码已经提交到默认分支
-- GitHub mirror 已同步最新代码
-- npm 包已配置 Trusted Publishing
-- GitHub Actions 工作流文件存在：`.github/workflows/publish.yml`
+- 已确认当前最新版本号（`npm view @atomgit.com/atomgit-mcp-server version`），新版本号不与已发布版本冲突
 
 ## 版本策略
 
@@ -49,45 +40,24 @@ npm version major
 标准发布流程如下：
 
 ```bash
-git push
-git push --tags
+git push origin main
+git push origin --tags
 ```
 
 更完整的推荐流程：
 
 ```bash
 npm version patch
-git push
-git push --tags
+git push origin main
+git push origin --tags
 ```
 
 说明：
 
+- 所有推送仅针对 AtomGit（origin）
 - `git push` 用于推送版本提交
 - `git push --tags` 用于推送发布标签
-- GitHub Actions 会在收到 `v*` 标签后自动执行发布
-
-## 自动发布工作流
-
-当前发布工作流位于：
-
-- `.github/workflows/publish.yml`
-
-工作流会执行以下步骤：
-
-1. 检出仓库代码
-2. 配置 Node.js 与 npm registry
-3. 校验 Git tag 与 `package.json` 版本一致
-4. 安装依赖
-5. 执行 `npm run typecheck`
-6. 执行 `npm run build`
-7. 执行 `npm pack --dry-run`
-8. 执行 `npm publish --provenance`
-
-发布状态可在以下页面查看：
-
-- GitHub Actions: <https://github.com/kylezhang/AtomGit-MCP-Server/actions>
-- npm package: <https://www.npmjs.com/package/@atomgit.com/atomgit-mcp-server>
+- 打 tag 后发布自动完成，无需其他操作
 
 ## 发布完成后的检查
 
@@ -110,45 +80,31 @@ npm view @atomgit.com/atomgit-mcp-server version
 例如：
 
 - `1.0.0` 已发布成功
-- `1.0.1` 对应的 GitHub Actions 发布失败
+- `1.0.1` 发布失败
 
 此时建议直接发布下一个版本：
 
 ```bash
 npm version patch
-git push
-git push --tags
+git push origin main
+git push origin --tags
 ```
 
 这样会生成例如 `1.0.2`，并继续自动发布。
 
 不建议通过删除 tag 并重发同一版本来恢复发布，除非有明确的版本管理要求。
 
-## 不需要发布 npm 包的情况
+## 不需要发版的情况
 
-以下变更通常不必单独发布 npm 新版本：
+以下变更通常不必单独发版：
 
-- 仅修改仓库内部说明文档，且这些文档不会进入 npm 包
-- 仅修改本地开发辅助内容，不影响 npm 包使用者
+- 仅修改仓库内部说明文档，且不影响使用者
+- 仅修改本地开发辅助内容，不影响使用者
 
 以下情况建议发布新版本：
 
 - 用户可见功能发生变化
 - MCP 工具、输入、输出或行为发生变化
 - `npx` 使用方式、构建产物、依赖或打包结果发生变化
-- 需要让 npm 页面同步新的 README 内容
+- 需要让使用者看到更新后的 README
 - 修复影响实际使用的问题
-
-## 安全建议
-
-当前推荐使用：
-
-- npm Trusted Publishing
-- Publishing access 选择最严格选项：
-  `Require two-factor authentication and disallow tokens`
-
-这样可以：
-
-- 保留 GitHub Actions 自动发布能力
-- 禁止传统 token 发布
-- 降低凭据泄露风险

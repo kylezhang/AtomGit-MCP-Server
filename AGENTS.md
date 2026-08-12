@@ -1,7 +1,7 @@
 # AtomGit MCP Server — Developer Guide
 
 **Status:** Maintained — single entry point covering architecture, coding standards, and the full change-to-release process.
-Release mechanics (bump, tag, npm publish) live in [RELEASE.md](./RELEASE.md).
+Release mechanics (bump, tag) live in [RELEASE.md](./RELEASE.md).
 
 ## 1. Project Overview
 AtomGit MCP Server is a Model Context Protocol (MCP) server implementation that provides AI assistants with access to the AtomGit code hosting platform.
@@ -153,7 +153,7 @@ Before writing any code, verify every new endpoint with curl. Never guess from d
 - [ ] **PR carries the label matching its Issue** (historically the most frequently missed item)
 - [ ] Pagination and building-block reuse checked against section 3
 - [ ] build + E2E passed
-- [ ] Branch pushed to both remotes (origin AtomGit + GitHub mirror)
+- [ ] Branch pushed to origin (AtomGit)
 
 ### 4.8 Review (Iron Rule)
 - After submitting the PR, **wait for explicit maintainer approval before merging. Never self-merge.**
@@ -164,11 +164,10 @@ Execute per [RELEASE.md](./RELEASE.md):
 1. Merge the PR; confirm/add the PR label.
 2. Bump the version (commit `chore(release): X.Y.Z — summary (#N)`).
 3. **Tag deduplication**: local `git tag -l` + remote `git ls-remote --tags` (v2.2.0 incident rule: tags are only created, never deleted).
-4. Push both remotes (main and tag to origin + github).
-5. GitHub Actions OIDC publishes to npm automatically (never publish manually).
-6. Create the AtomGit Release (changes grouped by category, with `(#N)` references).
-7. Close the linked Issue with a minimal comment: "Fixed in vX.Y.Z (commit hash)".
-8. **E2E acceptance**: verify the real version of the running process → call the changed tools against the published version → clean up test fixtures.
+4. Push main and tag to origin (AtomGit).
+5. Create the AtomGit Release (changes grouped by category, with `(#N)` references).
+6. Close the linked Issue with a minimal comment: "Fixed in vX.Y.Z (commit hash)".
+7. **E2E acceptance**: verify the real version of the running process → call the changed tools against the published version → clean up test fixtures.
 
 ## 5. External PR Review Workflow (Scenario B)
 
@@ -225,10 +224,9 @@ PR received → Formal check (Issue/labels/description) → Code review → Loca
 ## 8. Iron Rules
 
 1. Tags are only created, never deleted (v2.2.0 incident).
-2. Never publish to npm manually — GitHub Actions OIDC only.
-3. Never self-merge a PR — explicit review approval is required.
-4. High-risk operations that mutate remote state (pushing tags, pushing RELEASE docs, force-style commands) require maintainer confirmation first.
-5. Label Issues/PRs at creation; unlabeled means the workflow has not started.
+2. Never self-merge a PR — explicit review approval is required.
+3. High-risk operations that mutate remote state (pushing tags, pushing RELEASE docs, force-style commands) require maintainer confirmation first.
+4. Label Issues/PRs at creation; unlabeled means the workflow has not started.
 
 ## 9. Workflow
 
@@ -288,6 +286,6 @@ Notes:
 9. Review the final `git diff`
 
 ## 11. Reference
-- [RELEASE.md](./RELEASE.md): release runbook — version bump, tag deduplication, OIDC publishing, acceptance, failure recovery
+- [RELEASE.md](./RELEASE.md): release runbook — version bump, tag deduplication, acceptance, failure recovery
 - [API to Tool Mapping](docs/api_tool_map.md): generated source of truth for public tool-to-doc mapping
 - [Synced API Definitions](docs/apis_url.json): filtered official documentation inventory
