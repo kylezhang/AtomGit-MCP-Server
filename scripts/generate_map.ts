@@ -56,6 +56,7 @@ const KNOWN_VARS = new Set([
 ]);
 
 const MANUAL_OVERRIDES: Record<string, string> = {
+  'get_repository_raw_file': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-raw-path',
   'get_repository_pull_approval_reviewer_options': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-reviewers',
   'get_repository_pull_tester_options': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-testers',
   'assign_repository_pull_approval_reviewers': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers',
@@ -88,7 +89,7 @@ const MANUAL_ENDPOINT_OVERRIDES: Record<string, string> = {
     'getRepositoryCommitStatistics': 'GET /api/v5/${owner}/${repo}/repository/commit_statistics',
     'getRepositoryTree': 'GET /api/v5/repos/${owner}/${repo}/git/trees/${sha}',
     'deleteEnterpriseMembers': 'DELETE /api/v8/enterprises/${enterprise}/members/${username}',
-    'getRepositoryPullFileContent': 'GET /${owner}/${repo}/raw/${head_sha}/${name}',
+    'getRepositoryPullFileContent': 'GET /api/v5/repos/${owner}/${repo}/raw/${name}',
     'downloadReleaseAsset': 'GET /api/v5/repos/${owner}/${repo}/releases/${tag}/attach_files/${file_name}/download'
 };
 
