@@ -393,7 +393,7 @@ export interface UpdateMilestoneRequest {
 export interface CreateTagRequest {
   tag_name: string;
   refs: string;
-  message?: string;
+  tag_message?: string;
 }
 
 export interface CreateProtectedTagRequest {
