@@ -1028,7 +1028,7 @@
         {
           "name": "获取文件内容",
           "httpMethod": "GET",
-          "endpointPath": "/:owner/:repo/raw/:head_sha/:name",
+          "endpointPath": "/api/v5/repos/:owner/:repo/raw/:path",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name"
         },
         {

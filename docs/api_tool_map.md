@@ -1,6 +1,6 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-08-10
+**生成时间:** 2026-08-12
 **分类总数:** 19
 **工具总数:** 286
 
@@ -351,7 +351,7 @@
 | [`get_repository_pull_approval_reviewer_options`](../src/tools/PullRequestTools.ts) | **获取可作为Pull Request评审人列表**<br>Get available approval reviewers for pull request | [`getRepositoryPullApprovalReviewerOptions`](../src/services/PullRequestService.ts) | [`GET /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/option_reviewers`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-reviewers) |
 | [`get_repository_pull_comments`](../src/tools/PullRequestTools.ts) | **获取某个Pull Request的所有评论**<br>Get all comments on a pull request | [`getRepositoryPullComments`](../src/services/PullRequestService.ts) | [`GET /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/comments`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-comments) |
 | [`get_repository_pull_commits`](../src/tools/PullRequestTools.ts) | **获取某Pull Request的所有Commit信息**<br>Get commits in a pull request | [`getRepositoryPullCommits`](../src/services/PullRequestService.ts) | [`GET /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/commits`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-commits) |
-| [`get_repository_pull_file_content`](../src/tools/PullRequestTools.ts) | **获取文件内容**<br>Get file content from pull request | [`getRepositoryPullFileContent`](../src/services/PullRequestService.ts) | [`GET /${owner}/${repo}/raw/${head_sha}/${name}`](https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name) |
+| [`get_repository_pull_file_content`](../src/tools/PullRequestTools.ts) | **获取文件内容**<br>Get file content from pull request | [`getRepositoryPullFileContent`](../src/services/PullRequestService.ts) | [`GET /api/v5/repos/${owner}/${repo}/raw/${name}`](https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name) |
 | [`get_repository_pull_files`](../src/tools/PullRequestTools.ts) | **Pull Request Commit文件列表**<br>Get files changed in a pull request | [`getRepositoryPullFiles`](../src/services/PullRequestService.ts) | [`GET /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-files) |
 | [`get_repository_pull_files_json`](../src/tools/PullRequestTools.ts) | **pr提交的文件变更信息**<br>Get pull request file changes information | [`getRepositoryPullFilesJson`](../src/services/PullRequestService.ts) | [`GET /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/files.json`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-files-json) |
 | [`get_repository_pull_issues`](../src/tools/PullRequestTools.ts) | **获取pr关联的issue**<br>Get issues associated with a pull request | [`getRepositoryPullIssues`](../src/services/PullRequestService.ts) | [`GET /api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/issues`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-issues) |
