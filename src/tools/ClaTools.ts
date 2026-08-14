@@ -1,5 +1,6 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { ClaService } from '../services/ClaService.js';
+import { repoPathProperties } from '../schemas/common.js';
 
 export class ClaTools {
   private claService: ClaService;
@@ -16,14 +17,7 @@ export class ClaTools {
         inputSchema: {
           type: 'object',
           properties: {
-            owner: {
-              type: 'string',
-              description: '仓库所有者用户名或组织名'
-            },
-            repo: {
-              type: 'string',
-              description: '仓库名称'
-            }
+            ...repoPathProperties
           },
           required: ['owner', 'repo']
         }
@@ -34,14 +28,7 @@ export class ClaTools {
         inputSchema: {
           type: 'object',
           properties: {
-            owner: {
-              type: 'string',
-              description: '仓库所有者用户名或组织名'
-            },
-            repo: {
-              type: 'string',
-              description: '仓库名称'
-            },
+            ...repoPathProperties,
             claId: {
               type: 'string',
               description: 'CLA 协议 ID；留空则清空仓库当前 CLA 配置'

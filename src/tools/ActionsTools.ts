@@ -1,41 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { ActionsService } from '../services/ActionsService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
-
-const stringOrNumberSchema = (description: string) => ({
-  oneOf: [
-    { type: 'string' },
-    { type: 'number' }
-  ],
-  description
-});
-
-const repoPathProperties = {
-  owner: {
-    type: 'string',
-    description: '仓库所属空间地址(组织或个人的地址path)'
-  },
-  repo: {
-    type: 'string',
-    description: '仓库路径(path)'
-  }
-};
-
-const paginationProperties = {
-  keyword: {
-    type: 'string',
-    description: '关键字过滤'
-  },
-  page: {
-    type: 'number',
-    description: '当前页码'
-  },
-  perPage: {
-    type: 'number',
-    description: '每页的项目数'
-  },
-  ...autoPaginateSchemaProperties,
-};
+import { stringOrNumberSchema, repoPathProperties, paginationProperties } from '../schemas/common.js';
 
 const artifactListProperties = {
   name: {

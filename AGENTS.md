@@ -68,9 +68,9 @@ AtomGit-MCP-Server/
   - Use camelCase service method names such as `getRepositoryTree`.
 
 ### Pagination & Auto-Pagination (mandatory for list tools)
-- List tools must plug into the pagination system: schema exposes `page` / `perPage` via `paginationProperties` + `autoPaginateSchemaProperties`, and the `callTool` branch wires up `autoPaginate`.
+- List tools must plug into the pagination system: schema exposes `page` / `perPage` via `paginationProperties` (from `src/schemas/common.ts`, which includes `autoPaginateSchemaProperties`), and the `callTool` branch wires up `autoPaginate`.
 - The `autoPaginate` fetcher **must return a plain array**. If the API responds with an envelope (`{total_count, xxx}` or `{data: [...]}`), unwrap it inside the fetcher (e.g. `data?.workflows ?? []`). Returning the envelope crashes with a TypeError as soon as `autoPaginate: true` is requested.
-- Reuse existing building blocks before writing new ones: `repoPathProperties`, `paginationProperties`, `stringOrNumberSchema`, `buildParams`, `BaseService`.
+- Reuse existing building blocks before writing new ones. Shared schema fragments live in `src/schemas/common.ts` (`repoPathProperties`, `paginationProperties` — which already spreads `autoPaginateSchemaProperties` from `src/core/PaginationHelper.ts`, `stringOrNumberSchema`), plus `buildParams`, `BaseService`. List tools that need `page` / `perPage` should spread `paginationProperties` or `autoPaginateSchemaProperties` directly instead of re-declaring them inline.
 
 ### Public Surface Rule
 Keep these four layers aligned:
