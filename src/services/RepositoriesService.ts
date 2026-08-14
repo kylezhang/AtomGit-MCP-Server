@@ -148,7 +148,7 @@ export class RepositoriesService extends BaseService {
   }
 
   async getRepositoryContent(owner: string, repo: string, path: string = '', ref?: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contents/${path}`, {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/contents/${this.encodePath(path)}`, {
       params: ref ? { ref } : {}
     });
     return response.data;
@@ -156,7 +156,7 @@ export class RepositoriesService extends BaseService {
 
   async createRepositoryFile(owner: string, repo: string, fileData: CreateFileRequest): Promise<any> {
     const response = await this.client.post(
-      `/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`,
+      `/api/v5/repos/${owner}/${repo}/contents/${this.encodePath(fileData.path)}`,
       this.withEncodedContent(fileData)
     );
     return response.data;
@@ -164,14 +164,14 @@ export class RepositoriesService extends BaseService {
 
   async updateRepositoryFile(owner: string, repo: string, fileData: UpdateFileRequest): Promise<any> {
     const response = await this.client.put(
-      `/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`,
+      `/api/v5/repos/${owner}/${repo}/contents/${this.encodePath(fileData.path)}`,
       this.withEncodedContent(fileData)
     );
     return response.data;
   }
 
   async deleteRepositoryFile(owner: string, repo: string, fileData: DeleteFileRequest): Promise<any> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/contents/${fileData.path}`, {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/contents/${this.encodePath(fileData.path)}`, {
       data: fileData
     });
     return response.data;
@@ -410,7 +410,7 @@ export class RepositoriesService extends BaseService {
   }
 
   async getRepositoryRawFile(owner: string, repo: string, path: string, ref?: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${path}`, {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${this.encodePath(path)}`, {
       params: ref ? { ref } : {},
       responseType: 'text'
     });

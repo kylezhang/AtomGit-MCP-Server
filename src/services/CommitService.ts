@@ -119,7 +119,7 @@ export class CommitService extends BaseService {
   }
 
   async getRepositoryCommitRefComments(owner: string, repo: string, ref: string, options: PaginationOptions = {}): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${ref}/comments`, {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/commits/${this.encodeName(ref)}/comments`, {
       params: this.buildParams(options)
     });
     return response.data;

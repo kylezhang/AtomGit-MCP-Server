@@ -35,12 +35,12 @@ export class BranchService extends BaseService {
     return response.data;
   }
   async deleteRepositoryBranch(owner: string, repo: string, branch: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${this.encodeName(branch)}`);
     return response.data;
   }
 
   async getRepositoryBranch(owner: string, repo: string, branch: string): Promise<Branch> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches/${branch}`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/branches/${this.encodeName(branch)}`);
     return response.data;
   }
 
@@ -50,7 +50,7 @@ export class BranchService extends BaseService {
   }
 
   async deleteBranchProtectionRule(owner: string, repo: string, wildcard: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`);
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/branches/${this.encodePath(wildcard)}/setting`);
     return response.data;
   }
 
@@ -60,7 +60,7 @@ export class BranchService extends BaseService {
   }
 
   async updateBranchProtectionRule(owner: string, repo: string, wildcard: string, ruleData: BranchProtectionRuleUpdate): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/${wildcard}/setting`, ruleData);
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/branches/${this.encodePath(wildcard)}/setting`, ruleData);
     return response.data;
   }
 }
