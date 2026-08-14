@@ -181,7 +181,8 @@ export class UserTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
-            }
+            },
+            ...autoPaginateSchemaProperties,
           },
         }
       },
@@ -208,7 +209,8 @@ export class UserTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
-            }
+            },
+            ...autoPaginateSchemaProperties,
           },
           required: ['username']
         }
@@ -232,7 +234,8 @@ export class UserTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
-            }
+            },
+            ...autoPaginateSchemaProperties,
           }
         }
       },
@@ -255,7 +258,8 @@ export class UserTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
-            }
+            },
+            ...autoPaginateSchemaProperties,
           }
         }
       },
@@ -489,7 +493,8 @@ export class UserTools {
               type: 'number',
               description: 'Number of results per page',
               default: 30
-            }
+            },
+            ...autoPaginateSchemaProperties,
           }
         }
       },
@@ -589,7 +594,8 @@ export class UserTools {
             },
             perPage: {
               ...stringOrNumberSchema('Number of results per page', 30)
-            }
+            },
+            ...autoPaginateSchemaProperties,
           }
         }
       }
@@ -698,6 +704,12 @@ export class UserTools {
         });
       
       case 'get_current_user_namespaces':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getCurrentUserNamespaces({ mode: args.mode, page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getCurrentUserNamespaces({
           mode: args.mode,
           page: args.page,
@@ -762,6 +774,12 @@ export class UserTools {
         });
       
       case 'get_current_user_keys':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getCurrentUserKeys({ page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getCurrentUserKeys({
           page: args.page,
           perPage: args.perPage
@@ -777,6 +795,23 @@ export class UserTools {
         return await this.userService.getCurrentUserNamespace(args.path);
       
       case 'get_current_user_pull_requests':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getCurrentUserPullRequests({
+              state: args.state, sort: args.sort, direction: args.direction,
+              labels: args.labels,
+              created_after: args.created_after ?? args.createdAfter,
+              created_before: args.created_before ?? args.createdBefore,
+              updated_after: args.updated_after ?? args.updatedAfter,
+              updated_before: args.updated_before ?? args.updatedBefore,
+              scope: args.scope,
+              source_branch: args.source_branch ?? args.sourceBranch,
+              target_branch: args.target_branch ?? args.targetBranch,
+              page, perPage
+            }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.userService.getCurrentUserPullRequests({
           state: args.state,
           sort: args.sort,

@@ -336,8 +336,10 @@ export class PullRequestService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryPullLabels(owner: string, repo: string, pullNumber: string | number): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`);
+  async getRepositoryPullLabels(owner: string, repo: string, pullNumber: string | number, options: PaginationOptions = {}): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/labels`, {
+      params: this.buildParams(options)
+    });
     return response.data;
   }
 

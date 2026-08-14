@@ -1440,7 +1440,8 @@ export class PullRequestTools {
             updated_after: {
               type: 'string',
               description: 'Updated after filter'
-            }
+            },
+            ...autoPaginateSchemaProperties,
           },
           required: ['org']
         }
@@ -1646,10 +1647,17 @@ export class PullRequestTools {
         return await this.pullRequestService.createRepositoryPullLabel(args.owner, args.repo, number, args.labels);
 
       case 'get_repository_pull_labels':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.pullRequestService.getRepositoryPullLabels(args.owner, args.repo, number, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.pullRequestService.getRepositoryPullLabels(
           args.owner,
           args.repo,
-          number
+          number,
+          { page: args.page, perPage: args.perPage }
         );
 
       case 'replace_repository_pull_labels':

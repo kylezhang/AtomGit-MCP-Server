@@ -744,6 +744,20 @@ export class RepositoriesTools {
   async callTool(name: string, args: any): Promise<any> {
     switch (name) {
       case 'get_repository_tree':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            async (page, perPage) => {
+              const data = await this.service.getRepositoryTree(args.owner, args.repo, args.sha, {
+                page,
+                perPage,
+                recursive: args.recursive,
+                file_path: args.file_path ?? args.filePath
+              });
+              return data?.tree ?? [];
+            },
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
         return await this.service.getRepositoryTree(args.owner, args.repo, args.sha, {
           page: args.page,
           perPage: args.perPage,
