@@ -386,7 +386,7 @@ export class PullRequestService extends BaseService {
 
   async getRepositoryPullFileContent(owner: string, repo: string, headSha: string, name: string): Promise<any> {
     // 与 getRepositoryRawFile 同端点：raw 内容只能走 /api/v5，web host 返回 HTML 壳
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${name}`, {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/raw/${this.encodePath(name)}`, {
       params: { ref: headSha },
       responseType: 'text'
     });

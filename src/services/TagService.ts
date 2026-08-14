@@ -19,7 +19,7 @@ export class TagService extends BaseService {
   }
 
   async deleteRepositoryTag(owner: string, repo: string, tagName: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/tags/${tagName}`);
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/tags/${this.encodeName(tagName)}`);
     return response.data;
   }
 
@@ -44,12 +44,12 @@ export class TagService extends BaseService {
   }
 
   async deleteRepositoryProtectedTag(owner: string, repo: string, tagName: string): Promise<void> {
-    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/protected_tags/${tagName}`);
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/protected_tags/${this.encodeName(tagName)}`);
     return response.data;
   }
 
   async getRepositoryProtectedTag(owner: string, repo: string, tagName: string): Promise<any> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protected_tags/${tagName}`);
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/protected_tags/${this.encodeName(tagName)}`);
     return response.data;
   }
 }
