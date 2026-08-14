@@ -317,7 +317,7 @@ export class IssuesTools {
               }
             }
           },
-          required: ['owner', 'repo', 'number', 'title', 'issue_severity']
+          required: ['owner', 'repo', 'number']
         }
       },
       {
