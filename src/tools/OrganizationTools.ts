@@ -317,7 +317,7 @@ export class OrganizationTools {
             },
             ...autoPaginateSchemaProperties,
           },
-          required: ['enterprise', 'org']
+          required: ['enterprise']
         }
       },
       {
