@@ -21,7 +21,7 @@ export class RepositoriesTools {
     return [
       {
         name: 'get_repository_tree',
-        description: '获取仓库目录Tree',
+        description: '获取仓库目录Tree。注意：当 autoPaginate=true 时返回纯数组（tree 条目列表）；否则返回 { tree, sha } 信封结构',
         inputSchema: {
           type: 'object',
           properties: {
