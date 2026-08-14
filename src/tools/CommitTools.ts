@@ -1,15 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { CommitService } from '../services/CommitService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
-
-const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
-  oneOf: [
-    { type: 'string' },
-    { type: 'number' }
-  ],
-  description,
-  ...(defaultValue !== undefined ? { default: defaultValue } : {})
-});
+import { stringOrNumberSchema } from '../schemas/common.js';
 
 export class CommitTools {
   constructor(private commitService: CommitService) {}
