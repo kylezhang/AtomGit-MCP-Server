@@ -4,7 +4,7 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
 ![Tools](https://img.shields.io/badge/tools-286-orange.svg)
 
-`@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae 等。
+`@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae、AtomCode 等。
 
 ## 主要特性
 
@@ -121,6 +121,39 @@ Windows 环境建议将 `command` 设置为 `npx.cmd`：
 
 如需恢复当前全量行为，可把 `ATOMGIT_ENABLE_DANGEROUS_TOOLS` 改为 `"true"` 并重启客户端。
 
+### 5. 在 AtomCode 中配置
+
+[AtomCode](https://atomcode.atomgit.com/) 通过项目根目录的 `.mcp.json`（或用户全局 `~/.atomcode/mcp.json`）接入 MCP server，配置块与 Cursor 生态兼容：
+
+```json
+{
+  // .mcp.json 支持 JSONC 注释
+  "mcpServers": {
+    "atomgit": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@atomgit.com/atomgit-mcp-server"
+      ],
+      "env": {
+        "ATOMGIT_TOKEN": "${ATOMGIT_TOKEN}",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
+      }
+    }
+  }
+}
+```
+
+说明：
+
+- 建议先将 Token 导出为环境变量，AtomCode 支持 `${VAR}` 与 `${VAR:-默认值}` 展开，避免把敏感 Token 写死在配置里。
+- 项目级 `.mcp.json` 中的 server 在项目被信任前不会自动拉起；启动后使用 `/mcp trust` 信任当前项目，配置变更后用 `/mcp reload` 重新连接。
+- 接入后远端工具会以 `mcp__atomgit__<工具名>` 的形式注册，例如 `mcp__atomgit__get_repository_tree`。
+- 也可以不手动编辑文件，直接用一行命令添加：`atomcode mcp add atomgit npx -y @atomgit.com/atomgit-mcp-server`
+- 如需开启危险工具，把 `ATOMGIT_ENABLE_DANGEROUS_TOOLS` 改为 `"true"` 并重新连接。
+
+更多配置说明参见 [AtomCode MCP 集成文档](https://atomcode.atomgit.com/docs/zh/index.html)。
+
 ## 开发测试
 
 如需参与开发、进行本地调试，或在 MCP 客户端中联调本地构建产物，可使用以下步骤：
@@ -138,18 +171,31 @@ node dist/index.js
 - `ATOMGIT_TOKEN`
 - `ATOMGIT_ENABLE_DANGEROUS_TOOLS=false`
 
-如需使用 `.env`，可先复制 `.env.example` 再填写；也可以直接通过 MCP 客户端或 shell 注入环境变量。
+可选环境变量：
+
+- `ATOMGIT_API_BASE_URL`：覆盖 API 基础地址，默认 `https://api.atomgit.com`，可用于自定义网关、代理或本地 mock。
+- `ATOMGIT_TIMEOUT_MS`：HTTP 请求超时（毫秒），默认不超时。
 
 ### Transport 接入方式
 
-- 默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
-- 如需远程接入，可设置 `ATOMGIT_TRANSPORT=http`（或 `sse`）启动 Streamable HTTP 端点，默认监听 `http://localhost:3000/mcp`，端口可通过 `ATOMGIT_PORT` 修改：
+默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
+
+如需远程接入，可设置 `ATOMGIT_TRANSPORT=http` 启动 Streamable HTTP 端点（兼容 SSE 流式响应），默认监听 `http://127.0.0.1:3000/mcp`：
 
 ```bash
 ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
 ```
 
-- 远程客户端（如支持 HTTP 的 MCP 客户端）配置 url 指向 `http://<host>:3000/mcp` 即可连接。
+远程客户端（如支持 HTTP 的 MCP 客户端）配置 url 指向 `http://<host>:3000/mcp` 即可连接。
+
+> ⚠️ 安全说明
+>
+> - 服务器持有 `ATOMGIT_TOKEN`，且**当前没有内置认证**：能访问该端口的人可全权操作用户账号。
+> - 默认绑定 `127.0.0.1`（仅本机可访问），可通过 `ATOMGIT_HOST` 修改监听地址。
+> - 如需暴露到公网，请务必自行加认证/反代/TLS（例如置于带认证的反向代理之后），不要直接以 `0.0.0.0` 暴露。
+> - `ATOMGIT_TRANSPORT=sse` 已移除：SDK 的旧式 `SSEServerTransport` 已废弃，`http` 模式即兼容 SSE 流式响应，请改用 `http`。
+
+如需使用 `.env`，可先复制 `.env.example` 再填写；也可以直接通过 MCP 客户端或 shell 注入环境变量。
 
 如需在 Claude Desktop 等 MCP 客户端中直接联调本地构建产物，可根据操作系统使用如下配置。
 
@@ -189,6 +235,25 @@ macOS / Linux 示例：
       ],
       "env": {
         "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
+      }
+    }
+  }
+}
+```
+
+在 AtomCode 中联调本地构建产物时，可参照同款配置，将 `command` 指向本地 `node` 与 `dist/index.js`，并放入项目根目录 `.mcp.json` 后执行 `/mcp trust` 与 `/mcp reload`：
+
+```json
+{
+  "mcpServers": {
+    "atomgit-dev": {
+      "command": "node",
+      "args": [
+        "/path/to/AtomGit-MCP-Server/dist/index.js"
+      ],
+      "env": {
+        "ATOMGIT_TOKEN": "${ATOMGIT_TOKEN}",
         "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
       }
     }
@@ -260,6 +325,48 @@ AtomGit-MCP-Server/
 ├── docs/            # 文档与 API 映射
 └── dist/            # 编译产物
 ```
+
+## MCP Resources 与 Prompts
+
+除工具外，本服务还实现了 MCP Resources（资源读取）与 Prompts（预置提示词），供支持 MCP 资源/提示词协议的客户端直接使用。
+
+### Resources
+
+资源列表（`resources/list`）：
+
+| URI | 说明 | MIME |
+|-----|------|------|
+| `atomgit://user` | 当前认证用户信息 | `application/json` |
+
+资源模板（`resources/templates/list`）：
+
+| URI 模板 | 说明 | MIME |
+|----------|------|------|
+| `atomgit://{owner}/{repo}` | 仓库信息 | `application/json` |
+| `atomgit://{owner}/{repo}/readme` | 仓库 README 内容 | `text/markdown` |
+| `atomgit://{owner}/{repo}/file/{path}` | 仓库内文件内容（path 支持多级，如 `src/index.ts`） | `text/plain` |
+| `atomgit://{owner}/{repo}/commit/{sha}` | 指定提交详情 | `application/json` |
+| `atomgit://{owner}/{repo}/issue/{number}` | 指定 Issue 详情 | `application/json` |
+| `atomgit://{owner}/{repo}/pull/{number}` | 指定 Pull Request 详情 | `application/json` |
+
+读取示例：`atomgit://jianguoxu/AtomGit-MCP-Server/readme` 返回该仓库的 README 内容。
+
+### Prompts
+
+预置提示词（`prompts/list`），客户端可直接引用，服务端会按参数组装为对 AI 的指令：
+
+| 名称 | 说明 | 主要参数 |
+|------|------|----------|
+| `create-repository` | 在 AtomGit 创建新仓库 | name（必填）、description、private、autoInit、gitignoreTemplate、licenseTemplate |
+| `create-issue` | 在仓库中创建 Issue | owner、repo、title（必填）、body、labels、assignee |
+| `create-pull-request` | 创建 Pull Request | owner、repo、title、head、base（必填）、body、draft |
+| `review-code` | 评审 PR 或提交代码 | owner、repo、number 或 sha |
+| `setup-ci` | 为仓库配置 CI/CD | owner、repo、workflowName |
+| `manage-collaborators` | 管理仓库协作者 | owner、repo、action（必填）、username、permission |
+| `search-code` | 搜索仓库/Issue/用户 | query（必填）、type、limit |
+| `manage-issues` | 查看并筛选仓库 Issue | owner、repo、state、labels、assignee、sort |
+
+调用示例：`prompts/get` 传入 `{"name": "create-issue", "arguments": {"owner": "jianguoxu", "repo": "demo", "title": "hello"}}`，即可获得组装好的用户提示。
 
 ## 相关链接
 
