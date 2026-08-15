@@ -140,6 +140,17 @@ node dist/index.js
 
 如需使用 `.env`，可先复制 `.env.example` 再填写；也可以直接通过 MCP 客户端或 shell 注入环境变量。
 
+### Transport 接入方式
+
+- 默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
+- 如需远程接入，可设置 `ATOMGIT_TRANSPORT=http`（或 `sse`）启动 Streamable HTTP 端点，默认监听 `http://localhost:3000/mcp`，端口可通过 `ATOMGIT_PORT` 修改：
+
+```bash
+ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
+```
+
+- 远程客户端（如支持 HTTP 的 MCP 客户端）配置 url 指向 `http://<host>:3000/mcp` 即可连接。
+
 如需在 Claude Desktop 等 MCP 客户端中直接联调本地构建产物，可根据操作系统使用如下配置。
 
 Windows 示例：

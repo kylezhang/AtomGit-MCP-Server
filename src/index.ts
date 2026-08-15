@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
 import { readFileSync } from 'node:fs';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -66,6 +70,8 @@ config();
 
 const API_BASE_URL = 'https://api.atomgit.com';
 const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
+const ATOMGIT_TRANSPORT = process.env.ATOMGIT_TRANSPORT || 'stdio';
+const ATOMGIT_PORT = Number(process.env.ATOMGIT_PORT || 3000);
 const ATOMGIT_ENABLE_DANGEROUS_TOOLS = parseBooleanEnv(process.env.ATOMGIT_ENABLE_DANGEROUS_TOOLS);
 const SERVER_VERSION = getServerVersion();
 
@@ -285,9 +291,56 @@ class AtomGitMCPServer {
   }
 
   async start() {
+    if (ATOMGIT_TRANSPORT === 'http' || ATOMGIT_TRANSPORT === 'sse') {
+      await this.startHttpServer();
+      return;
+    }
+
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     console.error('AtomGit MCP Server running on stdio');
+  }
+
+  private async startHttpServer(): Promise<void> {
+    let httpTransport: StreamableHTTPServerTransport | undefined;
+
+    const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+      const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+      if (url.pathname !== '/mcp') {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not Found');
+        return;
+      }
+
+      try {
+        if (!httpTransport) {
+          httpTransport = new StreamableHTTPServerTransport({
+            sessionIdGenerator: () => randomUUID(),
+          });
+          // The SDK's StreamableHTTPServerTransport declares onclose/onerror as
+          // `(() => void) | undefined`, which conflicts with Transport's optional
+          // callback types under exactOptionalPropertyTypes. Cast is safe at runtime.
+          await this.server.connect(httpTransport as unknown as Transport);
+        }
+
+        await httpTransport.handleRequest(req, res);
+      } catch (error) {
+        console.error('HTTP transport error:', error);
+        if (!res.headersSent) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Internal Server Error' }));
+        }
+      }
+    });
+
+    await new Promise<void>((resolve) => {
+      server.listen(ATOMGIT_PORT, () => {
+        console.error(
+          `AtomGit MCP Server running on http://localhost:${ATOMGIT_PORT}/mcp (transport: ${ATOMGIT_TRANSPORT})`
+        );
+        resolve();
+      });
+    });
   }
 }
 
