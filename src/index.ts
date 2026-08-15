@@ -68,12 +68,8 @@ import { PromptProvider } from './core/PromptProvider.js';
 // Load environment variables
 config();
 
-const DEFAULT_API_BASE_URL = 'https://api.atomgit.com';
-const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || DEFAULT_API_BASE_URL;
+const API_BASE_URL = 'https://api.atomgit.com';
 const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
-const ATOMGIT_TRANSPORT = process.env.ATOMGIT_TRANSPORT || 'stdio';
-const ATOMGIT_PORT = Number(process.env.ATOMGIT_PORT || 3000);
-const ATOMGIT_TIMEOUT_MS = parseTimeoutEnv(process.env.ATOMGIT_TIMEOUT_MS);
 const ATOMGIT_ENABLE_DANGEROUS_TOOLS = parseBooleanEnv(process.env.ATOMGIT_ENABLE_DANGEROUS_TOOLS);
 const SERVER_VERSION = getServerVersion();
 
@@ -89,15 +85,6 @@ function parseBooleanEnv(value: string | undefined): boolean {
   return ['1', 'true', 'yes', 'on'].includes(value.toLowerCase());
 }
 
-function parseTimeoutEnv(value: string | undefined): number | undefined {
-  if (!value) {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
-}
-
 function getServerVersion(): string {
   try {
     const packageJsonUrl = new URL('../package.json', import.meta.url);
@@ -107,6 +94,9 @@ function getServerVersion(): string {
     return '1.0.0';
   }
 }
+
+const ATOMGIT_TRANSPORT = process.env.ATOMGIT_TRANSPORT || 'stdio';
+const ATOMGIT_PORT = Number(process.env.ATOMGIT_PORT || 3000);
 
 class AtomGitMCPServer {
   private server: Server;
@@ -139,7 +129,6 @@ class AtomGitMCPServer {
     const serviceConfig: any = {
       apiBaseUrl: API_BASE_URL,
       token: ATOMGIT_TOKEN,
-      timeout: ATOMGIT_TIMEOUT_MS,
     };
 
     // Create service instances once for reuse
