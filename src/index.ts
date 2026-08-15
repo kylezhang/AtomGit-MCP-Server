@@ -64,7 +64,8 @@ import { PromptProvider } from './core/PromptProvider.js';
 // Load environment variables
 config();
 
-const API_BASE_URL = 'https://api.atomgit.com';
+const DEFAULT_API_BASE_URL = 'https://api.atomgit.com';
+const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || DEFAULT_API_BASE_URL;
 const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
 const ATOMGIT_ENABLE_DANGEROUS_TOOLS = parseBooleanEnv(process.env.ATOMGIT_ENABLE_DANGEROUS_TOOLS);
 const SERVER_VERSION = getServerVersion();
