@@ -96,6 +96,16 @@ function parseTimeoutEnv(value: string | undefined): number | undefined {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 }
 
+function getServerVersion(): string {
+  try {
+    const packageJsonUrl = new URL('../package.json', import.meta.url);
+    const packageJson = JSON.parse(readFileSync(packageJsonUrl, 'utf8')) as { version?: string };
+    return packageJson.version ?? '1.0.0';
+  } catch {
+    return '1.0.0';
+  }
+}
+
 function parsePortEnv(value: string | undefined): number {
   if (!value) {
     return 3000;
@@ -111,16 +121,6 @@ function parsePortEnv(value: string | undefined): number {
     `Warning: invalid ATOMGIT_PORT "${value}", falling back to default 3000.`
   );
   return 3000;
-}
-
-function getServerVersion(): string {
-  try {
-    const packageJsonUrl = new URL('../package.json', import.meta.url);
-    const packageJson = JSON.parse(readFileSync(packageJsonUrl, 'utf8')) as { version?: string };
-    return packageJson.version ?? '1.0.0';
-  } catch {
-    return '1.0.0';
-  }
 }
 
 // Optional HTTP transport: set ATOMGIT_TRANSPORT=http to serve the MCP endpoint over
