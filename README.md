@@ -4,7 +4,7 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
 ![Tools](https://img.shields.io/badge/tools-286-orange.svg)
 
-`@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae 等。
+`@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae、AtomCode 等。
 
 ## 主要特性
 
@@ -121,6 +121,39 @@ Windows 环境建议将 `command` 设置为 `npx.cmd`：
 
 如需恢复当前全量行为，可把 `ATOMGIT_ENABLE_DANGEROUS_TOOLS` 改为 `"true"` 并重启客户端。
 
+### 5. 在 AtomCode 中配置
+
+[AtomCode](https://atomcode.atomgit.com/) 通过项目根目录的 `.mcp.json`（或用户全局 `~/.atomcode/mcp.json`）接入 MCP server，配置块与 Cursor 生态兼容：
+
+```json
+{
+  // .mcp.json 支持 JSONC 注释
+  "mcpServers": {
+    "atomgit": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@atomgit.com/atomgit-mcp-server"
+      ],
+      "env": {
+        "ATOMGIT_TOKEN": "${ATOMGIT_TOKEN}",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
+      }
+    }
+  }
+}
+```
+
+说明：
+
+- 建议先将 Token 导出为环境变量，AtomCode 支持 `${VAR}` 与 `${VAR:-默认值}` 展开，避免把敏感 Token 写死在配置里。
+- 项目级 `.mcp.json` 中的 server 在项目被信任前不会自动拉起；启动后使用 `/mcp trust` 信任当前项目，配置变更后用 `/mcp reload` 重新连接。
+- 接入后远端工具会以 `mcp__atomgit__<工具名>` 的形式注册，例如 `mcp__atomgit__get_repository_tree`。
+- 也可以不手动编辑文件，直接用一行命令添加：`atomcode mcp add atomgit npx -y @atomgit.com/atomgit-mcp-server`
+- 如需开启危险工具，把 `ATOMGIT_ENABLE_DANGEROUS_TOOLS` 改为 `"true"` 并重新连接。
+
+更多配置说明参见 [AtomCode MCP 集成文档](https://atomcode.atomgit.com/docs/zh/index.html)。
+
 ## 开发测试
 
 如需参与开发、进行本地调试，或在 MCP 客户端中联调本地构建产物，可使用以下步骤：
@@ -178,6 +211,25 @@ macOS / Linux 示例：
       ],
       "env": {
         "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
+        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
+      }
+    }
+  }
+}
+```
+
+在 AtomCode 中联调本地构建产物时，可参照同款配置，将 `command` 指向本地 `node` 与 `dist/index.js`，并放入项目根目录 `.mcp.json` 后执行 `/mcp trust` 与 `/mcp reload`：
+
+```json
+{
+  "mcpServers": {
+    "atomgit-dev": {
+      "command": "node",
+      "args": [
+        "/path/to/AtomGit-MCP-Server/dist/index.js"
+      ],
+      "env": {
+        "ATOMGIT_TOKEN": "${ATOMGIT_TOKEN}",
         "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
       }
     }
