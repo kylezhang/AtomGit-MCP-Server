@@ -68,8 +68,10 @@ import { PromptProvider } from './core/PromptProvider.js';
 // Load environment variables
 config();
 
-const API_BASE_URL = 'https://api.atomgit.com';
+const DEFAULT_API_BASE_URL = 'https://api.atomgit.com';
+const API_BASE_URL = process.env.ATOMGIT_API_BASE_URL || DEFAULT_API_BASE_URL;
 const ATOMGIT_TOKEN = process.env.ATOMGIT_TOKEN;
+const ATOMGIT_TIMEOUT_MS = parseTimeoutEnv(process.env.ATOMGIT_TIMEOUT_MS);
 const ATOMGIT_ENABLE_DANGEROUS_TOOLS = parseBooleanEnv(process.env.ATOMGIT_ENABLE_DANGEROUS_TOOLS);
 const SERVER_VERSION = getServerVersion();
 
@@ -85,6 +87,15 @@ function parseBooleanEnv(value: string | undefined): boolean {
   return ['1', 'true', 'yes', 'on'].includes(value.toLowerCase());
 }
 
+function parseTimeoutEnv(value: string | undefined): number | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+}
+
 function getServerVersion(): string {
   try {
     const packageJsonUrl = new URL('../package.json', import.meta.url);
@@ -95,8 +106,11 @@ function getServerVersion(): string {
   }
 }
 
+// Optional HTTP transport: set ATOMGIT_TRANSPORT=http to serve the MCP endpoint over
+// Streamable HTTP (compatible with SSE streaming responses) instead of stdio.
 const ATOMGIT_TRANSPORT = process.env.ATOMGIT_TRANSPORT || 'stdio';
 const ATOMGIT_PORT = Number(process.env.ATOMGIT_PORT || 3000);
+const ATOMGIT_HOST = process.env.ATOMGIT_HOST || '127.0.0.1';
 
 class AtomGitMCPServer {
   private server: Server;
@@ -129,6 +143,7 @@ class AtomGitMCPServer {
     const serviceConfig: any = {
       apiBaseUrl: API_BASE_URL,
       token: ATOMGIT_TOKEN,
+      timeout: ATOMGIT_TIMEOUT_MS,
     };
 
     // Create service instances once for reuse
@@ -292,7 +307,7 @@ class AtomGitMCPServer {
   }
 
   async start() {
-    if (ATOMGIT_TRANSPORT === 'http' || ATOMGIT_TRANSPORT === 'sse') {
+    if (ATOMGIT_TRANSPORT === 'http') {
       await this.startHttpServer();
       return;
     }
@@ -303,7 +318,9 @@ class AtomGitMCPServer {
   }
 
   private async startHttpServer(): Promise<void> {
-    let httpTransport: StreamableHTTPServerTransport | undefined;
+    // One StreamableHTTPServerTransport instance == one MCP session.
+    // Sessions are tracked by the Mcp-Session-Id the SDK assigns on initialize.
+    const transports = new Map<string, StreamableHTTPServerTransport>();
 
     const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
       const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
@@ -314,10 +331,32 @@ class AtomGitMCPServer {
       }
 
       try {
-        if (!httpTransport) {
+        const sessionId = req.headers['mcp-session-id'] as string | undefined;
+        let httpTransport: StreamableHTTPServerTransport | undefined;
+
+        if (sessionId) {
+          // Existing session: route to its transport.
+          httpTransport = transports.get(sessionId);
+          if (!httpTransport) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid or expired session' }));
+            return;
+          }
+        } else {
+          // New session: create a transport, connect it to the MCP server and
+          // register it once the SDK assigns the session id during initialize.
           httpTransport = new StreamableHTTPServerTransport({
             sessionIdGenerator: () => randomUUID(),
+            onsessioninitialized: (sid: string) => {
+              transports.set(sid, httpTransport!);
+            },
           });
+          httpTransport.onclose = () => {
+            const sid = httpTransport?.sessionId;
+            if (sid) {
+              transports.delete(sid);
+            }
+          };
           // The SDK's StreamableHTTPServerTransport declares onclose/onerror as
           // `(() => void) | undefined`, which conflicts with Transport's optional
           // callback types under exactOptionalPropertyTypes. Cast is safe at runtime.
@@ -335,9 +374,12 @@ class AtomGitMCPServer {
     });
 
     await new Promise<void>((resolve) => {
-      server.listen(ATOMGIT_PORT, () => {
+      // Bind to 127.0.0.1 by default: the server holds ATOMGIT_TOKEN and has no
+      // built-in auth, so exposing it on all interfaces would leak the token.
+      // Override with ATOMGIT_HOST (e.g. 0.0.0.0) only behind an auth proxy/TLS.
+      server.listen(ATOMGIT_PORT, ATOMGIT_HOST, () => {
         console.error(
-          `AtomGit MCP Server running on http://localhost:${ATOMGIT_PORT}/mcp (transport: ${ATOMGIT_TRANSPORT})`
+          `AtomGit MCP Server running on http://${ATOMGIT_HOST}:${ATOMGIT_PORT}/mcp (transport: http)`
         );
         resolve();
       });
