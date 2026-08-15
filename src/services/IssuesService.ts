@@ -471,7 +471,7 @@ export class IssuesService extends BaseService {
     owner: string,
     repo: string,
     issueNumber: string | number,
-    kanbanValues: Record<string, string>
+    kanbanValues: Record<string, unknown>
   ): Promise<any> {
     const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/issues/${issueNumber}/kanban_values`, kanbanValues);
     return response.data;

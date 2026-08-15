@@ -438,7 +438,8 @@ export class RepositoriesTools {
             generate_pre_merge_ref: { type: 'boolean', description: '生成 Pre-Merge 引用' },
             rebase_disable_trigger_webhook: { type: 'boolean', description: 'MR rebase 不触发 Webhook' },
             open_gpg_verified: { type: 'boolean', description: '公开 GPG 公钥验证' },
-            include_lfs_objects: { type: 'boolean', description: '压缩包下载包含 LFS 对象' }
+            include_lfs_objects: { type: 'boolean', description: '压缩包下载包含 LFS 对象' },
+            show_branch_creator: { type: 'boolean', description: '展示分支创建人' }
           },
           required: ['owner', 'repo']
         }
@@ -657,7 +658,10 @@ export class RepositoriesTools {
           properties: {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
-            number: { type: 'string', description: '讨论的编号' }
+            number: { type: 'string', description: '讨论的编号' },
+            page: stringOrNumberSchema('当前的页码'),
+            perPage: stringOrNumberSchema('每页的数量'),
+            order: { type: 'string', description: '排序方式' }
           },
           required: ['owner', 'repo', 'number']
         }
@@ -671,7 +675,9 @@ export class RepositoriesTools {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
             number: { type: 'string', description: '讨论的编号' },
-            commentId: { type: 'string', description: '评论id' }
+            commentId: { type: 'string', description: '评论id' },
+            page: stringOrNumberSchema('当前的页码'),
+            perPage: stringOrNumberSchema('每页的数量')
           },
           required: ['owner', 'repo', 'number', 'commentId']
         }
@@ -977,7 +983,8 @@ export class RepositoriesTools {
           generate_pre_merge_ref: args.generate_pre_merge_ref,
           rebase_disable_trigger_webhook: args.rebase_disable_trigger_webhook,
           open_gpg_verified: args.open_gpg_verified,
-          include_lfs_objects: args.include_lfs_objects
+          include_lfs_objects: args.include_lfs_objects,
+          show_branch_creator: args.show_branch_creator
         });
       
       case 'get_repository_settings':
@@ -1089,14 +1096,23 @@ export class RepositoriesTools {
         return await this.service.getRepositoryDiscussion(args.owner, args.repo, args.number);
 
       case 'get_repository_discussion_comments':
-        return await this.service.getRepositoryDiscussionComments(args.owner, args.repo, args.number);
+        return await this.service.getRepositoryDiscussionComments(
+          args.owner,
+          args.repo,
+          args.number,
+          args.page,
+          args.perPage,
+          args.order
+        );
 
       case 'get_repository_discussion_comment_replies':
         return await this.service.getRepositoryDiscussionCommentReplies(
           args.owner,
           args.repo,
           args.number,
-          args.comment_id ?? args.commentId
+          args.comment_id ?? args.commentId,
+          args.page,
+          args.perPage
         );
 
       case 'get_repository_sync_status':

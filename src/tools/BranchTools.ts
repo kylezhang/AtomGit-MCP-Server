@@ -69,6 +69,10 @@ export class BranchTools {
             refs: {
               type: 'string',
               description: 'The branch name or commit SHA to create the new branch from'
+            },
+            description: {
+              type: 'string',
+              description: 'The description of the new branch'
             }
           },
           required: ['owner', 'repo', 'branch_name', 'refs']
@@ -244,7 +248,7 @@ export class BranchTools {
         if (!branchName) {
           throw new Error('create_repository_branch requires branch_name (or legacy branch)');
         }
-        return await this.branchService.createRepositoryBranch(args.owner, args.repo, branchName, args.refs);
+        return await this.branchService.createRepositoryBranch(args.owner, args.repo, branchName, args.refs, args.description);
 
       case 'delete_repository_branch':
         return await this.branchService.deleteRepositoryBranch(args.owner, args.repo, args.name ?? args.branch);

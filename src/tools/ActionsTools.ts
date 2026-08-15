@@ -143,10 +143,10 @@ export class ActionsTools {
             },
             inputs: {
               type: 'object',
-              description: 'workflow_dispatch 定义的输入参数（键值均为字符串）'
+              description: 'workflow_dispatch 定义的输入参数（键值均为字符串，无参数时传空对象）'
             }
           },
-          required: ['owner', 'repo', 'workflowId', 'ref']
+          required: ['owner', 'repo', 'workflowId', 'ref', 'inputs']
         }
       },
       {
@@ -183,6 +183,14 @@ export class ActionsTools {
             workflow_name: {
               type: 'string',
               description: '流水线名称'
+            },
+            startTime: {
+              type: 'number',
+              description: '开始时间过滤，Unix 时间戳（毫秒）'
+            },
+            endTime: {
+              type: 'number',
+              description: '结束时间过滤，Unix 时间戳（毫秒）'
             },
             page: stringOrNumberSchema('当前的页码'),
             perPage: stringOrNumberSchema('每页的数量，最大为 100，默认 20')
@@ -293,6 +301,18 @@ export class ActionsTools {
             stepId: {
               type: 'string',
               description: '步骤id（可选，不传则返回整个 Job 的日志）'
+            },
+            offset: {
+              type: 'number',
+              description: '日志偏移量（可选，用于分页读取）'
+            },
+            limit: {
+              type: 'number',
+              description: '每次读取的日志长度（可选）'
+            },
+            sort: {
+              type: 'string',
+              description: '排序方式（可选，如 asc/desc）'
             }
           },
           required: ['owner', 'repo', 'runId', 'jobId']
@@ -509,7 +529,7 @@ export class ActionsTools {
         if (args.autoPaginate) {
           return autoPaginate(
             async (page, perPage) => {
-              const data = await this.actionsService.getRepositoryActionsRuns(args.owner, args.repo, { event: args.event, status: args.status, branch: args.branch, executor: args.executor, pull_request_id: args.pull_request_id, workflow_id: args.workflow_id, workflow_name: args.workflow_name, page: page.toString(), per_page: perPage.toString() });
+              const data = await this.actionsService.getRepositoryActionsRuns(args.owner, args.repo, { event: args.event, status: args.status, branch: args.branch, executor: args.executor, pull_request_id: args.pull_request_id, workflow_id: args.workflow_id, workflow_name: args.workflow_name, startTime: args.startTime, endTime: args.endTime, page: page.toString(), per_page: perPage.toString() });
               return data?.workflow_runs ?? [];
             },
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
@@ -523,6 +543,8 @@ export class ActionsTools {
           pull_request_id: args.pull_request_id,
           workflow_id: args.workflow_id,
           workflow_name: args.workflow_name,
+          startTime: args.startTime,
+          endTime: args.endTime,
           page: args.page,
           per_page: args.perPage
         });
@@ -563,7 +585,10 @@ export class ActionsTools {
           args.repo,
           args.runId,
           args.jobId,
-          args.stepId
+          args.stepId,
+          args.offset,
+          args.limit,
+          args.sort
         );
 
       case 'get_repository_actions_runners':

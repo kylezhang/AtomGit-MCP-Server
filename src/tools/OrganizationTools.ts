@@ -474,6 +474,12 @@ export class OrganizationTools {
             number: {
               type: 'string',
               description: '讨论的编号'
+            },
+            page: stringOrNumberSchema('当前的页码'),
+            perPage: stringOrNumberSchema('每页的数量'),
+            order: {
+              type: 'string',
+              description: '排序方式'
             }
           },
           required: ['org', 'number']
@@ -496,7 +502,9 @@ export class OrganizationTools {
             commentId: {
               type: 'string',
               description: '评论id'
-            }
+            },
+            page: stringOrNumberSchema('当前的页码'),
+            perPage: stringOrNumberSchema('每页的数量')
           },
           required: ['org', 'number', 'commentId']
         }
@@ -646,13 +654,21 @@ export class OrganizationTools {
         return await this.organizationService.getOrganizationDiscussion(args.org, args.number);
 
       case 'get_organization_discussion_comments':
-        return await this.organizationService.getOrganizationDiscussionComments(args.org, args.number);
+        return await this.organizationService.getOrganizationDiscussionComments(
+          args.org,
+          args.number,
+          args.page,
+          args.perPage,
+          args.order
+        );
 
       case 'get_organization_discussion_comment_replies':
         return await this.organizationService.getOrganizationDiscussionCommentReplies(
           args.org,
           args.number,
-          args.comment_id ?? args.commentId
+          args.comment_id ?? args.commentId,
+          args.page,
+          args.perPage
         );
        
       default:
