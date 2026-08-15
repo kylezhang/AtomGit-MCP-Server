@@ -306,6 +306,48 @@ AtomGit-MCP-Server/
 └── dist/            # 编译产物
 ```
 
+## MCP Resources 与 Prompts
+
+除工具外，本服务还实现了 MCP Resources（资源读取）与 Prompts（预置提示词），供支持 MCP 资源/提示词协议的客户端直接使用。
+
+### Resources
+
+资源列表（`resources/list`）：
+
+| URI | 说明 | MIME |
+|-----|------|------|
+| `atomgit://user` | 当前认证用户信息 | `application/json` |
+
+资源模板（`resources/templates/list`）：
+
+| URI 模板 | 说明 | MIME |
+|----------|------|------|
+| `atomgit://{owner}/{repo}` | 仓库信息 | `application/json` |
+| `atomgit://{owner}/{repo}/readme` | 仓库 README 内容 | `text/markdown` |
+| `atomgit://{owner}/{repo}/file/{path}` | 仓库内文件内容（path 支持多级，如 `src/index.ts`） | `text/plain` |
+| `atomgit://{owner}/{repo}/commit/{sha}` | 指定提交详情 | `application/json` |
+| `atomgit://{owner}/{repo}/issue/{number}` | 指定 Issue 详情 | `application/json` |
+| `atomgit://{owner}/{repo}/pull/{number}` | 指定 Pull Request 详情 | `application/json` |
+
+读取示例：`atomgit://jianguoxu/AtomGit-MCP-Server/readme` 返回该仓库的 README 内容。
+
+### Prompts
+
+预置提示词（`prompts/list`），客户端可直接引用，服务端会按参数组装为对 AI 的指令：
+
+| 名称 | 说明 | 主要参数 |
+|------|------|----------|
+| `create-repository` | 在 AtomGit 创建新仓库 | name（必填）、description、private、autoInit、gitignoreTemplate、licenseTemplate |
+| `create-issue` | 在仓库中创建 Issue | owner、repo、title（必填）、body、labels、assignee |
+| `create-pull-request` | 创建 Pull Request | owner、repo、title、head、base（必填）、body、draft |
+| `review-code` | 评审 PR 或提交代码 | owner、repo、number 或 sha |
+| `setup-ci` | 为仓库配置 CI/CD | owner、repo、workflowName |
+| `manage-collaborators` | 管理仓库协作者 | owner、repo、action（必填）、username、permission |
+| `search-code` | 搜索仓库/Issue/用户 | query（必填）、type、limit |
+| `manage-issues` | 查看并筛选仓库 Issue | owner、repo、state、labels、assignee、sort |
+
+调用示例：`prompts/get` 传入 `{"name": "create-issue", "arguments": {"owner": "jianguoxu", "repo": "demo", "title": "hello"}}`，即可获得组装好的用户提示。
+
 ## 相关链接
 
 - npm: [@atomgit.com/atomgit-mcp-server](https://www.npmjs.com/package/@atomgit.com/atomgit-mcp-server)
