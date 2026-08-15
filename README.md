@@ -174,26 +174,6 @@ node dist/index.js
 可选环境变量：
 
 - `ATOMGIT_API_BASE_URL`：覆盖 API 基础地址，默认 `https://api.atomgit.com`，可用于自定义网关、代理或本地 mock。
-- `ATOMGIT_TIMEOUT_MS`：HTTP 请求超时（毫秒），默认不超时。
-
-### Transport 接入方式
-
-默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
-
-如需远程接入，可设置 `ATOMGIT_TRANSPORT=http` 启动 Streamable HTTP 端点（兼容 SSE 流式响应），默认监听 `http://127.0.0.1:3000/mcp`：
-
-```bash
-ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
-```
-
-远程客户端（如支持 HTTP 的 MCP 客户端）配置 url 指向 `http://<host>:3000/mcp` 即可连接。
-
-> ⚠️ 安全说明
->
-> - 服务器持有 `ATOMGIT_TOKEN`，且**当前没有内置认证**：能访问该端口的人可全权操作用户账号。
-> - 默认绑定 `127.0.0.1`（仅本机可访问），可通过 `ATOMGIT_HOST` 修改监听地址。
-> - 如需暴露到公网，请务必自行加认证/反代/TLS（例如置于带认证的反向代理之后），不要直接以 `0.0.0.0` 暴露。
-> - `ATOMGIT_TRANSPORT=sse` 已移除：SDK 的旧式 `SSEServerTransport` 已废弃，`http` 模式即兼容 SSE 流式响应，请改用 `http`。
 
 如需使用 `.env`，可先复制 `.env.example` 再填写；也可以直接通过 MCP 客户端或 shell 注入环境变量。
 
@@ -367,6 +347,25 @@ AtomGit-MCP-Server/
 | `manage-issues` | 查看并筛选仓库 Issue | owner、repo、state、labels、assignee、sort |
 
 调用示例：`prompts/get` 传入 `{"name": "create-issue", "arguments": {"owner": "jianguoxu", "repo": "demo", "title": "hello"}}`，即可获得组装好的用户提示。
+
+### Transport 接入方式
+
+默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
+
+如需远程接入，可设置 `ATOMGIT_TRANSPORT=http` 启动 Streamable HTTP 端点（兼容 SSE 流式响应），默认监听 `http://127.0.0.1:3000/mcp`：
+
+```bash
+ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
+```
+
+远程客户端（如支持 HTTP 的 MCP 客户端）配置 url 指向 `http://<host>:3000/mcp` 即可连接。
+
+> ⚠️ 安全说明
+>
+> - 服务器持有 `ATOMGIT_TOKEN`，且**当前没有内置认证**：能访问该端口的人可全权操作用户账号。
+> - 默认绑定 `127.0.0.1`（仅本机可访问），可通过 `ATOMGIT_HOST` 修改监听地址。
+> - 如需暴露到公网，请务必自行加认证/反代/TLS（例如置于带认证的反向代理之后），不要直接以 `0.0.0.0` 暴露。
+> - `ATOMGIT_TRANSPORT=sse` 已移除：SDK 的旧式 `SSEServerTransport` 已废弃，`http` 模式即兼容 SSE 流式响应，请改用 `http`。
 
 ## 相关链接
 
