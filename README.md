@@ -171,6 +171,10 @@ node dist/index.js
 - `ATOMGIT_TOKEN`
 - `ATOMGIT_ENABLE_DANGEROUS_TOOLS=false`
 
+可选环境变量：
+
+- `ATOMGIT_API_BASE_URL`：覆盖 API 基础地址，默认 `https://api.atomgit.com`，可用于自定义网关、代理或本地 mock。
+
 如需使用 `.env`，可先复制 `.env.example` 再填写；也可以直接通过 MCP 客户端或 shell 注入环境变量。
 
 如需在 Claude Desktop 等 MCP 客户端中直接联调本地构建产物，可根据操作系统使用如下配置。
