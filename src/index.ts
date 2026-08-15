@@ -96,6 +96,23 @@ function parseTimeoutEnv(value: string | undefined): number | undefined {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 }
 
+function parsePortEnv(value: string | undefined): number {
+  if (!value) {
+    return 3000;
+  }
+
+  const parsed = Number(value);
+  // Ports are 1-65535; fall back to the default on invalid input instead of
+  // letting listen() fail with NaN.
+  if (Number.isInteger(parsed) && parsed > 0 && parsed <= 65535) {
+    return parsed;
+  }
+  console.error(
+    `Warning: invalid ATOMGIT_PORT "${value}", falling back to default 3000.`
+  );
+  return 3000;
+}
+
 function getServerVersion(): string {
   try {
     const packageJsonUrl = new URL('../package.json', import.meta.url);
@@ -109,7 +126,7 @@ function getServerVersion(): string {
 // Optional HTTP transport: set ATOMGIT_TRANSPORT=http to serve the MCP endpoint over
 // Streamable HTTP (compatible with SSE streaming responses) instead of stdio.
 const ATOMGIT_TRANSPORT = process.env.ATOMGIT_TRANSPORT || 'stdio';
-const ATOMGIT_PORT = Number(process.env.ATOMGIT_PORT || 3000);
+const ATOMGIT_PORT = parsePortEnv(process.env.ATOMGIT_PORT);
 const ATOMGIT_HOST = process.env.ATOMGIT_HOST || '127.0.0.1';
 
 class AtomGitMCPServer {
@@ -322,7 +339,27 @@ class AtomGitMCPServer {
     // Sessions are tracked by the Mcp-Session-Id the SDK assigns on initialize.
     const transports = new Map<string, StreamableHTTPServerTransport>();
 
+    // CORS: the server may be consumed by browser-based MCP clients.
+    const corsHeaders: Record<string, string> = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Mcp-Session-Id, MCP-Protocol-Version',
+    };
+
     const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+      // Set CORS headers before the SDK writes its response, so every /mcp
+      // reply (including 4xx errors) carries them for browser clients.
+      for (const [key, value] of Object.entries(corsHeaders)) {
+        res.setHeader(key, value);
+      }
+
+      // Answer preflight requests directly so browser clients can proceed.
+      if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return;
+      }
+
       const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
       if (url.pathname !== '/mcp') {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -384,6 +421,20 @@ class AtomGitMCPServer {
         resolve();
       });
     });
+
+    // Graceful shutdown: close live sessions and stop accepting connections so
+    // remote clients get a clean EOF instead of a hanging connection.
+    const shutdown = () => {
+      console.error('Shutting down HTTP transport...');
+      for (const t of transports.values()) {
+        void t.close();
+      }
+      server.close(() => process.exit(0));
+      // Force-exit if connections linger (e.g. an idle SSE stream never closes).
+      setTimeout(() => process.exit(0), 5000).unref();
+    };
+    process.once('SIGINT', shutdown);
+    process.once('SIGTERM', shutdown);
   }
 }
 
