@@ -217,6 +217,7 @@ export interface UpdatePullRequestCommentRequest {
 export interface AtomGitConfig {
   apiBaseUrl: string;
   token?: string;
+  timeout?: number;
 }
 
 export interface Commit {

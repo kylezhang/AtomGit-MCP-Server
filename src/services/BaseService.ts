@@ -7,6 +7,7 @@ export abstract class BaseService {
   constructor(config: AtomGitConfig) {
     this.client = axios.create({
       baseURL: config.apiBaseUrl,
+      ...(config.timeout !== undefined && { timeout: config.timeout }),
       headers: {
         'Content-Type': 'application/json',
         'X-Api-Version': '2023-02-21',
