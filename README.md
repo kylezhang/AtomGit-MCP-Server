@@ -348,6 +348,13 @@ AtomGit-MCP-Server/
 
 调用示例：`prompts/get` 传入 `{"name": "create-issue", "arguments": {"owner": "jianguoxu", "repo": "demo", "title": "hello"}}`，即可获得组装好的用户提示。
 
+## 相关链接
+
+- npm: [@atomgit.com/atomgit-mcp-server](https://www.npmjs.com/package/@atomgit.com/atomgit-mcp-server)
+- AtomGit Repository: [zkxw2008/AtomGit-MCP-Server](https://atomgit.com/zkxw2008/AtomGit-MCP-Server)
+- GitHub Mirror: [kylezhang/AtomGit-MCP-Server](https://github.com/kylezhang/AtomGit-MCP-Server)
+- Release Guide: [RELEASE.md](./RELEASE.md)
+
 ### Transport 接入方式
 
 默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
@@ -366,13 +373,6 @@ ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
 > - 默认绑定 `127.0.0.1`（仅本机可访问），可通过 `ATOMGIT_HOST` 修改监听地址。
 > - 如需暴露到公网，请务必自行加认证/反代/TLS（例如置于带认证的反向代理之后），不要直接以 `0.0.0.0` 暴露。
 > - `ATOMGIT_TRANSPORT=sse` 已移除：SDK 的旧式 `SSEServerTransport` 已废弃，`http` 模式即兼容 SSE 流式响应，请改用 `http`。
-
-## 相关链接
-
-- npm: [@atomgit.com/atomgit-mcp-server](https://www.npmjs.com/package/@atomgit.com/atomgit-mcp-server)
-- AtomGit Repository: [zkxw2008/AtomGit-MCP-Server](https://atomgit.com/zkxw2008/AtomGit-MCP-Server)
-- GitHub Mirror: [kylezhang/AtomGit-MCP-Server](https://github.com/kylezhang/AtomGit-MCP-Server)
-- Release Guide: [RELEASE.md](./RELEASE.md)
 
 ## 许可证
 
