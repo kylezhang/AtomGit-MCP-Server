@@ -184,13 +184,29 @@ export class OrganizationService extends BaseService {
     return response.data;
   }
 
-  async getOrganizationDiscussionComments(org: string, number: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}/comment`);
+  async getOrganizationDiscussionComments(
+    org: string,
+    number: string,
+    page?: number,
+    perPage?: number,
+    order?: string
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}/comment`, {
+      params: this.buildParams({ page, per_page: perPage, order })
+    });
     return response.data;
   }
 
-  async getOrganizationDiscussionCommentReplies(org: string, number: string, commentId: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}/comment/${commentId}/reply`);
+  async getOrganizationDiscussionCommentReplies(
+    org: string,
+    number: string,
+    commentId: string,
+    page?: number,
+    perPage?: number
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}/comment/${commentId}/reply`, {
+      params: this.buildParams({ page, per_page: perPage })
+    });
     return response.data;
   }
 }

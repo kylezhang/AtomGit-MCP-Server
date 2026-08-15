@@ -14,6 +14,8 @@ interface ActionsRunsQueryOptions {
   pull_request_id?: string;
   workflow_id?: string;
   workflow_name?: string;
+  startTime?: number;
+  endTime?: number;
   page?: string;
   per_page?: string;
 }
@@ -248,11 +250,23 @@ export class ActionsService extends BaseService {
     repo: string,
     runId: string,
     jobId: string,
-    stepId?: string
+    stepId?: string,
+    offset?: number,
+    limit?: number,
+    sort?: string
   ): Promise<any> {
     const body: Record<string, unknown> = {};
     if (stepId) {
       body.step_id = stepId;
+    }
+    if (offset !== undefined) {
+      body.offset = offset;
+    }
+    if (limit !== undefined) {
+      body.limit = limit;
+    }
+    if (sort) {
+      body.sort = sort;
     }
     const response = await this.client.post(
       `/api/v8/repos/${owner}/${repo}/actions/runs/${runId}/jobs/${jobId}/logs`,

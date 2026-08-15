@@ -665,7 +665,7 @@ export class IssuesTools {
             },
             number: stringOrNumberSchema('Issue 编号'),
             kanban_id: {
-              type: 'string',
+              type: 'number',
               description: '看板ID'
             },
             values: {

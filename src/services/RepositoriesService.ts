@@ -54,6 +54,7 @@ interface RepositoryRulesSettingsRequest {
   rebase_disable_trigger_webhook?: boolean;
   open_gpg_verified?: boolean;
   include_lfs_objects?: boolean;
+  show_branch_creator?: boolean;
 }
 
 interface PullRequestWorkflowSettingsRequest {
@@ -468,8 +469,17 @@ export class RepositoriesService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryDiscussionComments(owner: string, repo: string, number: string): Promise<any[]> {
-    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/discuss/${number}/comment`);
+  async getRepositoryDiscussionComments(
+    owner: string,
+    repo: string,
+    number: string,
+    page?: number,
+    perPage?: number,
+    order?: string
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/discuss/${number}/comment`, {
+      params: this.buildParams({ page, per_page: perPage, order })
+    });
     return response.data;
   }
 
@@ -477,10 +487,13 @@ export class RepositoriesService extends BaseService {
     owner: string,
     repo: string,
     number: string,
-    commentId: string
+    commentId: string,
+    page?: number,
+    perPage?: number
   ): Promise<any[]> {
     const response = await this.client.get(
-      `/api/v5/repos/${owner}/${repo}/discuss/${number}/comment/${commentId}/reply`
+      `/api/v5/repos/${owner}/${repo}/discuss/${number}/comment/${commentId}/reply`,
+      { params: this.buildParams({ page, per_page: perPage }) }
     );
     return response.data;
   }

@@ -6,10 +6,14 @@ export class ClaService extends BaseService {
     return response.data;
   }
 
-  async configureRepositoryCla(owner: string, repo: string, claId?: string): Promise<any> {
-    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/cla`, {
+  async configureRepositoryCla(owner: string, repo: string, claId?: string, enforceCheck?: boolean): Promise<any> {
+    const payload: Record<string, unknown> = {
       cla_id: claId ?? ''
-    });
+    };
+    if (enforceCheck !== undefined) {
+      payload.enforce_check = enforceCheck;
+    }
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/cla`, payload);
     return response.data;
   }
 }

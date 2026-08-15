@@ -220,6 +220,10 @@ export class PullRequestTools {
               type: 'boolean',
               description: 'Indicates whether maintainers can modify the pull request',
               default: true
+            },
+            inner_issue_nums: {
+              type: 'string',
+              description: 'Semicolon-separated issue iids to link to this pull request'
             }
           },
           required: ['owner', 'repo', 'title', 'head', 'base']
@@ -265,6 +269,14 @@ export class PullRequestTools {
               description: 'Merge method to use (merge, squash, rebase)',
               enum: ['merge', 'squash', 'rebase'],
               default: 'merge'
+            },
+            squash: {
+              type: 'boolean',
+              description: 'Whether to use squash merge'
+            },
+            squash_commit_message: {
+              type: 'string',
+              description: 'Squash merge commit message'
             },
             force_merge: {
               type: 'boolean',
@@ -509,6 +521,14 @@ export class PullRequestTools {
             maintainer_can_modify: {
               type: 'boolean',
               description: 'Indicates whether maintainers can modify the pull request'
+            },
+            prune_branch: {
+              type: 'boolean',
+              description: 'Delete the source branch after merge'
+            },
+            squash_merge: {
+              type: 'boolean',
+              description: 'Sets the squash merge flag on this PR. Note: does not control API merge behavior - pass squash: true to merge_repository_pull to actually squash when merging'
             }
           },
           required: ['owner', 'repo', 'number']
@@ -1368,6 +1388,10 @@ export class PullRequestTools {
               type: 'string',
               description: 'Comma-separated label names'
             },
+            scope: {
+              type: 'string',
+              description: 'Scope filter (e.g. created_by_me)'
+            },
             page: {
               type: 'number',
               description: 'Page number for pagination',
@@ -1440,6 +1464,10 @@ export class PullRequestTools {
             updated_after: {
               type: 'string',
               description: 'Updated after filter'
+            },
+            scope: {
+              type: 'string',
+              description: 'Scope filter (e.g. created_by_me)'
             },
             ...autoPaginateSchemaProperties,
           },
@@ -1539,7 +1567,8 @@ export class PullRequestTools {
           squash_commit_message: args.squash_commit_message ?? args.squashCommitMessage,
           fork_path: args.fork_path ?? args.forkPath,
           close_related_issue: args.close_related_issue ?? args.closeRelatedIssue,
-          maintainer_can_modify: args.maintainer_can_modify
+          maintainer_can_modify: args.maintainer_can_modify,
+          inner_issue_nums: args.inner_issue_nums
         });
 
       case 'merge_repository_pull':
@@ -1549,6 +1578,8 @@ export class PullRequestTools {
           commit_title: args.commit_title,
           commit_message: args.commit_message,
           merge_method: args.merge_method,
+          squash: args.squash,
+          squash_commit_message: args.squash_commit_message ?? args.squashCommitMessage,
           force_merge: args.force_merge ?? args.forceMerge
         });
 
@@ -1623,7 +1654,9 @@ export class PullRequestTools {
           draft: args.draft,
           close_related_issue: args.close_related_issue ?? args.closeRelatedIssue,
           base: args.base,
-          maintainer_can_modify: args.maintainer_can_modify
+          maintainer_can_modify: args.maintainer_can_modify,
+          prune_branch: args.prune_branch ?? args.pruneBranch,
+          squash_merge: args.squash_merge ?? args.squashMerge
         });
 
       case 'get_repository_pull_commits':
@@ -1827,7 +1860,7 @@ export class PullRequestTools {
               created_before: args.created_before ?? args.createdBefore,
               updated_before: args.updated_before ?? args.updatedBefore,
               updated_after: args.updated_after ?? args.updatedAfter,
-              labels: args.labels, page, perPage
+              labels: args.labels, scope: args.scope, page, perPage
             }),
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
           );
@@ -1845,6 +1878,7 @@ export class PullRequestTools {
           updated_before: args.updated_before ?? args.updatedBefore,
           updated_after: args.updated_after ?? args.updatedAfter,
           labels: args.labels,
+          scope: args.scope,
           page: args.page,
           perPage: args.perPage
         });
@@ -1859,6 +1893,7 @@ export class PullRequestTools {
               created_before: args.created_before ?? args.createdBefore,
               updated_before: args.updated_before ?? args.updatedBefore,
               updated_after: args.updated_after ?? args.updatedAfter,
+              scope: args.scope,
               page, perPage
             }),
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
@@ -1875,6 +1910,7 @@ export class PullRequestTools {
           created_before: args.created_before ?? args.createdBefore,
           updated_before: args.updated_before ?? args.updatedBefore,
           updated_after: args.updated_after ?? args.updatedAfter,
+          scope: args.scope,
           page: args.page,
           perPage: args.perPage
         });

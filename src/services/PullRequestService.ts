@@ -57,6 +57,7 @@ interface EnterprisePullRequestListOptions extends PaginationOptions {
   updated_before?: string;
   updated_after?: string;
   labels?: string;
+  scope?: string;
 }
 
 interface OrganizationPullRequestListOptions extends PaginationOptions {
@@ -70,6 +71,7 @@ interface OrganizationPullRequestListOptions extends PaginationOptions {
   created_before?: string;
   updated_before?: string;
   updated_after?: string;
+  scope?: string;
 }
 
 interface ReactionListOptions extends PaginationOptions {
@@ -93,6 +95,7 @@ interface CreatePullRequestPayload {
   fork_path?: string;
   close_related_issue?: boolean;
   maintainer_can_modify?: boolean;
+  inner_issue_nums?: string;
 }
 
 interface MergePullRequestPayload {
@@ -101,6 +104,8 @@ interface MergePullRequestPayload {
   description?: string;
   commit_title?: string;
   commit_message?: string;
+  squash?: boolean;
+  squash_commit_message?: string;
   force_merge?: boolean;
 }
 
@@ -114,6 +119,8 @@ interface UpdatePullRequestPayload {
   close_related_issue?: boolean;
   base?: string;
   maintainer_can_modify?: boolean;
+  prune_branch?: boolean;
+  squash_merge?: boolean;
 }
 
 interface ProcessPullActionPayload {
@@ -191,6 +198,9 @@ export class PullRequestService extends BaseService {
       'fork_path',
       'close_related_issue',
       'maintainer_can_modify',
+      'inner_issue_nums',
+      'prune_branch',
+      'squash_merge',
       'state'
     ] as const) {
       const value = rawPayload[key];
@@ -249,6 +259,12 @@ export class PullRequestService extends BaseService {
     }
     if (mergeData.description !== undefined || mergeData.commit_message !== undefined) {
       payload.description = mergeData.description ?? mergeData.commit_message;
+    }
+    if (mergeData.squash !== undefined) {
+      payload.squash = mergeData.squash;
+    }
+    if (mergeData.squash_commit_message !== undefined) {
+      payload.squash_commit_message = mergeData.squash_commit_message;
     }
     if (mergeData.force_merge !== undefined) {
       payload.force_merge = mergeData.force_merge;

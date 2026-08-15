@@ -32,6 +32,10 @@ export class ClaTools {
             claId: {
               type: 'string',
               description: 'CLA 协议 ID；留空则清空仓库当前 CLA 配置'
+            },
+            enforceCheck: {
+              type: 'boolean',
+              description: '是否强制校验 PR 贡献者签署 CLA'
             }
           },
           required: ['owner', 'repo']
@@ -47,7 +51,7 @@ export class ClaTools {
         return result?.data ?? [];
       }
       case 'configure_repository_cla':
-        return await this.claService.configureRepositoryCla(args.owner, args.repo, args.claId);
+        return await this.claService.configureRepositoryCla(args.owner, args.repo, args.claId, args.enforceCheck);
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
