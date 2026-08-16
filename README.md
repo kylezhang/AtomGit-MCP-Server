@@ -4,30 +4,19 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
 ![Tools](https://img.shields.io/badge/tools-286-orange.svg)
 
-`@atomgit.com/atomgit-mcp-server` 是一个基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的服务器实现，用于将 AtomGit 平台能力接入支持 MCP 的客户端，例如 Claude Desktop、Cursor、Trae、AtomCode 等。
+`@atomgit.com/atomgit-mcp-server` 将 [AtomGit](https://atomgit.com/) 平台能力接入支持 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的 AI 客户端，提供 286 个工具，覆盖仓库、PR、Issue、Actions、看板等 19 个功能分类。
 
-## 主要特性
+## 目录
 
-- 全量 MCP 工具接入：覆盖 19 个功能分类，提供 286 个工具。
-- 默认安全模式：危险工具默认隐藏，需要时可显式开启。
-- 基于 Access Token 认证：使用 AtomGit Personal Access Token 访问平台 API。
-- 标准 MCP 协议：兼容基于 stdio 的 MCP 客户端集成方式。
-- TypeScript 实现：包含类型定义、参数校验和构建产物。
-
-## 功能模块
-
-- 仓库管理：仓库查询、创建、删除、Fork、Star、Watch、文件操作。
-- 分支与标签：分支管理、标签管理、受保护分支相关能力。
-- 提交与发布：提交历史查询、版本发布管理。
-- 合并请求：Pull Request 查询、创建、合并、Diff、评审相关能力。
-- 工单管理：Issue 查询、创建、更新、评论、指派和状态管理。
-- 项目规划：Milestone 与 Label 管理。
-- 看板管理：组织看板与工作项管理。
-- 用户与组织：用户信息、SSH 密钥、组织成员相关能力。
-- 企业与成员：企业级资源和成员权限管理。
-- 搜索与 Webhook：代码搜索、仓库搜索、用户搜索，以及 Webhook 管理。
-- AIHub：AIHub 模型相关能力。
-- Actions：工作流运行、Job、Artifact、Runner 和 Runner Group 查询相关能力。
+- [快速开始](#快速开始)
+- [客户端配置](#客户端配置)
+- [功能概览](#功能概览)
+- [HTTP Transport](#http-transport)
+- [MCP Resources 与 Prompts](#mcp-resources-与-prompts)
+- [开发指南](#开发指南)
+- [环境变量](#环境变量)
+- [相关链接](#相关链接)
+- [许可证](#许可证)
 
 ## 快速开始
 
@@ -37,104 +26,39 @@
 - [AtomGit](https://atomgit.com/) 账号
 - AtomGit Personal Access Token
 
-### 1. 获取 Access Token
+### 获取 Access Token
 
 1. 登录 AtomGit。
-2. 打开 [设置 -> 访问令牌](https://atomgit.com/setting/token-classic)。
-3. 创建新的 Personal Access Token。
-4. 根据实际使用场景分配权限；如需完整体验，可授予常用仓库和组织相关权限。
-5. 保存生成的 Token。
+2. 打开 [设置 → 访问令牌](https://atomgit.com/setting/token-classic)。
+3. 创建 Personal Access Token，按需分配权限。
+4. 保存生成的 Token。
 
-### 2. 通过 `npx` 运行
-
-如采用 npm 包方式，可直接执行以下命令：
+### 运行
 
 ```bash
-npx -y @atomgit.com/atomgit-mcp-server
+ATOMGIT_TOKEN=你的Token npx -y @atomgit.com/atomgit-mcp-server
 ```
 
-运行前请先设置环境变量 `ATOMGIT_TOKEN`。默认安全模式下，`delete_*`、`remove_*`、`leave_*`、`archive_*`、`transfer_*` 这类危险工具不会暴露给 MCP 客户端。
+### 安全模式
 
-### 3. 安全模式与危险工具开关
-
-- 默认值：`ATOMGIT_ENABLE_DANGEROUS_TOOLS=false`
-- 默认行为：危险工具不会出现在 `tools/list` 中，直接调用也会收到明确禁用提示
-- 开启方式：设置 `ATOMGIT_ENABLE_DANGEROUS_TOOLS=true` 后重启服务
-- 当前文档与 `docs/api_tool_map.md` 仍展示完整工具能力；运行时实际暴露的工具集合取决于该开关
-
-例如，在临时 shell 中显式开启危险工具：
+默认不暴露 `delete_*`、`remove_*`、`leave_*`、`archive_*`、`transfer_*` 等危险工具。需要时设置：
 
 ```bash
 ATOMGIT_ENABLE_DANGEROUS_TOOLS=true npx -y @atomgit.com/atomgit-mcp-server
 ```
 
-### 4. 在 Claude Desktop 中配置
+## 客户端配置
 
-Claude Desktop 配置文件位置：
+### AtomCode
 
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-#### Windows 示例
-
-Windows 环境建议将 `command` 设置为 `npx.cmd`：
-
-```json
-{
-  "mcpServers": {
-    "atomgit": {
-      "command": "npx.cmd",
-      "args": [
-        "-y",
-        "@atomgit.com/atomgit-mcp-server"
-      ],
-      "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
-        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
-      }
-    }
-  }
-}
-```
-
-#### macOS / Linux 示例
+[AtomCode](https://atomcode.atomgit.com/) 通过项目根目录 `.mcp.json`（或用户全局 `~/.atomcode/mcp.json`）接入：
 
 ```json
 {
   "mcpServers": {
     "atomgit": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@atomgit.com/atomgit-mcp-server"
-      ],
-      "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
-        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
-      }
-    }
-  }
-}
-```
-
-完成配置后，重启 Claude Desktop 使配置生效。
-
-如需恢复当前全量行为，可把 `ATOMGIT_ENABLE_DANGEROUS_TOOLS` 改为 `"true"` 并重启客户端。
-
-### 5. 在 AtomCode 中配置
-
-[AtomCode](https://atomcode.atomgit.com/) 通过项目根目录的 `.mcp.json`（或用户全局 `~/.atomcode/mcp.json`）接入 MCP server，配置块与 Cursor 生态兼容：
-
-```json
-{
-  // .mcp.json 支持 JSONC 注释
-  "mcpServers": {
-    "atomgit": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@atomgit.com/atomgit-mcp-server"
-      ],
+      "args": ["-y", "@atomgit.com/atomgit-mcp-server"],
       "env": {
         "ATOMGIT_TOKEN": "${ATOMGIT_TOKEN}",
         "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
@@ -144,77 +68,105 @@ Windows 环境建议将 `command` 设置为 `npx.cmd`：
 }
 ```
 
-说明：
+- 建议先将 Token 导出为环境变量，AtomCode 支持 `${VAR}` 与 `${VAR:-默认值}` 展开，避免 Token 写死在配置里。
+- 项目级 `.mcp.json` 在项目被信任前不会自动拉起，使用 `/mcp trust` 信任当前项目，配置变更后 `/mcp reload` 重连。
+- 接入后工具以 `mcp__atomgit__<工具名>` 形式注册，如 `mcp__atomgit__get_repository_tree`。
+- 也可用命令行添加：`atomcode mcp add atomgit npx -y @atomgit.com/atomgit-mcp-server`
 
-- 建议先将 Token 导出为环境变量，AtomCode 支持 `${VAR}` 与 `${VAR:-默认值}` 展开，避免把敏感 Token 写死在配置里。
-- 项目级 `.mcp.json` 中的 server 在项目被信任前不会自动拉起；启动后使用 `/mcp trust` 信任当前项目，配置变更后用 `/mcp reload` 重新连接。
-- 接入后远端工具会以 `mcp__atomgit__<工具名>` 的形式注册，例如 `mcp__atomgit__get_repository_tree`。
-- 也可以不手动编辑文件，直接用一行命令添加：`atomcode mcp add atomgit npx -y @atomgit.com/atomgit-mcp-server`
-- 如需开启危险工具，把 `ATOMGIT_ENABLE_DANGEROUS_TOOLS` 改为 `"true"` 并重新连接。
+更多说明见 [AtomCode MCP 集成文档](https://atomcode.atomgit.com/docs/zh/index.html)。
 
-更多配置说明参见 [AtomCode MCP 集成文档](https://atomcode.atomgit.com/docs/zh/index.html)。
+### 其他客户端
 
-## 开发测试
+Claude Desktop、Cursor、Cline 等均使用标准 MCP 配置格式，将 `command` 指向 `npx`（Windows 用 `npx.cmd`），`args` 为 `["-y", "@atomgit.com/atomgit-mcp-server"]`，`env` 中注入 `ATOMGIT_TOKEN` 即可。各客户端配置文件路径不同，参考对应文档。
 
-如需参与开发、进行本地调试，或在 MCP 客户端中联调本地构建产物，可使用以下步骤：
+## 功能概览
+
+| 模块 | 能力 |
+|------|------|
+| 仓库管理 | 查询、创建、删除、Fork、Star、Watch、文件操作 |
+| 分支与标签 | 分支管理、标签管理、受保护分支 |
+| 提交与发布 | 提交历史查询、版本发布管理 |
+| 合并请求 | PR 查询、创建、合并、Diff、评审 |
+| 工单管理 | Issue 查询、创建、更新、评论、指派 |
+| 项目规划 | Milestone 与 Label 管理 |
+| 看板管理 | 组织看板与工作项管理 |
+| 用户与组织 | 用户信息、SSH 密钥、组织成员 |
+| 企业与成员 | 企业级资源和成员权限管理 |
+| 搜索与 Webhook | 代码/仓库/用户搜索，Webhook 管理 |
+| AIHub | AIHub 模型相关能力 |
+| Actions | 工作流运行、Job、Artifact、Runner 管理 |
+
+## HTTP Transport
+
+默认使用 stdio transport。如需远程接入，设置 `ATOMGIT_TRANSPORT=http` 启动 Streamable HTTP 端点（兼容 SSE 流式响应），默认监听 `http://127.0.0.1:3000/mcp`：
+
+```bash
+ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
+```
+
+远程客户端配置 url 指向 `http://<host>:3000/mcp` 即可。
+
+> ⚠️ 安全说明
+>
+> - 服务器持有 `ATOMGIT_TOKEN`，当前无内置认证：能访问端口即可全权操作用户账号。
+> - 默认绑定 `127.0.0.1`（仅本机），可通过 `ATOMGIT_HOST` 修改。
+> - 如需暴露到公网，请自行加认证/反代/TLS，不要直接以 `0.0.0.0` 暴露。
+
+## MCP Resources 与 Prompts
+
+### Resources
+
+| URI | 说明 | MIME |
+|-----|------|------|
+| `atomgit://user` | 当前认证用户信息 | `application/json` |
+
+资源模板：
+
+| URI 模板 | 说明 | MIME |
+|----------|------|------|
+| `atomgit://{owner}/{repo}` | 仓库信息 | `application/json` |
+| `atomgit://{owner}/{repo}/readme` | 仓库 README 内容 | `text/markdown` |
+| `atomgit://{owner}/{repo}/file/{path}` | 仓库内文件内容 | `text/plain` |
+| `atomgit://{owner}/{repo}/commit/{sha}` | 指定提交详情 | `application/json` |
+| `atomgit://{owner}/{repo}/issue/{number}` | 指定 Issue 详情 | `application/json` |
+| `atomgit://{owner}/{repo}/pull/{number}` | 指定 Pull Request 详情 | `application/json` |
+
+### Prompts
+
+| 名称 | 说明 | 主要参数 |
+|------|------|----------|
+| `create-repository` | 创建新仓库 | name（必填）、description、private 等 |
+| `create-issue` | 创建 Issue | owner、repo、title（必填）等 |
+| `create-pull-request` | 创建 Pull Request | owner、repo、title、head、base（必填）等 |
+| `review-code` | 评审 PR 或提交 | owner、repo、number 或 sha |
+| `setup-ci` | 配置 CI/CD | owner、repo、workflowName |
+| `manage-collaborators` | 管理协作者 | owner、repo、action（必填）等 |
+| `search-code` | 搜索 | query（必填）、type、limit |
+| `manage-issues` | 查看筛选 Issue | owner、repo、state、labels 等 |
+
+## 开发指南
+
+### 环境搭建
 
 ```bash
 git clone https://atomgit.com/zkxw2008/AtomGit-MCP-Server.git
 cd AtomGit-MCP-Server
 npm install
-npm run build
-node dist/index.js
+cp .env.example .env  # 填入 ATOMGIT_TOKEN
 ```
 
-本地运行前至少需要提供：
+### 本地联调
 
-- `ATOMGIT_TOKEN`
-- `ATOMGIT_ENABLE_DANGEROUS_TOOLS=false`
-
-可选环境变量：
-
-- `ATOMGIT_API_BASE_URL`：覆盖 API 基础地址，默认 `https://api.atomgit.com`，可用于自定义网关、代理或本地 mock。
-
-如需使用 `.env`，可先复制 `.env.example` 再填写；也可以直接通过 MCP 客户端或 shell 注入环境变量。
-
-如需在 Claude Desktop 等 MCP 客户端中直接联调本地构建产物，可根据操作系统使用如下配置。
-
-Windows 示例：
-
-```json
-{
-  "mcpServers": {
-    "atomgit-dev": {
-      "command": "node.exe",
-      "args": [
-        "D:\\path\\to\\AtomGit-MCP-Server\\dist\\index.js"
-      ],
-      "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
-        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
-      }
-    }
-  }
-}
-```
-
-说明：
-
-- Windows 路径中的反斜杠 `\` 需要写成 `\\`
-- 如果 `node.exe` 不在 `PATH` 中，可改为 Node.js 的绝对路径
-
-macOS / Linux 示例：
+将 MCP 客户端配置中的 `command` 指向本地 `node`，`args` 指向 `dist/index.js`：
 
 ```json
 {
   "mcpServers": {
     "atomgit-dev": {
       "command": "node",
-      "args": [
-        "/path/to/AtomGit-MCP-Server/dist/index.js"
-      ],
+      "args": ["/path/to/AtomGit-MCP-Server/dist/index.js"],
       "env": {
-        "ATOMGIT_TOKEN": "你的_ATOMGIT_TOKEN",
+        "ATOMGIT_TOKEN": "你的Token",
         "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
       }
     }
@@ -222,158 +174,85 @@ macOS / Linux 示例：
 }
 ```
 
-在 AtomCode 中联调本地构建产物时，可参照同款配置，将 `command` 指向本地 `node` 与 `dist/index.js`，并放入项目根目录 `.mcp.json` 后执行 `/mcp trust` 与 `/mcp reload`：
-
-```json
-{
-  "mcpServers": {
-    "atomgit-dev": {
-      "command": "node",
-      "args": [
-        "/path/to/AtomGit-MCP-Server/dist/index.js"
-      ],
-      "env": {
-        "ATOMGIT_TOKEN": "${ATOMGIT_TOKEN}",
-        "ATOMGIT_ENABLE_DANGEROUS_TOOLS": "false"
-      }
-    }
-  }
-}
-```
-
-## 开发说明
-
-维护规则、过滤例外和覆盖口径以 [AGENTS.md](./AGENTS.md) 为准；本节提供推荐的日常开发与同步顺序。
+- Windows：`command` 用 `node.exe`（或绝对路径），`args` 路径反斜杠写成 `\\`。
+- AtomCode：`env` 中用 `${ATOMGIT_TOKEN}` 引用环境变量，配置放入 `.mcp.json` 后执行 `/mcp trust` 和 `/mcp reload`。
 
 ### 常用命令
 
 | 命令 | 说明 |
 |------|------|
-| `npm run dev` | 使用 `tsx` 直接运行源码 |
-| `npm run build` | 编译 TypeScript 代码到 `dist/` |
-| `npm run start` | 运行编译后的 `dist/index.js` |
-| `npm run typecheck` | 执行 TypeScript 类型检查 |
-| `npm run clean` | 清理 `dist/` 目录 |
-| `npm run api:sync` | 更新 API 定义来源数据 |
-| `npm run api:map` | 生成 API 与工具映射文档 |
+| `npm run dev` | `tsx` 直接运行源码 |
+| `npm run build` | 编译 TypeScript → `dist/` |
+| `npm run start` | 运行 `dist/index.js` |
+| `npm run typecheck` | TypeScript 类型检查 |
+| `npm run test` | 运行 Jest 测试 |
+| `npm run clean` | 清理 `dist/` |
+| `npm run api:sync` | 同步官方 API 文档 → `docs/apis_url.json` |
 | `npm run api:check` | 检查 API 覆盖情况 |
-| `npm run api:audit` | 审计 tools / services 的参数与类型是否和官网文档一致 |
-| `npm run api:scaffold` | 为指定 API 生成工具和服务代码 |
+| `npm run api:map` | 生成 `docs/api_tool_map.md` |
+| `npm run api:audit` | 审计工具参数与官方文档一致性 |
+| `npm run api:scaffold` | 为新 API 生成工具和服务骨架 |
 
 ### 维护流程
 
-当需要同步 AtomGit 官网 API、补齐缺口或校准参数类型时，推荐按下面顺序执行：
+同步官方 API、补齐缺口或校准参数时，推荐按以下流程执行：
 
 ```mermaid
 flowchart TD
-    A["同步官方文档<br/>npm run api:sync"] --> B["检查当前覆盖缺口<br/>npm run api:check"]
+    A["同步官方文档<br/>npm run api:sync"] --> B["检查覆盖缺口<br/>npm run api:check"]
     B --> C["实现或移除 tools / services"]
     C --> D["重建映射文档<br/>npm run api:map"]
-    D --> E["校验 schema 与 service 参数<br/>npm run api:audit"]
-    E --> F["再次复核覆盖结果<br/>npm run api:check"]
+    D --> E["校验契约一致性<br/>npm run api:audit"]
+    E -->|通过| F["复核覆盖结果<br/>npm run api:check"]
+    E -->|不通过| C
     F --> G["类型检查<br/>npm run typecheck"]
     G --> H["构建验证<br/>npm run build"]
-    H --> I["Review git diff"]
+    H --> I["运行测试<br/>npm run test"]
+    I --> J["Review git diff"]
 ```
 
-简要说明：
-
-1. `api:sync` 用来同步并过滤 AtomGit 官网文档，得到当前允许纳入项目的 API 基线。
-2. `api:check` 应先跑一次，目的是先确认“项目缺了什么”或“项目多了什么”。
-3. 实现阶段只改 `src/services/`、`src/tools/`、必要的 `src/types/`，保持请求形状与官网文档一致。
-4. `api:map` 在实现后再跑，用于重建 [docs/api_tool_map.md](./docs/api_tool_map.md)。
-5. `api:audit` 用于检查参数名、必填项、字段类型和 service 签名是否与官网文档一致。
-6. 最后再跑 `api:check`、`typecheck`、`build`，并检查最终 `git diff`。
-
-补充说明：
-
-- `api:check` 是 canonical 覆盖统计，关注的是“去重后的官方 API 是否全部覆盖”。
-- `docs/apis_url.json`、`docs/api_tool_map.md`、公开 tools 数量需要保持一致。
-- `api:scaffold` 适合生成基础骨架，但分类命名与现有模块不完全一致时，仍应以手工实现和 review 为准。
+- `api:sync` 抓取 AtomGit 官网文档，过滤后得到 API 基线。
+- `api:check` 对比基线，确认缺了什么、多了什么。
+- 实现阶段只改 `src/services/`、`src/tools/`、必要的 `src/types/`。
+- `api:audit` 发现问题时回到实现，通过后再继续。
+- `api:scaffold` 可生成骨架，但分类命名与现有模块不一致时仍以手工实现为准。
 
 ### 项目结构
 
 ```text
 AtomGit-MCP-Server/
 ├── src/
-│   ├── core/        # 核心基础设施
+│   ├── core/        # 核心基础设施（ToolRegistry、SafetyPolicy 等）
 │   ├── services/    # API 服务层
 │   ├── tools/       # MCP 工具层
 │   ├── types/       # 类型定义
-│   └── index.ts     # 服务入口
+│   └── index.ts     # 入口
 ├── scripts/         # 辅助脚本
 ├── docs/            # 文档与 API 映射
 └── dist/            # 编译产物
 ```
 
-## MCP Resources 与 Prompts
+## 环境变量
 
-除工具外，本服务还实现了 MCP Resources（资源读取）与 Prompts（预置提示词），供支持 MCP 资源/提示词协议的客户端直接使用。
-
-### Resources
-
-资源列表（`resources/list`）：
-
-| URI | 说明 | MIME |
-|-----|------|------|
-| `atomgit://user` | 当前认证用户信息 | `application/json` |
-
-资源模板（`resources/templates/list`）：
-
-| URI 模板 | 说明 | MIME |
-|----------|------|------|
-| `atomgit://{owner}/{repo}` | 仓库信息 | `application/json` |
-| `atomgit://{owner}/{repo}/readme` | 仓库 README 内容 | `text/markdown` |
-| `atomgit://{owner}/{repo}/file/{path}` | 仓库内文件内容（path 支持多级，如 `src/index.ts`） | `text/plain` |
-| `atomgit://{owner}/{repo}/commit/{sha}` | 指定提交详情 | `application/json` |
-| `atomgit://{owner}/{repo}/issue/{number}` | 指定 Issue 详情 | `application/json` |
-| `atomgit://{owner}/{repo}/pull/{number}` | 指定 Pull Request 详情 | `application/json` |
-
-读取示例：`atomgit://jianguoxu/AtomGit-MCP-Server/readme` 返回该仓库的 README 内容。
-
-### Prompts
-
-预置提示词（`prompts/list`），客户端可直接引用，服务端会按参数组装为对 AI 的指令：
-
-| 名称 | 说明 | 主要参数 |
-|------|------|----------|
-| `create-repository` | 在 AtomGit 创建新仓库 | name（必填）、description、private、autoInit、gitignoreTemplate、licenseTemplate |
-| `create-issue` | 在仓库中创建 Issue | owner、repo、title（必填）、body、labels、assignee |
-| `create-pull-request` | 创建 Pull Request | owner、repo、title、head、base（必填）、body、draft |
-| `review-code` | 评审 PR 或提交代码 | owner、repo、number 或 sha |
-| `setup-ci` | 为仓库配置 CI/CD | owner、repo、workflowName |
-| `manage-collaborators` | 管理仓库协作者 | owner、repo、action（必填）、username、permission |
-| `search-code` | 搜索仓库/Issue/用户 | query（必填）、type、limit |
-| `manage-issues` | 查看并筛选仓库 Issue | owner、repo、state、labels、assignee、sort |
-
-调用示例：`prompts/get` 传入 `{"name": "create-issue", "arguments": {"owner": "jianguoxu", "repo": "demo", "title": "hello"}}`，即可获得组装好的用户提示。
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `ATOMGIT_TOKEN` | — | Personal Access Token（**必填**） |
+| `ATOMGIT_ENABLE_DANGEROUS_TOOLS` | `false` | 开启危险工具（delete/remove/archive/transfer） |
+| `ATOMGIT_API_BASE_URL` | `https://api.atomgit.com` | API 基础地址 |
+| `ATOMGIT_TIMEOUT_MS` | 无限制 | HTTP 请求超时（毫秒） |
+| `ATOMGIT_TRANSPORT` | `stdio` | 传输模式：`stdio` 或 `http` |
+| `ATOMGIT_HOST` | `127.0.0.1` | HTTP 模式监听地址 |
+| `ATOMGIT_PORT` | `3000` | HTTP 模式监听端口 |
 
 ## 相关链接
 
 - npm: [@atomgit.com/atomgit-mcp-server](https://www.npmjs.com/package/@atomgit.com/atomgit-mcp-server)
-- AtomGit Repository: [zkxw2008/AtomGit-MCP-Server](https://atomgit.com/zkxw2008/AtomGit-MCP-Server)
+- AtomGit: [zkxw2008/AtomGit-MCP-Server](https://atomgit.com/zkxw2008/AtomGit-MCP-Server)
 - GitHub Mirror: [kylezhang/AtomGit-MCP-Server](https://github.com/kylezhang/AtomGit-MCP-Server)
-- Release Guide: [RELEASE.md](./RELEASE.md)
-
-### Transport 接入方式
-
-默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
-
-如需远程接入，可设置 `ATOMGIT_TRANSPORT=http` 启动 Streamable HTTP 端点（兼容 SSE 流式响应），默认监听 `http://127.0.0.1:3000/mcp`：
-
-```bash
-ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
-```
-
-远程客户端（如支持 HTTP 的 MCP 客户端）配置 url 指向 `http://<host>:3000/mcp` 即可连接。
-
-> ⚠️ 安全说明
->
-> - 服务器持有 `ATOMGIT_TOKEN`，且**当前没有内置认证**：能访问该端口的人可全权操作用户账号。
-> - 默认绑定 `127.0.0.1`（仅本机可访问），可通过 `ATOMGIT_HOST` 修改监听地址。
-> - 如需暴露到公网，请务必自行加认证/反代/TLS（例如置于带认证的反向代理之后），不要直接以 `0.0.0.0` 暴露。
-> - `ATOMGIT_TRANSPORT=sse` 已移除：SDK 的旧式 `SSEServerTransport` 已废弃，`http` 模式即兼容 SSE 流式响应，请改用 `http`。
+- 开发规范: [AGENTS.md](./AGENTS.md)
+- 发版流程: [RELEASE.md](./RELEASE.md)
+- API 映射: [docs/api_tool_map.md](./docs/api_tool_map.md)
 
 ## 许可证
 
-本项目采用 Apache 2.0 License。
+Apache 2.0 License
