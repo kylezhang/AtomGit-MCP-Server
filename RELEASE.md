@@ -37,27 +37,39 @@ npm version major
 
 ## 标准发布流程
 
-标准发布流程如下：
+### 1. 更新版本号并打 tag
+
+```bash
+npm version minor --no-git-tag-version
+```
+
+这会更新 `package.json` 和 `package-lock.json` 但不自动创建 tag。
+
+然后手动提交并打带变更摘要的 annotated tag：
+
+```bash
+git add package.json package-lock.json
+git commit -m "chore(release): bump version to v2.6.0"
+git tag -a v2.6.0 -m "v2.6.0 — 变更摘要，例如：新增 HTTP transport、修复工具参数 (#25 #30)"
+```
+
+> ⚠️ 不要直接用 `npm version minor`（不带 `--no-git-tag-version`），它生成的 tag 没有变更摘要。
+> Tag 消息格式：`vX.Y.Z — 简短摘要 (#PR1 #PR2)`
+
+### 2. 推送
 
 ```bash
 git push origin main
 git push origin --tags
 ```
 
-更完整的推荐流程：
+所有推送仅针对 AtomGit（origin）。AtomGit 会自动镜像到 GitHub，GitHub Actions 看到 `v*` tag 后自动发布到 npm。
 
-```bash
-npm version patch
-git push origin main
-git push origin --tags
-```
+### 3. 创建 AtomGit Release
 
-说明：
-
-- 所有推送仅针对 AtomGit（origin）
-- `git push` 用于推送版本提交
-- `git push --tags` 用于推送发布标签
-- 打 tag 后发布自动完成，无需其他操作
+在 AtomGit 仓库页面上为 tag 创建 Release：
+- **标题**：仅版本号，例如 `v2.6.0`（不要放描述，仓库主页侧边栏显示不全）
+- **描述**：写入详细变更列表
 
 ## 发布完成后的检查
 
