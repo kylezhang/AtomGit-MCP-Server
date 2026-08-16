@@ -355,6 +355,25 @@ AtomGit-MCP-Server/
 - GitHub Mirror: [kylezhang/AtomGit-MCP-Server](https://github.com/kylezhang/AtomGit-MCP-Server)
 - Release Guide: [RELEASE.md](./RELEASE.md)
 
+### Transport 接入方式
+
+默认使用 stdio transport，适用于 Claude Desktop、Cursor、AtomCode 等本地 MCP 客户端。
+
+如需远程接入，可设置 `ATOMGIT_TRANSPORT=http` 启动 Streamable HTTP 端点（兼容 SSE 流式响应），默认监听 `http://127.0.0.1:3000/mcp`：
+
+```bash
+ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
+```
+
+远程客户端（如支持 HTTP 的 MCP 客户端）配置 url 指向 `http://<host>:3000/mcp` 即可连接。
+
+> ⚠️ 安全说明
+>
+> - 服务器持有 `ATOMGIT_TOKEN`，且**当前没有内置认证**：能访问该端口的人可全权操作用户账号。
+> - 默认绑定 `127.0.0.1`（仅本机可访问），可通过 `ATOMGIT_HOST` 修改监听地址。
+> - 如需暴露到公网，请务必自行加认证/反代/TLS（例如置于带认证的反向代理之后），不要直接以 `0.0.0.0` 暴露。
+> - `ATOMGIT_TRANSPORT=sse` 已移除：SDK 的旧式 `SSEServerTransport` 已废弃，`http` 模式即兼容 SSE 流式响应，请改用 `http`。
+
 ## 许可证
 
 本项目采用 Apache 2.0 License。

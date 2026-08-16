@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
 import { readFileSync } from 'node:fs';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -101,6 +105,29 @@ function getServerVersion(): string {
     return '1.0.0';
   }
 }
+
+function parsePortEnv(value: string | undefined): number {
+  if (!value) {
+    return 3000;
+  }
+
+  const parsed = Number(value);
+  // Ports are 1-65535; fall back to the default on invalid input instead of
+  // letting listen() fail with NaN.
+  if (Number.isInteger(parsed) && parsed > 0 && parsed <= 65535) {
+    return parsed;
+  }
+  console.error(
+    `Warning: invalid ATOMGIT_PORT "${value}", falling back to default 3000.`
+  );
+  return 3000;
+}
+
+// Optional HTTP transport: set ATOMGIT_TRANSPORT=http to serve the MCP endpoint over
+// Streamable HTTP (compatible with SSE streaming responses) instead of stdio.
+const ATOMGIT_TRANSPORT = process.env.ATOMGIT_TRANSPORT || 'stdio';
+const ATOMGIT_PORT = parsePortEnv(process.env.ATOMGIT_PORT);
+const ATOMGIT_HOST = process.env.ATOMGIT_HOST || '127.0.0.1';
 
 class AtomGitMCPServer {
   private server: Server;
@@ -297,9 +324,117 @@ class AtomGitMCPServer {
   }
 
   async start() {
+    if (ATOMGIT_TRANSPORT === 'http') {
+      await this.startHttpServer();
+      return;
+    }
+
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     console.error('AtomGit MCP Server running on stdio');
+  }
+
+  private async startHttpServer(): Promise<void> {
+    // One StreamableHTTPServerTransport instance == one MCP session.
+    // Sessions are tracked by the Mcp-Session-Id the SDK assigns on initialize.
+    const transports = new Map<string, StreamableHTTPServerTransport>();
+
+    // CORS: the server may be consumed by browser-based MCP clients.
+    const corsHeaders: Record<string, string> = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Mcp-Session-Id, MCP-Protocol-Version',
+    };
+
+    const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+      // Set CORS headers before the SDK writes its response, so every /mcp
+      // reply (including 4xx errors) carries them for browser clients.
+      for (const [key, value] of Object.entries(corsHeaders)) {
+        res.setHeader(key, value);
+      }
+
+      // Answer preflight requests directly so browser clients can proceed.
+      if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return;
+      }
+
+      const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+      if (url.pathname !== '/mcp') {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not Found');
+        return;
+      }
+
+      try {
+        const sessionId = req.headers['mcp-session-id'] as string | undefined;
+        let httpTransport: StreamableHTTPServerTransport | undefined;
+
+        if (sessionId) {
+          // Existing session: route to its transport.
+          httpTransport = transports.get(sessionId);
+          if (!httpTransport) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid or expired session' }));
+            return;
+          }
+        } else {
+          // New session: create a transport, connect it to the MCP server and
+          // register it once the SDK assigns the session id during initialize.
+          httpTransport = new StreamableHTTPServerTransport({
+            sessionIdGenerator: () => randomUUID(),
+            onsessioninitialized: (sid: string) => {
+              transports.set(sid, httpTransport!);
+            },
+          });
+          httpTransport.onclose = () => {
+            const sid = httpTransport?.sessionId;
+            if (sid) {
+              transports.delete(sid);
+            }
+          };
+          // The SDK's StreamableHTTPServerTransport declares onclose/onerror as
+          // `(() => void) | undefined`, which conflicts with Transport's optional
+          // callback types under exactOptionalPropertyTypes. Cast is safe at runtime.
+          await this.server.connect(httpTransport as unknown as Transport);
+        }
+
+        await httpTransport.handleRequest(req, res);
+      } catch (error) {
+        console.error('HTTP transport error:', error);
+        if (!res.headersSent) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Internal Server Error' }));
+        }
+      }
+    });
+
+    await new Promise<void>((resolve) => {
+      // Bind to 127.0.0.1 by default: the server holds ATOMGIT_TOKEN and has no
+      // built-in auth, so exposing it on all interfaces would leak the token.
+      // Override with ATOMGIT_HOST (e.g. 0.0.0.0) only behind an auth proxy/TLS.
+      server.listen(ATOMGIT_PORT, ATOMGIT_HOST, () => {
+        console.error(
+          `AtomGit MCP Server running on http://${ATOMGIT_HOST}:${ATOMGIT_PORT}/mcp (transport: http)`
+        );
+        resolve();
+      });
+    });
+
+    // Graceful shutdown: close live sessions and stop accepting connections so
+    // remote clients get a clean EOF instead of a hanging connection.
+    const shutdown = () => {
+      console.error('Shutting down HTTP transport...');
+      for (const t of transports.values()) {
+        void t.close();
+      }
+      server.close(() => process.exit(0));
+      // Force-exit if connections linger (e.g. an idle SSE stream never closes).
+      setTimeout(() => process.exit(0), 5000).unref();
+    };
+    process.once('SIGINT', shutdown);
+    process.once('SIGTERM', shutdown);
   }
 }
 
