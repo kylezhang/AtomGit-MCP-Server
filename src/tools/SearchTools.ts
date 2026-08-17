@@ -1,6 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { SearchService } from '../services/SearchService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
+import { looseArrayOutputSchema } from '../schemas/common.js';
 
 export class SearchTools {
   constructor(private searchService: SearchService) {}
@@ -136,7 +137,8 @@ export class SearchTools {
             ...autoPaginateSchemaProperties,
           },
           required: ['q']
-        }
+        },
+        outputSchema: looseArrayOutputSchema('JSON array of repository objects (search results)'),
       }
     ];
   }

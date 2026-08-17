@@ -1,6 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { BranchService } from '../services/BranchService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
+import { branchOutputSchema, looseArrayOutputSchema } from '../schemas/common.js';
 
 export class BranchTools {
   constructor(private branchService: BranchService) { }
@@ -42,7 +43,8 @@ export class BranchTools {
             ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
-        }
+        },
+        outputSchema: looseArrayOutputSchema('JSON array of branch objects'),
       },
       {
         name: 'create_repository_branch',
@@ -120,7 +122,8 @@ export class BranchTools {
             }
           },
           required: ['owner', 'repo', 'branch']
-        }
+        },
+        outputSchema: branchOutputSchema,
       },
       {
         name: 'create_branch_protection_rule',

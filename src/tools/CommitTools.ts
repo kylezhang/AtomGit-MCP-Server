@@ -1,7 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { CommitService } from '../services/CommitService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
-import { stringOrNumberSchema } from '../schemas/common.js';
+import { stringOrNumberSchema, looseArrayOutputSchema } from '../schemas/common.js';
 
 export class CommitTools {
   constructor(private commitService: CommitService) {}
@@ -51,7 +51,8 @@ export class CommitTools {
             ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo']
-        }
+        },
+        outputSchema: looseArrayOutputSchema('JSON array of commit objects'),
       },
       {
         name: 'get_repository_commit',

@@ -1,6 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { IssuesService } from '../services/IssuesService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
+import { issueOutputSchema } from '../schemas/common.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -218,7 +219,8 @@ export class IssuesTools {
             number: stringOrNumberSchema('The number of the issue')
           },
           required: ['owner', 'repo', 'number']
-        }
+        },
+        outputSchema: issueOutputSchema,
       },
       {
         name: 'update_repository_issue',

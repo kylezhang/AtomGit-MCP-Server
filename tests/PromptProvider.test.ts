@@ -13,6 +13,9 @@ describe('PromptProvider', () => {
       'manage-collaborators',
       'search-code',
       'manage-issues',
+      'release',
+      'triage-issues',
+      'sync-fork',
     ]);
   });
 
@@ -51,6 +54,26 @@ describe('PromptProvider', () => {
     const result = provider.getPrompt('review-code', { owner: 'a', repo: 'b', number: '42' });
     expect(result.messages[0]!.content.text).toContain('I want to review code in a/b.');
     expect(result.messages[0]!.content.text).toContain('- number: 42');
+  });
+
+  it('builds a release prompt', () => {
+    const provider = new PromptProvider();
+    const result = provider.getPrompt('release', { owner: 'a', repo: 'b', tagName: 'v1.0.0', body: 'notes' });
+    expect(result.messages[0]!.content.text).toContain('create tag v1.0.0 and publish a release for a/b');
+    expect(result.messages[0]!.content.text).toContain('- body: notes');
+  });
+
+  it('builds a triage-issues prompt', () => {
+    const provider = new PromptProvider();
+    const result = provider.getPrompt('triage-issues', { owner: 'a', repo: 'b', labels: 'bug' });
+    expect(result.messages[0]!.content.text).toContain('triage the open issues for a/b');
+    expect(result.messages[0]!.content.text).toContain('- labels: bug');
+  });
+
+  it('builds a sync-fork prompt', () => {
+    const provider = new PromptProvider();
+    const result = provider.getPrompt('sync-fork', { owner: 'a', repo: 'b', upstream: 'u/v' });
+    expect(result.messages[0]!.content.text).toContain('sync the fork a/b with upstream u/v');
   });
 
   it('throws for unknown prompt names', () => {

@@ -15,6 +15,7 @@ import {
   ReadResourceRequestSchema,
   ListPromptsRequestSchema,
   GetPromptRequestSchema,
+  CompleteRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { config } from 'dotenv';
 import { AxiosError } from 'axios';
@@ -64,6 +65,7 @@ import { ToolRegistry } from './core/ToolRegistry.js';
 import { ToolSafetyPolicy } from './core/ToolSafetyPolicy.js';
 import { ResourceProvider } from './core/ResourceProvider.js';
 import { PromptProvider } from './core/PromptProvider.js';
+import { CompletionProvider } from './core/CompletionProvider.js';
 
 // Load environment variables
 config();
@@ -135,6 +137,7 @@ class AtomGitMCPServer {
   private safetyPolicy: ToolSafetyPolicy;
   private resourceProvider: ResourceProvider;
   private promptProvider: PromptProvider;
+  private completionProvider: CompletionProvider;
 
   constructor() {
     this.server = new Server(
@@ -147,6 +150,7 @@ class AtomGitMCPServer {
           tools: {},
           resources: {},
           prompts: {},
+          completions: {},
         },
       }
     );
@@ -211,9 +215,13 @@ class AtomGitMCPServer {
       issuesService,
       pullRequestService,
       commitService,
-      userService
+      userService,
+      organizationService,
+      actionsService,
+      branchService
     );
     this.promptProvider = new PromptProvider();
+    this.completionProvider = new CompletionProvider(userService, organizationService);
 
     console.error(
       `✅ Safe mode: ${ATOMGIT_ENABLE_DANGEROUS_TOOLS ? 'disabled' : 'enabled'}, ${this.registry.size} tools registered, ${this.registry.blockedSize} dangerous tools skipped`
@@ -320,6 +328,12 @@ class AtomGitMCPServer {
         console.error('Error getting prompt:', error);
         throw new Error(`Prompt error: ${error instanceof Error ? error.message : String(error)}`);
       }
+    });
+
+    // Completions handler (argument autocompletion for owner/repo)
+    this.server.setRequestHandler(CompleteRequestSchema, async (request) => {
+      const result = await this.completionProvider.complete(request.params);
+      return { completion: result };
     });
   }
 
