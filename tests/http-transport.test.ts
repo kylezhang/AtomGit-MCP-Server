@@ -45,6 +45,7 @@ function waitForExit(child: ChildProcess, timeoutMs = 10000): Promise<number | n
 describe('HTTP transport (ATOMGIT_TRANSPORT=http)', () => {
   let child: ChildProcess;
   let port: number;
+  let serverLog = '';
 
   beforeAll(async () => {
     // Use a high random port to avoid collisions with other tests/services.
@@ -60,6 +61,12 @@ describe('HTTP transport (ATOMGIT_TRANSPORT=http)', () => {
         ATOMGIT_TOKEN: 'test-token',
       },
       stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+    // Capture the child's stderr so we can assert the server's own shutdown
+    // handler actually ran (instead of relying on the wrapper exit code).
+    child.stderr?.on('data', (chunk: Buffer) => {
+      serverLog += chunk.toString();
     });
 
     await waitForServer(child, port);
@@ -97,6 +104,18 @@ describe('HTTP transport (ATOMGIT_TRANSPORT=http)', () => {
     const exitPromise = waitForExit(child);
     child.kill('SIGTERM');
     const code = await exitPromise;
-    expect(code).toBe(0);
+
+    // The server's own shutdown handler must run and log before exiting.
+    expect(serverLog).toContain('Shutting down HTTP transport...');
+
+    // The process must exit on its own (not be SIGKILLed by the timeout).
+    expect(code).not.toBeNull();
+
+    // Under plain `node` (dist/index.js) the server exits 0. When spawned
+    // through the tsx wrapper (as this test does), tsx installs its own
+    // hidden SIGTERM handler that exits with 128 + signum (143), masking the
+    // application's exit code. Accept both — what matters is that the server
+    // handled SIGTERM gracefully and exited by itself.
+    expect([0, 143]).toContain(code);
   });
 });
