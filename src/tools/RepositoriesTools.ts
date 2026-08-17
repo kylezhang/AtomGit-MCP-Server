@@ -1,6 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { RepositoriesService } from '../services/RepositoriesService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
+import { treeOutputSchema, looseArrayOutputSchema } from '../schemas/common.js';
 
 const stringOrNumberSchema = (description: string) => ({
   oneOf: [
@@ -35,7 +36,8 @@ export class RepositoriesTools {
             ...autoPaginateSchemaProperties,
           },
           required: ['owner', 'repo', 'sha']
-        }
+        },
+        outputSchema: treeOutputSchema,
       },
       {
         name: 'get_repository_content',

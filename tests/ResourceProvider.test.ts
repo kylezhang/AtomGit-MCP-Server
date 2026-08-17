@@ -43,6 +43,9 @@ describe('ResourceProvider', () => {
       'atomgit://{owner}/{repo}/commit/{sha}',
       'atomgit://{owner}/{repo}/issue/{number}',
       'atomgit://{owner}/{repo}/pull/{number}',
+      'atomgit://org/{org}',
+      'atomgit://{owner}/{repo}/branches',
+      'atomgit://{owner}/{repo}/actions/runs',
     ]);
   });
 
@@ -100,6 +103,39 @@ describe('ResourceProvider', () => {
     const content = await provider.readResource('atomgit://a/b/pull/2');
     expect(pullRequestService.getRepositoryPull as AnyFn).toHaveBeenCalledWith('a', 'b', 2);
     expect(JSON.parse(content.text)).toMatchObject({ number: 2 });
+  });
+
+  it('reads organization info', async () => {
+    const organizationService = { getOrganization: jest.fn(async () => ({ path: 'team-a', name: 'Team A' })) };
+    const provider = new ResourceProvider(
+      {} as any, {} as any, {} as any, {} as any, {} as any,
+      organizationService as any
+    );
+    const content = await provider.readResource('atomgit://org/team-a');
+    expect(organizationService.getOrganization).toHaveBeenCalledWith('team-a');
+    expect(JSON.parse(content.text)).toMatchObject({ path: 'team-a' });
+  });
+
+  it('reads branch list', async () => {
+    const branchService = { getRepositoryBranches: jest.fn(async () => [{ name: 'main' }, { name: 'dev' }]) };
+    const provider = new ResourceProvider(
+      {} as any, {} as any, {} as any, {} as any, {} as any,
+      {} as any, {} as any, branchService as any
+    );
+    const content = await provider.readResource('atomgit://a/b/branches');
+    expect(branchService.getRepositoryBranches).toHaveBeenCalledWith('a', 'b');
+    expect(JSON.parse(content.text)).toEqual([{ name: 'main' }, { name: 'dev' }]);
+  });
+
+  it('reads workflow runs', async () => {
+    const actionsService = { getRepositoryActionsRuns: jest.fn(async () => [{ id: 1, status: 'success' }]) };
+    const provider = new ResourceProvider(
+      {} as any, {} as any, {} as any, {} as any, {} as any,
+      {} as any, actionsService as any
+    );
+    const content = await provider.readResource('atomgit://a/b/actions/runs');
+    expect(actionsService.getRepositoryActionsRuns).toHaveBeenCalledWith('a', 'b', {});
+    expect(JSON.parse(content.text)).toEqual([{ id: 1, status: 'success' }]);
   });
 
   it('throws on unknown URIs', async () => {

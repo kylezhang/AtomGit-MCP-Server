@@ -109,6 +109,40 @@ export class PromptProvider {
           { name: 'sort', description: 'Sort field: created, updated, or comments' },
         ],
       }],
+      ['release', {
+        name: 'release',
+        description: 'Walk through creating a tag and publishing a release for a repository',
+        arguments: [
+          { name: 'owner', description: 'Repository owner', required: true },
+          { name: 'repo', description: 'Repository name', required: true },
+          { name: 'tagName', description: 'Tag name (e.g. v1.0.0)', required: true },
+          { name: 'tagMessage', description: 'Tag annotation message' },
+          { name: 'releaseName', description: 'Release title' },
+          { name: 'body', description: 'Release notes / body' },
+          { name: 'targetBranch', description: 'Branch or commit the tag points to (default: default branch)' },
+        ],
+      }],
+      ['triage-issues', {
+        name: 'triage-issues',
+        description: 'List open issues, group them by label, and suggest next actions',
+        arguments: [
+          { name: 'owner', description: 'Repository owner', required: true },
+          { name: 'repo', description: 'Repository name', required: true },
+          { name: 'labels', description: 'Comma-separated label names to focus on' },
+          { name: 'sort', description: 'Sort field: created, updated, or comments' },
+        ],
+      }],
+      ['sync-fork', {
+        name: 'sync-fork',
+        description: 'Compare a fork with its upstream and create a pull request for missing changes',
+        arguments: [
+          { name: 'owner', description: 'Repository owner (the fork)', required: true },
+          { name: 'repo', description: 'Repository name', required: true },
+          { name: 'upstream', description: 'Upstream repository in owner/repo form', required: true },
+          { name: 'base', description: 'Fork branch to merge into (default: default branch)' },
+          { name: 'head', description: 'Upstream branch to pull from (default: default branch)' },
+        ],
+      }],
     ]);
   }
 
@@ -154,6 +188,15 @@ export class PromptProvider {
         break;
       case 'manage-issues':
         lines.push(`I want to view issues for ${args.owner}/${args.repo}.`);
+        break;
+      case 'release':
+        lines.push(`I want to create tag ${args.tagName} and publish a release for ${args.owner}/${args.repo}.`);
+        break;
+      case 'triage-issues':
+        lines.push(`I want to triage the open issues for ${args.owner}/${args.repo}.`);
+        break;
+      case 'sync-fork':
+        lines.push(`I want to sync the fork ${args.owner}/${args.repo} with upstream ${args.upstream}.`);
         break;
     }
 

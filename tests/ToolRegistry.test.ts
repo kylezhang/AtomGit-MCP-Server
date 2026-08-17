@@ -1,4 +1,4 @@
-import { ToolRegistry } from '../src/core/ToolRegistry.js';
+import { ToolRegistry, deriveToolAnnotations } from '../src/core/ToolRegistry.js';
 import { ToolSafetyPolicy } from '../src/core/ToolSafetyPolicy.js';
 
 const makeTool = (name: string) => ({ name, description: 'test tool', inputSchema: { type: 'object' as const } });
@@ -49,5 +49,37 @@ describe('ToolRegistry', () => {
     registry.registerTools(instance);
     expect(registry.has('atomgit_delete_repository')).toBe(true);
     expect(registry.blockedSize).toBe(0);
+  });
+});
+
+describe('deriveToolAnnotations', () => {
+  it('marks read-only tools with readOnlyHint', () => {
+    expect(deriveToolAnnotations('get_repository')).toEqual({ readOnlyHint: true, openWorldHint: false });
+    expect(deriveToolAnnotations('search_repositories')).toEqual({ readOnlyHint: true, openWorldHint: false });
+    expect(deriveToolAnnotations('query_repository_actions_job_step_logs')).toEqual({ readOnlyHint: true, openWorldHint: false });
+  });
+
+  it('marks destructive prefixes with destructiveHint', () => {
+    expect(deriveToolAnnotations('delete_repository')).toMatchObject({ readOnlyHint: false, destructiveHint: true });
+    expect(deriveToolAnnotations('remove_organization_member')).toMatchObject({ destructiveHint: true });
+    expect(deriveToolAnnotations('transfer_repository')).toMatchObject({ destructiveHint: true });
+  });
+
+  it('marks idempotent prefixes with idempotentHint', () => {
+    expect(deriveToolAnnotations('update_repository')).toMatchObject({ readOnlyHint: false, idempotentHint: true });
+    expect(deriveToolAnnotations('replace_repository_pull_request')).toMatchObject({ idempotentHint: true });
+  });
+
+  it('keeps mutating tools non-destructive by default and merges explicit annotations', () => {
+    const registry = new ToolRegistry();
+    const instance = makeInstance([{ name: 'create_repository' }, { name: 'get_repository' }]);
+    registry.registerTools(instance);
+
+    const createTool = registry.get('atomgit_create_repository')!.tool;
+    expect(createTool.annotations).toMatchObject({ readOnlyHint: false, openWorldHint: false });
+    expect(createTool.annotations!.destructiveHint).toBeUndefined();
+
+    const getTool = registry.get('atomgit_get_repository')!.tool;
+    expect(getTool.annotations).toEqual({ readOnlyHint: true, openWorldHint: false });
   });
 });

@@ -1,7 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { ActionsService } from '../services/ActionsService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
-import { stringOrNumberSchema, repoPathProperties, paginationProperties } from '../schemas/common.js';
+import { stringOrNumberSchema, repoPathProperties, paginationProperties, looseArrayOutputSchema } from '../schemas/common.js';
 
 const artifactListProperties = {
   name: {
@@ -196,7 +196,8 @@ export class ActionsTools {
             perPage: stringOrNumberSchema('每页的数量，最大为 100，默认 20')
           },
           required: ['owner', 'repo']
-        }
+        },
+        outputSchema: looseArrayOutputSchema('JSON array of workflow run objects'),
       },
       {
         name: 'get_repository_actions_run',

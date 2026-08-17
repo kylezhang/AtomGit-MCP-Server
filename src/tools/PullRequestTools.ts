@@ -1,6 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { PullRequestService } from '../services/PullRequestService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
+import { pullRequestOutputSchema } from '../schemas/common.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -147,7 +148,8 @@ export class PullRequestTools {
             }
           },
           required: ['owner', 'repo', 'number']
-        }
+        },
+        outputSchema: pullRequestOutputSchema,
       },
       {
         name: 'create_repository_pull',

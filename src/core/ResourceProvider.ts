@@ -3,6 +3,9 @@ import { IssuesService } from '../services/IssuesService.js';
 import { PullRequestService } from '../services/PullRequestService.js';
 import { CommitService } from '../services/CommitService.js';
 import { UserService } from '../services/UserService.js';
+import { OrganizationService } from '../services/OrganizationService.js';
+import { ActionsService } from '../services/ActionsService.js';
+import { BranchService } from '../services/BranchService.js';
 
 export interface ResourceDefinition {
   uri: string;
@@ -30,7 +33,10 @@ export class ResourceProvider {
     private issuesService: IssuesService,
     private pullRequestService: PullRequestService,
     private commitService: CommitService,
-    private userService: UserService
+    private userService: UserService,
+    private organizationService?: OrganizationService,
+    private actionsService?: ActionsService,
+    private branchService?: BranchService
   ) {}
 
   listResources(): ResourceDefinition[] {
@@ -80,6 +86,24 @@ export class ResourceProvider {
         uriTemplate: 'atomgit://{owner}/{repo}/pull/{number}',
         name: 'Pull Request Details',
         description: 'Get details of a specific pull request',
+        mimeType: 'application/json',
+      },
+      {
+        uriTemplate: 'atomgit://org/{org}',
+        name: 'Organization Info',
+        description: 'Get organization information by org path',
+        mimeType: 'application/json',
+      },
+      {
+        uriTemplate: 'atomgit://{owner}/{repo}/branches',
+        name: 'Branch List',
+        description: 'List all branches of a repository',
+        mimeType: 'application/json',
+      },
+      {
+        uriTemplate: 'atomgit://{owner}/{repo}/actions/runs',
+        name: 'Workflow Runs',
+        description: 'List recent workflow runs of a repository',
         mimeType: 'application/json',
       },
     ];
@@ -159,6 +183,27 @@ export class ResourceProvider {
         return { uri, mimeType: 'application/json', text: JSON.stringify(pr, null, 2) };
       }
 
+      case 'org': {
+        if (!identifier) throw new Error('Missing org path');
+        if (!this.organizationService) throw new Error('Organization service not available');
+        const org = await this.organizationService.getOrganization(identifier);
+        return { uri, mimeType: 'application/json', text: JSON.stringify(org, null, 2) };
+      }
+
+      case 'branches': {
+        if (!owner || !repo) throw new Error('Missing owner/repo');
+        if (!this.branchService) throw new Error('Branch service not available');
+        const branches = await this.branchService.getRepositoryBranches(owner, repo);
+        return { uri, mimeType: 'application/json', text: JSON.stringify(branches, null, 2) };
+      }
+
+      case 'actions': {
+        if (!owner || !repo) throw new Error('Missing owner/repo');
+        if (!this.actionsService) throw new Error('Actions service not available');
+        const runs = await this.actionsService.getRepositoryActionsRuns(owner, repo, {});
+        return { uri, mimeType: 'application/json', text: JSON.stringify(runs, null, 2) };
+      }
+
       default:
         throw new Error(`Unknown resource type: ${resourceType}`);
     }
@@ -172,6 +217,12 @@ export class ResourceProvider {
 
     const parts = path.split('/');
     if (parts.length < 2) return null;
+
+    // atomgit://org/{org} — org info resource (must precede the repo template,
+    // since a two-segment path would otherwise be parsed as owner/repo).
+    if (parts[0] === 'org' && parts.length === 2 && parts[1]) {
+      return { resourceType: 'org', identifier: parts[1] };
+    }
 
     const owner = parts[0];
     const repo = parts[1];

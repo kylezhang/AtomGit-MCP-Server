@@ -1,5 +1,5 @@
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { ToolSafetyPolicy } from './ToolSafetyPolicy.js';
+import { Tool, ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
+import { ToolSafetyPolicy, DANGEROUS_TOOL_PREFIXES } from './ToolSafetyPolicy.js';
 
 /**
  * Tool handler interface for registry lookup
@@ -7,6 +7,48 @@ import { ToolSafetyPolicy } from './ToolSafetyPolicy.js';
 export interface ToolHandler {
   tool: Tool;
   execute: (args: any) => Promise<any>;
+}
+
+/** Internal tool prefixes that only read state and never mutate it. */
+const READONLY_TOOL_PREFIXES = [
+  'get_',
+  'query_',
+  'search_',
+  'compare_',
+  'validate_',
+  'download_',
+  'check_',
+] as const;
+
+/** Internal tool prefixes that perform idempotent (PUT-style) updates. */
+const IDEMPOTENT_TOOL_PREFIXES = [
+  'update_',
+  'replace_',
+  'set_',
+] as const;
+
+/**
+ * Derive MCP Tool annotations from the internal tool name so clients can tell
+ * read-only from destructive or idempotent tools without parsing descriptions.
+ * Kept conservative: anything not clearly read-only is treated as a mutation,
+ * and destructive prefixes (shared with ToolSafetyPolicy) are flagged as such.
+ */
+export function deriveToolAnnotations(name: string): ToolAnnotations {
+  const readOnly = READONLY_TOOL_PREFIXES.some((prefix) => name.startsWith(prefix));
+
+  if (readOnly) {
+    return { readOnlyHint: true, openWorldHint: false };
+  }
+
+  const destructive = DANGEROUS_TOOL_PREFIXES.some((prefix) => name.startsWith(prefix));
+  const idempotent = IDEMPOTENT_TOOL_PREFIXES.some((prefix) => name.startsWith(prefix));
+
+  return {
+    readOnlyHint: false,
+    destructiveHint: destructive || undefined,
+    idempotentHint: idempotent || undefined,
+    openWorldHint: false,
+  };
 }
 
 /**
@@ -44,7 +86,11 @@ export class ToolRegistry {
         continue;
       }
 
-      const prefixedTool = { ...tool, name: prefixedName };
+      const prefixedTool = {
+        ...tool,
+        name: prefixedName,
+        annotations: { ...deriveToolAnnotations(tool.name), ...tool.annotations },
+      };
       
       this.register(prefixedName, {
         tool: prefixedTool,

@@ -130,6 +130,9 @@ ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
 | `atomgit://{owner}/{repo}/commit/{sha}` | 指定提交详情 | `application/json` |
 | `atomgit://{owner}/{repo}/issue/{number}` | 指定 Issue 详情 | `application/json` |
 | `atomgit://{owner}/{repo}/pull/{number}` | 指定 Pull Request 详情 | `application/json` |
+| `atomgit://org/{org}` | 组织信息 | `application/json` |
+| `atomgit://{owner}/{repo}/branches` | 仓库分支列表 | `application/json` |
+| `atomgit://{owner}/{repo}/actions/runs` | 仓库近期流水线运行记录 | `application/json` |
 
 ### Prompts
 
@@ -143,6 +146,9 @@ ATOMGIT_TRANSPORT=http ATOMGIT_PORT=3000 node dist/index.js
 | `manage-collaborators` | 管理协作者 | owner、repo、action（必填）等 |
 | `search-code` | 搜索 | query（必填）、type、limit |
 | `manage-issues` | 查看筛选 Issue | owner、repo、state、labels 等 |
+| `release` | 打标签并发布 Release | owner、repo、tagName（必填）等 |
+| `triage-issues` | 按标签整理 Issue 并给出下一步建议 | owner、repo、labels、sort |
+| `sync-fork` | 同步 fork 与上游并创建 PR | owner、repo、upstream（必填）等 |
 
 ## 开发指南
 

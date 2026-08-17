@@ -1,6 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { UserService } from '../services/UserService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
+import { userOutputSchema, repositoryOutputSchema } from '../schemas/common.js';
 
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
@@ -22,7 +23,8 @@ export class UserTools {
         inputSchema: {
           type: 'object',
           properties: {},
-        }
+        },
+        outputSchema: userOutputSchema,
       },
       {
         name: 'get_user',
@@ -87,7 +89,8 @@ export class UserTools {
             }
           },
           required: ['owner', 'repo']
-        }
+        },
+        outputSchema: repositoryOutputSchema,
       },
       {
         name: 'get_current_user_repos',
