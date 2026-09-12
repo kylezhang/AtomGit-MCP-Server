@@ -59,11 +59,11 @@ git tag -a v2.6.0 -m "v2.6.0 — 变更摘要，例如：新增 HTTP transport�
 ### 2. 推送
 
 ```bash
+git push origin v2.6.0
 git push origin main
-git push origin --tags
 ```
 
-所有推送仅针对 AtomGit（origin）。AtomGit 会自动镜像到 GitHub，GitHub Actions 看到 `v*` tag 后自动发布到 npm。
+先推 tag、紧接着推 main，顺序不可颠倒：tag 先到达 AtomGit 才会先被镜像到 GitHub、触发发布。所有推送仅针对 AtomGit（origin），GitHub Actions 看到 `v*` tag 后自动发布到 npm。
 
 ### 3. 创建 AtomGit Release
 
@@ -85,6 +85,10 @@ npm view @atomgit.com/atomgit-mcp-server version
 - README 已同步到 npm 包页面
 - `npx -y @atomgit.com/atomgit-mcp-server` 可正常启动
 
+### 关闭关联 Issue
+
+npm 确认新版本后，回到关联 Issue 留一句收尾评论：修复完成 + 版本号，附上 npm 包、commit/tag、Release 链接，然后关闭。
+
 ## 失败重试
 
 如果 Git tag 已创建，但自动发布失败，不建议复用原版本号。
@@ -98,8 +102,8 @@ npm view @atomgit.com/atomgit-mcp-server version
 
 ```bash
 npm version patch
-git push origin main
 git push origin --tags
+git push origin main
 ```
 
 这样会生成例如 `1.0.2`，并继续自动发布。

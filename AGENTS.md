@@ -105,10 +105,11 @@ Requirement/bug → Issue (label at creation) → Preflight API testing → Impl
 ```
 
 ### 4.1 Issue Registration
-- Every change starts from an Issue.
+- Every change starts from an Issue — including dependency upgrades and hotfixes.
   - Feature: goal, involved API endpoints, expected tool names.
   - Bug: symptoms, root-cause analysis, **live reproduction evidence** (raw curl or tool-call transcript).
 - **Label the Issue at creation**: `bug` / `feature` / `documentation`. An unlabeled Issue means the workflow has not started.
+- **Set the Issue assignee** to the maintainer's platform login (`zkxw2008`) — the exact account value the platform uses, no personal aliases.
 
 ### 4.2 Sync the Official Baseline
 - Run `npm run api:sync`
@@ -164,10 +165,11 @@ Execute per [RELEASE.md](./RELEASE.md):
 1. Merge the PR; confirm/add the PR label.
 2. Bump the version (commit `chore(release): X.Y.Z — summary (#N)`).
 3. **Tag deduplication**: local `git tag -l` + remote `git ls-remote --tags` (v2.2.0 incident rule: tags are only created, never deleted).
-4. Push main and tag to origin (AtomGit).
+4. Push tag first, then main, to origin (AtomGit) — see RELEASE.md §2 (order matters: the tag must reach AtomGit first so it gets mirrored to GitHub and triggers publishing).
 5. Create the AtomGit Release (changes grouped by category, with `(#N)` references).
-6. Close the linked Issue with a minimal comment: "Fixed in vX.Y.Z (commit hash)".
-7. **E2E acceptance**: verify the real version of the running process → call the changed tools against the published version → clean up test fixtures.
+6. Close the linked Issue **after npm confirms the new version**: leave a polite closing comment naming the release ("Fixed in vX.Y.Z") with links to the npm package, commit/tag, and Release. Changes that need no release may close the Issue right after merge.
+7. Leave a brief closing comment on the merged PR as well.
+8. **E2E acceptance**: verify the real version of the running process → call the changed tools against the published version → clean up test fixtures.
 
 ## 5. External PR Review Workflow (Scenario B)
 
@@ -178,7 +180,7 @@ PR received → Formal check (Issue/labels/description) → Code review → Loca
 ```
 
 ### 5.1 Formal Check
-- Is the PR linked to an Issue? If not, ask the contributor to create one, or create it on their behalf.
+- Is the PR linked to an Issue? If not, create one on the contributor's behalf, label it, and add a `fixes #N` reference to the PR description — before the review starts.
 - Are Issue/PR labels complete? Add missing ones.
 - Does the description include motivation, change summary, and test evidence? Request more if insufficient.
 
@@ -205,7 +207,7 @@ PR received → Formal check (Issue/labels/description) → Code review → Loca
 
 ## 6. Derived Scenarios
 
-- **C. Hotfix**: same as Scenario A, with differences: branch `fix/xxx`, commit prefix `fix(scope):`, release as `patch`. Live reproduction evidence and E2E acceptance are never skippable (lesson: version drift once left the running server stuck on an old release — typecheck/build passing does not guarantee the published package is correct).
+- **C. Hotfix**: same as Scenario A — Issue → PR → review → merge, never a direct push to main — with differences: branch `fix/xxx`, commit prefix `fix(scope):`, release as `patch`. Dependency-security upgrades are hotfixes and follow the same route. Sole exemption: production outage repair, which still requires an Issue + PR record filed within 24 hours. Live reproduction evidence and E2E acceptance are never skippable (lesson: version drift once left the running server stuck on an old release — typecheck/build passing does not guarantee the published package is correct).
 - **D. Release failure recovery**: never reuse version numbers, never delete tags — ship the next version. See RELEASE.md "Failure retry".
 - **E. No-release changes**: repo-internal documentation or local development aids that do not ship in the npm package need no release. Criteria in RELEASE.md.
 
@@ -227,6 +229,7 @@ PR received → Formal check (Issue/labels/description) → Code review → Loca
 2. Never self-merge a PR — explicit review approval is required.
 3. High-risk operations that mutate remote state (pushing tags, pushing RELEASE docs, force-style commands) require maintainer confirmation first.
 4. Label Issues/PRs at creation; unlabeled means the workflow has not started.
+5. Never push directly to main — every change merges through a reviewed PR.
 
 ## 9. Workflow
 
