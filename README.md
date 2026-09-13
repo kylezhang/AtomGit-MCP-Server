@@ -2,9 +2,8 @@
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
-![Tools](https://img.shields.io/badge/tools-286-orange.svg)
 
-`@atomgit.com/atomgit-mcp-server` 将 [AtomGit](https://atomgit.com/) 平台能力接入支持 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的 AI 客户端，提供 286 个工具，覆盖仓库、PR、Issue、Actions、看板等 19 个功能分类。
+`@atomgit.com/atomgit-mcp-server` 将 [AtomGit](https://atomgit.com/) 平台能力接入支持 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的 AI 客户端，工具覆盖仓库、PR、Issue、Actions、看板等各类场景，完整工具清单见 [API 映射文档](./docs/api_tool_map.md)。
 
 ## 目录
 
