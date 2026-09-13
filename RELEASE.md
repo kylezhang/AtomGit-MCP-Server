@@ -67,9 +67,28 @@ git push origin main
 
 ### 3. 创建 AtomGit Release
 
-在 AtomGit 仓库页面上为 tag 创建 Release：
+为 tag 创建 Release：
 - **标题**：仅版本号，例如 `v2.6.0`（不要放描述，仓库主页侧边栏显示不全）
 - **描述**：写入详细变更列表
+
+```bash
+curl -s -X POST "https://atomgit.com/api/v5/repos/zkxw2008/AtomGit-MCP-Server/releases" \
+  -H "PRIVATE-TOKEN: <token>" -H "Content-Type: application/json" \
+  -d '{"tag_name":"v2.6.0","name":"v2.6.0","body":"变更列表"}'
+```
+
+> ⚠️ **必须补设 `release_status=latest`**：POST 创建 Release 默认不更新"最新发行版"标记，仓库主页侧边栏会一直停在旧版本（曾因此显示 v2.7.0 但实际已发到 v2.8.0）。创建后立即 PATCH：
+
+```bash
+# 先取现有 body 再 PATCH（该接口要求全量字段）
+curl -s "https://atomgit.com/api/v5/repos/zkxw2008/AtomGit-MCP-Server/releases/v2.6.0" \
+  -H "PRIVATE-TOKEN: <token>" | python3 -c "import json,sys;print(json.load(sys.stdin)['body'])" > /tmp/rel_body.txt
+
+node -e "console.log(JSON.stringify({tag_name:'v2.6.0',name:'v2.6.0',body:require('fs').readFileSync('/tmp/rel_body.txt','utf8'),release_status:'latest'}))" > /tmp/rel_payload.json
+
+curl -s -X PATCH "https://atomgit.com/api/v5/repos/zkxw2008/AtomGit-MCP-Server/releases/v2.6.0" \
+  -H "PRIVATE-TOKEN: <token>" -H "Content-Type: application/json" -d @/tmp/rel_payload.json
+```
 
 ## 发布完成后的检查
 
@@ -84,6 +103,7 @@ npm view @atomgit.com/atomgit-mcp-server version
 - npm 上已出现新版本
 - README 已同步到 npm 包页面
 - `npx -y @atomgit.com/atomgit-mcp-server` 可正常启动
+- **AtomGit 仓库主页侧边栏"Release"区块显示最新版本号 + Latest 徽标**（若仍显示旧版本，说明漏了上一步 PATCH `release_status=latest`）
 
 ### 关闭关联 Issue
 
