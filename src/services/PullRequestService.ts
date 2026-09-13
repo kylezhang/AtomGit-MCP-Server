@@ -138,6 +138,10 @@ interface PullTesterPayload {
   add?: boolean;
 }
 
+interface PullMergerPayload {
+  mergers: string | string[];
+}
+
 interface PullReviewerPayload {
   reviewers: string | string[];
   add?: boolean;
@@ -474,6 +478,20 @@ export class PullRequestService extends BaseService {
       data: {
         testers: this.normalizeCsv(testers)
       }
+    });
+    return response.data;
+  }
+
+  async setRepositoryPullMergers(
+    owner: string,
+    repo: string,
+    pullNumber: string | number,
+    payload: PullMergerPayload
+  ): Promise<any> {
+    // 空数组表示清空合并人，normalizeCsv 会返回 undefined 导致丢键，需显式置空串
+    const mergers = this.normalizeCsv(payload.mergers) ?? '';
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/pulls/${pullNumber}/mergers`, {
+      mergers
     });
     return response.data;
   }

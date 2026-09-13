@@ -647,7 +647,7 @@ export class RepositoriesTools {
           properties: {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
-            number: { type: 'string', description: '讨论的编号' }
+            number: stringOrNumberSchema('讨论的编号')
           },
           required: ['owner', 'repo', 'number']
         }
@@ -660,7 +660,7 @@ export class RepositoriesTools {
           properties: {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
-            number: { type: 'string', description: '讨论的编号' },
+            number: stringOrNumberSchema('讨论的编号'),
             page: stringOrNumberSchema('当前的页码'),
             perPage: stringOrNumberSchema('每页的数量'),
             order: { type: 'string', description: '排序方式' }
@@ -676,12 +676,114 @@ export class RepositoriesTools {
           properties: {
             owner: { type: 'string', description: '仓库所有者' },
             repo: { type: 'string', description: '仓库名称' },
-            number: { type: 'string', description: '讨论的编号' },
+            number: stringOrNumberSchema('讨论的编号'),
             commentId: { type: 'string', description: '评论id' },
             page: stringOrNumberSchema('当前的页码'),
             perPage: stringOrNumberSchema('每页的数量')
           },
           required: ['owner', 'repo', 'number', 'commentId']
+        }
+      },
+      {
+        name: 'create_repository_discussion',
+        description: '创建项目讨论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            title: { type: 'string', description: '讨论标题' },
+            mdContent: { type: 'string', description: '讨论内容（md格式）' },
+            categoryName: { type: 'string', description: '讨论分类名称' }
+          },
+          required: ['owner', 'repo', 'title', 'mdContent', 'categoryName']
+        }
+      },
+      {
+        name: 'update_repository_discussion',
+        description: '更新项目讨论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: stringOrNumberSchema('讨论的编号'),
+            title: { type: 'string', description: '讨论标题' },
+            mdContent: { type: 'string', description: '讨论内容（md格式）' },
+            categoryName: { type: 'string', description: '讨论分类名称' }
+          },
+          required: ['owner', 'repo', 'number', 'title', 'mdContent', 'categoryName']
+        }
+      },
+      {
+        name: 'delete_repository_discussion',
+        description: '删除项目讨论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: stringOrNumberSchema('讨论的编号')
+          },
+          required: ['owner', 'repo', 'number']
+        }
+      },
+      {
+        name: 'create_repository_discussion_comment',
+        description: '创建项目讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: stringOrNumberSchema('讨论的编号'),
+            mdContent: { type: 'string', description: '评论内容（md格式）' }
+          },
+          required: ['owner', 'repo', 'number', 'mdContent']
+        }
+      },
+      {
+        name: 'update_repository_discussion_comment',
+        description: '更新项目讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: stringOrNumberSchema('讨论的编号'),
+            id: { type: 'string', description: '评论id' },
+            mdContent: { type: 'string', description: '评论内容（md格式）' }
+          },
+          required: ['owner', 'repo', 'number', 'id', 'mdContent']
+        }
+      },
+      {
+        name: 'delete_repository_discussion_comment',
+        description: '删除项目讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: stringOrNumberSchema('讨论的编号'),
+            id: { type: 'string', description: '评论id' }
+          },
+          required: ['owner', 'repo', 'number', 'id']
+        }
+      },
+      {
+        name: 'reply_repository_discussion_comment',
+        description: '回复项目讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: { type: 'string', description: '仓库所有者' },
+            repo: { type: 'string', description: '仓库名称' },
+            number: stringOrNumberSchema('讨论的编号'),
+            id: { type: 'string', description: '评论id' },
+            mdContent: { type: 'string', description: '回复内容（md格式）' }
+          },
+          required: ['owner', 'repo', 'number', 'id', 'mdContent']
         }
       },
       {
@@ -1115,6 +1217,49 @@ export class RepositoriesTools {
           args.comment_id ?? args.commentId,
           args.page,
           args.perPage
+        );
+
+      case 'create_repository_discussion':
+        return await this.service.createRepositoryDiscussion(args.owner, args.repo, {
+          title: args.title,
+          md_content: args.md_content ?? args.mdContent,
+          category_name: args.category_name ?? args.categoryName
+        });
+
+      case 'update_repository_discussion':
+        return await this.service.updateRepositoryDiscussion(args.owner, args.repo, args.number, {
+          title: args.title,
+          md_content: args.md_content ?? args.mdContent,
+          category_name: args.category_name ?? args.categoryName
+        });
+
+      case 'delete_repository_discussion':
+        return await this.service.deleteRepositoryDiscussion(args.owner, args.repo, args.number);
+
+      case 'create_repository_discussion_comment':
+        return await this.service.createRepositoryDiscussionComment(args.owner, args.repo, args.number, {
+          md_content: args.md_content ?? args.mdContent
+        });
+
+      case 'update_repository_discussion_comment':
+        return await this.service.updateRepositoryDiscussionComment(
+          args.owner,
+          args.repo,
+          args.number,
+          args.id,
+          { md_content: args.md_content ?? args.mdContent }
+        );
+
+      case 'delete_repository_discussion_comment':
+        return await this.service.deleteRepositoryDiscussionComment(args.owner, args.repo, args.number, args.id);
+
+      case 'reply_repository_discussion_comment':
+        return await this.service.replyRepositoryDiscussionComment(
+          args.owner,
+          args.repo,
+          args.number,
+          args.id,
+          { md_content: args.md_content ?? args.mdContent }
         );
 
       case 'get_repository_sync_status':

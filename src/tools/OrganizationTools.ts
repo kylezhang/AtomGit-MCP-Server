@@ -508,6 +508,101 @@ export class OrganizationTools {
           },
           required: ['org', 'number', 'commentId']
         }
+      },
+      {
+        name: 'create_organization_discussion',
+        description: '创建组织讨论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: { type: 'string', description: '组织path' },
+            title: { type: 'string', description: '讨论标题' },
+            mdContent: { type: 'string', description: '讨论内容（md格式）' },
+            categoryName: { type: 'string', description: '讨论分类名称' }
+          },
+          required: ['org', 'title', 'mdContent', 'categoryName']
+        }
+      },
+      {
+        name: 'update_organization_discussion',
+        description: '更新组织讨论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: { type: 'string', description: '组织path' },
+            number: stringOrNumberSchema('讨论的编号'),
+            title: { type: 'string', description: '讨论标题' },
+            mdContent: { type: 'string', description: '讨论内容（md格式）' },
+            categoryName: { type: 'string', description: '讨论分类名称' }
+          },
+          required: ['org', 'number']
+        }
+      },
+      {
+        name: 'delete_organization_discussion',
+        description: '删除组织讨论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: { type: 'string', description: '组织path' },
+            number: stringOrNumberSchema('讨论的编号')
+          },
+          required: ['org', 'number']
+        }
+      },
+      {
+        name: 'create_organization_discussion_comment',
+        description: '创建组织讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: { type: 'string', description: '组织path' },
+            number: stringOrNumberSchema('讨论的编号'),
+            mdContent: { type: 'string', description: '评论内容（md格式）' }
+          },
+          required: ['org', 'number', 'mdContent']
+        }
+      },
+      {
+        name: 'update_organization_discussion_comment',
+        description: '更新组织讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: { type: 'string', description: '组织path' },
+            number: stringOrNumberSchema('讨论的编号'),
+            id: { type: 'string', description: '评论id' },
+            mdContent: { type: 'string', description: '评论内容（md格式）' }
+          },
+          required: ['org', 'number', 'id', 'mdContent']
+        }
+      },
+      {
+        name: 'delete_organization_discussion_comment',
+        description: '删除组织讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: { type: 'string', description: '组织path' },
+            number: stringOrNumberSchema('讨论的编号'),
+            id: { type: 'string', description: '评论id' }
+          },
+          required: ['org', 'number', 'id']
+        }
+      },
+      {
+        name: 'reply_organization_discussion_comment',
+        description: '回复组织讨论评论',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: { type: 'string', description: '组织path' },
+            number: stringOrNumberSchema('讨论的编号'),
+            id: { type: 'string', description: '评论id' },
+            mdContent: { type: 'string', description: '回复内容（md格式）' }
+          },
+          required: ['org', 'number', 'id', 'mdContent']
+        }
       }
     ];
   }
@@ -669,6 +764,47 @@ export class OrganizationTools {
           args.comment_id ?? args.commentId,
           args.page,
           args.perPage
+        );
+
+      case 'create_organization_discussion':
+        return await this.organizationService.createOrganizationDiscussion(args.org, {
+          title: args.title,
+          md_content: args.md_content ?? args.mdContent,
+          category_name: args.category_name ?? args.categoryName
+        });
+
+      case 'update_organization_discussion':
+        return await this.organizationService.updateOrganizationDiscussion(args.org, args.number, {
+          title: args.title,
+          md_content: args.md_content ?? args.mdContent,
+          category_name: args.category_name ?? args.categoryName
+        });
+
+      case 'delete_organization_discussion':
+        return await this.organizationService.deleteOrganizationDiscussion(args.org, args.number);
+
+      case 'create_organization_discussion_comment':
+        return await this.organizationService.createOrganizationDiscussionComment(args.org, args.number, {
+          md_content: args.md_content ?? args.mdContent
+        });
+
+      case 'update_organization_discussion_comment':
+        return await this.organizationService.updateOrganizationDiscussionComment(
+          args.org,
+          args.number,
+          args.id,
+          { md_content: args.md_content ?? args.mdContent }
+        );
+
+      case 'delete_organization_discussion_comment':
+        return await this.organizationService.deleteOrganizationDiscussionComment(args.org, args.number, args.id);
+
+      case 'reply_organization_discussion_comment':
+        return await this.organizationService.replyOrganizationDiscussionComment(
+          args.org,
+          args.number,
+          args.id,
+          { md_content: args.md_content ?? args.mdContent }
         );
        
       default:

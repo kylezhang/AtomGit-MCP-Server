@@ -1,5 +1,5 @@
 {
-  "totalEndpoints": 286,
+  "totalEndpoints": 305,
   "categories": [
     {
       "name": "AI hub",
@@ -51,7 +51,7 @@
     },
     {
       "name": "Actions",
-      "endpointCount": 23,
+      "endpointCount": 27,
       "endpoints": [
         {
           "name": "删除指定 Artifact",
@@ -106,6 +106,12 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v8/orgs/:org/actions/runner-groups",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-groups"
+        },
+        {
+          "name": "查询Runner资源的Job执行历史",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/orgs/:org/actions/runner-resources/job-history",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-orgs-org-actions-runner-resources-job-history"
         },
         {
           "name": "获取 Artifact 详情",
@@ -186,10 +192,28 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-workflows-workflow-id-dispatches"
         },
         {
+          "name": "停止运行中的流水线实例",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/stop",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-runs-run-id-stop"
+        },
+        {
           "name": "校验 Workflow YAML",
           "httpMethod": "POST",
           "endpointPath": "/api/v8/repos/:owner/:repo/actions/workflows/validate",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-workflows-validate"
+        },
+        {
+          "name": "重试失败任务",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/retry",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-runs-run-id-retry"
+        },
+        {
+          "name": "重新运行流水线",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v8/repos/:owner/:repo/actions/runs/:run_id/rerun",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-8-repos-owner-repo-actions-runs-run-id-rerun"
         }
       ]
     },
@@ -370,6 +394,144 @@
           "httpMethod": "PUT",
           "endpointPath": "/api/v5/org/:owner/kanban/:kanban_id/state",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-org-owner-kanban-kanban-id-state"
+        }
+      ]
+    },
+    {
+      "name": "Discussion",
+      "endpointCount": 22,
+      "endpoints": [
+        {
+          "name": "删除仓库讨论",
+          "httpMethod": "DELETE",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-discuss-number"
+        },
+        {
+          "name": "删除仓库讨论评论",
+          "httpMethod": "DELETE",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment/:id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-5-repos-owner-repo-discuss-number-comment-id"
+        },
+        {
+          "name": "删除组织讨论",
+          "httpMethod": "DELETE",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-5-org-org-discuss-number"
+        },
+        {
+          "name": "删除组织讨论评论",
+          "httpMethod": "DELETE",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment/:id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-5-org-org-discuss-number-comment-id"
+        },
+        {
+          "name": "获取项目讨论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss"
+        },
+        {
+          "name": "获取项目讨论评论回复列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment/:comment_id/reply",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number-comment-comment-id-reply"
+        },
+        {
+          "name": "获取项目讨论评论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number-comment"
+        },
+        {
+          "name": "获取项目讨论详情",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number"
+        },
+        {
+          "name": "获取组织讨论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss"
+        },
+        {
+          "name": "获取组织讨论评论回复列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment/:comment_id/reply",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number-comment-comment-id-reply"
+        },
+        {
+          "name": "获取组织讨论评论列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number-comment"
+        },
+        {
+          "name": "获取组织讨论详情",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number"
+        },
+        {
+          "name": "创建仓库讨论",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-discuss"
+        },
+        {
+          "name": "创建仓库讨论评论",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-discuss-number-comment"
+        },
+        {
+          "name": "创建组织讨论",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/orgs/:org/discuss",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-org-org-discuss"
+        },
+        {
+          "name": "创建组织讨论评论",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-org-org-discuss-number-comment"
+        },
+        {
+          "name": "回复仓库讨论评论",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment/:id/reply",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-discuss-number-comment-id-reply"
+        },
+        {
+          "name": "回复组织讨论评论",
+          "httpMethod": "POST",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment/:id/reply",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-org-org-discuss-number-comment-id-reply"
+        },
+        {
+          "name": "更新仓库讨论",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-discuss-number"
+        },
+        {
+          "name": "更新仓库讨论评论",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment/:id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-discuss-number-comment-id"
+        },
+        {
+          "name": "更新组织讨论",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-org-org-discuss-number"
+        },
+        {
+          "name": "更新组织讨论评论",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment/:id",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-org-org-discuss-number-comment-id"
         }
       ]
     },
@@ -801,7 +963,7 @@
     },
     {
       "name": "Organizations",
-      "endpointCount": 22,
+      "endpointCount": 18,
       "endpoints": [
         {
           "name": "退出一个组织",
@@ -844,30 +1006,6 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/orgs/:org/members/:username",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-members-username"
-        },
-        {
-          "name": "获取组织讨论列表",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/orgs/:org/discuss",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss"
-        },
-        {
-          "name": "获取组织讨论评论回复列表",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment/:comment_id/reply",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number-comment-comment-id-reply"
-        },
-        {
-          "name": "获取组织讨论评论列表",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/orgs/:org/discuss/:number/comment",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number-comment"
-        },
-        {
-          "name": "获取组织讨论详情",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/orgs/:org/discuss/:number",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number"
         },
         {
           "name": "获取组织项目列表",
@@ -939,7 +1077,7 @@
     },
     {
       "name": "Pull Requests",
-      "endpointCount": 45,
+      "endpointCount": 46,
       "endpoints": [
         {
           "name": "取消用户测试Pull Request",
@@ -1028,7 +1166,7 @@
         {
           "name": "获取文件内容",
           "httpMethod": "GET",
-          "endpointPath": "/api/v5/repos/:owner/:repo/raw/:path",
+          "endpointPath": "/:owner/:repo/raw/:head_sha/:name",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name"
         },
         {
@@ -1200,6 +1338,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-merge"
         },
         {
+          "name": "设置Pull Request合并人",
+          "httpMethod": "PUT",
+          "endpointPath": "/api/v5/repos/:owner/:repo/pulls/:number/mergers",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-pulls-number-mergers"
+        },
+        {
           "name": "替换 Pull Request所有标签",
           "httpMethod": "PUT",
           "endpointPath": "/api/v5/repos/:owner/:repo/pulls/:number/labels",
@@ -1275,7 +1419,7 @@
     },
     {
       "name": "Repositories",
-      "endpointCount": 48,
+      "endpointCount": 44,
       "endpoints": [
         {
           "name": "删除文件",
@@ -1396,30 +1540,6 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/repos/:owner/:repo/transition",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-transition"
-        },
-        {
-          "name": "获取项目讨论列表",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/repos/:owner/:repo/discuss",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss"
-        },
-        {
-          "name": "获取项目讨论评论回复列表",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment/:comment_id/reply",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number-comment-comment-id-reply"
-        },
-        {
-          "name": "获取项目讨论评论列表",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number/comment",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number-comment"
-        },
-        {
-          "name": "获取项目讨论详情",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/repos/:owner/:repo/discuss/:number",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-discuss-number"
         },
         {
           "name": "获取项目推送规则",

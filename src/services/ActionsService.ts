@@ -28,6 +28,13 @@ interface ActionsArtifactsQueryOptions {
   per_page?: number;
 }
 
+interface ActionsJobHistoryQueryOptions {
+  page?: number;
+  per_page?: number;
+  start_time_begin?: string;
+  start_time_end?: string;
+}
+
 export class ActionsService extends BaseService {
   private buildParams(options?: object): Record<string, unknown> {
     const params: Record<string, unknown> = { ...((options ?? {}) as Record<string, unknown>) };
@@ -125,6 +132,36 @@ export class ActionsService extends BaseService {
   async getOrganizationActionsRunnerGroups(org: string, options: ActionsPaginationOptions = {}): Promise<any> {
     const response = await this.client.get(`/api/v8/orgs/${org}/actions/runner-groups`, {
       params: this.buildParams(options)
+    });
+    return response.data;
+  }
+
+  async getOrganizationActionsJobHistory(org: string, options: ActionsJobHistoryQueryOptions = {}): Promise<any> {
+    const response = await this.client.get(`/api/v8/orgs/${org}/actions/runner-resources/job-history`, {
+      params: this.buildParams({ ...options, access_token: this.serviceToken })
+    });
+    return response.data;
+  }
+
+  async rerunRepositoryActionsRun(owner: string, repo: string, runId: string): Promise<any> {
+    const response = await this.client.post(`/api/v8/repos/${owner}/${repo}/actions/runs/${runId}/rerun`, {}, {
+      params: { access_token: this.serviceToken }
+    });
+    return response.data;
+  }
+
+  async retryRepositoryActionsRun(owner: string, repo: string, runId: string, jobRunIds: string[]): Promise<any> {
+    const response = await this.client.post(`/api/v8/repos/${owner}/${repo}/actions/runs/${runId}/retry`, {
+      job_run_ids: jobRunIds
+    }, {
+      params: { access_token: this.serviceToken }
+    });
+    return response.data;
+  }
+
+  async stopRepositoryActionsRun(owner: string, repo: string, runId: string): Promise<any> {
+    const response = await this.client.post(`/api/v8/repos/${owner}/${repo}/actions/runs/${runId}/stop`, {}, {
+      params: { access_token: this.serviceToken }
     });
     return response.data;
   }

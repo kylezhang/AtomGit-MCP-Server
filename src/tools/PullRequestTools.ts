@@ -289,6 +289,26 @@ export class PullRequestTools {
         }
       },
       {
+        name: 'set_repository_pull_mergers',
+        description: 'Set who can merge this pull request',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            owner: {
+              type: 'string',
+              description: 'The owner of the repository'
+            },
+            repo: {
+              type: 'string',
+              description: 'The name of the repository'
+            },
+            number: stringOrNumberSchema('The number of pull request'),
+            mergers: stringOrArraySchema('Comma-separated user personal paths allowed to merge')
+          },
+          required: ['owner', 'repo', 'number', 'mergers']
+        }
+      },
+      {
         name: 'get_repository_pull_merge_status',
         description: 'Check if a pull request can be merged',
         inputSchema: {
@@ -1587,6 +1607,11 @@ export class PullRequestTools {
 
       case 'get_repository_pull_merge_status':
         return await this.pullRequestService.getRepositoryPullMergeStatus(args.owner, args.repo, number);
+
+      case 'set_repository_pull_mergers':
+        return await this.pullRequestService.setRepositoryPullMergers(args.owner, args.repo, number, {
+          mergers: args.mergers
+        });
 
       case 'refresh_repository_pull_position':
         return await this.pullRequestService.refreshRepositoryPullPosition(args.owner, args.repo, number);
