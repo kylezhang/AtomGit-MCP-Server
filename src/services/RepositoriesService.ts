@@ -97,6 +97,16 @@ interface RepositoryDiscussionListOptions {
   search?: string;
 }
 
+interface RepositoryDiscussionPayload {
+  title: string;
+  md_content: string;
+  category_name: string;
+}
+
+interface RepositoryDiscussionCommentPayload {
+  md_content: string;
+}
+
 interface RepositorySyncStatusOptions {
   branch?: string;
 }
@@ -464,7 +474,7 @@ export class RepositoriesService extends BaseService {
     return response.data;
   }
 
-  async getRepositoryDiscussion(owner: string, repo: string, number: string): Promise<any> {
+  async getRepositoryDiscussion(owner: string, repo: string, number: string | number): Promise<any> {
     const response = await this.client.get(`/api/v5/repos/${owner}/${repo}/discuss/${number}`);
     return response.data;
   }
@@ -472,7 +482,7 @@ export class RepositoriesService extends BaseService {
   async getRepositoryDiscussionComments(
     owner: string,
     repo: string,
-    number: string,
+    number: string | number,
     page?: number,
     perPage?: number,
     order?: string
@@ -486,7 +496,7 @@ export class RepositoriesService extends BaseService {
   async getRepositoryDiscussionCommentReplies(
     owner: string,
     repo: string,
-    number: string,
+    number: string | number,
     commentId: string,
     page?: number,
     perPage?: number
@@ -495,6 +505,63 @@ export class RepositoriesService extends BaseService {
       `/api/v5/repos/${owner}/${repo}/discuss/${number}/comment/${commentId}/reply`,
       { params: this.buildParams({ page, per_page: perPage }) }
     );
+    return response.data;
+  }
+
+  async createRepositoryDiscussion(owner: string, repo: string, payload: RepositoryDiscussionPayload): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/discuss`, payload);
+    return response.data;
+  }
+
+  async updateRepositoryDiscussion(
+    owner: string,
+    repo: string,
+    number: string | number,
+    payload: RepositoryDiscussionPayload
+  ): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/discuss/${number}`, payload);
+    return response.data;
+  }
+
+  async deleteRepositoryDiscussion(owner: string, repo: string, number: string | number): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/discuss/${number}`);
+    return response.data;
+  }
+
+  async createRepositoryDiscussionComment(
+    owner: string,
+    repo: string,
+    number: string | number,
+    payload: RepositoryDiscussionCommentPayload
+  ): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/discuss/${number}/comment`, payload);
+    return response.data;
+  }
+
+  async updateRepositoryDiscussionComment(
+    owner: string,
+    repo: string,
+    number: string | number,
+    id: string,
+    payload: RepositoryDiscussionCommentPayload
+  ): Promise<any> {
+    const response = await this.client.put(`/api/v5/repos/${owner}/${repo}/discuss/${number}/comment/${id}`, payload);
+    return response.data;
+  }
+
+  async deleteRepositoryDiscussionComment(owner: string, repo: string, number: string | number, id: string): Promise<any> {
+    const response = await this.client.delete(`/api/v5/repos/${owner}/${repo}/discuss/${number}/comment/${id}`);
+    return response.data;
+  }
+
+  async replyRepositoryDiscussionComment(
+    owner: string,
+    repo: string,
+    number: string | number,
+    id: string,
+    payload: RepositoryDiscussionCommentPayload
+  ): Promise<any> {
+    const response = await this.client.post(`/api/v5/repos/${owner}/${repo}/discuss/${number}/comment/${id}/reply`, payload);
     return response.data;
   }
 

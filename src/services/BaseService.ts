@@ -3,8 +3,10 @@ import { AtomGitConfig } from '../types/index.js';
 
 export abstract class BaseService {
   protected client: AxiosInstance;
+  protected serviceToken: string | undefined;
 
   constructor(config: AtomGitConfig) {
+    this.serviceToken = config.token;
     this.client = axios.create({
       baseURL: config.apiBaseUrl,
       ...(config.timeout !== undefined && { timeout: config.timeout }),

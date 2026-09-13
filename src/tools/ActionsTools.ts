@@ -456,6 +456,88 @@ export class ActionsTools {
           },
           required: ['org', 'runnerGroupId']
         }
+      },
+      {
+        name: 'get_organization_actions_job_history',
+        description: '查询 Runner 资源的 Job 执行历史',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            org: {
+              type: 'string',
+              description: '组织path'
+            },
+            page: {
+              type: 'number',
+              description: '当前页码'
+            },
+            perPage: {
+              type: 'number',
+              description: '每页的项目数'
+            },
+            startTimeBegin: {
+              type: 'string',
+              description: '开始时间过滤起始，格式：yyyy-MM-dd HH:mm:ss'
+            },
+            startTimeEnd: {
+              type: 'string',
+              description: '开始时间过滤结束，格式：yyyy-MM-dd HH:mm:ss'
+            }
+          },
+          required: ['org']
+        }
+      },
+      {
+        name: 'rerun_repository_actions_run',
+        description: '重新运行流水线',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ...repoPathProperties,
+            runId: {
+              type: 'string',
+              description: '流水线运行id'
+            }
+          },
+          required: ['owner', 'repo', 'runId']
+        }
+      },
+      {
+        name: 'retry_repository_actions_run',
+        description: '重试流水线中的失败任务',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ...repoPathProperties,
+            runId: {
+              type: 'string',
+              description: '流水线运行id'
+            },
+            jobRunIds: {
+              type: 'array',
+              items: {
+                type: 'string'
+              },
+              description: '任务id数组'
+            }
+          },
+          required: ['owner', 'repo', 'runId', 'jobRunIds']
+        }
+      },
+      {
+        name: 'stop_repository_actions_run',
+        description: '停止运行中的流水线实例',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ...repoPathProperties,
+            runId: {
+              type: 'string',
+              description: '流水线运行id'
+            }
+          },
+          required: ['owner', 'repo', 'runId']
+        }
       }
     ];
   }
@@ -650,6 +732,23 @@ export class ActionsTools {
           page: args.page,
           per_page: args.perPage
         });
+
+      case 'get_organization_actions_job_history':
+        return await this.actionsService.getOrganizationActionsJobHistory(args.org, {
+          page: args.page,
+          per_page: args.perPage,
+          start_time_begin: args.startTimeBegin,
+          start_time_end: args.startTimeEnd
+        });
+
+      case 'rerun_repository_actions_run':
+        return await this.actionsService.rerunRepositoryActionsRun(args.owner, args.repo, args.runId);
+
+      case 'retry_repository_actions_run':
+        return await this.actionsService.retryRepositoryActionsRun(args.owner, args.repo, args.runId, args.jobRunIds);
+
+      case 'stop_repository_actions_run':
+        return await this.actionsService.stopRepositoryActionsRun(args.owner, args.repo, args.runId);
 
       default:
         throw new Error(`Unknown tool: ${name}`);

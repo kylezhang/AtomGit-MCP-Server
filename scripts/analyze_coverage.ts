@@ -51,6 +51,8 @@ const KNOWN_VARS = new Set([
 
 // Copy of MANUAL_OVERRIDES from generate_map.ts
 const MANUAL_OVERRIDES: Record<string, string> = {
+  'get_repository_raw_file': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-raw-path',
+  'get_repository_pull_file_content': 'https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name',
   'get_repository_pull_approval_reviewer_options': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-reviewers',
   'get_repository_pull_tester_options': 'https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-pulls-number-option-approval-testers',
   'assign_repository_pull_approval_reviewers': 'https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-pulls-number-approval-reviewers',

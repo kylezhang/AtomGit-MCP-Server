@@ -52,6 +52,22 @@ interface DiscussionListOptions {
   search?: string;
 }
 
+interface OrganizationDiscussionPayload {
+  title: string;
+  md_content: string;
+  category_name: string;
+}
+
+interface UpdateOrganizationDiscussionPayload {
+  title?: string;
+  md_content?: string;
+  category_name?: string;
+}
+
+interface OrganizationDiscussionCommentPayload {
+  md_content: string;
+}
+
 export class OrganizationService extends BaseService {
   private buildParams(options?: object): Record<string, unknown> {
     const params: Record<string, unknown> = { ...((options ?? {}) as Record<string, unknown>) };
@@ -207,6 +223,55 @@ export class OrganizationService extends BaseService {
     const response = await this.client.get(`/api/v5/orgs/${org}/discuss/${number}/comment/${commentId}/reply`, {
       params: this.buildParams({ page, per_page: perPage })
     });
+    return response.data;
+  }
+
+  async createOrganizationDiscussion(org: string, payload: OrganizationDiscussionPayload): Promise<any> {
+    const response = await this.client.post(`/api/v5/orgs/${org}/discuss`, payload);
+    return response.data;
+  }
+
+  async updateOrganizationDiscussion(org: string, number: string | number, payload: UpdateOrganizationDiscussionPayload): Promise<any> {
+    const response = await this.client.put(`/api/v5/orgs/${org}/discuss/${number}`, payload);
+    return response.data;
+  }
+
+  async deleteOrganizationDiscussion(org: string, number: string | number): Promise<any> {
+    const response = await this.client.delete(`/api/v5/orgs/${org}/discuss/${number}`);
+    return response.data;
+  }
+
+  async createOrganizationDiscussionComment(
+    org: string,
+    number: string | number,
+    payload: OrganizationDiscussionCommentPayload
+  ): Promise<any> {
+    const response = await this.client.post(`/api/v5/orgs/${org}/discuss/${number}/comment`, payload);
+    return response.data;
+  }
+
+  async updateOrganizationDiscussionComment(
+    org: string,
+    number: string | number,
+    id: string,
+    payload: OrganizationDiscussionCommentPayload
+  ): Promise<any> {
+    const response = await this.client.put(`/api/v5/orgs/${org}/discuss/${number}/comment/${id}`, payload);
+    return response.data;
+  }
+
+  async deleteOrganizationDiscussionComment(org: string, number: string | number, id: string): Promise<any> {
+    const response = await this.client.delete(`/api/v5/orgs/${org}/discuss/${number}/comment/${id}`);
+    return response.data;
+  }
+
+  async replyOrganizationDiscussionComment(
+    org: string,
+    number: string | number,
+    id: string,
+    payload: OrganizationDiscussionCommentPayload
+  ): Promise<any> {
+    const response = await this.client.post(`/api/v5/orgs/${org}/discuss/${number}/comment/${id}/reply`, payload);
     return response.data;
   }
 }
