@@ -66,6 +66,7 @@ import { ToolSafetyPolicy } from './core/ToolSafetyPolicy.js';
 import { ResourceProvider } from './core/ResourceProvider.js';
 import { PromptProvider } from './core/PromptProvider.js';
 import { CompletionProvider } from './core/CompletionProvider.js';
+import { errorToSafeLogValue } from './core/ErrorSanitizer.js';
 
 // Load environment variables
 config();
@@ -259,7 +260,7 @@ class AtomGitMCPServer {
           ],
         };
       } catch (error) {
-        console.error(`Error in tool ${name}:`, error);
+        console.error(`Error in tool ${name}:`, errorToSafeLogValue(error));
         
         if (error instanceof AxiosError) {
           return {
@@ -305,7 +306,7 @@ class AtomGitMCPServer {
           contents: [content],
         };
       } catch (error) {
-        console.error('Error reading resource:', error);
+        console.error('Error reading resource:', errorToSafeLogValue(error));
         throw new Error(`Resource read error: ${error instanceof Error ? error.message : String(error)}`);
       }
     });
@@ -325,7 +326,7 @@ class AtomGitMCPServer {
           messages: result.messages,
         };
       } catch (error) {
-        console.error('Error getting prompt:', error);
+        console.error('Error getting prompt:', errorToSafeLogValue(error));
         throw new Error(`Prompt error: ${error instanceof Error ? error.message : String(error)}`);
       }
     });
@@ -416,7 +417,7 @@ class AtomGitMCPServer {
 
         await httpTransport.handleRequest(req, res);
       } catch (error) {
-        console.error('HTTP transport error:', error);
+        console.error('HTTP transport error:', errorToSafeLogValue(error));
         if (!res.headersSent) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: 'Internal Server Error' }));

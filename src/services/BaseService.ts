@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { AtomGitConfig } from '../types/index.js';
+import { sanitizeAxiosError } from '../core/ErrorSanitizer.js';
 
 export abstract class BaseService {
   protected client: AxiosInstance;
@@ -20,6 +21,11 @@ export abstract class BaseService {
           'token': config.token
         })
       }
+    });
+
+    this.client.interceptors.response.use(undefined, (error) => {
+      sanitizeAxiosError(error);
+      return Promise.reject(error);
     });
   }
 
