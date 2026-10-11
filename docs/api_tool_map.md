@@ -1,6 +1,6 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-09-12
+**生成时间:** 2026-10-11
 **分类总数:** 19
 **工具总数:** 305
 
@@ -181,8 +181,8 @@
 | [`delete_organization_discussion_comment`](../src/tools/OrganizationTools.ts) | 删除组织讨论评论 | [`deleteOrganizationDiscussionComment`](../src/services/OrganizationService.ts) | [`DELETE /api/v5/orgs/${org}/discuss/${number}/comment/${id}`](https://docs.atomgit.com/docs/apis/delete-api-v-5-org-org-discuss-number-comment-id) |
 | [`get_current_user_organization_membership`](../src/tools/OrganizationTools.ts) | 获取授权用户在一个组织的成员资料 | [`getCurrentUserOrganizationMembership`](../src/services/OrganizationService.ts) | [`GET /api/v5/user/memberships/orgs/${org}`](https://docs.atomgit.com/docs/apis/get-api-v-5-user-memberships-orgs-org) |
 | [`get_current_user_organizations`](../src/tools/OrganizationTools.ts) | 列出授权用户所属的组织 | [`getCurrentUserOrganizations`](../src/services/OrganizationService.ts) | [`GET /api/v5/users/orgs`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-orgs) |
-| [`get_enterprise_member`](../src/tools/OrganizationTools.ts) | 获取企业的一个成员 | [`getEnterpriseMember`](../src/services/OrganizationService.ts) | [`GET /api/v5/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members-username) |
-| [`get_enterprise_members`](../src/tools/OrganizationTools.ts) | 列出企业的所有成员 | [`getEnterpriseMembers`](../src/services/OrganizationService.ts) | [`GET /api/v5/enterprises/${enterprise}/members`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members) |
+| [`get_enterprise_member`](../src/tools/OrganizationTools.ts) | **获取组织的一个成员**<br>获取企业的一个成员 | [`getEnterpriseMember`](../src/services/OrganizationService.ts) | [`GET /api/v5/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members-username) |
+| [`get_enterprise_members`](../src/tools/OrganizationTools.ts) | **列出组织的所有成员**<br>列出企业的所有成员 | [`getEnterpriseMembers`](../src/services/OrganizationService.ts) | [`GET /api/v5/enterprises/${enterprise}/members`](https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members) |
 | [`get_organization`](../src/tools/OrganizationTools.ts) | 获取一个组织信息 | [`getOrganization`](../src/services/OrganizationService.ts) | [`GET /api/v5/orgs/${org}`](https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org) |
 | [`get_organization_customized_roles`](../src/tools/OrganizationTools.ts) | 获取组织自定义角色 | [`getOrganizationCustomizedRoles`](../src/services/OrganizationService.ts) | [`GET /api/v5/orgs/${org}/customized_roles`](https://docs.atomgit.com/docs/apis/get-api-v-5-org-org-customized-roles) |
 | [`get_organization_discussion`](../src/tools/OrganizationTools.ts) | 获取组织讨论详情 | [`getOrganizationDiscussion`](../src/services/OrganizationService.ts) | [`GET /api/v5/orgs/${org}/discuss/${number}`](https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-discuss-number) |
@@ -199,7 +199,7 @@
 | [`leave_organization`](../src/tools/OrganizationTools.ts) | 退出一个组织 | [`leaveOrganization`](../src/services/OrganizationService.ts) | [`DELETE /api/v5/user/memberships/orgs/${org}`](https://docs.atomgit.com/docs/apis/delete-api-v-5-user-memberships-orgs-org) |
 | [`remove_organization_member`](../src/tools/OrganizationTools.ts) | 移除授权用户所管理组织中的成员 | [`removeOrganizationMember`](../src/services/OrganizationService.ts) | [`DELETE /api/v5/orgs/${org}/memberships/${username}`](https://docs.atomgit.com/docs/apis/delete-api-v-5-orgs-org-memberships-username) |
 | [`reply_organization_discussion_comment`](../src/tools/OrganizationTools.ts) | 回复组织讨论评论 | [`replyOrganizationDiscussionComment`](../src/services/OrganizationService.ts) | [`POST /api/v5/orgs/${org}/discuss/${number}/comment/${id}/reply`](https://docs.atomgit.com/docs/apis/post-api-v-5-org-org-discuss-number-comment-id-reply) |
-| [`update_enterprise_member`](../src/tools/OrganizationTools.ts) | 修改企业成员权限 | [`updateEnterpriseMember`](../src/services/OrganizationService.ts) | [`PUT /api/v5/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/put-api-v-5-enterprises-enterprise-members-username) |
+| [`update_enterprise_member`](../src/tools/OrganizationTools.ts) | **修改组织成员权限**<br>修改企业成员权限 | [`updateEnterpriseMember`](../src/services/OrganizationService.ts) | [`PUT /api/v5/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/put-api-v-5-enterprises-enterprise-members-username) |
 | [`update_organization`](../src/tools/OrganizationTools.ts) | 更新授权用户所管理的组织资料 | [`updateOrganization`](../src/services/OrganizationService.ts) | [`PATCH /api/v5/orgs/${org}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-orgs-org) |
 | [`update_organization_discussion`](../src/tools/OrganizationTools.ts) | 更新组织讨论 | [`updateOrganizationDiscussion`](../src/services/OrganizationService.ts) | [`PUT /api/v5/orgs/${org}/discuss/${number}`](https://docs.atomgit.com/docs/apis/put-api-v-5-org-org-discuss-number) |
 | [`update_organization_discussion_comment`](../src/tools/OrganizationTools.ts) | 更新组织讨论评论 | [`updateOrganizationDiscussionComment`](../src/services/OrganizationService.ts) | [`PUT /api/v5/orgs/${org}/discuss/${number}/comment/${id}`](https://docs.atomgit.com/docs/apis/put-api-v-5-org-org-discuss-number-comment-id) |

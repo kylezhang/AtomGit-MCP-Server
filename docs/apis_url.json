@@ -984,12 +984,6 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-issue-extend-settings"
         },
         {
-          "name": "获取企业的一个成员",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/enterprises/:enterprise/members/:username",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members-username"
-        },
-        {
           "name": "获取授权用户在一个组织的成员资料",
           "httpMethod": "GET",
           "endpointPath": "/api/v5/user/memberships/orgs/:org",
@@ -1008,6 +1002,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-org-members-username"
         },
         {
+          "name": "获取组织的一个成员",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/enterprises/:enterprise/members/:username",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members-username"
+        },
+        {
           "name": "获取组织项目列表",
           "httpMethod": "GET",
           "endpointPath": "/api/v5/orgs/:org/repos",
@@ -1018,12 +1018,6 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/orgs/:org/customized_roles",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-org-org-customized-roles"
-        },
-        {
-          "name": "列出企业的所有成员",
-          "httpMethod": "GET",
-          "endpointPath": "/api/v5/enterprises/:enterprise/members",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members"
         },
         {
           "name": "列出授权用户所属的组织",
@@ -1050,6 +1044,12 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-orgs-owner-followers"
         },
         {
+          "name": "列出组织的所有成员",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/enterprises/:enterprise/members",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-enterprises-enterprise-members"
+        },
+        {
           "name": "更新授权用户所管理的组织资料",
           "httpMethod": "PATCH",
           "endpointPath": "/api/v5/orgs/:org",
@@ -1068,7 +1068,7 @@
           "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-orgs-org-memberships-username"
         },
         {
-          "name": "修改企业成员权限",
+          "name": "修改组织成员权限",
           "httpMethod": "PUT",
           "endpointPath": "/api/v5/enterprises/:enterprise/members/:username",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/put-api-v-5-enterprises-enterprise-members-username"
