@@ -198,13 +198,13 @@ export class OrganizationTools {
       },
       {
         name: 'get_enterprise_member',
-        description: '获取企业的一个成员',
+        description: '获取组织的一个成员',
         inputSchema: {
           type: 'object',
           properties: {
             enterprise: {
               type: 'string',
-              description: '企业名'
+              description: '组织的路径 (path/login)'
             },
             username: {
               type: 'string',
@@ -216,13 +216,13 @@ export class OrganizationTools {
       },
       {
         name: 'update_enterprise_member',
-        description: '修改企业成员权限',
+        description: '修改组织成员权限',
         inputSchema: {
           type: 'object',
           properties: {
             enterprise: {
               type: 'string',
-              description: '企业名'
+              description: '组织的路径 (path/login)'
             },
             username: {
               type: 'string',
@@ -291,13 +291,13 @@ export class OrganizationTools {
       },
       {
         name: 'get_enterprise_members',
-        description: '列出企业的所有成员',
+        description: '列出组织的所有成员',
         inputSchema: {
           type: 'object',
           properties: {
             enterprise: {
               type: 'string',
-              description: '企业名'
+              description: '组织的路径 (path/login)'
             },
             org: {
               type: 'string',
