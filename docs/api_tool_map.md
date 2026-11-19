@@ -1,8 +1,8 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-10-11
+**生成时间:** 2026-11-19
 **分类总数:** 19
-**工具总数:** 305
+**工具总数:** 308
 
 ## 概览
 本文档列出了所有注册的工具、描述以及它们调用的底层 AtomGit API 端点。
@@ -84,7 +84,7 @@
 | [`update_org_kanban_repo_item`](../src/tools/DashboardTools.ts) | 更新Issue或者Pull Request关联的看板 | [`updateKanbanItem`](../src/services/DashboardService.ts) | [`PUT /api/v5/org/${owner}/kanban/repo/${repo}/${type}/${iid}`](https://docs.atomgit.com/docs/apis/put-api-v-5-org-owner-kanban-repo-repo-type-iid-new) |
 | [`update_org_kanban_state`](../src/tools/DashboardTools.ts) | 修改看板状态 | [`updateKanbanState`](../src/services/DashboardService.ts) | [`PUT /api/v5/org/${owner}/kanban/${kanbanId}/state`](https://docs.atomgit.com/docs/apis/put-api-v-5-org-owner-kanban-kanban-id-state) |
 
-### Enterprise (18)
+### Enterprise (19)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`create_enterprise_label_v8`](../src/tools/EnterpriseTools.ts) | 创建企业标签 | [`createEnterpriseLabel`](../src/services/EnterpriseService.ts) | [`POST /api/v8/enterprises/${enterpriseId}/label`](https://docs.atomgit.com/docs/apis/post-api-v-8-enterprises-enterprises-id-label) |
@@ -95,6 +95,7 @@
 | [`get_enterprise_customized_roles_v8`](../src/tools/EnterpriseTools.ts) | 获取企业自定义角色 | [`getEnterpriseCustomizedRoles`](../src/services/EnterpriseService.ts) | [`GET /api/v8/enterprise/${enterpriseId}/customized_roles`](https://docs.atomgit.com/docs/apis/get-api-v-8-enterprise-enterprise-id-customized-roles) |
 | [`get_enterprise_issue_extend_fields_v8`](../src/tools/EnterpriseTools.ts) | 获取企业Issue自定义字段列表 | [`getEnterpriseIssueExtendFields`](../src/services/EnterpriseService.ts) | [`GET /api/v8/enterprises/${enterprisesId}/issue_extend_field`](https://docs.atomgit.com/docs/apis/get-api-v-8-enterprises-enterprises-id-issue-extend-field) |
 | [`get_enterprise_issues_v8`](../src/tools/EnterpriseTools.ts) | 获取企业Issue列表 | [`getEnterpriseIssuesV8`](../src/services/EnterpriseService.ts) | [`POST /api/v8/enterprises/${enterpriseId}/issues`](https://docs.atomgit.com/docs/apis/post-api-v-8-enterprises-enterprises-id-issues) |
+| [`get_enterprise_label_v8`](../src/tools/EnterpriseTools.ts) | 分页查询企业标签 | [`getEnterpriseLabelsPage`](../src/services/EnterpriseService.ts) | [`GET /api/v8/enterprises/${enterpriseId}/label`](https://docs.atomgit.com/docs/apis/get-api-v-8-enterprises-enterprises-id-label) |
 | [`get_enterprise_member_v8`](../src/tools/EnterpriseTools.ts) | 获取企业的一个成员 | [`getEnterpriseMemberV8`](../src/services/EnterpriseService.ts) | [`GET /api/v8/enterprises/${enterprise}/members/${username}`](https://docs.atomgit.com/docs/apis/get-api-v-8-enterprises-enterprise-members-username) |
 | [`get_enterprise_members_v8`](../src/tools/EnterpriseTools.ts) | 列出企业的所有成员 | [`getEnterpriseMembersV8`](../src/services/EnterpriseService.ts) | [`GET /api/v8/enterprises/${enterprise}/members`](https://docs.atomgit.com/docs/apis/get-api-v-8-enterprises-enterprise-members) |
 | [`get_enterprise_milestone_v8`](../src/tools/EnterpriseTools.ts) | 获取企业里程碑详情 | [`getEnterpriseMilestone`](../src/services/EnterpriseService.ts) | [`GET /api/v8/enterprises/${enterprise}/milestones/${milestoneId}`](https://docs.atomgit.com/docs/apis/get-api-v-8-enterprise-enterprise-id-milestones-milestone-id) |
@@ -292,7 +293,7 @@
 | [`get_repository_tags`](../src/tools/TagTools.ts) | **列出项目所有的tags**<br>List all tags in a repository | [`getRepositoryTags`](../src/services/TagService.ts) | [`GET /api/v5/repos/${owner}/${repo}/tags`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-tags) |
 | [`update_repository_protected_tag`](../src/tools/TagTools.ts) | **修改项目保护 tag**<br>Update a protected tag in a repository | [`updateRepositoryProtectedTag`](../src/services/TagService.ts) | [`PUT /api/v5/repos/${owner}/${repo}/protected_tags`](https://docs.atomgit.com/docs/apis/put-api-v-5-repos-owner-repo-protected-tags) |
 
-### User (22)
+### User (24)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`add_user_key`](../src/tools/UserTools.ts) | **添加一个公钥**<br>Add a public key for user | [`addUserKey`](../src/services/UserService.ts) | [`POST /api/v5/user/keys`](https://docs.atomgit.com/docs/apis/post-api-v-5-user-keys) |
@@ -311,6 +312,8 @@
 | [`get_repository_notifications`](../src/tools/UserTools.ts) | **列出一个仓库里的通知**<br>List notifications in a repository | [`getRepositoryNotifications`](../src/services/UserService.ts) | [`GET /api/v5/repos/${owner}/${repo}/notifications`](https://docs.atomgit.com/docs/apis/get-api-v-5-repos-owner-repo-notifications) |
 | [`get_user`](../src/tools/UserTools.ts) | **获取一个用户**<br>Get information about a specific user | [`getUser`](../src/services/UserService.ts) | [`GET /api/v5/users/${username}`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-username) |
 | [`get_user_events`](../src/tools/UserTools.ts) | **获取用户个人动态**<br>Get user events | [`getUserEvents`](../src/services/UserService.ts) | [`GET /api/v5/users/${username}/events`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-username-events) |
+| [`get_user_followers`](../src/tools/UserTools.ts) | **列出指定用户的粉丝列表**<br>List followers of a specific user | [`getUserFollowers`](../src/services/UserService.ts) | [`GET /api/v5/users/${username}/followers`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-username-followers) |
+| [`get_user_following`](../src/tools/UserTools.ts) | **列出指定用户的关注列表**<br>List accounts followed by a specific user (users or organizations) | [`getUserFollowing`](../src/services/UserService.ts) | [`GET /api/v5/users/${username}/following`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-username-following) |
 | [`get_user_key`](../src/tools/UserTools.ts) | **获取一个公钥**<br>Get a specific public key | [`getUserKey`](../src/services/UserService.ts) | [`GET /api/v5/user/keys/${keyId}`](https://docs.atomgit.com/docs/apis/get-api-v-5-user-keys-id) |
 | [`get_user_repos`](../src/tools/UserTools.ts) | **获取某个用户的公开仓库**<br>Get all repositories for a specific user | [`getUserRepos`](../src/services/UserService.ts) | [`GET /api/v5/users/${username}/repos`](https://docs.atomgit.com/docs/apis/get-api-v-5-users-username-repos) |
 | [`get_user_starred_repos`](../src/tools/UserTools.ts) | **列出用户 star 了的仓库**<br>Get all starred repositories for a specific user | [`getUserStarredRepos`](../src/services/UserService.ts) | [`GET /api/v5/users/${username}/starred`](https://docs.atomgit.com/docs/apis/get-api-v-5-user-username-starred) |

@@ -463,6 +463,31 @@ export class EnterpriseTools {
           },
           required: ['enterpriseId', 'labelId']
         }
+      },
+      {
+        name: 'get_enterprise_label_v8',
+        description: '分页查询企业标签',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            enterpriseId: {
+              type: 'number',
+              description: '企业id'
+            },
+            search: {
+              type: 'string',
+              description: '关键词搜索'
+            },
+            page: {
+              ...stringOrNumberSchema('页码', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('每页数量，最大100', 20)
+            },
+            ...autoPaginateSchemaProperties,
+          },
+          required: ['enterpriseId']
+        }
       }
     ];
   }
@@ -627,6 +652,15 @@ export class EnterpriseTools {
           args.enterprise_id ?? args.enterpriseId,
           args.label_id ?? args.labelId
         );
+
+      case 'get_enterprise_label_v8':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.enterpriseService.getEnterpriseLabelsPage(args.enterprise_id ?? args.enterpriseId, page, perPage, args.search),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
+        return await this.enterpriseService.getEnterpriseLabelsPage(args.enterprise_id ?? args.enterpriseId, args.page, args.perPage, args.search);
       
       default:
         throw new Error(`Unknown tool: ${name}`);

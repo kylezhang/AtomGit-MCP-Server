@@ -1,5 +1,5 @@
 {
-  "totalEndpoints": 305,
+  "totalEndpoints": 308,
   "categories": [
     {
       "name": "AI hub",
@@ -537,7 +537,7 @@
     },
     {
       "name": "Enterprise",
-      "endpointCount": 18,
+      "endpointCount": 19,
       "endpoints": [
         {
           "name": "删除企业标签",
@@ -556,6 +556,12 @@
           "httpMethod": "DELETE",
           "endpointPath": "/api/v8/enterprises/:enterprise/milestones/:milestone_id",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/delete-api-v-8-enterprise-enterprise-id-milestones-milestone-id"
+        },
+        {
+          "name": "分页查询企业标签",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v8/enterprises/:enterprise_id/label",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-8-enterprises-enterprises-id-label"
         },
         {
           "name": "获取企业的一个成员",
@@ -1767,7 +1773,7 @@
     },
     {
       "name": "Users",
-      "endpointCount": 22,
+      "endpointCount": 24,
       "endpoints": [
         {
           "name": "删除一个公钥",
@@ -1876,6 +1882,18 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/users/:username/subscriptions",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-user-username-subscriptions"
+        },
+        {
+          "name": "列出指定用户的粉丝列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/users/:username/followers",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-users-username-followers"
+        },
+        {
+          "name": "列出指定用户的关注列表",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/users/:username/following",
+          "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-users-username-following"
         },
         {
           "name": "更新授权用户的资料",

@@ -166,4 +166,16 @@ export class EnterpriseService extends BaseService {
     const response = await this.client.delete(`/api/v8/enterprises/${enterpriseId}/label/${labelId}`);
     return response.data;
   }
+
+  async getEnterpriseLabelsPage(
+    enterpriseId: number,
+    page = 1,
+    perPage = 20,
+    search?: string
+  ): Promise<any[]> {
+    const response = await this.client.get(`/api/v8/enterprises/${enterpriseId}/label`, {
+      params: { page, per_page: perPage, search }
+    });
+    return response.data;
+  }
 }
