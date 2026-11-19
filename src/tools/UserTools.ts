@@ -41,6 +41,48 @@ export class UserTools {
         }
       },
       {
+        name: 'get_user_followers',
+        description: 'List followers of a specific user',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            username: {
+              type: 'string',
+              description: 'The username of the user'
+            },
+            page: {
+              ...stringOrNumberSchema('Page number for pagination', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('Number of results per page (max 100)', 30)
+            },
+            ...autoPaginateSchemaProperties,
+          },
+          required: ['username']
+        }
+      },
+      {
+        name: 'get_user_following',
+        description: 'List accounts followed by a specific user (users or organizations)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            username: {
+              type: 'string',
+              description: 'The username of the user'
+            },
+            page: {
+              ...stringOrNumberSchema('Page number for pagination', 1)
+            },
+            perPage: {
+              ...stringOrNumberSchema('Number of results per page (max 100)', 30)
+            },
+            ...autoPaginateSchemaProperties,
+          },
+          required: ['username']
+        }
+      },
+      {
         name: 'get_user_repos',
         description: 'Get all repositories for a specific user',
         inputSchema: {
@@ -612,6 +654,30 @@ export class UserTools {
       
       case 'get_user':
         return await this.userService.getUser(args.username);
+      
+      case 'get_user_followers':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getUserFollowers(args.username, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
+        return await this.userService.getUserFollowers(args.username, {
+          page: args.page,
+          perPage: args.perPage
+        });
+      
+      case 'get_user_following':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            (page, perPage) => this.userService.getUserFollowing(args.username, { page, perPage }),
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
+        return await this.userService.getUserFollowing(args.username, {
+          page: args.page,
+          perPage: args.perPage
+        });
       
       case 'get_user_repos':
         if (args.autoPaginate) {

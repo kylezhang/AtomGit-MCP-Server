@@ -116,6 +116,20 @@ export class UserService extends BaseService {
     return response.data;
   }
 
+  async getUserFollowers(username: string, options: PaginationOptions = {}): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/followers`, {
+      params: this.buildParams(options)
+    });
+    return response.data;
+  }
+
+  async getUserFollowing(username: string, options: PaginationOptions = {}): Promise<any[]> {
+    const response = await this.client.get(`/api/v5/users/${username}/following`, {
+      params: this.buildParams(options)
+    });
+    return response.data;
+  }
+
   async getCurrentUser(): Promise<AtomGitUser> {
     const response = await this.client.get('/api/v5/user');
     return response.data;
