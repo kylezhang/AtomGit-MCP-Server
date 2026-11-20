@@ -688,9 +688,9 @@ export class IssuesTools {
               type: 'string',
               description: 'The enterprise name'
             },
-            issue_id: {
+            number: {
               type: 'string',
-              description: 'The issue ID'
+              description: 'The issue number'
             },
             page: {
               ...stringOrNumberSchema('Page number for pagination', 1)
@@ -700,7 +700,7 @@ export class IssuesTools {
             },
             ...autoPaginateSchemaProperties,
           },
-          required: ['enterprise', 'issue_id']
+          required: ['enterprise', 'number']
         }
       },
       {
@@ -1210,11 +1210,11 @@ export class IssuesTools {
       case 'get_enterprise_issue_labels':
         if (args.autoPaginate) {
           return autoPaginate(
-            (page, perPage) => this.issuesService.getEnterpriseIssueLabels(args.enterprise, issueId, { page, perPage }),
+            (page, perPage) => this.issuesService.getEnterpriseIssueLabels(args.enterprise, args.number ?? issueId, { page, perPage }),
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
           );
         }
-        return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, issueId, {
+        return await this.issuesService.getEnterpriseIssueLabels(args.enterprise, args.number ?? issueId, {
           page: args.page,
           perPage: args.perPage
         });

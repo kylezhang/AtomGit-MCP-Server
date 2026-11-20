@@ -370,7 +370,7 @@ export class OrganizationTools {
         inputSchema: {
           type: 'object',
           properties: {
-            owner: {
+            org: {
               type: 'string',
               description: '组织名'
             },
@@ -384,7 +384,7 @@ export class OrganizationTools {
             },
             ...autoPaginateSchemaProperties,
           },
-          required: ['owner']
+          required: ['org']
         }
       },
       {
@@ -724,11 +724,11 @@ export class OrganizationTools {
       case 'get_organization_followers':
         if (args.autoPaginate) {
           return autoPaginate(
-            (page, perPage) => this.organizationService.getOrganizationFollowers(args.owner, page, perPage),
+            (page, perPage) => this.organizationService.getOrganizationFollowers(args.org ?? args.owner, page, perPage),
             { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
           );
         }
-        return await this.organizationService.getOrganizationFollowers(args.owner, args.page, args.perPage);
+        return await this.organizationService.getOrganizationFollowers(args.org ?? args.owner, args.page, args.perPage);
         
       case 'get_organization_issue_extend_settings':
         return await this.organizationService.getOrganizationIssueExtendSettings(args.org);
