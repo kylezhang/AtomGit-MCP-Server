@@ -95,6 +95,8 @@ If an official page is intentionally filtered from `docs/apis_url.json`, the mat
 - The raw file content page below must **not** be filtered and must parse as a valid endpoint:
   - `https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name`
   - Expected endpoint path: `/:owner/:repo/raw/:head_sha/:name`
+- 2026-11-20 (#57): `docs/apis_url.json` carries two manual OpenAPI-aligned overrides — the decommissioned `POST /api/v5/similarity/` entry removed and `GET /api/v5/search` added (official confirmed). `npm run api:sync` (old-docs sitemap) will revert these until the sync chain switches to OpenAPI; re-apply or switch the chain before relying on them.
+- `api:audit` reads the old-docs baseline, so it flags the OpenAPI-aligned renames `get_enterprise_issue_labels` (issue_id→number) and `get_organization_followers` (owner→org) as missing_param/extra_required. These are intentional (official: OpenAPI param names authoritative), not regressions.
 
 ## 4. Feature Development Workflow (Scenario A)
 
