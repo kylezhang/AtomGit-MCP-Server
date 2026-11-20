@@ -112,7 +112,7 @@ Requirement/bug → Issue (label at creation) → Preflight API testing → Impl
   - Bug: symptoms, root-cause analysis, **live reproduction evidence** (raw curl or tool-call transcript).
 - **Label the Issue at creation**: `bug` / `feature` / `documentation`. An unlabeled Issue means the workflow has not started.
 - **Set the Issue assignee** to the maintainer's platform login (`zkxw2008`) — the exact account value the platform uses, no personal aliases.
-- Issue 标题用中文大白话（说人话），不堆英文术语；PR 标题仍按 `type(scope): English description` 约定。
+- Issue 标题用中文大白话、一句话点明目标（例：同步官方最新的API文档），不罗列改动清单，细节放正文；PR 标题仍按 `type(scope): English description` 约定。
 
 ### 4.2 Sync the Official Baseline
 - Run `npm run api:sync`
