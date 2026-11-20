@@ -112,6 +112,7 @@ Requirement/bug → Issue (label at creation) → Preflight API testing → Impl
   - Bug: symptoms, root-cause analysis, **live reproduction evidence** (raw curl or tool-call transcript).
 - **Label the Issue at creation**: `bug` / `feature` / `documentation`. An unlabeled Issue means the workflow has not started.
 - **Set the Issue assignee** to the maintainer's platform login (`zkxw2008`) — the exact account value the platform uses, no personal aliases.
+- Issue 标题用中文大白话（说人话），不堆英文术语；PR 标题仍按 `type(scope): English description` 约定。
 
 ### 4.2 Sync the Official Baseline
 - Run `npm run api:sync`
@@ -154,6 +155,7 @@ Before writing any code, verify every new endpoint with curl. Never guess from d
 - [ ] PR title format: `feat/fix(scope): English description fixes #N`
 - [ ] PR body contains: linked Issue, change summary, preflight/reproduction evidence, deviations from conventions (if any)
 - [ ] **PR carries the label matching its Issue** (historically the most frequently missed item)
+- [ ] PR 设置里显式关联 Issue（创建时 `inner_issue_nums` string，或事后 `POST /pulls/{n}/issues` 裸数组 `[num]`）；正文 `fixes #N` 只负责合并自动关闭，不等于设置关联。
 - [ ] Pagination and building-block reuse checked against section 3
 - [ ] build + E2E passed
 - [ ] Branch pushed to origin (AtomGit)
