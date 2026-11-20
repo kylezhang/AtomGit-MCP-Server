@@ -689,7 +689,7 @@ export class IssuesTools {
               description: 'The enterprise name'
             },
             number: {
-              type: 'string',
+              type: 'number',
               description: 'The issue number'
             },
             page: {

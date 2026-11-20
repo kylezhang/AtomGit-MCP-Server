@@ -59,6 +59,7 @@ export class SearchService extends BaseService {
   }
 
   async search(options: GenericSearchOptions): Promise<any> {
+    // OpenAPI /api/v5/search query aliases: param.min/param.max, s=sort, o=order, p=page, pp=perPage
     const params = Object.fromEntries(
       Object.entries({
         type: options.type,
