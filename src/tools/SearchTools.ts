@@ -139,6 +139,68 @@ export class SearchTools {
           required: ['q']
         },
         outputSchema: looseArrayOutputSchema('JSON array of repository objects (search results)'),
+      },
+      {
+        name: 'search',
+        description: '通用搜索 (按类型搜索 repo/user/group/pullrequest/issue)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            type: {
+              type: 'string',
+              description: '搜索类型',
+              enum: ['repo', 'user', 'group', 'pullrequest', 'issue']
+            },
+            query: {
+              type: 'string',
+              description: '搜索查询字符串'
+            },
+            q: {
+              type: 'string',
+              description: '搜索查询字符串'
+            },
+            repo_type: {
+              type: 'string',
+              description: '仓库类型过滤'
+            },
+            task: {
+              type: 'string',
+              description: '任务过滤'
+            },
+            library: {
+              type: 'string',
+              description: '库过滤'
+            },
+            min: {
+              type: 'number',
+              description: '数值下限 (param.min)'
+            },
+            max: {
+              type: 'number',
+              description: '数值上限 (param.max)'
+            },
+            sort: {
+              type: 'string',
+              description: '排序字段'
+            },
+            order: {
+              type: 'string',
+              description: '排序方向'
+            },
+            page: {
+              type: 'number',
+              description: '页码，默认为1',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: '每页结果数，默认为30',
+              default: 30
+            },
+            ...autoPaginateSchemaProperties,
+          },
+          required: ['type']
+        }
       }
     ];
   }
@@ -191,6 +253,30 @@ export class SearchTools {
           owner: args.owner,
           fork: args.fork,
           language: args.language,
+          page: args.page,
+          perPage: args.perPage
+        });
+      
+      case 'search':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            async (page, perPage) => {
+              const data = await this.searchService.search({ type: args.type, q: args.q ?? args.query, repo_type: args.repo_type, task: args.task, library: args.library, min: args.min, max: args.max, sort: args.sort, order: args.order, page, perPage });
+              return data?.content ?? [];
+            },
+            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
+        return await this.searchService.search({
+          type: args.type,
+          q: args.q ?? args.query,
+          repo_type: args.repo_type,
+          task: args.task,
+          library: args.library,
+          min: args.min,
+          max: args.max,
+          sort: args.sort,
+          order: args.order,
           page: args.page,
           perPage: args.perPage
         });

@@ -13,6 +13,20 @@ interface SearchOptions {
   language?: string;
 }
 
+interface GenericSearchOptions {
+  type: string;
+  q?: string;
+  repo_type?: string;
+  task?: string;
+  library?: string;
+  min?: number;
+  max?: number;
+  sort?: string;
+  order?: string;
+  page?: number;
+  perPage?: number;
+}
+
 export class SearchService extends BaseService {
   private buildParams(options: SearchOptions): Record<string, unknown> {
     return Object.fromEntries(
@@ -41,6 +55,26 @@ export class SearchService extends BaseService {
     const response = await this.client.get('/api/v5/search/repositories', {
       params: this.buildParams(options)
     });
+    return response.data;
+  }
+
+  async search(options: GenericSearchOptions): Promise<any> {
+    const params = Object.fromEntries(
+      Object.entries({
+        type: options.type,
+        q: options.q,
+        repo_type: options.repo_type,
+        task: options.task,
+        library: options.library,
+        'param.min': options.min,
+        'param.max': options.max,
+        s: options.sort,
+        o: options.order,
+        p: options.page,
+        pp: options.perPage
+      }).filter(([, value]) => value !== undefined)
+    );
+    const response = await this.client.get('/api/v5/search', { params });
     return response.data;
   }
 }
