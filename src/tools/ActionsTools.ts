@@ -1,7 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { ActionsService } from '../services/ActionsService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
-import { stringOrNumberSchema, repoPathProperties, paginationProperties, looseArrayOutputSchema } from '../schemas/common.js';
+import { stringOrNumberSchema, repoPathProperties, paginationProperties, actionsRunsOutputSchema } from '../schemas/common.js';
 
 const artifactListProperties = {
   name: {
@@ -197,7 +197,7 @@ export class ActionsTools {
           },
           required: ['owner', 'repo']
         },
-        outputSchema: looseArrayOutputSchema('JSON array of workflow run objects'),
+        outputSchema: actionsRunsOutputSchema,
       },
       {
         name: 'get_repository_actions_run',

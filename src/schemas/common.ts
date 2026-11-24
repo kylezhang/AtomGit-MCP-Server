@@ -113,7 +113,7 @@ export const issueOutputSchema = {
   description: 'AtomGit issue object',
   properties: {
     id: { type: 'number' },
-    number: { type: 'number' },
+    number: { type: ['number', 'string'] },
     title: { type: 'string' },
     body: { type: 'string' },
     state: { type: 'string', enum: ['open', 'closed'] },
@@ -179,14 +179,28 @@ export const treeOutputSchema = {
   additionalProperties: true,
 } as const;
 
+export const actionsRunsOutputSchema = {
+  type: 'object',
+  description: 'Workflow runs result: an envelope {total_count, workflow_runs} normally, or {items:[...]} when autoPaginate is used',
+  properties: {
+    total_count: { type: 'number' },
+    workflow_runs: { type: 'array' },
+    items: { type: 'array' },
+  },
+  additionalProperties: true,
+} as const;
+
 /**
  * Loose outputSchema for list tools whose payload is a plain JSON array.
- * MCP requires the schema root to be `object`, so we describe the actual
- * array payload in the description and keep the schema permissive.
+ * MCP requires the schema root to be `object`, so the array is wrapped under
+ * `items` in structuredContent; the schema stays permissive for envelope variants.
  */
 export const looseArrayOutputSchema = (description: string) =>
   ({
     type: 'object',
-    description,
+    description: `${description} (array payload wrapped under "items" in structuredContent)`,
+    properties: {
+      items: { type: 'array', description: 'The list payload' },
+    },
     additionalProperties: true,
   } as const);
