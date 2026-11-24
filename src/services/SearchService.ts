@@ -19,8 +19,8 @@ interface GenericSearchOptions {
   repo_type?: string;
   task?: string;
   library?: string;
-  min?: number;
-  max?: number;
+  min?: string;
+  max?: string;
   sort?: string;
   order?: string;
   page?: number;

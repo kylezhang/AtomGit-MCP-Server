@@ -161,7 +161,8 @@ export class SearchTools {
             },
             repo_type: {
               type: 'string',
-              description: '仓库类型过滤'
+              description: '仓库类型：0 代码仓、1 模型仓、2 数据集仓',
+              enum: ['0', '1', '2']
             },
             task: {
               type: 'string',
@@ -172,20 +173,21 @@ export class SearchTools {
               description: '库过滤'
             },
             min: {
-              type: 'number',
-              description: '数值下限 (param.min)'
+              type: 'string',
+              description: '参数规模下限，如 1B'
             },
             max: {
-              type: 'number',
-              description: '数值上限 (param.max)'
+              type: 'string',
+              description: '参数规模上限，如 7B'
             },
             sort: {
               type: 'string',
-              description: '排序字段'
+              description: '排序字段，如 created_at、updated_at、star、fork，默认最佳匹配'
             },
             order: {
               type: 'string',
-              description: '排序方向'
+              description: '排序顺序',
+              enum: ['asc', 'desc']
             },
             page: {
               type: 'number',
@@ -194,8 +196,8 @@ export class SearchTools {
             },
             perPage: {
               type: 'number',
-              description: '每页结果数，默认为30',
-              default: 30
+              description: '每页结果数，默认为10',
+              default: 10
             },
             ...autoPaginateSchemaProperties,
           },
@@ -264,7 +266,8 @@ export class SearchTools {
               const data = await this.searchService.search({ type: args.type, q: args.q ?? args.query, repo_type: args.repo_type, task: args.task, library: args.library, min: args.min, max: args.max, sort: args.sort, order: args.order, page, perPage });
               return data?.content ?? [];
             },
-            { page: args.page, perPage: args.perPage, autoPaginate: true, maxPages: args.maxPages }
+            // autoPaginate's global default is 30; keep this tool's advertised 10
+            { page: args.page, perPage: args.perPage ?? 10, autoPaginate: true, maxPages: args.maxPages }
           );
         }
         return await this.searchService.search({
