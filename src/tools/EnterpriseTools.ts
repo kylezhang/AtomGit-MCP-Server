@@ -2,6 +2,8 @@ import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { EnterpriseService } from '../services/EnterpriseService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 
+const ENTERPRISE_LABEL_DEFAULT_PER_PAGE = 20;
+
 const stringOrNumberSchema = (description: string, defaultValue?: number) => ({
   oneOf: [
     { type: 'string' },
@@ -482,7 +484,7 @@ export class EnterpriseTools {
               ...stringOrNumberSchema('页码', 1)
             },
             perPage: {
-              ...stringOrNumberSchema('每页数量，最大100', 20)
+              ...stringOrNumberSchema('每页数量，最大100', ENTERPRISE_LABEL_DEFAULT_PER_PAGE)
             },
             ...autoPaginateSchemaProperties,
           },
@@ -657,8 +659,8 @@ export class EnterpriseTools {
         if (args.autoPaginate) {
           return autoPaginate(
             (page, perPage) => this.enterpriseService.getEnterpriseLabelsPage(args.enterprise_id ?? args.enterpriseId, page, perPage, args.search),
-            // autoPaginate's global default is 30; keep this tool's advertised 20
-            { page: args.page, perPage: args.perPage ?? 20, autoPaginate: true, maxPages: args.maxPages }
+            // autoPaginate's global default is 30; keep this tool's advertised default
+            { page: args.page, perPage: args.perPage ?? ENTERPRISE_LABEL_DEFAULT_PER_PAGE, autoPaginate: true, maxPages: args.maxPages }
           );
         }
         return await this.enterpriseService.getEnterpriseLabelsPage(args.enterprise_id ?? args.enterpriseId, args.page, args.perPage, args.search);
