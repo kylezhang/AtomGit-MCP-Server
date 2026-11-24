@@ -218,11 +218,14 @@ function parseToolMappings(): ToolMapping[] {
   const mappings: ToolMapping[] = [];
 
   const rowPattern =
-    /^\| \[`([^`]+)`\]\(\.\.\/src\/tools\/([^)]+)\) \| .* \| \[`([^`]+)`\]\(\.\.\/src\/services\/([^)]+)\) \| \[`[^`]+`\]\((https:\/\/docs\.atomgit\.com[^)]+)\) \|$/;
+    /^\| \[`([^`]+)`\]\(\.\.\/src\/tools\/([^)]+)\) \| .* \| \[`([^`]+)`\]\(\.\.\/src\/services\/([^)]+)\) \| \[`[^`]+`\]\((https:\/\/[^)]+)\) \|$/;
 
   for (const row of rows) {
     const match = row.match(rowPattern);
     if (!match) {
+      if (row.startsWith('| [`')) {
+        console.warn(`[audit] skipped malformed tool row: ${row.slice(0, 120)}`);
+      }
       continue;
     }
 
@@ -571,10 +574,17 @@ async function main() {
 
   const contractCache = new Map<string, DocsContract>();
   const results: AuditResult[] = [];
+  const skipped: Array<{ toolName: string; reason: string }> = [];
 
   for (const mapping of mappings) {
     const tool = toolMap.get(mapping.toolName);
     if (!tool) {
+      skipped.push({ toolName: mapping.toolName, reason: 'tool not found in loaded tool modules' });
+      continue;
+    }
+
+    if (!mapping.docUrl.startsWith(`${DOCS_HOST}/`)) {
+      skipped.push({ toolName: mapping.toolName, reason: `doc URL not on ${DOCS_HOST}: ${mapping.docUrl}` });
       continue;
     }
 
@@ -593,7 +603,11 @@ async function main() {
 
   console.log('\nAPI Contract Audit Report');
   console.log('=========================');
-  console.log(`Tools checked: ${mappings.length}`);
+  console.log(`Tools checked: ${mappings.length - skipped.length}`);
+  console.log(`Tools skipped: ${skipped.length}`);
+  for (const skip of skipped) {
+    console.warn(`[audit] skipped ${skip.toolName}: ${skip.reason}`);
+  }
   console.log(`Tools with issues: ${results.length}`);
 
   const issueCount = results.reduce((sum, result) => sum + result.issues.length, 0);
