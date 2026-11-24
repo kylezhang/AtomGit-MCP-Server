@@ -169,12 +169,13 @@ export const commitOutputSchema = {
 
 export const treeOutputSchema = {
   type: 'object',
-  description: 'AtomGit repository tree object',
+  description: 'AtomGit repository tree: a {tree, sha} envelope normally, or {items:[...]} when autoPaginate is used',
   properties: {
     sha: { type: 'string' },
     url: { type: 'string' },
     tree: { type: 'array' },
     truncated: { type: 'boolean' },
+    items: { type: 'array' },
   },
   additionalProperties: true,
 } as const;

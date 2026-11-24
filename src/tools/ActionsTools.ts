@@ -193,7 +193,8 @@ export class ActionsTools {
               description: '结束时间过滤，Unix 时间戳（毫秒）'
             },
             page: stringOrNumberSchema('当前的页码'),
-            perPage: stringOrNumberSchema('每页的数量，最大为 100，默认 20')
+            perPage: stringOrNumberSchema('每页的数量，最大为 100，默认 20'),
+            ...autoPaginateSchemaProperties
           },
           required: ['owner', 'repo']
         },
