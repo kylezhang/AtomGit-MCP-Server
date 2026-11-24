@@ -251,13 +251,16 @@ class AtomGitMCPServer {
           throw new Error(`Unknown tool: ${name}`);
         }
         const result = await handler.execute(args);
+        const text = JSON.stringify(result, null, 2) ?? 'null';
+        if (handler.tool.outputSchema) {
+          // MCP requires structuredContent to be an object, so array payloads are wrapped under "items".
+          return {
+            content: [{ type: 'text', text }],
+            structuredContent: Array.isArray(result) ? { items: result } : result,
+          };
+        }
         return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify(result, null, 2) ?? 'null',
-            },
-          ],
+          content: [{ type: 'text', text }],
         };
       } catch (error) {
         console.error(`Error in tool ${name}:`, errorToSafeLogValue(error));
