@@ -690,7 +690,13 @@ export class IssuesTools {
             },
             number: {
               type: 'number',
-              description: 'The issue number'
+              description: 'The issue number (or pass legacy issue_id/issueId instead)'
+            },
+            issue_id: {
+              ...stringOrNumberSchema('Deprecated alias of number')
+            },
+            issueId: {
+              ...stringOrNumberSchema('Deprecated alias of number')
             },
             page: {
               ...stringOrNumberSchema('Page number for pagination', 1)
@@ -700,7 +706,7 @@ export class IssuesTools {
             },
             ...autoPaginateSchemaProperties,
           },
-          required: ['enterprise', 'number']
+          required: ['enterprise']
         }
       },
       {

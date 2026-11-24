@@ -372,7 +372,11 @@ export class OrganizationTools {
           properties: {
             org: {
               type: 'string',
-              description: '组织名'
+              description: '组织名（也可传旧参数 owner，二者传其一）'
+            },
+            owner: {
+              type: 'string',
+              description: '已废弃：org 的旧别名'
             },
             page: {
               type: 'number',
@@ -384,7 +388,7 @@ export class OrganizationTools {
             },
             ...autoPaginateSchemaProperties,
           },
-          required: ['org']
+          required: []
         }
       },
       {
