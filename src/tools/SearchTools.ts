@@ -139,6 +139,70 @@ export class SearchTools {
           required: ['q']
         },
         outputSchema: looseArrayOutputSchema('JSON array of repository objects (search results)'),
+      },
+      {
+        name: 'search',
+        description: '通用搜索 (按类型搜索 repo/user/group/pullrequest/issue)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            type: {
+              type: 'string',
+              description: '搜索类型',
+              enum: ['repo', 'user', 'group', 'pullrequest', 'issue']
+            },
+            query: {
+              type: 'string',
+              description: '搜索查询字符串'
+            },
+            q: {
+              type: 'string',
+              description: '搜索查询字符串'
+            },
+            repo_type: {
+              type: 'string',
+              description: '仓库类型：0 代码仓、1 模型仓、2 数据集仓',
+              enum: ['0', '1', '2']
+            },
+            task: {
+              type: 'string',
+              description: '任务过滤'
+            },
+            library: {
+              type: 'string',
+              description: '库过滤'
+            },
+            min: {
+              type: 'string',
+              description: '参数规模下限，如 1B'
+            },
+            max: {
+              type: 'string',
+              description: '参数规模上限，如 7B'
+            },
+            sort: {
+              type: 'string',
+              description: '排序字段，如 created_at、updated_at、star、fork，默认最佳匹配'
+            },
+            order: {
+              type: 'string',
+              description: '排序顺序',
+              enum: ['asc', 'desc']
+            },
+            page: {
+              type: 'number',
+              description: '页码，默认为1',
+              default: 1
+            },
+            perPage: {
+              type: 'number',
+              description: '每页结果数，默认为10',
+              default: 10
+            },
+            ...autoPaginateSchemaProperties,
+          },
+          required: ['type']
+        }
       }
     ];
   }
@@ -191,6 +255,31 @@ export class SearchTools {
           owner: args.owner,
           fork: args.fork,
           language: args.language,
+          page: args.page,
+          perPage: args.perPage
+        });
+      
+      case 'search':
+        if (args.autoPaginate) {
+          return autoPaginate(
+            async (page, perPage) => {
+              const data = await this.searchService.search({ type: args.type, q: args.q ?? args.query, repo_type: args.repo_type, task: args.task, library: args.library, min: args.min, max: args.max, sort: args.sort, order: args.order, page, perPage });
+              return data?.content ?? [];
+            },
+            // autoPaginate's global default is 30; keep this tool's advertised 10
+            { page: args.page, perPage: args.perPage ?? 10, autoPaginate: true, maxPages: args.maxPages }
+          );
+        }
+        return await this.searchService.search({
+          type: args.type,
+          q: args.q ?? args.query,
+          repo_type: args.repo_type,
+          task: args.task,
+          library: args.library,
+          min: args.min,
+          max: args.max,
+          sort: args.sort,
+          order: args.order,
           page: args.page,
           perPage: args.perPage
         });

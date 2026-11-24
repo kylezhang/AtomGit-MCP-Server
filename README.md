@@ -200,21 +200,7 @@ cp .env.example .env  # 填入 ATOMGIT_TOKEN
 
 ### 维护流程
 
-同步官方 API、补齐缺口或校准参数时，推荐按以下流程执行：
-
-```mermaid
-flowchart TD
-    A["同步官方文档<br/>npm run api:sync"] --> B["检查覆盖缺口<br/>npm run api:check"]
-    B --> C["实现或移除 tools / services"]
-    C --> D["重建映射文档<br/>npm run api:map"]
-    D --> E["校验契约一致性<br/>npm run api:audit"]
-    E -->|通过| F["复核覆盖结果<br/>npm run api:check"]
-    E -->|不通过| C
-    F --> G["类型检查<br/>npm run typecheck"]
-    G --> H["构建验证<br/>npm run build"]
-    H --> I["运行测试<br/>npm run test"]
-    I --> J["Review git diff"]
-```
+同步官方 API、补齐缺口或校准参数时，按 `api:sync` → `api:check` → 实现或移除 tools/services → `api:map` → `api:audit` → `api:check` 复核 → `typecheck` / `build` / `test` → Review git diff 的顺序执行。完整 SOP 见 [AGENTS.md](./AGENTS.md)。
 
 - `api:sync` 抓取 AtomGit 官网文档，过滤后得到 API 基线。
 - `api:check` 对比基线，确认缺了什么、多了什么。
