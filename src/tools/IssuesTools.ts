@@ -690,13 +690,13 @@ export class IssuesTools {
             },
             number: {
               type: 'number',
-              description: 'The issue number (or pass legacy issue_id/issueId instead)'
+              description: 'The issue global ID (the id field from enterprise issue list APIs, not the per-list number); or pass legacy issue_id/issueId instead'
             },
             issue_id: {
-              ...stringOrNumberSchema('Deprecated alias of number')
+              ...stringOrNumberSchema('Deprecated alias of number (issue global ID)')
             },
             issueId: {
-              ...stringOrNumberSchema('Deprecated alias of number')
+              ...stringOrNumberSchema('Deprecated alias of number (issue global ID)')
             },
             page: {
               ...stringOrNumberSchema('Page number for pagination', 1)
