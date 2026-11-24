@@ -95,6 +95,8 @@ If an official page is intentionally filtered from `docs/apis_url.json`, the mat
 - The raw file content page below must **not** be filtered and must parse as a valid endpoint:
   - `https://docs.atomgit.com/docs/apis/get-owner-repo-raw-head-sha-name`
   - Expected endpoint path: `/:owner/:repo/raw/:head_sha/:name`
+- 2026-11-20 (#57): `docs/apis_url.json` carries two manual OpenAPI-aligned overrides — the decommissioned `POST /api/v5/similarity/` entry removed and `GET /api/v5/search` added (official confirmed). `npm run api:sync` (old-docs sitemap) will revert these until the sync chain switches to OpenAPI; re-apply or switch the chain before relying on them.
+- `api:audit` reads the old-docs baseline, so it flags the OpenAPI-aligned renames `get_enterprise_issue_labels` (issue_id→number) and `get_organization_followers` (owner→org) as missing_param/extra_required. These are intentional (official: OpenAPI param names authoritative), not regressions.
 
 ## 4. Feature Development Workflow (Scenario A)
 
@@ -110,6 +112,7 @@ Requirement/bug → Issue (label at creation) → Preflight API testing → Impl
   - Bug: symptoms, root-cause analysis, **live reproduction evidence** (raw curl or tool-call transcript).
 - **Label the Issue at creation**: `bug` / `feature` / `documentation`. An unlabeled Issue means the workflow has not started.
 - **Set the Issue assignee** to the maintainer's platform login (`zkxw2008`) — the exact account value the platform uses, no personal aliases.
+- Issue 标题用中文大白话、一句话点明目标（例：同步官方最新的API文档），不罗列改动清单，细节放正文；PR 标题仍按 `type(scope): English description` 约定。
 
 ### 4.2 Sync the Official Baseline
 - Run `npm run api:sync`
@@ -152,6 +155,7 @@ Before writing any code, verify every new endpoint with curl. Never guess from d
 - [ ] PR title format: `feat/fix(scope): English description fixes #N`
 - [ ] PR body contains: linked Issue, change summary, preflight/reproduction evidence, deviations from conventions (if any)
 - [ ] **PR carries the label matching its Issue** (historically the most frequently missed item)
+- [ ] PR 设置里显式关联 Issue（创建时 `inner_issue_nums` string，或事后 `POST /pulls/{n}/issues` 裸数组 `[num]`）；正文 `fixes #N` 只负责合并自动关闭，不等于设置关联。
 - [ ] Pagination and building-block reuse checked against section 3
 - [ ] build + E2E passed
 - [ ] Branch pushed to origin (AtomGit)

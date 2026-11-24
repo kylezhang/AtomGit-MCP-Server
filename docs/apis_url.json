@@ -3,14 +3,8 @@
   "categories": [
     {
       "name": "AI hub",
-      "endpointCount": 7,
+      "endpointCount": 6,
       "endpoints": [
-        {
-          "name": "句子相似度",
-          "httpMethod": "POST",
-          "endpointPath": "/api/v5/similarity/",
-          "documentationUrl": "https://docs.atomgit.com/docs/apis/post-api-v-5-similarity"
-        },
         {
           "name": "目标检测",
           "httpMethod": "POST",
@@ -1695,7 +1689,7 @@
     },
     {
       "name": "Search",
-      "endpointCount": 3,
+      "endpointCount": 4,
       "endpoints": [
         {
           "name": "搜索 Issues",
@@ -1714,6 +1708,12 @@
           "httpMethod": "GET",
           "endpointPath": "/api/v5/search/users",
           "documentationUrl": "https://docs.atomgit.com/docs/apis/get-api-v-5-search-users"
+        },
+        {
+          "name": "根据类型搜索",
+          "httpMethod": "GET",
+          "endpointPath": "/api/v5/search",
+          "documentationUrl": "https://atomgit.com/.well-known/openapi.json"
         }
       ]
     },

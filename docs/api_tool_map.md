@@ -1,6 +1,6 @@
 # AtomGit MCP Server - API 与工具映射表
 
-**生成时间:** 2026-11-19
+**生成时间:** 2026-11-20
 **分类总数:** 19
 **工具总数:** 308
 
@@ -274,9 +274,10 @@
 | [`upload_repository_file`](../src/tools/RepositoriesTools.ts) | 上传文件 | [`uploadRepositoryFile`](../src/services/RepositoriesService.ts) | [`POST /api/v5/repos/${owner}/${repo}/file/upload`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-file-upload) |
 | [`upload_repository_image`](../src/tools/RepositoriesTools.ts) | 上传图片 | [`uploadRepositoryImage`](../src/services/RepositoriesService.ts) | [`POST /api/v5/repos/${owner}/${repo}/img/upload`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-img-upload) |
 
-### Search (3)
+### Search (4)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
+| [`search`](../src/tools/SearchTools.ts) | **根据类型搜索**<br>通用搜索 (按类型搜索 repo/user/group/pullrequest/issue) | [`search`](../src/services/SearchService.ts) | [`GET /api/v5/search`](https://atomgit.com/.well-known/openapi.json) |
 | [`search_issues`](../src/tools/SearchTools.ts) | 搜索 Issues | [`searchIssues`](../src/services/SearchService.ts) | [`GET /api/v5/search/issues`](https://docs.atomgit.com/docs/apis/get-api-v-5-search-issues) |
 | [`search_repositories`](../src/tools/SearchTools.ts) | 搜索仓库 | [`searchRepositories`](../src/services/SearchService.ts) | [`GET /api/v5/search/repositories`](https://docs.atomgit.com/docs/apis/get-api-v-5-search-repositories) |
 | [`search_users`](../src/tools/SearchTools.ts) | 搜索用户 | [`searchUsers`](../src/services/SearchService.ts) | [`GET /api/v5/search/users`](https://docs.atomgit.com/docs/apis/get-api-v-5-search-users) |
@@ -331,14 +332,13 @@
 | [`test_repository_webhook`](../src/tools/WebhooksTools.ts) | **测试WebHook是否发送成功**<br>测试仓库Webhook | [`testRepositoryWebhook`](../src/services/WebhooksService.ts) | [`POST /api/v5/repos/${owner}/${repo}/hooks/${id}/tests`](https://docs.atomgit.com/docs/apis/post-api-v-5-repos-owner-repo-hooks-id-tests) |
 | [`update_repository_webhook`](../src/tools/WebhooksTools.ts) | **更新一个仓库WebHook**<br>更新仓库Webhook | [`updateRepositoryWebhook`](../src/services/WebhooksService.ts) | [`PATCH /api/v5/repos/${owner}/${repo}/hooks/${id}`](https://docs.atomgit.com/docs/apis/patch-api-v-5-repos-owner-repo-hooks-id) |
 
-### AIHub (7)
+### AIHub (6)
 | Tool Name | Description | Service Method | API Endpoint |
 |-----------|-------------|----------------|--------------|
 | [`audio_classification`](../src/tools/AIHubTools.ts) | **音频分类**<br>AI音频分类 (Audio Classification) | [`audioClassification`](../src/services/AIHubService.ts) | [`POST /api/v5/audio/classification`](https://docs.atomgit.com/docs/apis/post-api-v-5-audio-classification) |
 | [`audio_transcription`](../src/tools/AIHubTools.ts) | **自动语音识别**<br>AI语音识别 (Automatic Speech Recognition) | [`audioTranscription`](../src/services/AIHubService.ts) | [`POST /api/v5/audio/transcriptions`](https://docs.atomgit.com/docs/apis/post-api-v-1-audio-transcriptions) |
 | [`chat_completion`](../src/tools/AIHubTools.ts) | **文本生成**<br>AI文本生成完成 (Chat Completion) | [`chatCompletion`](../src/services/AIHubService.ts) | [`POST /api/v5/chat/completions`](https://docs.atomgit.com/docs/apis/post-api-v-5-chat-completions) |
 | [`object_detection`](../src/tools/AIHubTools.ts) | **目标检测**<br>AI物体检测 (Object Detection - YOLO) | [`detectYolo`](../src/services/AIHubService.ts) | [`POST /api/v5/detect/yolo`](https://docs.atomgit.com/docs/apis/post-api-v-5-detect-yolo) |
-| [`sentence_similarity`](../src/tools/AIHubTools.ts) | **句子相似度**<br>句子相似度 (Sentence Similarity) | [`similarity`](../src/services/AIHubService.ts) | [`POST /api/v5/similarity`](https://docs.atomgit.com/docs/apis/post-api-v-5-similarity) |
 | [`video_generation_create`](../src/tools/AIHubTools.ts) | **图像生成视频（创建任务）**<br>AI图像生成视频 - 创建任务 (Image to Video Generation - Create Task) | [`videoGenerate`](../src/services/AIHubService.ts) | [`POST /api/v5/video/generate`](https://docs.atomgit.com/docs/apis/post-api-v-5-video-generate) |
 | [`video_generation_status`](../src/tools/AIHubTools.ts) | **图像生成视频（查询状态）**<br>AI图像生成视频 - 查询状态 (Image to Video Generation - Query Status) | [`videoStatus`](../src/services/AIHubService.ts) | [`POST /api/v5/video/status`](https://docs.atomgit.com/docs/apis/post-api-v-5-video-status) |
 

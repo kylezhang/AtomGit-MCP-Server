@@ -11,14 +11,6 @@ interface ChatCompletionPayload {
   maxTokens?: number;
 }
 
-interface SentenceSimilarityPayload {
-  model: string;
-  inputs: {
-    source_sentence: string;
-    sentences: string[];
-  };
-}
-
 interface AudioTranscriptionPayload {
   file: string;
   model: string;
@@ -57,11 +49,6 @@ export class AIHubService extends BaseService {
 
   async chatCompletion(data: ChatCompletionPayload): Promise<any> {
     const response = await this.client.post('/api/v5/chat/completions', data);
-    return response.data;
-  }
-
-  async similarity(data: SentenceSimilarityPayload): Promise<any> {
-    const response = await this.client.post('/api/v5/similarity', data);
     return response.data;
   }
 

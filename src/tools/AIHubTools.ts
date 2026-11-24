@@ -32,30 +32,6 @@ export class AIHubTools {
         }
       },
       {
-        name: 'sentence_similarity',
-        description: '句子相似度 (Sentence Similarity)',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            model: { type: 'string', description: '模型名称' },
-            inputs: {
-              type: 'object',
-              description: '输入参数',
-              properties: {
-                source_sentence: { type: 'string', description: '源文本' },
-                sentences: {
-                  type: 'array',
-                  description: '目标文本数组',
-                  items: { type: 'string' }
-                }
-              },
-              required: ['source_sentence', 'sentences']
-            }
-          },
-          required: ['model', 'inputs']
-        }
-      },
-      {
         name: 'audio_transcription',
         description: 'AI语音识别 (Automatic Speech Recognition)',
         inputSchema: {
@@ -143,12 +119,6 @@ export class AIHubTools {
           top_p: args.top_p,
           frequency_penalty: args.frequency_penalty,
           maxTokens: args.maxTokens
-        });
-      
-      case 'sentence_similarity':
-        return await this.aiHubService.similarity({
-          model: args.model,
-          inputs: args.inputs
         });
       
       case 'audio_transcription':
