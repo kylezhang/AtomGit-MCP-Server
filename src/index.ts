@@ -132,6 +132,18 @@ const ATOMGIT_TRANSPORT = process.env.ATOMGIT_TRANSPORT || 'stdio';
 const ATOMGIT_PORT = parsePortEnv(process.env.ATOMGIT_PORT);
 const ATOMGIT_HOST = process.env.ATOMGIT_HOST || '127.0.0.1';
 
+// MCP requires structuredContent to be an object: arrays wrap under "items",
+// primitive/empty payloads (e.g. 204 delete responses) wrap under "value".
+function toStructuredObject(result: unknown): Record<string, unknown> {
+  if (Array.isArray(result)) {
+    return { items: result };
+  }
+  if (result !== null && typeof result === 'object') {
+    return result as Record<string, unknown>;
+  }
+  return { value: result === undefined ? null : result };
+}
+
 class AtomGitMCPServer {
   private server: Server;
   private registry: ToolRegistry;
@@ -253,10 +265,9 @@ class AtomGitMCPServer {
         const result = await handler.execute(args);
         const text = JSON.stringify(result, null, 2) ?? 'null';
         if (handler.tool.outputSchema) {
-          // MCP requires structuredContent to be an object, so array payloads are wrapped under "items".
           return {
             content: [{ type: 'text', text }],
-            structuredContent: Array.isArray(result) ? { items: result } : result,
+            structuredContent: toStructuredObject(result),
           };
         }
         return {
