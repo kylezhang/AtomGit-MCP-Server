@@ -1,5 +1,6 @@
 import { Tool, ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
 import { ToolSafetyPolicy, DANGEROUS_TOOL_PREFIXES } from './ToolSafetyPolicy.js';
+import { defaultObjectOutputSchema } from '../schemas/common.js';
 
 /**
  * Tool handler interface for registry lookup
@@ -90,6 +91,7 @@ export class ToolRegistry {
         ...tool,
         name: prefixedName,
         annotations: { ...deriveToolAnnotations(tool.name), ...tool.annotations },
+        outputSchema: tool.outputSchema ?? defaultObjectOutputSchema,
       };
       
       this.register(prefixedName, {

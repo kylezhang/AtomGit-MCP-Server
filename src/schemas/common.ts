@@ -205,3 +205,11 @@ export const looseArrayOutputSchema = (description: string) =>
     },
     additionalProperties: true,
   } as const);
+
+// Catch-all applied to tools without a bespoke schema so every tool emits
+// structuredContent; stays fully permissive because AtomGit payload shapes vary.
+export const defaultObjectOutputSchema = {
+  type: 'object',
+  description: 'AtomGit API response object (array payloads wrapped under "items", empty/primitive payloads under "value")',
+  additionalProperties: true,
+} as const;
