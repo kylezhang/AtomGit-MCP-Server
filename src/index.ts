@@ -264,14 +264,9 @@ class AtomGitMCPServer {
         }
         const result = await handler.execute(args);
         const text = JSON.stringify(result, null, 2) ?? 'null';
-        if (handler.tool.outputSchema) {
-          return {
-            content: [{ type: 'text', text }],
-            structuredContent: toStructuredObject(result),
-          };
-        }
         return {
           content: [{ type: 'text', text }],
+          structuredContent: toStructuredObject(result),
         };
       } catch (error) {
         console.error(`Error in tool ${name}:`, errorToSafeLogValue(error));
