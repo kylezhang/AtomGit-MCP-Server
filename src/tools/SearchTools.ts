@@ -3,6 +3,13 @@ import { SearchService } from '../services/SearchService.js';
 import { autoPaginate, autoPaginateSchemaProperties } from '../core/PaginationHelper.js';
 import { looseArrayOutputSchema } from '../schemas/common.js';
 
+function unwrapSearchEnvelope(data: any): any[] {
+  if (!data || !Array.isArray(data.content)) {
+    throw new Error('Unexpected search response: expected an envelope with a content array');
+  }
+  return data.content;
+}
+
 export class SearchTools {
   constructor(private searchService: SearchService) {}
 
@@ -16,11 +23,11 @@ export class SearchTools {
           properties: {
             query: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（q 的别名；与 q 同时传时以 q 为准）'
             },
             q: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（主参数）'
             },
             sort: {
               type: 'string',
@@ -53,11 +60,11 @@ export class SearchTools {
           properties: {
             query: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（q 的别名；与 q 同时传时以 q 为准）'
             },
             q: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（主参数）'
             },
             sort: {
               type: 'string',
@@ -98,11 +105,11 @@ export class SearchTools {
           properties: {
             query: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（q 的别名；与 q 同时传时以 q 为准）'
             },
             q: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（主参数）'
             },
             sort: {
               type: 'string',
@@ -153,11 +160,11 @@ export class SearchTools {
             },
             query: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（q 的别名；与 q 同时传时以 q 为准）'
             },
             q: {
               type: 'string',
-              description: '搜索查询字符串'
+              description: '搜索查询字符串（主参数）'
             },
             repo_type: {
               type: 'string',
@@ -264,13 +271,13 @@ export class SearchTools {
           return autoPaginate(
             async (page, perPage) => {
               const data = await this.searchService.search({ type: args.type, q: args.q ?? args.query, repo_type: args.repo_type, task: args.task, library: args.library, min: args.min, max: args.max, sort: args.sort, order: args.order, page, perPage });
-              return data?.content ?? [];
+              return unwrapSearchEnvelope(data);
             },
             // autoPaginate's global default is 30; keep this tool's advertised 10
             { page: args.page, perPage: args.perPage ?? 10, autoPaginate: true, maxPages: args.maxPages }
           );
         }
-        return await this.searchService.search({
+        return unwrapSearchEnvelope(await this.searchService.search({
           type: args.type,
           q: args.q ?? args.query,
           repo_type: args.repo_type,
@@ -282,7 +289,7 @@ export class SearchTools {
           order: args.order,
           page: args.page,
           perPage: args.perPage
-        });
+        }));
       
       default:
         throw new Error(`Unknown tool: ${name}`);
