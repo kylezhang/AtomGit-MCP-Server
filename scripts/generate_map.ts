@@ -563,8 +563,18 @@ async function main() {
     md += `\n`;
   }
 
-  fs.writeFileSync(OUTPUT_FILE, md, 'utf-8');
-  console.log(`Successfully wrote to ${OUTPUT_FILE}`);
+  // Only rewrite when the mapping body actually changed; otherwise a fresh
+  // timestamp would churn the file on every run even with identical content.
+  const dateLine = /^\*\*生成时间:\*\* .*$/m;
+  const newBody = md.replace(dateLine, '');
+  const unchanged = fs.existsSync(OUTPUT_FILE)
+    && fs.readFileSync(OUTPUT_FILE, 'utf-8').replace(dateLine, '') === newBody;
+  if (unchanged) {
+    console.log(`No content change; keeping existing ${OUTPUT_FILE} (timestamp not refreshed)`);
+  } else {
+    fs.writeFileSync(OUTPUT_FILE, md, 'utf-8');
+    console.log(`Successfully wrote to ${OUTPUT_FILE}`);
+  }
 }
 
 main();
